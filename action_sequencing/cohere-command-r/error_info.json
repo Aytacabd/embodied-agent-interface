@@ -1,0 +1,5391 @@
+{
+    "11_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "120_1": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "FIND": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "WALK": [
+                    "floor_lamp"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "floor_lamp"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "125_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "150_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "160_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[FIND] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "180_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "205_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "222_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "232_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <light> (1001)",
+            "[SWITCHON] <light> (1001)",
+            "[FIND] <light> (1001)",
+            "[SWITCHON] <light> (1001)",
+            "[FIND] <light> (1001)",
+            "[SWITCHON] <light> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "310_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "311_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "331_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "339_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <home_office> (319)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <character> (65)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[WALK] <home_office> (319)"
+    },
+    "345_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "392_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <light> (64)",
+            "[WALK] <light> (64)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <light> (64)"
+    },
+    "394_2": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (245)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <light> (245)"
+    },
+    "432_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "443_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "445_1": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "light"
+                ]
+            },
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "511_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (245)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <light> (245)"
+    },
+    "585_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "604_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (64)",
+            "[SWITCHON] <light> (64)",
+            "[WALK] <light> (64)",
+            "[SWITCHON] <light> (64)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "616_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <light> (64)",
+            "[WALK] <light> (64)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <light> (64)"
+    },
+    "627_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <dining_room> (201)",
+            "[WALK] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "705_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "708_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "715_2": {
+        "executable": false,
+        "actions": [
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "737_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "780_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[FIND] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[WALK] <light> (411)",
+            "[FIND] <light> (411)",
+            "[SWITCHON] <light> (411)",
+            "[WALK] <light> (411)",
+            "[FIND] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "812_1": {
+        "executable": false,
+        "actions": [
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "835_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "85_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "FIND": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "light"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "874_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)",
+            "[FIND] <bedroom> (67)",
+            "[WALK] <bedroom> (67)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[SWITCHON] <light> (169)"
+    },
+    "1003_2": {
+        "executable": false,
+        "actions": [
+            "[TYPE] <keyboard> (415)",
+            "[SWITCHOFF] <computer> (417)",
+            "[WALK] <wall> (213)",
+            "[TYPE] <walllamp> (351)",
+            "[SWITCHOFF] <walllamp> (351)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[TYPE] <keyboard> (415)"
+    },
+    "115_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "407_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[FIND] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[TYPE] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TYPE] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "430_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TYPE] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "481_2": {
+        "executable": false,
+        "actions": [
+            "[TYPE] <computer> (417)",
+            "[SWITCHOFF] <computer> (417)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[TYPE] <computer> (417)"
+    },
+    "622_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "computer"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "computer"
+                ]
+            },
+            {
+                "TYPE": [
+                    "keyboard"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "mouse"
+                ]
+            },
+            {
+                "TYPE": [
+                    "keyboard"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "699_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "824_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TYPE] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "87_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "laptop"
+                ]
+            },
+            {
+                "GRAB": [
+                    "laptop"
+                ]
+            },
+            {
+                "TYPE": [
+                    "keyboard"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "laptop"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "986_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHOFF] <computer> (417)",
+            "[SWITCHOFF] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "996_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <computer> (1001)",
+            "[SWITCHON] <computer> (1001)",
+            "[TYPE] <keyboard> (1002)",
+            "[TYPE] <keyboard> (1002)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[TYPE] <keyboard> (1002)"
+    },
+    "1004_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "FIND": [
+                    "food_food"
+                ]
+            },
+            {
+                "GRAB": [
+                    "food_food"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "152_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "FIND": [
+                    "food_food"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            },
+            {
+                "GRAB": [
+                    "food_food"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "food_food",
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "298_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "FIND": [
+                    "food_food"
+                ]
+            },
+            {
+                "WALK": [
+                    "home_office"
+                ]
+            },
+            {
+                "GRAB": [
+                    "food_food"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "food_food",
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "609_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "703_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "FIND": [
+                    "food_food"
+                ]
+            },
+            {
+                "GRAB": [
+                    "food_food"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "food_food",
+                    "freezer"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "772_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "837_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "kitchen_counter"
+                ]
+            },
+            {
+                "FIND": [
+                    "milk"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "food_cheese",
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "milk"
+                ]
+            },
+            {
+                "POUR": [
+                    "milk",
+                    "colander"
+                ]
+            },
+            {
+                "SCRUB": [
+                    "colander"
+                ]
+            },
+            {
+                "RINSE": [
+                    "colander"
+                ]
+            },
+            {
+                "DRINK": [
+                    "milk"
+                ]
+            },
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "LIE": [
+                    "bed"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "323_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (37)",
+            "[SIT] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "430_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "toilet"
+                ]
+            },
+            {
+                "SIT": [
+                    "toilet"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "toilet"
+                ]
+            },
+            {
+                "LOOKAT": [
+                    "toilet"
+                ]
+            },
+            {
+                "ON": [
+                    "toilet"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "478_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (37)",
+            "[SIT] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "624_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (1000)",
+            "[SIT] <toilet> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "101_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <bedroom> (67)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "1068_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "153_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "196_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <desk> (357)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "198_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <mouse> (413)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "201_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "232_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "234_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <floor> (208)",
+            "[FIND] <mouse> (413)",
+            "[GRAB] <mouse> (413)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "343_2": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (170)",
+            "[WALK] <keyboard> (168)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (170)"
+    },
+    "373_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "406_2": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (170)"
+    },
+    "409_2": {
+        "executable": false,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <bedroom> (67)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "419_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "433_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "437_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "440_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (170)"
+    },
+    "453_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "46_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <mouse> (413)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "475_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "503_1": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <mouse> (413)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "670_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "719_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "757_2": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (170)"
+    },
+    "787_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "795_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "819_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)",
+            "[WALK] <desk> (357)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "874_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "910_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "91_2": {
+        "executable": false,
+        "actions": [
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <mouse> (413)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHON] <computer> (417)"
+    },
+    "93_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "962_1": {
+        "executable": false,
+        "actions": [
+            {
+                "SWITCHON": [
+                    "computer"
+                ]
+            },
+            {
+                "WALK": [
+                    "button"
+                ]
+            },
+            {
+                "GRAB": [
+                    "button"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "button"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "1027_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LIE] <bed> (105)"
+    },
+    "181_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LIE] <bed> (105)"
+    },
+    "244_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LIE] <bed> (105)"
+    },
+    "269_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LIE] <bed> (105)"
+    },
+    "509_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[SIT] <bed> (105)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SIT] <bed> (105)"
+    },
+    "875_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[LIE] <bed> (105)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "102_1": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom_counter"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "sink"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "sink"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "154_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap",
+                    "water"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "176_1": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "214_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "soap",
+                    "sink"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "bathroom_counter"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "258_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "FIND": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "soap",
+                    "water"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "sink"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "499_1": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "paper_towel"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "sink"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "517_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "sink"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "549_2": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "soap"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap"
+                ]
+            },
+            {
+                "WALK": [
+                    "hands_both"
+                ]
+            },
+            {
+                "RINSE": [
+                    "soap"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "soap"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "562_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <hands_both> (1001)",
+            "[GRAB] <water> (1000)",
+            "[FIND] <faucet> (43)",
+            "[WALK] <character> (65)",
+            "[PUTIN] <water> (1000) <hands_both> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <water> (1000)"
+    },
+    "580_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "FIND": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "soap",
+                    "sink"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "sink"
+                ]
+            },
+            {
+                "TOWELDRY": [
+                    "hands_both",
+                    "towel"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "towel",
+                    "bathroom_counter"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "657_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "660_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "bathroom_counter"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "672_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "710_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "water"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            },
+            {
+                "WASH": [
+                    "hands_both"
+                ]
+            },
+            {
+                "SCRUB": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "water"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "bathroom_counter"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "741_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            },
+            {
+                "FIND": [
+                    "faucet"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "faucet"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both",
+                    "soap"
+                ]
+            },
+            {
+                "WASH": [
+                    "hands_both"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "750_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "GET": [
+                    "soap"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "USE": [
+                    "soap",
+                    "hands_both"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both",
+                    "towel"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "bathroom_counter"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "805_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "soap",
+                    "sink"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "WASH": [
+                    "towel",
+                    "sink"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "soap",
+                    "sink"
+                ]
+            },
+            {
+                "DRY": [
+                    "towel",
+                    "hands"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "80_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <soap> (1000)",
+            "[FIND] <sink> (42)",
+            "[RUN] <hands_both> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "813_2": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "water"
+                ]
+            },
+            {
+                "GRAB": [
+                    "hands_both"
+                ]
+            },
+            {
+                "RINSE": [
+                    "water",
+                    "hands_both"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "hands_both"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "928_2": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "sink"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom_counter"
+                ]
+            },
+            {
+                "RINSE": [
+                    "hands_both"
+                ]
+            },
+            {
+                "DRY": [
+                    "hands_both"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "995_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <soap> (1000)",
+            "[FIND] <faucet> (43)",
+            "[SWITCHON] <faucet> (43)",
+            "[RUN] <hands_both> (1001)",
+            "[RINSE] <hands_both> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "1035_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "113_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "12_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "137_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "203_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "220_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "242_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "279_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "287_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "292_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "297_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "381_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "388_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "38_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "429_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "437_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <character> (65)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "451_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "469_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "479_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "502_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "612_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "856_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "60_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "keyboard"
+                ]
+            },
+            {
+                "LOOKAT": [
+                    "laptop"
+                ]
+            },
+            {
+                "WATCH": [
+                    "laptop"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "laptop"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "laptop"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "1070_1": {
+        "executable": false,
+        "actions": [
+            "[FIND] <toothbrush_holder> (1000)",
+            "[GRAB] <toothbrush_holder> (1000)",
+            "[OPEN] <toothbrush> (1001)",
+            "[PUTBACK] <toothbrush> (1001) <toothbrush_holder> (1000)",
+            "[WALK] <character> (65)",
+            "[GRAB] <character> (65)",
+            "[TOUCH] <toothbrush> (1001)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[OPEN] <toothbrush> (1001)"
+    },
+    "313_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "toothbrush"
+                ]
+            },
+            {
+                "GRAB": [
+                    "toothbrush"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "HOLDS_LH": [
+                    "toothbrush"
+                ]
+            },
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "689_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <toothbrush> (1002)",
+            "[GRAB] <toothbrush> (1002)",
+            "[TURNTO] <character> (65)",
+            "[WALK] <bedroom> (67)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "718_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <toothbrush> (1001)",
+            "[GRAB] <toothbrush> (1001)",
+            "[WALK] <tooth_paste> (1000)",
+            "[PUTBACK] <toothbrush> (1001) <tooth_paste> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "1049_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "television"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "113_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cd",
+                    "cd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "FIND": [
+                    "cd"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cd"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "cd",
+                    "cd_player"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "cd_player"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "161_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "stereo",
+                    "character"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "173_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "headset",
+                    "cd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "headset",
+                    "cd_player"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "23_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "FIND": [
+                    "plug"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo",
+                    "plug"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "263_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "FIND": [
+                    "plug"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo",
+                    "plug"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "305_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "363_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "FIND": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "dvd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "dvd_player"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "385_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cd",
+                    "cd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "FIND": [
+                    "cd"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cd"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "cd",
+                    "cd_player"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "cd_player"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "403_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "stereo",
+                    "hair"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "415_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <headset> (1000)",
+            "[PUTON] <headset> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[PUTON] <headset> (1000)"
+    },
+    "462_2": {
+        "executable": false,
+        "actions": [
+            {
+                "FIND": [
+                    "stereo"
+                ]
+            },
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PUTON": [
+                    "headset"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "463_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "503_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cd_player"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "remote_control",
+                    "cd_player"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cd_player"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "cd_player"
+                ]
+            },
+            {
+                "SIT": [
+                    "chair"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "59_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dining_room> (201)",
+            "[FIND] <phone> (1000)",
+            "[SWITCHON] <phone> (1000)",
+            "[GRAB] <headset> (1001)",
+            "[PUTON] <headset> (1001)",
+            "[TURNTO] <phone> (1000)",
+            "[WATCH] <phone> (1000)",
+            "[PUTOFF] <headset> (1001)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[WATCH] <phone> (1000)"
+    },
+    "737_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "773_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "FIND": [
+                    "stereo"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "stereo",
+                    "character"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "LIE": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "910_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "stereo"
+                ]
+            },
+            {
+                "OPEN": [
+                    "stereo"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "stereo"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "stereo"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "953_1": {
+        "executable": false,
+        "actions": null,
+        "error_type": "parsing error",
+        "error_action": null
+    },
+    "1057_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "117_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "134_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "170_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "197_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "21_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "225_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <remote_control> (1001)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "259_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[WALK] <television> (410)"
+    },
+    "307_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "329_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "342_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "377_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <remote_control> (1000)",
+            "[TURNTO] <television> (410)",
+            "[FIND] <remote_control> (1000)",
+            "[SWITCHON] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "383_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "411_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "454_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "459_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "548_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (248)",
+            "[LOOKAT] <television> (248)",
+            "[WATCH] <television> (248)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (248)"
+    },
+    "595_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "684_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <remote_control> (1000)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <remote_control> (1000)"
+    },
+    "74_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "806_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "98_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[LOOKAT] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <television> (410)"
+    },
+    "1064_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "GRAB": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "water_glass"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "156_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "cup"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "cup"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "171_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cup"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "cup"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "175_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (231)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "181_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water> (1001)",
+            "[PUTBACK] <water_glass> (1000) <freezer> (289)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[DRINK] <water> (1001)"
+    },
+    "26_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[WALK] <cup> (1000)"
+    },
+    "286_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cupboard"
+                ]
+            },
+            {
+                "GRAB": [
+                    "water_glass"
+                ]
+            },
+            {
+                "FIND": [
+                    "freezer"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cupboard"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "water_glass",
+                    "cupboard"
+                ]
+            },
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            },
+            {
+                "FIND": [
+                    "water"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "water",
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "water_glass"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "291_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            },
+            {
+                "FIND": [
+                    "water_glass"
+                ]
+            },
+            {
+                "GRAB": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "water_glass"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "317_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[GRAB] <cup> (1001)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[PUTBACK] <cup> (1001) <kitchen_cabinet> (1000)",
+            "[WALK] <sink> (231)",
+            "[DRINK] <cup> (1001)",
+            "[DRINK] <cup> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <cup> (1001)"
+    },
+    "488_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <water> (1001)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <cup> (1000)"
+    },
+    "510_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <drinking_glass> (1001)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[DRINK] <water> (1000)",
+            "[DRINK] <water> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[DRINK] <water> (1000)"
+    },
+    "528_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <drinking_glass> (1000)",
+            "[GRAB] <drinking_glass> (1000)",
+            "[DRINK] <water> (1001)",
+            "[DRINK] <drinking_glass> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <drinking_glass> (1000)"
+    },
+    "532_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "drinking_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water",
+                    "drinking_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water",
+                    "drinking_glass"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "drinking_glass"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "589_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <water> (1001)",
+            "[PUTBACK] <cup> (1000) <bedroom> (67)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[DRINK] <water> (1001)"
+    },
+    "600_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "GRAB": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water_glass"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "water_glass"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "662_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "GRAB": [
+                    "water_glass"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "water_glass"
+                ]
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "787_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <sink> (231)",
+            "[GRAB] <water_glass> (1000)",
+            "[FIND] <faucet> (232)",
+            "[FIND] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)",
+            "[PUTBACK] <water_glass> (1000) <sink> (231)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[DRINK] <water_glass> (1000)"
+    },
+    "788_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <kitchen_counter> (230)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[FIND] <faucet> (232)",
+            "[FIND] <sink> (231)",
+            "[OPEN] <faucet> (232)",
+            "[POUR] <water> (1002) <drinking_glass> (1001)",
+            "[DRINK] <drinking_glass> (1001)",
+            "[PUTBACK] <drinking_glass> (1001) <kitchen_cabinet> (1000)",
+            "[WALK] <bathroom> (1)",
+            "[DRINK] <drinking_glass> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <drinking_glass> (1001)"
+    },
+    "814_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)",
+            "[PUTBACK] <water_glass> (1000) <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[DRINK] <water> (1001)"
+    },
+    "850_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[GRAB] <water_glass> (1001)",
+            "[DRINK] <water_glass> (1001)",
+            "[DRINK] <water_glass> (1001)",
+            "[PUTBACK] <water_glass> (1001) <kitchen_cabinet> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <water_glass> (1001)"
+    },
+    "861_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "cup"
+                ]
+            },
+            {
+                "DRINK": [
+                    "cup"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "cup"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "878_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)",
+            "[PUTBACK] <water_glass> (1000) <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[DRINK] <water> (1001)"
+    },
+    "1073_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "1088_1": {
+        "executable": true,
+        "actions": [
+            "[FIND] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "15_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <address_book> (1000)",
+            "[GRAB] <address_book> (1000)",
+            "[READ] <address_book> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "163_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "16_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <coffee_table> (1001)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "192_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "208_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1001)",
+            "[GRAB] <novel> (1001)",
+            "[READ] <novel> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "221_2": {
+        "executable": false,
+        "actions": [
+            "[FIND] <novel> (1001)",
+            "[GRAB] <novel> (1001)",
+            "[READ] <novel> (1001)",
+            "[LOOKAT] <novel> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1001)"
+    },
+    "241_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[WALK] <novel> (1000)"
+    },
+    "484_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "504_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "508_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "544_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "57_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "617_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <nightstand> (100)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <novel> (1000)"
+    },
+    "628_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "688_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "693_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "821_1": {
+        "executable": false,
+        "actions": [
+            "[FIND] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "86_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <filing_cabinet> (399)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "896_2": {
+        "executable": false,
+        "actions": [
+            "[FIND] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)",
+            "[LOOKAT] <novel> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <novel> (1000)"
+    },
+    "897_2": {
+        "executable": true,
+        "actions": [
+            "[FIND] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "1083_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "WALK": [
+                    "oven"
+                ]
+            },
+            {
+                "FIND": [
+                    "water"
+                ]
+            },
+            {
+                "WALK": [
+                    "oven"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "oven"
+                ]
+            },
+            {
+                "OPEN": [
+                    "oven"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "water",
+                    "oven"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "oven"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "oven"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "pot",
+                    "oven"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "392_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "oven"
+                ]
+            },
+            {
+                "OPEN": [
+                    "oven"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "pot",
+                    "freezer"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "freezer"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "oven"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "oven"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "oven"
+                ]
+            },
+            {
+                "LOOKAT": [
+                    "oven"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "755_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "kitchen_cabinet"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "oven"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "oven"
+                ]
+            },
+            {
+                "FIND": [
+                    "sauce_pan"
+                ]
+            },
+            {
+                "GRAB": [
+                    "sauce_pan"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "sauce_pan"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "sauce_pan",
+                    "oven"
+                ]
+            },
+            {
+                "FIND": [
+                    "pasta"
+                ]
+            },
+            {
+                "GRAB": [
+                    "pasta"
+                ]
+            },
+            {
+                "WALK": [
+                    "oven"
+                ]
+            },
+            {
+                "OPEN": [
+                    "oven"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "pasta",
+                    "oven"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "oven"
+                ]
+            },
+            {
+                "DRINK": [
+                    "water"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "124_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "137_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "204_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[WALK] <bedroom> (67)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <bedroom> (67)"
+    },
+    "268_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "297_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[TURNTO] <character> (65)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "299_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "300_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "321_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "332_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "379_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[FIND] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <couch> (352)"
+    },
+    "387_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "390_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "3_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "416_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "438_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[FIND] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <couch> (352)"
+    },
+    "442_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "447_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "449_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <television> (410)"
+    },
+    "455_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "456_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "473_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "490_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "563_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "567_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "570_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "674_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "6_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "742_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "762_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[FIND] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <couch> (352)"
+    },
+    "793_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "798_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "932_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "941_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "96_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "976_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[FIND] <couch> (352)",
+            "[LIE] <couch> (352)",
+            "[SIT] <couch> (352)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[WALK] <couch> (352)"
+    },
+    "149_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "154_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "180_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "SIT": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "195_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)",
+            "[LOOKAT] <phone> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[LOOKAT] <phone> (1000)"
+    },
+    "211_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "241_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "264_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <desk> (357)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "265_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "287_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "352_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "360_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "388_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "431_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bedroom"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "436_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "442_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "474_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "482_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "WALK": [
+                    "character"
+                ]
+            },
+            {
+                "GRAB": [
+                    "drawing"
+                ]
+            },
+            {
+                "CUT": [
+                    "drawing"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "drawing",
+                    "phone"
+                ]
+            },
+            {
+                "WALK": [
+                    "character"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "phone"
+                ]
+            },
+            {
+                "TYPE": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            },
+            {
+                "SIT": [
+                    "chair"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "497_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "dining_room"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "553_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <phone> (1000)"
+    },
+    "601_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "LOOKAT": [
+                    "phone"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "phone"
+                ]
+            },
+            {
+                "WALK": [
+                    "character"
+                ]
+            },
+            {
+                "SIT": [
+                    "floor"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "70_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "864_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "963_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <phone> (1000)"
+    },
+    "974_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bedroom> (67)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <phone> (1000)"
+    },
+    "976_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <desk> (357)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "99_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "phone"
+                ]
+            },
+            {
+                "GRAB": [
+                    "phone"
+                ]
+            },
+            {
+                "TURNTO": [
+                    "character"
+                ]
+            },
+            {
+                "HOLDS_RH": [
+                    "phone"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "710_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <plate> (1001)",
+            "[PUTBACK] <plate> (1001) <table> (226)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[PUTBACK] <plate> (1001) <table> (226)"
+    },
+    "84_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "home_office"
+                ]
+            },
+            {
+                "SIT": [
+                    "couch"
+                ]
+            },
+            {
+                "WALK": [
+                    "table"
+                ]
+            },
+            {
+                "GRAB": [
+                    "some_object"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "some_object",
+                    "couch"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "93_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bedroom> (67)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "368_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dining_room> (201)",
+            "[FIND] <character> (65)",
+            "[GREET] <dining_room> (201)",
+            "[WALK] <home_office> (319)",
+            "[OPEN] <home_office> (319)",
+            "[GRAB] <cloth_napkin> (1000)",
+            "[PUTBACK] <cloth_napkin> (1000) <character> (65)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[GREET] <dining_room> (201)"
+    },
+    "729_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <shower> (36)",
+            "[CLOSE] <shower> (36)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[CLOSE] <shower> (36)"
+    },
+    "975_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <shower> (36)",
+            "[CLOSE] <bedroom> (67)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[CLOSE] <bedroom> (67)"
+    },
+    "231_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <plate> (1000)",
+            "[GRAB] <dish_soap> (1001)",
+            "[FIND] <water> (1002)",
+            "[GRAB] <water> (1002)",
+            "[PUTIN] <dish_soap> (1001) <plate> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "31_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "dish_soap",
+                    "sponge"
+                ]
+            },
+            {
+                "WASH": [
+                    "sponge"
+                ]
+            },
+            {
+                "RINSE": [
+                    "sponge"
+                ]
+            },
+            {
+                "SCRUB": [
+                    "sink",
+                    "sponge"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "dish_soap",
+                    "sponge"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "349_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dish_soap> (1000)",
+            "[GRAB] <dish_soap> (1000)",
+            "[FIND] <faucet> (232)",
+            "[OPEN] <dish_soap> (1000)",
+            "[PUTIN] <dish_soap> (1000) <faucet> (232)",
+            "[PUTBACK] <dish_soap> (1000) <faucet> (232)",
+            "[SCRUB] <plate> (1001)"
+        ],
+        "error_type": "affordance_error",
+        "error_action": "[OPEN] <dish_soap> (1000)"
+    },
+    "397_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[GRAB] <dish_soap> (1000)",
+            "[FIND] <plate> (1001)",
+            "[PUTBACK] <dish_soap> (1000) <plate> (1001)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <dish_soap> (1000)"
+    },
+    "429_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <kitchen_counter> (230)",
+            "[GRAB] <dish_soap> (1001)",
+            "[FIND] <sink> (231)",
+            "[PUTBACK] <dish_soap> (1001) <sink> (231)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <dish_soap> (1001)"
+    },
+    "553_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate"
+                ]
+            },
+            {
+                "WASH": [
+                    "plate"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "plate"
+                ]
+            },
+            {
+                "WALK": [
+                    "soap"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap"
+                ]
+            },
+            {
+                "RINSE": [
+                    "plate",
+                    "soap"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "plate",
+                    "cupboard"
+                ]
+            },
+            {
+                "PUTON": [
+                    "soap",
+                    "sink"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "594_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[GRAB] <dish_soap> (1000)",
+            "[FIND] <sink> (42)",
+            "[PUTBACK] <dish_soap> (1000) <sink> (42)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "746_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <sink> (231)",
+            "[GRAB] <sponge> (1002)",
+            "[FIND] <water> (1001)",
+            "[PUTIN] <sponge> (1002) <water> (1001)",
+            "[GRAB] <dish_soap> (1000)",
+            "[PUTIN] <dish_soap> (1000) <sink> (231)",
+            "[FIND] <drinking_glass> (1003)",
+            "[WALK] <drinking_glass> (1003)",
+            "[GRAB] <drinking_glass> (1003)",
+            "[OPEN] <drinking_glass> (1003)",
+            "[PUTBACK] <drinking_glass> (1003) <sink> (231)",
+            "[SCRUB] <sink> (231)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <sponge> (1002)"
+    },
+    "961_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate"
+                ]
+            },
+            {
+                "FIND": [
+                    "dish_soap"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "dish_soap",
+                    "sink"
+                ]
+            },
+            {
+                "SCRUB": [
+                    "plate"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "plate"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "988_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bowl"
+                ]
+            },
+            {
+                "GRAB": [
+                    "bowl"
+                ]
+            },
+            {
+                "WASH": [
+                    "bowl"
+                ]
+            },
+            {
+                "RELEASE": [
+                    "bowl"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    }
+}
