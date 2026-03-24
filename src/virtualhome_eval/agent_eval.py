@@ -20,9 +20,13 @@ from virtualhome_eval.evaluation.goal_interpretation.scripts.evaluate_results im
 from virtualhome_eval.evaluation.transition_modeling.scripts.evaluate_results import (
     evaluate_results as tm_output_evaluation,
 )
-from virtualhome_eval.evaluation.action_sequencing.scripts.evaluate_results import (
-    evaluate_results as action_output_evaluation,
-)
+# from virtualhome_eval.evaluation.action_sequencing.scripts.evaluate_results import (
+#     evaluate_results as action_output_evaluation,
+# )
+import sys
+sys.path.insert(0, "/Users/aytaj/Desktop/embodied-agent-interface/sda_final")
+from evaluate_results_sda import evaluate_results as action_output_evaluation
+
 from virtualhome_eval.evaluation.subgoal_decomposition.scripts.evaluate_results import (
     evaluate_results as subgoal_output_evaluation,
 )

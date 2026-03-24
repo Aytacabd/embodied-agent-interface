@@ -34,13 +34,19 @@ EAI_ERROR_CODES = {
 
 # Preconditions that change dynamically during execution
 # Used to find meaningful t_source (static object properties never change)
+# DYNAMIC_PRECONDITIONS = {
+#     "holds_obj", "not_both_hands_full", "not_sitting",
+#     "not_lying", "open", "closed", "on", "off",
+#     "next_to_obj", "next_to_target", "sitting_or_lying",
+#     "obj_not_inside_closed_container", "target_open_or_not_openable",
+# }
 DYNAMIC_PRECONDITIONS = {
     "holds_obj", "not_both_hands_full", "not_sitting",
     "not_lying", "open", "closed", "on", "off",
     "next_to_obj", "next_to_target", "sitting_or_lying",
     "obj_not_inside_closed_container", "target_open_or_not_openable",
+    # REMOVED: "grabbable", "has_switch", "can_open" — static, never dynamic
 }
-
 
 # ── ActionStep ────────────────────────────────────────────────────────────────
 
@@ -152,29 +158,75 @@ class StateTracker:
             self.current_states.add("plugged_in")
             self.current_states.add("obj_not_inside_closed_container")
 
+    # def _init_from_env_dict(self, env_dict: dict):
+    #     """
+    #     Initialise states from EAI's env_state.to_dict().
+    #     env_dict has 'nodes' (list of node dicts) and 'edges'.
+    #     """
+    #     nodes = env_dict.get("nodes", [])
+    #     edges = env_dict.get("edges", [])
+
+    #     has_open   = False
+    #     has_closed = False
+
+    #     for node in nodes:
+    #         states = [s.upper() for s in node.get("states", [])]
+    #         if "OPEN" in states:
+    #             has_open = True
+    #         if "CLOSED" in states:
+    #             has_closed = True
+    #         if "OFF" in states:
+    #             self.current_states.add("off")
+    #         if "ON" in states:
+    #             self.current_states.add("on")
+    #         if "PLUGGED_IN" in states:
+    #             self.current_states.add("plugged_in")
+    #         if "SITTING" in states:
+    #             self.current_states.discard("not_sitting")
+    #             self.current_states.add("sitting")
+    #         if "LYING" in states:
+    #             self.current_states.discard("not_lying")
+    #             self.current_states.add("lying")
+
+    #     # Check if agent is holding anything
+    #     char_id = None
+    #     for node in nodes:
+    #         if node.get("class_name") == "character":
+    #             char_id = node.get("id")
+    #             break
+
+    #     if char_id:
+    #         holds_count = sum(
+    #             1 for e in edges
+    #             if e.get("from_id") == char_id
+    #             and e.get("relation_type") in ("HOLDS_RH", "HOLDS_LH")
+    #         )
+    #         self.hand_count = holds_count
+    #         if holds_count > 0:
+    #             self.current_states.add("holds_obj")
+    #             self.current_states.discard("not_holds_obj")
+    #         if holds_count >= 2:
+    #             self.current_states.add("both_hands_full")
+    #             self.current_states.discard("not_both_hands_full")
+
+    #     if has_open:
+    #         self.current_states.add("open")
+    #         self.current_states.add("obj_not_inside_closed_container")
+    #         self.current_states.add("target_open_or_not_openable")
+    #     if has_closed:
+    #         self.current_states.add("closed")
+
+    #     # Default: plugged_in always true in VirtualHome
+    #     self.current_states.add("plugged_in")
     def _init_from_env_dict(self, env_dict: dict):
-        """
-        Initialise states from EAI's env_state.to_dict().
-        env_dict has 'nodes' (list of node dicts) and 'edges'.
-        """
         nodes = env_dict.get("nodes", [])
         edges = env_dict.get("edges", [])
 
-        has_open   = False
-        has_closed = False
-
         for node in nodes:
             states = [s.upper() for s in node.get("states", [])]
-            if "OPEN" in states:
-                has_open = True
-            if "CLOSED" in states:
-                has_closed = True
-            if "OFF" in states:
-                self.current_states.add("off")
-            if "ON" in states:
-                self.current_states.add("on")
-            if "PLUGGED_IN" in states:
-                self.current_states.add("plugged_in")
+            class_name = node.get("class_name", "")
+
+            # These are global/character states
             if "SITTING" in states:
                 self.current_states.discard("not_sitting")
                 self.current_states.add("sitting")
@@ -182,13 +234,18 @@ class StateTracker:
                 self.current_states.discard("not_lying")
                 self.current_states.add("lying")
 
-        # Check if agent is holding anything
-        char_id = None
-        for node in nodes:
-            if node.get("class_name") == "character":
-                char_id = node.get("id")
-                break
+            # Object states — store qualified by class name
+            # Also store unqualified for backward compat
+            for s in states:
+                s_lower = s.lower()
+                if s_lower in ("on", "off", "open", "closed",
+                            "clean", "dirty", "plugged_in", "plugged_out"):
+                    self.current_states.add(s_lower)
+                    self.current_states.add(f"{s_lower}:{class_name}")
 
+        # Holding state
+        char_id = next((n["id"] for n in nodes
+                        if n.get("class_name") == "character"), None)
         if char_id:
             holds_count = sum(
                 1 for e in edges
@@ -203,16 +260,19 @@ class StateTracker:
                 self.current_states.add("both_hands_full")
                 self.current_states.discard("not_both_hands_full")
 
-        if has_open:
+        # Container states
+        open_names  = {n.get("class_name") for n in nodes
+                    if "OPEN" in [s.upper() for s in n.get("states", [])]}
+        closed_names = {n.get("class_name") for n in nodes
+                        if "CLOSED" in [s.upper() for s in n.get("states", [])]}
+        if open_names:
             self.current_states.add("open")
             self.current_states.add("obj_not_inside_closed_container")
             self.current_states.add("target_open_or_not_openable")
-        if has_closed:
+        if closed_names:
             self.current_states.add("closed")
 
-        # Default: plugged_in always true in VirtualHome
         self.current_states.add("plugged_in")
-
     def apply_action(self, step: ActionStep):
         """Apply an action's effects to update current state."""
         effects        = get_effects(step.action)
@@ -282,8 +342,24 @@ class StateTracker:
             "states_removed": states_removed,
         })
 
+    # def is_satisfied(self, precondition: str) -> bool:
+    #     """Check if a precondition is currently satisfied."""
+    #     if precondition == "sitting_or_lying":
+    #         return "sitting" in self.current_states or "lying" in self.current_states
+    #     if precondition == "not_both_hands_full":
+    #         return "both_hands_full" not in self.current_states
+    #     if precondition == "target_open_or_not_openable":
+    #         return ("open" in self.current_states or
+    #                 "not_openable" in self.current_states or
+    #                 "target_open_or_not_openable" in self.current_states)
+    #     # Static object properties — assume satisfied
+    #     if precondition in ("grabbable", "has_switch", "can_open",
+    #                         "has_plug", "eatable", "drinkable",
+    #                         "readable", "movable", "lookable",
+    #                         "sittable", "lieable", "clothes"):
+    #         return True
+    #     return precondition in self.current_states
     def is_satisfied(self, precondition: str) -> bool:
-        """Check if a precondition is currently satisfied."""
         if precondition == "sitting_or_lying":
             return "sitting" in self.current_states or "lying" in self.current_states
         if precondition == "not_both_hands_full":
@@ -292,12 +368,12 @@ class StateTracker:
             return ("open" in self.current_states or
                     "not_openable" in self.current_states or
                     "target_open_or_not_openable" in self.current_states)
-        # Static object properties — assume satisfied
-        if precondition in ("grabbable", "has_switch", "can_open",
-                            "has_plug", "eatable", "drinkable",
-                            "readable", "movable", "lookable",
-                            "sittable", "lieable", "clothes"):
-            return True
+        # Static properties no longer appear in SDG needs,
+        # but handle gracefully if called directly
+        if precondition in ("grabbable", "has_switch", "can_open", "has_plug",
+                            "eatable", "drinkable", "readable", "movable",
+                            "lookable", "sittable", "lieable", "clothes"):
+            return True   # keep for safety, won't be called from SDG anymore
         return precondition in self.current_states
 
     def find_t_source(self, precondition: str, t_error: int) -> int:
