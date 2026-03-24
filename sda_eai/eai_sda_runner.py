@@ -3286,7 +3286,7 @@
 # # # # =============================================================================
 
 # # # # vvv PASTE YOUR GEMINI API KEY HERE vvv
-# # # GEMINI_API_KEY = "AIzaSyD9_yyQR4gdpducKL6GokaodXfnWd0UTg4"
+# # # GEMINI_API_KEY = 
 # # # # ^^^ PASTE YOUR GEMINI API KEY HERE ^^^
 
 # # # GEMINI_MODEL  = "gemini-2.5-flash-lite"
