@@ -449,17 +449,35 @@ class EAISDARunner:
             for action in current_plan_eai:
                 exe_flag, my_info = motion_planner.my_execute_primitive_action_eval(action)
 
+                # if not exe_flag:
+                #     executable    = False
+                #     failed_action = action
+                #     history_cp    = copy.deepcopy(history_env_states)
+                #     try:
+                #         checker  = TemporalOrderChecker(my_info, history_cp)
+                #         code     = checker.run_checker().get_error_type()
+                #         err_type = ERROR_CODE_TO_TYPE.get(code, "UNKNOWN")
+                #     except Exception:
+                #         err_type = "UNKNOWN"
+                #     logger.info(f"  ❌ {action} | {err_type}")
                 if not exe_flag:
-                    executable    = False
-                    failed_action = action
-                    history_cp    = copy.deepcopy(history_env_states)
+                    history_cp = copy.deepcopy(history_env_states)
                     try:
                         checker  = TemporalOrderChecker(my_info, history_cp)
                         code     = checker.run_checker().get_error_type()
                         err_type = ERROR_CODE_TO_TYPE.get(code, "UNKNOWN")
                     except Exception:
                         err_type = "UNKNOWN"
+
+                    # Match EAI behavior: ADDITIONAL_STEP is not a real failure
+                    if err_type == "ADDITIONAL_STEP":
+                        logger.info(f"  ⏭️ Skipping unnecessary action: {action}")
+                        continue  # skip, keep executing rest of plan
+
+                    executable    = False
+                    failed_action = action
                     logger.info(f"  ❌ {action} | {err_type}")
+                    break  # ← don't forget this!
                     break
                 else:
                     history_actions.append(action)
