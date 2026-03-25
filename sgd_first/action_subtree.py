@@ -233,7 +233,13 @@ def build_and_search_tree(
         state  = initial_state.copy(),
         depth  = 0,
     )
-
+        # If no target effects (local replan), return first valid candidate
+    if not target_effects:
+        for (action, obj, target) in candidates:
+            if satisfied(action, root.state) and changes_state(action):
+                return [(action, obj, target)]
+        return []
+    
     queue          = deque([root])
     nodes_expanded = 0
 
@@ -380,46 +386,65 @@ def _build_initial_state(env_dict: dict, char_sitting: bool, char_lying: bool) -
     else:
         states.add("not_lying")
 
-    # Safe defaults
-    states.add("not_both_hands_full")
-    states.add("grabbable")
-    states.add("plugged_in")
+    # # Safe defaults
+    # states.add("not_both_hands_full")
+    # states.add("grabbable")
+    # states.add("plugged_in")
 
-    # Read actual object states from environment
-    has_open   = False
-    has_closed = False
+    # # Read actual object states from environment
+    # has_open   = False
+    # has_closed = False
+    # try:
+    #     for node in env_dict.get("nodes", []):
+    #         node_states = [s.upper() for s in node.get("states", [])]
+    #         props       = [p.upper() for p in node.get("properties", [])]
+
+    #         if "OPEN" in node_states:
+    #             states.add("open")
+    #             states.add("obj_not_inside_closed_container")
+    #             states.add("target_open_or_not_openable")
+    #             has_open = True
+    #         if "CLOSED" in node_states:
+    #             states.add("closed")
+    #             has_closed = True
+    #         if "ON" in node_states:
+    #             states.add("on")
+    #         if "OFF" in node_states:
+    #             states.add("off")
+    #         if "PLUGGED_IN" in node_states:
+    #             states.add("plugged_in")
+    #         if "HAS_SWITCH" in props:
+    #             states.add("has_switch")
+    #         if "HAS_PLUG" in props:
+    #             states.add("has_plug")
+    #         if "CAN_OPEN" in props:
+    #             states.add("can_open")
+    # except Exception:
+    #     pass
+
+    # # If no explicit closed container found, assume objects are accessible
+    # if not has_closed:
+    #     states.add("obj_not_inside_closed_container")
+
+    # return states
+    # Read properties from environment nodes
     try:
         for node in env_dict.get("nodes", []):
-            node_states = [s.upper() for s in node.get("states", [])]
-            props       = [p.upper() for p in node.get("properties", [])]
-
-            if "OPEN" in node_states:
-                states.add("open")
-                states.add("obj_not_inside_closed_container")
-                states.add("target_open_or_not_openable")
-                has_open = True
-            if "CLOSED" in node_states:
-                states.add("closed")
-                has_closed = True
-            if "ON" in node_states:
-                states.add("on")
-            if "OFF" in node_states:
-                states.add("off")
-            if "PLUGGED_IN" in node_states:
-                states.add("plugged_in")
+            props = [p.upper() for p in node.get("properties", [])]
             if "HAS_SWITCH" in props:
                 states.add("has_switch")
-            if "HAS_PLUG" in props:
-                states.add("has_plug")
             if "CAN_OPEN" in props:
                 states.add("can_open")
+            if "HAS_PLUG" in props:
+                states.add("has_plug")
     except Exception:
         pass
 
-    # If no explicit closed container found, assume objects are accessible
-    if not has_closed:
-        states.add("obj_not_inside_closed_container")
-
+    # Default states
+    states.add("not_both_hands_full")
+    states.add("grabbable")
+    states.add("obj_not_inside_closed_container")
+    states.add("plugged_in")
     return states
 
 
