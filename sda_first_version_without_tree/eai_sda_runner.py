@@ -53,10 +53,10 @@ logger = logging.getLogger(__name__)
 
 API_PROVIDER = "openai"                          # "groq" | "openai" | "gemini"
 API_KEY      = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
-MODEL        = "gpt-4o-mini"                     # model name for the provider
-MODEL_NAME   = "gpt-4o-mini-sda"                 # used for output filename
+MODEL        = "gpt-4o"                     # model name for the provider
+MODEL_NAME   = "gpt-4o-sda_withouttree"                 # used for output filename
 
-MAX_REPLAN    = 3
+MAX_REPLAN    = 5
 SCENEGRAPH_ID = 1
 
 RESOURCE_DIR   = "/usr/local/lib/python3.8/dist-packages/virtualhome_eval/resources"
