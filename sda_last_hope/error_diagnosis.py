@@ -249,6 +249,28 @@ def diagnose_error(
         result.t_end           = failed_step.index
         return result
 
+    # ── ALREADY SATISFIED: the action's positive effects are already true ─────
+    # e.g. SWITCHON <light> fails because light is already ON (off unsatisfied)
+    #      OPEN <fridge> fails because fridge is already OPEN
+    #      SWITCHOFF <light> fails because light is already OFF
+    # In these cases the goal state is already achieved — remove the action
+    # from the plan rather than trying to replan around it.
+    positive_effects = [e for e in get_effects(failed_step.action)
+                        if not e.startswith("not_")]
+    if positive_effects:
+        all_already_true = all(
+            tracker.model.satisfies(e, failed_step.obj, failed_step.target)
+            for e in positive_effects
+        )
+        if all_already_true:
+            result.replan_strategy   = "already_satisfied"
+            result.root_cause        = failed_step
+            result.root_cause_at     = failed_step.index
+            result.t_start           = failed_step.index
+            result.t_end             = failed_step.index
+            result.unsatisfied_needs = []
+            return result
+
     # ── WRONG ACTION: action is semantically wrong for this object ────────────
     # Detected when holds_obj is unsatisfied but the obj is not grabbable
     # (e.g. PUTON <washing_machine> — washing_machine can't be held).

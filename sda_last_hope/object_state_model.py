@@ -26,13 +26,16 @@ class ObjectStateModel:
     """
 
     def __init__(self):
-        self.object_states: dict = {}   # obj -> set of state strings
-        self.relations:     dict = {}   # (from, to) -> set of relation strings
-        self.container_of:  dict = {}   # obj -> its direct container
-        self.hand_right:    str  = None  # object held in right hand
-        self.hand_left:     str  = None  # object held in left hand
-        self.char_sitting:  bool = False
-        self.char_lying:    bool = False
+        self.object_states: dict = {}   # obj_name -> set of state strings (merged across instances)
+        self.object_states_by_id: dict = {}  # obj_id -> set of state strings (per instance)
+        self.id_to_name: dict  = {}     # obj_id -> class_name
+        self.name_to_ids: dict = {}     # class_name -> list of ids
+        self.relations:   dict = {}     # (from_name, to_name) -> set of relation strings
+        self.container_of: dict = {}    # obj_name -> its direct container
+        self.hand_right:   str  = None
+        self.hand_left:    str  = None
+        self.char_sitting: bool = False
+        self.char_lying:   bool = False
 
     # ──────────────────────────────────────────────────────────────────────────
     # Loaders
@@ -55,12 +58,14 @@ class ObjectStateModel:
 
         id_to_name: dict = {}
 
-        # ── Pass 1: nodes → object_states ────────────────────────────────────
+        # ── Pass 1: nodes → object_states_by_id + merged object_states ─────────
         for node in env_dict.get("nodes", []):
             name = node.get("class_name", "").lower().strip()
             nid  = node.get("id")
             if nid is not None:
-                id_to_name[nid] = name
+                id_to_name[nid]       = name
+                m.id_to_name[nid]     = name
+                m.name_to_ids.setdefault(name, []).append(nid)
 
             states = {s.upper() for s in node.get("states", [])}
             props  = {p.upper() for p in node.get("properties", [])}
@@ -69,15 +74,10 @@ class ObjectStateModel:
             # VirtualHome convention: devices start OFF unless explicitly ON;
             # containers start CLOSED unless explicitly OPEN;
             # devices start PLUGGED_IN unless explicitly PLUGGED_OUT.
-            # Without these defaults ObjectStateModel incorrectly reports
-            # preconditions like "off" as unsatisfied even when the object
-            # has never been touched.
             if "HAS_SWITCH" in props:
                 if "ON" not in states:
                     states.add("OFF")
-                if "OFF" not in states:
-                    states.discard("OFF")   # ON wins if explicitly set
-                # EAI assumes all devices are plugged in (PLUGIN/PLUGOUT don't exist)
+                # EAI assumes all devices are plugged in
                 if "PLUGGED_OUT" not in states:
                     states.add("PLUGGED_IN")
 
@@ -88,14 +88,22 @@ class ObjectStateModel:
             if "CAN_OPEN" in props:
                 if "OPEN" not in states:
                     states.add("CLOSED")
-                if "CLOSED" not in states:
-                    states.discard("CLOSED")  # OPEN wins if explicitly set
 
-            # Merge states and properties into a single set per object.
-            # Properties are permanent (GRABBABLE, CAN_OPEN …) while states
-            # are dynamic (OPEN, CLOSED, ON, OFF …) — storing them together
-            # lets satisfies() use one lookup for both.
-            m.object_states[name] = states | props
+            combined = states | props
+
+            # Store per-ID (exact state of this specific instance)
+            if nid is not None:
+                m.object_states_by_id[nid] = combined
+
+            # Store merged by name:
+            # - Properties (permanent): union across all instances
+            # - Dynamic states (ON/OFF, OPEN/CLOSED): keep ALL variants —
+            #   a name has a state if ANY instance has it. This is optimistic
+            #   but correct for planning: if one light is OFF we can SWITCHON it.
+            if name not in m.object_states:
+                m.object_states[name] = set(combined)
+            else:
+                m.object_states[name] |= combined
 
             # Extract character posture from the scene graph when available
             if name == "character":
@@ -130,13 +138,16 @@ class ObjectStateModel:
 
     def copy(self) -> "ObjectStateModel":
         new = ObjectStateModel()
-        new.object_states = {k: set(v) for k, v in self.object_states.items()}
-        new.relations     = {k: set(v) for k, v in self.relations.items()}
-        new.container_of  = dict(self.container_of)
-        new.hand_right    = self.hand_right
-        new.hand_left     = self.hand_left
-        new.char_sitting  = self.char_sitting
-        new.char_lying    = self.char_lying
+        new.object_states       = {k: set(v) for k, v in self.object_states.items()}
+        new.object_states_by_id = {k: set(v) for k, v in self.object_states_by_id.items()}
+        new.id_to_name          = dict(self.id_to_name)
+        new.name_to_ids         = {k: list(v) for k, v in self.name_to_ids.items()}
+        new.relations           = {k: set(v) for k, v in self.relations.items()}
+        new.container_of        = dict(self.container_of)
+        new.hand_right          = self.hand_right
+        new.hand_left           = self.hand_left
+        new.char_sitting        = self.char_sitting
+        new.char_lying          = self.char_lying
         return new
 
     # ──────────────────────────────────────────────────────────────────────────

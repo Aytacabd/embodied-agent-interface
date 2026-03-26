@@ -350,14 +350,15 @@ def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
 
 def plan_to_json_str(eai_actions: list) -> str:
     """
-    Convert EAI action list to JSON string with object names only (no IDs).
+    Convert EAI action list to JSON string for the evaluator.
 
-    EAI format  :  [WALK] <light> (245)
-    Output      :  {"WALK": ["light"]}
+    EAI internal format : [WALK] <light> (245)
+    Required output     : {"WALK": ["light"]}
+    2-arg output        : {"PUTIN": ["clothes", "washing_machine"]}
 
-    Numeric IDs are internal to EAI and must not appear in saved output.
-    Preserves duplicate action keys via manual string building (standard
-    json.dumps would deduplicate them).
+    The evaluator matches on object names only — IDs are internal to EAI
+    execution and must NOT appear in the saved output.
+    Duplicate action keys are preserved via manual string building.
     """
     parts = []
     for action in eai_actions:
@@ -600,6 +601,25 @@ class EAISDATreeRunner:
 
             before = history_actions[:max(0, t_start - 1)]
             after  = current_plan_eai[t_end:]
+
+            # ── Already satisfied: goal state already true → drop the action ──
+            if diagnosis.replan_strategy == "already_satisfied":
+                logger.info(f"  ✅ Goal already met — removing redundant: {failed_action}")
+                # Remove just this one action from the plan and retry
+                current_plan_eai = [a for i, a in enumerate(current_plan_eai)
+                                    if a != failed_action or i < len(history_actions)]
+                # Safer: remove the first occurrence after the history boundary
+                boundary = len(history_actions)
+                removed  = False
+                new_plan = []
+                for i, a in enumerate(current_plan_eai):
+                    if not removed and i >= boundary and a == failed_action:
+                        removed = True   # skip this one occurrence
+                    else:
+                        new_plan.append(a)
+                current_plan_eai = new_plan
+                raw_output       = plan_to_json_str(current_plan_eai)
+                continue
 
             # ── Local replan with Unsat=[] → go straight to LLM ──────────────
             if diagnosis.replan_strategy == "local" and not diagnosis.unsatisfied_needs:
