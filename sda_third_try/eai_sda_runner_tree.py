@@ -527,8 +527,8 @@ class EAISDATreeRunner:
             # Use env state just before the failure for accurate diagnosis
             env_at_failure   = (history_env_states[-1]
                                 if history_env_states else initial_env_state)
-            char_sitting, char_lying = get_char_state(initial_env_state)
-
+            char_sitting, char_lying = get_char_state(env_at_failure)
+            
             exec_steps      = [parse_eai_action(a, i + 1)
                                for i, a in enumerate(history_actions)]
             failed_step     = parse_eai_action(failed_action, len(exec_steps) + 1)

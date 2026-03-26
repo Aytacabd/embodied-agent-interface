@@ -34,7 +34,7 @@ SDG = {
     },
     # PDDL find: precondition (next_to ?char ?obj)
     "FIND": {
-        "needs":   ["next_to_obj"],
+        "needs":   [],              # navigates automatically, no prior state needed
         "effects": ["next_to_obj"],
         "is_prep": True,
     },

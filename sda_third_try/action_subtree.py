@@ -28,11 +28,23 @@ class TreeState:
     """Tracks abstract states during BFS search."""
 
     def __init__(self, initial_states: set):
-        self.states = set(initial_states)
+        self.states     = set(initial_states)
+        self.hand_count = 0  # tracks how many objects are held
 
     def copy(self):
-        return TreeState(set(self.states))
+        new            = TreeState(set(self.states))
+        new.hand_count = self.hand_count
+        return new
 
+    # def apply(self, action: str):
+    #     """Apply action effects."""
+    #     for effect in get_effects(action.upper()):
+    #         if effect.startswith("not_"):
+    #             self.states.discard(effect[4:])
+    #             self.states.add(effect)
+    #         else:
+    #             self.states.add(effect)
+    #             self.states.discard(f"not_{effect}")
     def apply(self, action: str):
         """Apply action effects."""
         for effect in get_effects(action.upper()):
@@ -42,6 +54,30 @@ class TreeState:
             else:
                 self.states.add(effect)
                 self.states.discard(f"not_{effect}")
+        # Container state (mirrors StateTracker logic)
+        if action.upper() == "OPEN":
+            self.states.add("obj_not_inside_closed_container")
+            self.states.add("target_open_or_not_openable")
+        elif action.upper() == "CLOSE":
+            self.states.discard("obj_not_inside_closed_container")
+            self.states.discard("target_open_or_not_openable")
+        # Hand tracking
+        if action.upper() == "GRAB":
+            self.hand_count += 1
+            self.states.add("holds_obj")
+            self.states.discard("not_holds_obj")
+            if self.hand_count >= 2:
+                self.states.add("both_hands_full")
+                self.states.discard("not_both_hands_full")
+        elif action.upper() in ("PUTBACK", "PUTIN", "DROP", "PUTON",
+                                "PUTOFF", "PUTOBJBACK", "POUR"):
+            self.hand_count = max(0, self.hand_count - 1)
+            if self.hand_count < 2:
+                self.states.discard("both_hands_full")
+                self.states.add("not_both_hands_full")
+            if self.hand_count == 0:
+                self.states.discard("holds_obj")
+                self.states.add("not_holds_obj")
 
     def satisfies(self, preconditions: list) -> bool:
         """Check all preconditions hold."""
@@ -249,8 +285,14 @@ def build_and_search_tree(
             if not satisfied(action, current.state):
                 continue
 
-            # Constraint 2: change(Aj, G)
-            if not changes_state(action):
+            # # Constraint 2: change(Aj, G)
+            # if not changes_state(action):
+            #     continue
+            # Constraint 2: change(Aj, G) — allow zero-effect actions only as terminal leaf
+            simulated = current.state.copy()
+            simulated.apply(action)
+            is_terminal = _achieves_target(simulated, target_effects)
+            if not changes_state(action) and not is_terminal:
                 continue
 
             # Constraint 3: notCovered(At, Aj)
@@ -293,7 +335,7 @@ def _extract_path(node: TreeNode) -> list:
 # Initial State Builder
 # =============================================================================
 
-def _build_initial_state(env_dict: dict, char_sitting: bool, char_lying: bool) -> set:
+def _build_initial_state(env_dict: dict, char_sitting: bool, char_lying: bool, error_objects: set = None) -> set:
     """
     Build initial state set from EAI environment dictionary.
     Reads actual object states AND properties from the scene graph.
@@ -319,6 +361,11 @@ def _build_initial_state(env_dict: dict, char_sitting: bool, char_lying: bool) -
 
     try:
         for node in env_dict.get("nodes", []):
+            # Only read states for objects relevant to the error
+            name = node.get("class_name", "")
+            if error_objects and name not in error_objects:
+                continue
+
             node_states = [s.upper() for s in node.get("states", [])]
             props       = [p.upper() for p in node.get("properties", [])]
 
@@ -379,7 +426,7 @@ def generate_replacement_subsequence(
     Returns list of EAI-format action dicts, or [] if tree fails.
     """
     initial_states = _build_initial_state(
-        initial_state_dict, char_sitting, char_lying
+    initial_state_dict, char_sitting, char_lying, error_objects
     )
     initial_state  = TreeState(initial_states)
 

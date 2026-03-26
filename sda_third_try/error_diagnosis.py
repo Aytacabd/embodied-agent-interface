@@ -33,7 +33,6 @@ STATIC_PROPERTIES = {
     "grabbable", "has_switch", "can_open", "has_plug", "has_plug_or_switch",
     "eatable", "drinkable_or_recipient", "readable", "movable", "lookable",
     "sittable", "lieable", "clothes", "recipient_target", "cuttable",
-    "sittable", "lieable", "movable", "readable", "eatable", "cuttable",
     "clothes", "hangable", "body_part", "person", "cover_object",
     "surfaces", "containers", "cream", "pourable", "drinkable",
 }
