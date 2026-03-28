@@ -1440,6 +1440,23 @@ def generate_replacement_subsequence(
                 # Inject WALK + OPEN for the actual container at the front
                 guaranteed_candidates.append(("WALK", container, None))
                 guaranteed_candidates.append(("OPEN", container, None))
+        # FIX 4a: also inject WALK + GRAB for the error objects themselves.
+        # The original failed action (GRAB dish_soap) is inside the replaced
+        # window [t_start, t_end], so it is NOT in `after`. Without these
+        # candidates the tree stops at OPEN(container) and GRAB is lost.
+        for obj in error_objects:
+            if obj not in container_targets:
+                continue   # only for objects that were inside containers
+            guaranteed_candidates.append(("WALK", obj, None))
+            guaranteed_candidates.append(("GRAB", obj, None))
+
+    # FIX 4b: for not_both_hands_full, inject DROP for whichever objects the
+    # character is actually holding. The LLM uses placeholder names like
+    # "object_in_hand" which don't exist in the scene and always fail the
+    # satisfied() check in BFS, so the tree never finds a DROP path.
+    if "not_both_hands_full" in needs_set:
+        for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
+            guaranteed_candidates.append(("DROP", held_obj, None))
 
     candidates = generate_candidate_nodes(
         llm_suggestions      = llm_suggestions,
@@ -1480,14 +1497,17 @@ def generate_replacement_subsequence(
         elif need in ("next_to_obj", "next_to_target"):
             target_effects.append(("check", "next_to_obj", None))
         elif need == "obj_not_inside_closed_container":
-            # Check that the container of the error object is open
+            # FIX 4c: require BOTH open(container) AND holds_obj(obj).
+            # Old code only checked open(container), so the tree stopped at
+            # OPEN and never produced WALK+GRAB — leaving the original GRAB
+            # action lost from the spliced plan.
             for obj in error_objects:
                 container = container_targets.get(obj) or initial_model.get_container(obj)
                 if container:
                     target_effects.append(("check", "open", container))
-                else:
-                    # Object not inside anything — already accessible
-                    pass
+                # Also require the character ends up holding the object
+                if obj != "character":
+                    target_effects.append(("check", "holds_obj", obj))
         elif need == "target_open_or_not_openable":
             for obj in error_objects:
                 container = container_targets.get(obj) or initial_model.get_container(obj)

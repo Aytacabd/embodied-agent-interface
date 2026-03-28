@@ -485,6 +485,9 @@ _CAN_OPEN_CL = frozenset(k for k, v in _VH_OBJECT_STATES.items()
 # Objects that can be PLUGGED/UNPLUGGED
 _CAN_PLUGGED = frozenset(k for k, v in _VH_OBJECT_STATES.items()
                           if "plugged" in v or "unplugged" in v)
+# Objects that are grabbable
+_CAN_GRAB    = frozenset(k for k, v in _VH_OBJECT_STATES.items()
+                          if "grabbed" in v)
 
 
 class ObjectStateModel:
@@ -558,14 +561,25 @@ class ObjectStateModel:
                 # EAI assumes all devices are plugged in
                 if "PLUGGED_OUT" not in states:
                     states.add("PLUGGED_IN")
+                # FIX 1: ensure inferred property is always explicit in combined.
+                # At runtime, env_state.to_dict() sometimes omits properties for
+                # objects the EAI derived from its catalogue rather than the scene.
+                # Without this, BFS precondition checks like can_open / has_switch
+                # silently return False and the tree always fails for those objects.
+                props.add("HAS_SWITCH")
 
             if "HAS_PLUG" in props or name in _CAN_PLUGGED:
                 if "PLUGGED_OUT" not in states and "PLUGGED_IN" not in states:
                     states.add("PLUGGED_IN")
+                props.add("HAS_PLUG")
 
-            if ("CAN_OPEN" in props or name in _CAN_OPEN_CL):
+            if "CAN_OPEN" in props or name in _CAN_OPEN_CL:
                 if "OPEN" not in states and "CLOSED" not in states:
                     states.add("CLOSED")   # default: closed
+                props.add("CAN_OPEN")
+                
+            if "GRABBABLE" in props or name in _CAN_GRAB:
+                props.add("GRABBABLE")
 
             combined = states | props
 
@@ -590,6 +604,27 @@ class ObjectStateModel:
                 if "LYING" in states:
                     m.char_lying = True
 
+        # # ── Pass 2: edges → relations + container_of ─────────────────────────
+        # for edge in env_dict.get("edges", []):
+        #     from_id   = edge.get("from_id")
+        #     to_id     = edge.get("to_id")
+        #     rel       = edge.get("relation_type", "").upper()
+        #     from_name = id_to_name.get(from_id, "").lower()
+        #     to_name   = id_to_name.get(to_id,   "").lower()
+        #     if not from_name or not to_name:
+        #         continue
+
+        #     key = (from_name, to_name)
+        #     m.relations.setdefault(key, set()).add(rel)
+
+        #     if rel == "INSIDE":
+        #         m.container_of[from_name] = to_name
+
+        #     if from_name == "character":
+        #         if rel == "HOLDS_RH":
+        #             m.hand_right = to_name
+        #         elif rel == "HOLDS_LH":
+        #             m.hand_left = to_name
         # ── Pass 2: edges → relations + container_of ─────────────────────────
         for edge in env_dict.get("edges", []):
             from_id   = edge.get("from_id")
@@ -604,7 +639,14 @@ class ObjectStateModel:
             m.relations.setdefault(key, set()).add(rel)
 
             if rel == "INSIDE":
-                m.container_of[from_name] = to_name
+                # FIX: Only store as container if to_name is an actual container
+                # (has CAN_OPEN or CONTAINERS property). This prevents room membership
+                # (dish_soap INSIDE dining_room) from being mistaken for container access,
+                # which caused get_container() to return "dining_room" instead of the
+                # real container, making the tree try to OPEN a room.
+                to_states = m.object_states.get(to_name, set())
+                if "CAN_OPEN" in to_states or "CONTAINERS" in to_states:
+                    m.container_of[from_name] = to_name
 
             if from_name == "character":
                 if rel == "HOLDS_RH":
@@ -659,10 +701,19 @@ class ObjectStateModel:
         """Return direct container of obj, or None if not inside anything."""
         return self.container_of.get(obj.lower())
 
+    # def container_is_open(self, obj: str) -> bool:
+    #     """True if obj has no container, or its immediate container is OPEN."""
+    #     container = self.get_container(obj)
+    #     if container is None:
+    #         return True
+    #     return self.has_state(container, "OPEN")
     def container_is_open(self, obj: str) -> bool:
         """True if obj has no container, or its immediate container is OPEN."""
         container = self.get_container(obj)
         if container is None:
+            return True
+        # Safety net: if container is not openable, treat as open
+        if not self.has_state(container, "CAN_OPEN"):
             return True
         return self.has_state(container, "OPEN")
 

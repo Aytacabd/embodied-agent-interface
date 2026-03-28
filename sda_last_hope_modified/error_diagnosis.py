@@ -136,7 +136,14 @@ class StateTracker:
         # any history by replaying actions onto a blank copy and tracking flips.
         # Simpler and correct: snapshot the satisfaction at each step.
 
-        last_violated_at = 1  # default: problem was in initial state
+        # FIX 2: Use None sentinel instead of 1 as default.
+        # If the precondition was NEVER satisfied in the history (e.g. dish_soap
+        # was always inside a closed cabinet), the old code returned 1, causing
+        # t_start=1 and before=[] which discarded all prior successful steps
+        # (e.g. GRAB plate already in hand). Returning t_error instead means
+        # t_start = failed_step.index and before preserves everything up to that
+        # point — the fix only needs to be inserted RIGHT BEFORE the failed step.
+        last_violated_at = None  # None = always broken from initial state
 
         # Start: check if precondition was satisfied BEFORE any action
         was_ok = self.model.satisfies(precondition, obj)
@@ -185,7 +192,41 @@ class StateTracker:
                 last_violated_at = step.index
             prev_ok = now_ok
 
+        # If the precondition was never satisfied from the start (no True→False
+        # flip found), return t_error so reconstruction starts at the failed step.
+        if last_violated_at is None:
+            return t_error
         return last_violated_at
+
+
+def _find_container_in_env(obj_name: str, env_dict: dict):
+    """
+    Given an object name and env dict, return the class_name of the container
+    that obj_name is INSIDE, or None if not found.
+
+    Used by error_diagnosis_tree.py to add the real container name to
+    error_objects so the tree and LLM receive a concrete object to open
+    rather than guessing a generic "container".
+    """
+    if not env_dict:
+        return None
+    nodes = env_dict.get("nodes", [])
+    edges = env_dict.get("edges", [])
+    obj_id = next(
+        (n["id"] for n in nodes if n.get("class_name") == obj_name),
+        None,
+    )
+    if obj_id is None:
+        return None
+    for edge in edges:
+        if (edge.get("relation_type") == "INSIDE"
+                and edge.get("from_id") == obj_id):
+            container_id = edge.get("to_id")
+            return next(
+                (n["class_name"] for n in nodes if n["id"] == container_id),
+                None,
+            )
+    return None
 
 
 def diagnose_error(
