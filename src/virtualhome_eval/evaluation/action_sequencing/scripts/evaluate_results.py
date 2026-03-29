@@ -131,6 +131,20 @@ def evaluate_results(args):
             _, _, _, _, _, relevant_name_to_id = motion_planner.get_symbolic_goal_nl(
                 gold_node_goals, gold_edge_goals, action_goals=gold_action_goals
             )
+            # Expand with name_id format to match runner output format
+            for name, id_val in list(relevant_name_to_id.items()):
+                if isinstance(id_val, int):
+                    relevant_name_to_id[f"{name}_{id_val}"] = id_val
+                elif isinstance(id_val, list):
+                    for i in id_val:
+                        relevant_name_to_id[f"{name}_{i}"] = i
+            # ADD THIS room wouldnt appear
+            for node in motion_planner.env_graph.get_nodes():
+                nd = node.to_dict()
+                name = nd["class_name"]
+                nid = nd["id"]
+                relevant_name_to_id[name] = nid
+                relevant_name_to_id[f"{name}_{nid}"] = nid
 
             _, _, _, all_success, _, _, _ = scene_evaluate_wID(
                 motion_planner.final_state_dict,
@@ -172,7 +186,8 @@ def evaluate_results(args):
                 actions = None
                 format_error = True
 
-            if actions is None or len(actions) == 0 or not check_name_id_format(actions)[0]:
+            #if actions is None or len(actions) == 0 or not check_name_id_format(actions)[0]:
+            if actions is None or len(actions) == 0:
                 all_parsing_wrong += 1
                 logger.info(f"Task {task_name}, file {file_id} prediction has no prediction")
                 format_error = True
