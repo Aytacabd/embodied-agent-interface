@@ -57,6 +57,9 @@ valid_actions = {
     "DROP": ("DROP", 1),
     "LIE": ("LIE", 1),
     "POUR": ("POUR", 2),
+    "PLUGIN": ("PLUGIN", 1),
+    "PLUGOUT": ("PLUGOUT", 1),
+    "RELEASE": ("RELEASE", 1),
 }
 
 state_transform_dictionary = {
@@ -89,7 +92,7 @@ def load_json_preserving_order(json_string):
     # Remove newlines and extra spaces
     json_string = re.sub(r"\s+", " ", json_string.strip())
     # Extract key-value pairs
-    pattern = r'"(\w+)"\s*:\s*(\[[^\]]+\])'
+    pattern = r'"(\w+)"\s*:\s*(\[[^\]]*\])'
     matches = re.findall(pattern, json_string)
     result = []
     for key, value in matches:

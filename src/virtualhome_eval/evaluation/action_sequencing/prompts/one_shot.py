@@ -36,8 +36,8 @@ Action commands include action names and objects. Each action's number of object
 
 Required output format:
 - []: Represents 0 objects.
-- [object_name, object_id]&#58; Represents 1 object.
-- [object1_name, object1_id, object2_name, object2_id]&#58; Represents 2 objects.
+- [object_name, object_id]: Represents 1 object.
+- [object1_name, object1_id, object2_name, object2_id]: Represents 2 objects.
 
 The output must be in JSON format, where:
 - Dictionary keys are action names.
@@ -57,42 +57,45 @@ For example:
 - SWITCHON has 1 object. To switch on something, the object should have property HAS_SWITCH.
   SWITCHON = ("Switch on", 1, [['HAS_SWITCH']])
 
-- POUR has 2 objects. To pour something A into something B, A should be POURABLE and DRINKABLE, and B should be RECIPIENT.
+- POUR has 2 objects. To pour something A into something B, A should be POURABLE or DRINKABLE, and B should be RECIPIENT.
   POUR = ("Pour", 2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']])
 
 Action Definitions Format:
 Each action is defined as a combination of:
 - Action Name (String): a descriptive name for the action
 - Required Number of Parameters (Integer): the count of parameters needed
-- Preconditions for Each Object (List of Lists of Strings): conditions that must be met for each object involved
+- Preconditions for Each Object (List of Lists of Strings): property conditions that must be met for each object involved
+
+Note: When multiple properties appear in the same inner list (e.g., ['POURABLE', 'DRINKABLE']), the object must have AT LEAST ONE of them (OR semantics). Each inner list corresponds to one object argument. Exception: CUT requires the object to have BOTH EATABLE and CUTTABLE (AND semantics, as noted in its definition).
 
 Supported Actions List:
 CLOSE: (1, [['CAN_OPEN']]) # Change state from OPEN to CLOSED
-DRINK: (1, [['DRINKABLE', 'RECIPIENT']]) # Consume a drinkable item
-FIND: (1, [[]]) # Locate and approach an item
+DRINK: (1, [['DRINKABLE', 'RECIPIENT']]) # Consume from an item that is DRINKABLE or is a RECIPIENT
+FIND: (1, [[]]) # Confirm presence of a nearby object; robot must already be next to it, no state-changing effect
 WALK: (1, [[]]) # Move towards something
 GRAB: (1, [['GRABBABLE']]) # Take hold of an item that can be grabbed
 LOOKAT: (1, [[]]) # Direct your gaze towards something
 OPEN: (1, [['CAN_OPEN']]) # Open an item that can be opened
 POINTAT: (1, [[]]) # Point towards something
-PUTBACK: (2, [['GRABBABLE'], []]) # Place one object back onto or onto a surface/object
-PUTIN: (2, [['GRABBABLE'], ['CAN_OPEN']]) # Insert one object into another
+PUTBACK: (2, [['GRABBABLE'], []]) # Place one object back onto a surface/object
+PUTIN: (2, [['GRABBABLE'], []]) # Insert one object into another (target may be openable or non-openable)
+PUTOBJBACK: (1, [['GRABBABLE']]) # Put an object back to its original place
 RUN: (1, [[]]) # Run towards something
 SIT: (1, [['SITTABLE']]) # Sit on a suitable object
 STANDUP: (0, []) # Stand up from a sitting or lying position
 SWITCHOFF: (1, [['HAS_SWITCH']]) # Turn off an item with a switch
 SWITCHON: (1, [['HAS_SWITCH']]) # Turn on an item with a switch
-TOUCH: (1, [[]]) # Physically touch something
+TOUCH: (1, [['READABLE']]) # Physically touch something
 TURNTO: (1, [[]]) # Turn your body to face something
-WATCH: (1, [[]]) # Observe something attentively
+WATCH: (1, [['LOOKABLE']]) # Observe something attentively
 WIPE: (1, [[]]) # Clean or dry something by rubbing
 PUTON: (1, [['CLOTHES']]) # Dress oneself with an item of clothing
 PUTOFF: (1, [['CLOTHES']]) # Remove an item of clothing
-GREET: (1, [['PERSON']]) # Offer a greeting to a person
+GREET: (1, [[]]) # Offer a greeting to someone nearby
 DROP: (1, [[]]) # Let go of something so it falls
 READ: (1, [['READABLE']]) # Read text from an object
 LIE: (1, [['LIEABLE']]) # Lay oneself down on an object
-POUR: (2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']]) # Transfer a liquid from one container to another
+POUR: (2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']]) # Pour from A (POURABLE or DRINKABLE) into B (RECIPIENT)
 PUSH: (1, [['MOVABLE']]) # Exert force on something to move it away from you
 PULL: (1, [['MOVABLE']]) # Exert force on something to bring it towards you
 MOVE: (1, [['MOVABLE']]) # Change the location of an object
@@ -100,39 +103,44 @@ WASH: (1, [[]]) # Clean something by immersing and agitating it in water
 RINSE: (1, [[]]) # Remove soap from something by applying water
 SCRUB: (1, [[]]) # Clean something by rubbing it hard with a brush
 SQUEEZE: (1, [['CLOTHES']]) # Compress clothes to extract liquid
-CUT: (1, [['EATABLE', 'CUTABLE']]) # Cut some food
+PLUGIN: (1, [['HAS_PLUG', 'HAS_SWITCH']]) # Plug in an object that has a plug or switch (HAS_PLUG or HAS_SWITCH)
+PLUGOUT: (1, [['HAS_PLUG']]) # Unplug an object that has a plug
+CUT: (1, [['EATABLE', 'CUTTABLE']]) # Cut some food — object must have BOTH EATABLE and CUTTABLE properties (AND semantics, not OR)
 EAT: (1, [['EATABLE']]) # Eat some food
+SLEEP: (0, []) # Go to sleep
+WAKEUP: (0, []) # Wake up from sleep
+RELEASE: (1, [[]]) # Drop something inside the current room
 TYPE: (1, [['HAS_SWITCH']]) # Type on a keyboard
 
 Important rules:
-1. CLOSE is the opposite of OPEN. CLOSE something means changing the object's state from OPEN to CLOSED.
+1. The subject of all actions is the character itself, that is, the robot. Do not include character as any action argument.
 
-2. You cannot PUTIN character into a room. If you want the robot to be inside a room, use WALK to the room.
+2. Before applying any action to an object, you should first WALK to that object unless the current state clearly shows that the robot is already NEAR it. If you WALK to pick up a tool and then need to use it on a different object, you must WALK back to that target object before applying the action.
 
-3. The subject of all actions is the character itself, that is, the robot. Do not include character as any action argument.
-
-4. The action name must be upper case without whitespace.
-
-5. Before applying any action to an object, you should first WALK to that object unless the current state clearly shows that the robot is already NEAR it.
-
-6. Every action argument must include both object name and object ID.
+3. Every action argument must include both object name and object ID.
 - For 1-object actions, output exactly: [object_name, object_id]
 - For 2-object actions, output exactly: [object1_name, object1_id, object2_name, object2_id]
 - Do not output only object names.
 - Do not omit IDs.
 
-7. When multiple objects share the same class name, you must use the exact object ID shown in the goals or scene description. Do not substitute a different instance of the same class.
+4. When multiple objects share the same class name, use the exact object ID shown in the goals or scene description. Do not substitute a different instance of the same class. Your plan must satisfy the specific goal instances, not just any object of the same class.
 
-8. Read the node goals and edge goals carefully. Your plan must satisfy the specific goal instances, not just any object of the same class.
-
-9. Output should not be empty. Always output some actions and their arguments.
-
-10. Every plan should be executable step by step. Respect object properties and action preconditions.
-
-11. Use PUTIN for enclosed containers such as fridge, dishwasher, washing_machine, microwave, cabinet, box, bag, or trashcan.
+5. Use PUTIN for enclosed containers such as fridge, dishwasher, washing_machine, microwave, cabinet, box, bag, or trashcan.
 Use PUTBACK for surfaces such as table, counter, desk, shelf, sofa, bench, chair, or nightstand.
 
-12. PUTON is only for wearing clothes on the robot body. Do not use PUTON for appliances or containers.
+6. Before using SWITCHON on an appliance, ensure it is plugged in. If the object is PLUGGED_OUT, use PLUGIN first, then SWITCHON.
+
+7. Before using WATCH or LOOKAT on an object, you must first use TURNTO to face that object.
+
+8. Use WALK for navigation. FIND requires the robot to already be near the object and has no state-changing effect. Only use FIND if it is explicitly required by the action goals.
+
+9. DRINK, READ, and TOUCH require holding the object. PUTIN and PUTBACK require holding the first object. Use WALK + GRAB before these actions when needed. WIPE requires holding a wiping tool such as a rag, sponge, towel, cloth, napkin, brush, or paper_towel; then WALK to the target surface and WIPE it.
+
+10. DROP and RELEASE both free your hand. Use DROP when you want the object to fall to the floor. Use RELEASE to let go of an object while staying in the current room (no specific surface needed).
+
+11. Before PUTIN into an openable container, if the container is CLOSED, WALK to the container and OPEN it first.
+
+12. Repeated action keys are allowed and represent repeated ordered actions. The evaluator preserves duplicate keys in order.
 
 Input:
 The relevant objects in the scene are:

@@ -793,6 +793,14 @@ class ObjectStateModel:
             return self.has_state(obj, "HAS_SWITCH")
         if precondition == "has_plug":
             return self.has_state(obj, "HAS_PLUG")
+        if precondition == "has_plug_or_has_switch":
+            return self.has_state(obj, "HAS_PLUG") or self.has_state(obj, "HAS_SWITCH")
+        if precondition == "pourable_or_drinkable":
+            return self.has_state(obj, "POURABLE") or self.has_state(obj, "DRINKABLE")
+        if precondition == "drinkable_or_recipient":
+            return self.has_state(obj, "DRINKABLE") or self.has_state(obj, "RECIPIENT")
+        if precondition == "target_is_recipient":
+            return self.has_state(target, "RECIPIENT")
         if precondition == "grabbable":
             return self.has_state(obj, "GRABBABLE")
         if precondition == "sittable":

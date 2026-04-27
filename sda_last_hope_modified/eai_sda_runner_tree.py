@@ -38,7 +38,6 @@ from virtualhome_eval.simulation.evolving_graph.eval_utils import (
 )
 from virtualhome_eval.simulation.evolving_graph.checker import TemporalOrderChecker
 
-from sdg import explain_precondition, is_prep_action
 from error_diagnosis_tree import diagnose_error_tree, get_unsatisfied_explanation
 from action_subtree import generate_replacement_subsequence
 
@@ -56,12 +55,15 @@ logger = logging.getLogger(__name__)
 API_PROVIDER = "openai"
 API_KEY = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
 MODEL = "gpt-4o"
-MODEL_NAME = f"{MODEL}-sda-tree_m"
+MODEL_NAME = f"{MODEL}-sda-tree_m_modifiedsdg"
 
 MAX_REPLAN = 3
 SCENEGRAPH_ID = 1
 TREE_MAX_DEPTH = 6
 TREE_MAX_NODES = 500
+
+VERBOSE = True        # show execution trace, responses, diagnosis
+SHOW_PROMPTS = False  # set True to also print full prompts sent to LLM
 
 RESOURCE_DIR = "/usr/local/lib/python3.8/dist-packages/virtualhome_eval/resources"
 DATASET_DIR = "/usr/local/lib/python3.8/dist-packages/virtualhome_eval/dataset"
@@ -88,6 +90,7 @@ EAI_VALID_ACTIONS = {
     "WASH", "GRAB", "SWITCHOFF", "SWITCHON", "CLOSE", "FIND", "WALK", "OPEN",
     "POINTAT", "PUTBACK", "PUTIN", "PUTOBJBACK", "RUN", "SIT", "STANDUP",
     "TURNTO", "WIPE", "PUTON", "PUTOFF", "GREET", "DROP", "LIE", "POUR",
+    "RELEASE", "PLUGIN", "PLUGOUT",
 }
 
 SYSTEM_PROMPT = """You are an embodied task planning assistant for a household robot in VirtualHome.
@@ -101,7 +104,7 @@ OUTPUT FORMAT - respond with ONLY a JSON object:
 {"ACTION": ["object"], "ACTION": ["object1", "object2"]}
 
 VALID ACTIONS:
-- 1 argument: DRINK, EAT, CUT, TOUCH, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO
+- 1 argument: DRINK, EAT, CUT, TOUCH, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
 - 2 arguments: PUTBACK, PUTIN, POUR
 - 0 arguments: STANDUP, SLEEP, WAKEUP
 
@@ -123,7 +126,7 @@ If an object is stored inside a closed container (cabinet, fridge, etc.), you MU
 WALK <container> → OPEN <container> → WALK <object> → GRAB <object>
 Never attempt GRAB without first opening the container the object is in.
 
-RULE 4 — PLUGIN/PLUGOUT do not exist. All devices are already plugged in.
+RULE 4 — Devices are plugged in by default. Only use PLUGIN if the scene explicitly shows a device as PLUGGED_OUT. PLUGOUT is rarely needed.
 
 RULE 5 — Max 2 objects held at once. DROP or PUTBACK before grabbing a third.
 
@@ -188,12 +191,28 @@ class LLMClient:
             raise ValueError(f"Unknown provider: {API_PROVIDER}")
         logger.info(f"LLM: {API_PROVIDER} / {MODEL}")
 
-    def call(self, user_prompt: str, system_prompt: str = None) -> str:
+    def call(self, user_prompt: str, system_prompt: str = None, label: str = "LLM") -> str:
         if system_prompt is None:
             system_prompt = SYSTEM_PROMPT
+        sep = "─" * 60
+        if VERBOSE and SHOW_PROMPTS:
+            print(f"\n{sep}")
+            print(f"[{label}] PROMPT SENT ▼")
+            print(user_prompt)
+            print(sep)
+        t0 = time.time()
         if self.provider == "openai_style":
-            return self._call_openai(user_prompt, system_prompt)
-        return self._call_gemini(user_prompt, system_prompt)
+            result = self._call_openai(user_prompt, system_prompt)
+        else:
+            result = self._call_gemini(user_prompt, system_prompt)
+        elapsed = time.time() - t0
+        if VERBOSE:
+            print(f"[{label}] RESPONSE RECEIVED ({elapsed:.2f}s) ▼", flush=True)
+            print(result, flush=True)
+            print(sep, flush=True)
+        else:
+            logger.info(f"  [{label}] {elapsed:.2f}s | {result}")
+        return result
 
     def _call_openai(self, user_prompt: str, system_prompt: str) -> str:
         try:
@@ -241,12 +260,6 @@ class LLMClient:
 
 def parse_llm_output(raw: str):
     raw = re.sub(r"```[a-z]*", "", raw).strip().strip("`").strip()
-    raw = re.sub(
-        r'"(STANDUP|SLEEP|WAKEUP)"\s*:\s*\[\]',
-        r'"\1": ["character"]',
-        raw,
-        flags=re.IGNORECASE,
-    )
     match = re.search(r"\{.*\}", raw, re.DOTALL)
     if not match:
         return []
@@ -789,9 +802,14 @@ class EAISDATreeRunner:
         fallback_count = 0
         raw_output = ""
 
+        if VERBOSE:
+            print(f"\n{'='*60}", flush=True)
+            print(f"TASK: {file_id}  |  {task_name}", flush=True)
+            print(f"{'='*60}", flush=True)
+
         # ── Generate initial plan ─────────────────────────────────────────────
-        raw_output = self.llm.call(base_prompt)
-        logger.info(f"  Initial plan: {raw_output[:100]}...")
+        raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
+        logger.info(f"  Initial plan: {raw_output}")
 
         actions = parse_and_validate(raw_output, relevant_name_to_id)
         if not actions:
@@ -815,7 +833,13 @@ class EAISDATreeRunner:
             skipped_indices = set()
 
             # ── Execute current plan ──────────────────────────────────────────
+            if VERBOSE:
+                print(f"\n  {'─'*50}")
+                print(f"  EXECUTING PLAN (attempt {attempt+1}) — {len(current_plan_eai)} actions")
+                print(f"  {'─'*50}")
             for action_idx, action in enumerate(current_plan_eai):
+                if VERBOSE:
+                    print(f"  [{action_idx+1:02d}] {action}", end="  →  ", flush=True)
                 exe_flag, my_info = motion_planner.my_execute_primitive_action_eval(action)
 
                 if not exe_flag:
@@ -829,15 +853,30 @@ class EAISDATreeRunner:
                         err_type = "UNKNOWN_ERROR"
 
                     if err_type == "ADDITIONAL_STEP":
-                        logger.info(f"  ⏭️  Skipping: {action}")
+                        if VERBOSE:
+                            print(f"SKIPPED (ADDITIONAL_STEP)")
+                        else:
+                            logger.info(f"  ⏭️  Skipping: {action}")
                         skipped_indices.add(action_idx)
                         continue
 
+                    if err_type == "UNSEEN_OBJECT":
+                        if VERBOSE:
+                            print("SKIPPED (UNSEEN_OBJECT — object not in scene)")
+                        else:
+                            logger.info(f"  ⏭️  Skipping unseen object: {action}")
+                        skipped_indices.add(action_idx)
+                        continue
+
+                    if VERBOSE:
+                        print(f"FAILED [{err_type}]")
                     executable = False
                     failed_action = action
                     logger.info(f"  ❌ {action} | {err_type}")
                     break
                 else:
+                    if VERBOSE:
+                        print("OK")
                     history_actions.append(action)
                     history_env_states.append(
                         copy.deepcopy(motion_planner.env_state.to_dict())
@@ -856,10 +895,16 @@ class EAISDATreeRunner:
                         if skipped_indices else ""
                     )
                 )
+                if VERBOSE:
+                    print(f"\n  FINAL OUTPUT SAVED:", flush=True)
+                    print(f"  {raw_output}", flush=True)
                 break
 
             if attempt == MAX_REPLAN:
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
+                if VERBOSE:
+                    print(f"\n  FINAL OUTPUT SAVED (max replans reached):", flush=True)
+                    print(f"  {raw_output}", flush=True)
                 break
 
             # ── SDA Error Backtrack and Diagnosis ─────────────────────────────
@@ -895,6 +940,14 @@ class EAISDATreeRunner:
                     f"Window: [{diagnosis.t_start},{diagnosis.t_end}] | "
                     f"Unsat: {diagnosis.unsatisfied_needs}"
                 )
+                if VERBOSE:
+                    print(f"\n  ERROR DIAGNOSIS:")
+                    print(f"    Failed action    : {failed_action}")
+                    print(f"    Error type       : {err_type}")
+                    print(f"    Replan strategy  : {diagnosis.replan_strategy}")
+                    print(f"    Repair window    : [{diagnosis.t_start}, {diagnosis.t_end}]")
+                    print(f"    Unsatisfied needs: {diagnosis.unsatisfied_needs}")
+                    print(f"    Error objects    : {error_objects}")
             except Exception as e:
                 logger.warning(f"  Diagnosis failed: {e}", exc_info=True)
                 break
@@ -908,19 +961,29 @@ class EAISDATreeRunner:
             before = history_actions[:max(0, t_start - 1)]
             after = current_plan_eai[t_end:]
 
+            # ── Action already satisfied: goal is already true, just remove it ─
+            if diagnosis.replan_strategy == "already_satisfied":
+                replan_count -= 1
+                idx = failed_step.index - 1
+                current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
+                raw_output = plan_to_json_str(current_plan_eai)
+                if VERBOSE:
+                    print(f"\n  ACTION ALREADY SATISFIED — removed: {failed_action}")
+                continue
+
             # ── Special handling: semantically wrong action ───────────────────
-            if diagnosis.replan_strategy == "replace_wrong_action":
+            if diagnosis.replan_strategy == "wrong_action":
                 wrong_prompt = WRONG_ACTION_PROMPT.format(
                     failed_action=failed_action,
                     reason=get_unsatisfied_explanation(diagnosis.unsatisfied_needs),
                 )
-                wrong_raw = self.llm.call(wrong_prompt, system_prompt=SYSTEM_PROMPT)
+                wrong_raw = self.llm.call(wrong_prompt, system_prompt=SYSTEM_PROMPT, label="WRONG ACTION FIX")
                 new_subseq = parse_and_validate(wrong_raw, relevant_name_to_id)
 
                 if new_subseq:
-                    current_plan_eai = history_actions + new_subseq
+                    current_plan_eai = history_actions + new_subseq + after
                     raw_output = plan_to_json_str(current_plan_eai)
-                    logger.info(f"  🔄 Replaced with: {wrong_raw[:80]}...")
+                    logger.info(f"  🔄 Replaced with: {wrong_raw}")
                 else:
                     fallback_raw = self.llm.call(base_prompt)
                     new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id)
@@ -937,16 +1000,21 @@ class EAISDATreeRunner:
                     diagnosis.unsatisfied_needs
                 ),
             )
-            suggestion_raw = self.llm.call(suggestion_prompt, system_prompt=SYSTEM_PROMPT)
+            suggestion_raw = self.llm.call(suggestion_prompt, system_prompt=SYSTEM_PROMPT, label=f"SUGGESTION (replan {replan_count})")
             llm_suggestions = parse_llm_output(suggestion_raw)
             llm_suggestions = filter_valid_actions(llm_suggestions) if llm_suggestions else []
             if isinstance(llm_suggestions, dict):
                 llm_suggestions = [{k: v} for k, v in llm_suggestions.items()]
 
-            logger.info(f"  💡 LLM suggestions: {suggestion_raw[:80]}...")
+            logger.info(f"  💡 LLM suggestions: {suggestion_raw}")
 
             # ── Step 2: BFS search tree ───────────────────────────────────────
-            state_at_tstart = env_at_failure
+            tstart_hist_idx = t_start - 1
+            state_at_tstart = (
+                history_env_states[tstart_hist_idx]
+                if tstart_hist_idx < len(history_env_states)
+                else env_at_failure
+            )
 
             orig_subseq_dicts = []
             for s in orig_subseq:
@@ -969,21 +1037,29 @@ class EAISDATreeRunner:
 
             if tree_result:
                 logger.info(f"  🌳 Tree found: {tree_result}")
+                if VERBOSE:
+                    print(f"\n  TREE SEARCH RESULT: {tree_result}")
                 tree_success += 1
                 new_subseq = subtree_results_to_eai(tree_result, relevant_name_to_id)
             else:
                 logger.info("  🌳 Tree failed — no fallback (tree-only mode)")
+                if VERBOSE:
+                    print(f"\n  TREE SEARCH: no solution found")
                 new_subseq = None
 
             if not new_subseq:
                 continue
 
             # ── Splice replacement into plan ──────────────────────────────────
-            current_plan_eai = before + new_subseq + after
+            # Retain the failed action(s) after the repair sequence so that
+            # prep-style fixes (WALK, OPEN, etc.) are followed by a retry of
+            # the original action rather than silently dropping it.
+            failed_eai = current_plan_eai[t_start - 1 : t_end]
+            current_plan_eai = before + new_subseq + failed_eai + after
             raw_output = plan_to_json_str(current_plan_eai)
             logger.info(
                 f"  Spliced: {len(before)} + {len(new_subseq)} + "
-                f"{len(after)} = {len(current_plan_eai)}"
+                f"{len(failed_eai)} (retry) + {len(after)} = {len(current_plan_eai)}"
             )
 
         return raw_output, replan_count, tree_success, fallback_count
