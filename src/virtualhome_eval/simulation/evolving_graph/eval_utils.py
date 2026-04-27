@@ -92,7 +92,8 @@ def load_json_preserving_order(json_string):
     # Remove newlines and extra spaces
     json_string = re.sub(r"\s+", " ", json_string.strip())
     # Extract key-value pairs
-    pattern = r'"(\w+)"\s*:\s*(\[[^\]]*\])'
+    #pattern = r'"(\w+)"\s*:\s*(\[[^\]]*\])'
+    pattern = r'"(\w+)"\s*:\s*(\[\s*\]|\[[^\]]+\])'
     matches = re.findall(pattern, json_string)
     result = []
     for key, value in matches:
@@ -294,13 +295,32 @@ def json_to_action(action_list, relevant_name_to_id):
         for action, objects in action_json.items():
             if len(objects) == 0:
                 actions.append(f"[{action}]")
-            elif len(objects) == 2:
-                obj_name1 = objects[0]
-                obj_id1 = objects[1]
-                key1 = f"{obj_name1}_{obj_id1}"
+            elif len(objects) == 1:
+                # Combined name_id format: ["light_245"] (produced by parse_and_validate)
+                key1 = objects[0]
+                obj_name1 = key1.rsplit("_", 1)[0]
                 obg_id1 = relevant_name_to_id[key1]
                 actions.append(f"[{action}] <{obj_name1}> ({obg_id1})")
+            elif len(objects) == 2:
+                if str(objects[1]).isdigit():
+                    # Old interleaved format for 1-arg action: ["light", "245"]
+                    obj_name1 = objects[0]
+                    obj_id1 = objects[1]
+                    key1 = f"{obj_name1}_{obj_id1}"
+                    obg_id1 = relevant_name_to_id[key1]
+                    actions.append(f"[{action}] <{obj_name1}> ({obg_id1})")
+                else:
+                    # Combined name_id format for 2-arg action: ["apple_7", "fridge_2"]
+                    key1, key2 = objects[0], objects[1]
+                    obj_name1 = key1.rsplit("_", 1)[0]
+                    obj_name2 = key2.rsplit("_", 1)[0]
+                    obg_id1 = relevant_name_to_id[key1]
+                    obg_id2 = relevant_name_to_id[key2]
+                    actions.append(
+                        f"[{action}] <{obj_name1}> ({obg_id1}) <{obj_name2}> ({obg_id2})"
+                    )
             elif len(objects) == 4:
+                # Old interleaved format for 2-arg action: ["apple", "7", "fridge", "2"]
                 obj_name1 = objects[0]
                 obj_id1 = objects[1]
                 obj_name2 = objects[2]
@@ -1148,8 +1168,6 @@ def check_action_grammar(action_list):
     for action_dict in action_list:
         for predicate_name, params in action_dict.items():
             params.remove("") if "" in params else None
-            # if len(params) != valid_actions[predicate_name][1]:
-            # edit by shiwenxuan
             if len(params) // 2 != valid_actions[predicate_name][1]:
                 logger.info(
                     f"Action {predicate_name} has {params} arguments, but expected number is {valid_actions[predicate_name][1]}"

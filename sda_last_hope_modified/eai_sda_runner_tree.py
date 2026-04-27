@@ -33,8 +33,7 @@ import virtualhome_eval.simulation.evolving_graph.utils as utils
 from virtualhome_eval.simulation.evolving_graph.eval_utils import (
     construct_planner,
     json_to_action,
-    check_action_grammar,
-    load_json_preserving_order,
+    valid_actions as _eai_valid_actions,
 )
 from virtualhome_eval.simulation.evolving_graph.checker import TemporalOrderChecker
 
@@ -264,7 +263,14 @@ def parse_llm_output(raw: str):
     if not match:
         return []
     try:
-        return load_json_preserving_order(match.group(0))
+        json_str = re.sub(r"\s+", " ", match.group(0).strip())
+        # [^\]]* (not +) so empty arrays like "STANDUP": [] are captured
+       #pattern = r'"(\w+)"\s*:\s*(\[[^\]]*\])'
+        pattern = r'"(\w+)"\s*:\s*(\[\s*\]|\[[^\]]+\])'
+        matches = re.findall(pattern, json_str)
+        if not matches:
+            return []
+        return [{key: json.loads(value)} for key, value in matches]
     except Exception:
         return []
 
@@ -327,6 +333,19 @@ def _normalize_name_id_token(token: str) -> str:
     if m:
         return f"{m.group(1)}_{m.group(2)}"
     return s
+
+
+def _check_grammar_combined(action_list):
+    """Grammar check for combined name_id format (1 string per object) used internally."""
+    for item in action_list:
+        for action, params in item.items():
+            if action not in _eai_valid_actions:
+                return False, f"Unknown action: {action}"
+            clean = [p for p in params if p != ""]
+            expected = _eai_valid_actions[action][1]
+            if len(clean) != expected:
+                return False, f"{action} expects {expected} arg(s), got {len(clean)}"
+    return True, None
 
 
 def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_goals=None):
@@ -526,7 +545,7 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
         return None
 
     try:
-        ok, err = check_action_grammar(parsed)
+        ok, err = _check_grammar_combined(parsed)
         if not ok:
             logger.warning(f"Grammar check failed: {err}")
             return None
@@ -594,7 +613,7 @@ def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
         return None
 
     try:
-        ok, err = check_action_grammar(processed)
+        ok, err = _check_grammar_combined(processed)
         if not ok:
             logger.warning(f"Subtree grammar failed: {err}")
             return None
@@ -669,11 +688,10 @@ def plan_to_json_str(eai_actions: list) -> str:
 
         if not name_ids:
             parts.append(f'"{action_name}": []')
-        elif len(name_ids) == 1:
-            name, oid = name_ids[0]
-            parts.append(f'"{action_name}": ["{_dedup_name(name, oid)}_{oid}"]')
         else:
-            tokens = ", ".join(f'"{_dedup_name(n, i)}_{i}"' for n, i in name_ids)
+            tokens = ", ".join(
+                f'"{_dedup_name(n, i)}", "{i}"' for n, i in name_ids
+            )
             parts.append(f'"{action_name}": [{tokens}]')
 
     return "{" + ", ".join(parts) + "}"
