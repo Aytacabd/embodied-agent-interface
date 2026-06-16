@@ -1,0 +1,3128 @@
+2026-03-29 20:42:30,034 - INFO - LLM: openai / gpt-4o
+2026-03-29 20:42:30,035 - INFO - Loading EAI resources...
+2026-03-29 20:42:30,042 - INFO - EAI resources loaded.
+2026-03-29 20:42:30,042 - INFO - === EAI + SDA-Planner (Full Search Tree) ===
+2026-03-29 20:42:30,042 - INFO - Model      : gpt-4o-sda-tree_m
+2026-03-29 20:42:30,042 - INFO - Provider   : openai
+2026-03-29 20:42:30,042 - INFO - Max replan : 3
+2026-03-29 20:42:30,042 - INFO - Tree depth : 6 | Tree nodes: 500
+2026-03-29 20:42:30,042 - INFO - Max tasks  : ALL
+2026-03-29 20:42:30,042 - INFO - Task IDs   : ALL
+2026-03-29 20:42:30,042 - INFO - LLM fallback on tree fail: DISABLED
+2026-03-29 20:42:30,042 - INFO - Resuming: 60 tasks already done
+2026-03-29 20:42:30,042 - INFO - 
+[1] Go to toilet | 478_1
+2026-03-29 20:42:31,214 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:31,247 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toilet", "37"],
+  "SIT": ["toilet", "37"]
+}
+```...
+2026-03-29 20:42:31,333 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:32,342 - INFO - 
+[2] Go to toilet | 496_1
+2026-03-29 20:42:33,509 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:33,512 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bathroom", "1"],
+  "TURNTO": ["toilet", "37"]
+}
+```...
+2026-03-29 20:42:33,607 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:34,615 - INFO - 
+[3] Go to toilet | 624_2
+2026-03-29 20:42:35,452 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:35,455 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toilet_1000"],
+  "SIT": ["toilet_1000"]
+}
+```...
+2026-03-29 20:42:35,561 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:36,567 - INFO - 
+[4] Change TV channel | 188_1
+2026-03-29 20:42:37,660 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:37,663 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "WALK": ["remote_con...
+2026-03-29 20:42:37,956 - INFO -   ❌ [SWITCHON] <television_410> (410) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:42:37,962 - INFO -   🔍 Strategy: reconstruct | Window: [1,6] | Unsat: ['next_to_obj', 'has_switch', 'off', 'plugged_in']
+2026-03-29 20:42:38,575 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:38,578 - INFO -   💡 LLM suggestions: {"WALK": ["television_410"], "SWITCHOFF": ["television_410"], "SWITCHON": ["tele...
+2026-03-29 20:42:38,599 - INFO -   🌳 Tree found: [{'WALK': ['television_410']}]
+2026-03-29 20:42:38,600 - INFO -   Spliced: 0 + 1 + 0 = 1
+2026-03-29 20:42:38,665 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:42:39,672 - INFO - 
+[5] Change TV channel | 803_2
+2026-03-29 20:42:40,984 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:40,987 - INFO -   Initial plan: ```json
+{
+  "WALK": ["remote_control", "1000"],
+  "TURNTO": ["remote_control", "1000"],
+  "GRAB": ["...
+2026-03-29 20:42:41,238 - INFO -   ❌ [SWITCHON] <television_410> (410) | MISSING_STEP
+2026-03-29 20:42:41,244 - INFO -   🔍 Strategy: reconstruct | Window: [5,5] | Unsat: ['next_to_obj', 'has_switch', 'off', 'plugged_in']
+2026-03-29 20:42:42,520 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:42,524 - INFO -   💡 LLM suggestions: {"WALK": ["television_410"], "SWITCHOFF": ["television_410"], "SWITCHON": ["tele...
+2026-03-29 20:42:42,545 - INFO -   🌳 Tree found: [{'WALK': ['television_410']}]
+2026-03-29 20:42:42,545 - INFO -   Spliced: 4 + 1 + 0 = 5
+2026-03-29 20:42:42,704 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:42:43,710 - INFO - 
+[6] Change TV channel | 960_2
+2026-03-29 20:42:44,872 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:44,876 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "WALK": ["remote_con...
+2026-03-29 20:42:45,113 - INFO -   ❌ [SWITCHON] <television_410> (410) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:42:45,118 - INFO -   🔍 Strategy: reconstruct | Window: [1,5] | Unsat: ['next_to_obj', 'has_switch', 'off', 'plugged_in']
+2026-03-29 20:42:46,285 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:46,289 - INFO -   💡 LLM suggestions: {"WALK": ["television_410"], "SWITCHOFF": ["television_410"], "SWITCHON": ["tele...
+2026-03-29 20:42:46,339 - INFO -   🌳 Tree found: [{'WALK': ['television_410']}]
+2026-03-29 20:42:46,339 - INFO -   Spliced: 0 + 1 + 0 = 1
+2026-03-29 20:42:46,390 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:42:47,399 - INFO - 
+[7] Work | 101_2
+2026-03-29 20:42:48,459 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:48,461 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:48,554 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:49,562 - INFO - 
+[8] Work | 1068_1
+2026-03-29 20:42:50,402 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:50,405 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:50,518 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:51,526 - INFO - 
+[9] Work | 153_2
+2026-03-29 20:42:52,769 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:52,772 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:52,865 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:53,873 - INFO - 
+[10] Work | 196_2
+2026-03-29 20:42:54,602 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:54,606 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:54,706 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:55,719 - INFO - Saved 70 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:42:55,719 - INFO - Progress: 10 | Tree: 3 | Fallback: 0
+2026-03-29 20:42:55,719 - INFO - 
+[11] Work | 198_1
+2026-03-29 20:42:56,445 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:56,448 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:56,542 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:57,550 - INFO - 
+[12] Work | 201_2
+2026-03-29 20:42:58,695 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:42:58,697 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:42:58,798 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:42:59,807 - INFO - 
+[13] Work | 232_1
+2026-03-29 20:43:00,747 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:00,751 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:00,859 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:01,869 - INFO - 
+[14] Work | 234_1
+2026-03-29 20:43:02,671 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:02,673 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:02,758 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:03,762 - INFO - 
+[15] Work | 343_2
+2026-03-29 20:43:04,944 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:04,947 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:05,062 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:06,070 - INFO - 
+[16] Work | 373_1
+2026-03-29 20:43:06,890 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:06,894 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:06,994 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:08,000 - INFO - 
+[17] Work | 406_2
+2026-03-29 20:43:08,729 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:08,732 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:08,829 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:09,837 - INFO - 
+[18] Work | 409_2
+2026-03-29 20:43:10,783 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:10,786 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:10,894 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:11,902 - INFO - 
+[19] Work | 419_1
+2026-03-29 20:43:12,728 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:12,731 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:12,830 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:13,838 - INFO - 
+[20] Work | 433_1
+2026-03-29 20:43:14,674 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:14,677 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:14,770 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:15,782 - INFO - Saved 80 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:43:15,782 - INFO - Progress: 20 | Tree: 3 | Fallback: 0
+2026-03-29 20:43:15,782 - INFO - 
+[21] Work | 437_2
+2026-03-29 20:43:16,621 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:16,624 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:16,726 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:17,735 - INFO - 
+[22] Work | 440_1
+2026-03-29 20:43:18,757 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:18,761 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:18,862 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:19,869 - INFO - 
+[23] Work | 453_2
+2026-03-29 20:43:20,719 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:20,723 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:20,821 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:21,830 - INFO - 
+[24] Work | 46_1
+2026-03-29 20:43:22,867 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:22,869 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:22,961 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:23,969 - INFO - 
+[25] Work | 475_2
+2026-03-29 20:43:24,914 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:24,917 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:25,032 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:26,034 - INFO - 
+[26] Work | 503_1
+2026-03-29 20:43:27,063 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:27,066 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:27,168 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:28,176 - INFO - 
+[27] Work | 670_2
+2026-03-29 20:43:29,009 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:29,012 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:29,118 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:30,122 - INFO - 
+[28] Work | 719_2
+2026-03-29 20:43:30,986 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:30,990 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:31,091 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:32,100 - INFO - 
+[29] Work | 757_2
+2026-03-29 20:43:32,858 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:32,862 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:32,955 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:33,959 - INFO - 
+[30] Work | 787_2
+2026-03-29 20:43:34,742 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:34,745 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:34,852 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:35,863 - INFO - Saved 90 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:43:35,863 - INFO - Progress: 30 | Tree: 3 | Fallback: 0
+2026-03-29 20:43:35,863 - INFO - 
+[31] Work | 795_1
+2026-03-29 20:43:36,897 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:36,901 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "170"],
+  "SWITCHON": ["computer", "170"]
+}
+```...
+2026-03-29 20:43:36,993 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:37,997 - INFO - 
+[32] Work | 819_1
+2026-03-29 20:43:38,604 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:38,607 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:38,710 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:39,718 - INFO - 
+[33] Work | 874_1
+2026-03-29 20:43:41,000 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:41,003 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:41,096 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:42,102 - INFO - 
+[34] Work | 910_1
+2026-03-29 20:43:42,937 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:42,941 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:43,034 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:44,041 - INFO - 
+[35] Work | 91_2
+2026-03-29 20:43:44,776 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:44,779 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:44,888 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:45,896 - INFO - 
+[36] Work | 93_2
+2026-03-29 20:43:46,648 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:46,653 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:46,748 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:47,756 - INFO - 
+[37] Work | 962_1
+2026-03-29 20:43:48,670 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:48,674 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer", "417"]
+}
+```...
+2026-03-29 20:43:48,776 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:49,784 - INFO - 
+[38] Wash dishes with dishwasher | 190_1
+2026-03-29 20:43:51,640 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:51,645 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["dish_soap"...
+2026-03-29 20:43:51,646 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:43:51,647 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:43:51,647 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:43:52,096 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:53,105 - INFO - 
+[39] Wash dishes with dishwasher | 201_1
+2026-03-29 20:43:55,121 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:55,124 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["plate", "1...
+2026-03-29 20:43:55,124 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:43:55,125 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:43:55,404 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:43:56,414 - INFO - 
+[40] Wash dishes with dishwasher | 223_2
+2026-03-29 20:43:58,584 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:43:58,588 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher...
+2026-03-29 20:43:58,589 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:43:58,589 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:43:58,589 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:43:59,040 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:00,056 - INFO - Saved 100 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:44:00,056 - INFO - Progress: 40 | Tree: 3 | Fallback: 0
+2026-03-29 20:44:00,056 - INFO - 
+[41] Wash dishes with dishwasher | 327_2
+2026-03-29 20:44:01,779 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:01,782 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["plate", "1...
+2026-03-29 20:44:01,782 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:01,782 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:02,062 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:03,072 - INFO - 
+[42] Wash dishes with dishwasher | 383_1
+2026-03-29 20:44:04,748 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:04,752 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["plate", "1...
+2026-03-29 20:44:04,753 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:04,753 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:04,753 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:05,125 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:06,135 - INFO - 
+[43] Wash dishes with dishwasher | 417_2
+2026-03-29 20:44:08,739 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:08,741 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["drinking_g...
+2026-03-29 20:44:08,741 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:08,741 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:08,741 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:08,741 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:08,741 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:09,236 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:10,244 - INFO - 
+[44] Wash dishes with dishwasher | 487_1
+2026-03-29 20:44:12,427 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:12,430 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["spoon", "1...
+2026-03-29 20:44:12,431 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:44:12,431 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:44:12,431 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:44:12,432 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:44:12,432 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1001
+2026-03-29 20:44:12,818 - INFO -   ❌ [PUTIN] <plate_1000> (1000) <dishwasher_1001> (1001) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:44:12,823 - INFO -   🔍 Strategy: already_satisfied | Window: [8,8] | Unsat: []
+2026-03-29 20:44:13,455 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:13,459 - INFO -   💡 LLM suggestions: ```json
+{"WALK": ["dishwasher_1001"], "OPEN": ["dishwasher_1001"], "WALK": ["pla...
+2026-03-29 20:44:13,476 - INFO -   🌳 Tree found: [{'WALK': ['dishwasher_1001']}]
+2026-03-29 20:44:13,476 - INFO -   Spliced: 7 + 1 + 11 = 19
+2026-03-29 20:44:14,000 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:44:15,013 - INFO - 
+[45] Wash dishes with dishwasher | 650_2
+2026-03-29 20:44:17,344 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:17,347 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher...
+2026-03-29 20:44:17,810 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:18,821 - INFO - 
+[46] Wash dishes with dishwasher | 783_1
+2026-03-29 20:44:21,643 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:21,647 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["plate", "1...
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:21,648 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:22,299 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:23,312 - INFO - 
+[47] Wash dishes with dishwasher | 815_2
+2026-03-29 20:44:25,331 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:25,334 - INFO -   Initial plan: ```json
+{
+  "WALK": ["table", "226"],
+  "GRAB": ["plate", "1000"],
+  "WALK": ["dishwasher", "1001"],...
+2026-03-29 20:44:25,592 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:26,598 - INFO - 
+[48] Wash dishes with dishwasher | 826_1
+2026-03-29 20:44:30,552 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:30,554 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["fork", "10...
+2026-03-29 20:44:30,555 - WARNING -   Could not parse initial plan for 826_1
+2026-03-29 20:44:31,564 - INFO - 
+[49] Wash dishes with dishwasher | 856_1
+2026-03-29 20:44:33,489 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:33,493 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["plate", "1...
+2026-03-29 20:44:33,493 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:33,493 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:33,770 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:34,778 - INFO - 
+[50] Wash dishes with dishwasher | 911_1
+2026-03-29 20:44:37,927 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:37,930 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["cup", "100...
+2026-03-29 20:44:37,931 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:37,931 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:37,931 - INFO -   🔄 Auto-corrected PUTBACK→PUTIN for container: dishwasher_1000
+2026-03-29 20:44:38,368 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:39,384 - INFO - Saved 110 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:44:39,384 - INFO - Progress: 50 | Tree: 4 | Fallback: 0
+2026-03-29 20:44:39,385 - INFO - 
+[51] Go to sleep | 1027_2
+2026-03-29 20:44:40,536 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:40,540 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bedroom", "67"],
+  "WALK": ["bed", "105"],
+  "LIE": ["bed", "105"],
+  "SLEEP":...
+2026-03-29 20:44:40,677 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:41,686 - INFO - 
+[52] Go to sleep | 181_1
+2026-03-29 20:44:42,635 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:42,635 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bed_105"],
+  "LIE": ["bed_105"],
+  "SLEEP": []
+}
+```...
+2026-03-29 20:44:42,728 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:43,737 - INFO - 
+[53] Go to sleep | 244_2
+2026-03-29 20:44:44,990 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:44,994 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bedroom", "67"],
+  "WALK": ["bed", "105"],
+  "LIE": ["bed", "105"],
+  "SLEEP":...
+2026-03-29 20:44:45,152 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:46,160 - INFO - 
+[54] Go to sleep | 269_2
+2026-03-29 20:44:47,141 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:47,144 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bed_105"],
+  "LIE": ["bed_105"],
+  "SLEEP": []
+}
+```...
+2026-03-29 20:44:47,274 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:48,283 - INFO - 
+[55] Go to sleep | 509_2
+2026-03-29 20:44:49,188 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:49,191 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bed_105"],
+  "LIE": ["bed_105"],
+  "SLEEP": []
+}
+```...
+2026-03-29 20:44:49,313 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:50,319 - INFO - 
+[56] Go to sleep | 875_1
+2026-03-29 20:44:51,750 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:51,752 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bed_105"],
+  "LIE": ["bed_105"],
+  "SLEEP": []
+}
+```...
+2026-03-29 20:44:51,866 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:52,875 - INFO - 
+[57] Wash hands | 102_1
+2026-03-29 20:44:53,694 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:53,697 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1000"]
+}
+```...
+2026-03-29 20:44:53,792 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:54,800 - INFO - 
+[58] Wash hands | 154_2
+2026-03-29 20:44:55,638 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:55,641 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:44:55,734 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:56,743 - INFO - 
+[59] Wash hands | 176_1
+2026-03-29 20:44:57,688 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:57,691 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "WASH": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:44:57,790 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:44:58,799 - INFO - 
+[60] Wash hands | 214_1
+2026-03-29 20:44:59,634 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:44:59,637 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["soap", "1000"]
+}
+```...
+2026-03-29 20:44:59,743 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:00,755 - INFO - Saved 120 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:45:00,755 - INFO - Progress: 60 | Tree: 4 | Fallback: 0
+2026-03-29 20:45:00,755 - INFO - 
+[61] Wash hands | 258_2
+2026-03-29 20:45:02,808 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:02,813 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "232"],
+  "SWITCHON": ["faucet", "232"],
+  "WALK": ["soap", "1000"],
+...
+2026-03-29 20:45:03,075 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:04,085 - INFO - 
+[62] Wash hands | 499_1
+2026-03-29 20:45:04,959 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:04,962 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1002"]
+}
+```...
+2026-03-29 20:45:05,057 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:06,065 - INFO - 
+[63] Wash hands | 517_1
+2026-03-29 20:45:07,213 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:07,216 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "WASH": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:45:07,312 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:08,320 - INFO - 
+[64] Wash hands | 549_2
+2026-03-29 20:45:09,257 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:09,259 - INFO -   Initial plan: ```json
+{
+  "WALK": ["soap", "1001"],
+  "GRAB": ["soap", "1001"],
+  "WASH": ["soap", "1001"]
+}
+```...
+2026-03-29 20:45:09,386 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:10,394 - INFO - 
+[65] Wash hands | 562_1
+2026-03-29 20:45:11,205 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:11,207 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "43"],
+  "GRAB": ["water", "1000"]
+}
+```...
+2026-03-29 20:45:11,320 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:12,328 - INFO - 
+[66] Wash hands | 580_1
+2026-03-29 20:45:13,255 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:13,257 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1000"]
+}
+```...
+2026-03-29 20:45:13,350 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:14,355 - INFO - 
+[67] Wash hands | 657_1
+2026-03-29 20:45:15,364 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:15,369 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "43"],
+  "RINSE": ["hands_both", "1000"]
+}
+```...
+2026-03-29 20:45:15,486 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:16,490 - INFO - 
+[68] Wash hands | 660_1
+2026-03-29 20:45:17,234 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:17,237 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bathroom_1"],
+  "WASH": ["hands_both_1001"]
+}
+```...
+2026-03-29 20:45:17,350 - INFO -   ❌ [WASH] <hands_both_1001> (1001) | MISSING_STEP
+2026-03-29 20:45:17,355 - INFO -   🔍 Strategy: already_satisfied | Window: [2,2] | Unsat: []
+2026-03-29 20:45:18,067 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:18,071 - INFO -   💡 LLM suggestions: {"WALK": ["sink"], "OPEN": ["faucet"], "WASH": ["hands_both_1001"]}...
+2026-03-29 20:45:18,091 - INFO -   🌳 Tree found: [{'WALK': ['sink']}]
+2026-03-29 20:45:18,091 - INFO -   Spliced: 1 + 1 + 0 = 2
+2026-03-29 20:45:18,180 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:45:19,186 - INFO - 
+[69] Wash hands | 672_1
+2026-03-29 20:45:19,907 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:19,910 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "43"],
+  "RINSE": ["hands_both", "1000"]
+}
+```...
+2026-03-29 20:45:20,004 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:21,011 - INFO - 
+[70] Wash hands | 710_1
+2026-03-29 20:45:21,716 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:21,719 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1002"]
+}
+```...
+2026-03-29 20:45:21,818 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:22,831 - INFO - Saved 130 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:45:22,831 - INFO - Progress: 70 | Tree: 5 | Fallback: 0
+2026-03-29 20:45:22,831 - INFO - 
+[71] Wash hands | 741_1
+2026-03-29 20:45:23,696 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:23,697 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "43"],
+  "RINSE": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:45:23,782 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:24,790 - INFO - 
+[72] Wash hands | 750_2
+2026-03-29 20:45:25,645 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:25,648 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "GRAB": ["water", "1001"],
+  "POUR": ["water", "1001", "hands_...
+2026-03-29 20:45:25,775 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:26,782 - INFO - 
+[73] Wash hands | 805_1
+2026-03-29 20:45:27,690 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:27,694 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["sink", "42"]
+}
+```...
+2026-03-29 20:45:27,796 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:28,803 - INFO - 
+[74] Wash hands | 80_1
+2026-03-29 20:45:29,536 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:29,540 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:45:29,639 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:30,648 - INFO - 
+[75] Wash hands | 813_2
+2026-03-29 20:45:31,341 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:31,344 - INFO -   Initial plan: ```json
+{
+  "WALK": ["water", "1000"],
+  "RINSE": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:45:31,444 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:32,450 - INFO - 
+[76] Wash hands | 928_2
+2026-03-29 20:45:33,178 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:33,185 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "42"],
+  "RINSE": ["hands_both", "1000"]
+}
+```...
+2026-03-29 20:45:33,288 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:34,296 - INFO - 
+[77] Wash hands | 995_2
+2026-03-29 20:45:35,372 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:35,376 - INFO -   Initial plan: ```json
+{
+  "WALK": ["faucet", "43"],
+  "RINSE": ["hands_both", "1001"]
+}
+```...
+2026-03-29 20:45:35,470 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:36,473 - INFO - 
+[78] Pet cat | 1035_1
+2026-03-29 20:45:37,422 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:37,425 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:37,519 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:38,527 - INFO - 
+[79] Pet cat | 113_2
+2026-03-29 20:45:39,467 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:39,470 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:39,565 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:40,573 - INFO - 
+[80] Pet cat | 12_2
+2026-03-29 20:45:41,339 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:41,357 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:41,459 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:42,468 - INFO - Saved 140 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:45:42,469 - INFO - Progress: 80 | Tree: 5 | Fallback: 0
+2026-03-29 20:45:42,469 - INFO - 
+[81] Pet cat | 137_2
+2026-03-29 20:45:43,220 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:43,223 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:43,320 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:44,329 - INFO - 
+[82] Pet cat | 203_2
+2026-03-29 20:45:45,202 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:45,205 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:45,307 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:46,315 - INFO - 
+[83] Pet cat | 220_2
+2026-03-29 20:45:47,144 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:47,148 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:47,263 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:48,269 - INFO - 
+[84] Pet cat | 242_1
+2026-03-29 20:45:49,296 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:49,299 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:49,402 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:50,410 - INFO - 
+[85] Pet cat | 279_2
+2026-03-29 20:45:51,551 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:51,554 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:51,650 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:52,653 - INFO - 
+[86] Pet cat | 287_1
+2026-03-29 20:45:53,394 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:53,397 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:53,512 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:54,520 - INFO - 
+[87] Pet cat | 292_1
+2026-03-29 20:45:55,237 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:55,239 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:55,332 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:56,336 - INFO - 
+[88] Pet cat | 297_1
+2026-03-29 20:45:57,183 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:57,185 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:57,278 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:45:58,282 - INFO - 
+[89] Pet cat | 381_1
+2026-03-29 20:45:58,924 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:45:58,928 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:45:59,023 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:00,031 - INFO - 
+[90] Pet cat | 388_2
+2026-03-29 20:46:00,768 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:00,771 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:00,866 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:01,878 - INFO - Saved 150 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:46:01,878 - INFO - Progress: 90 | Tree: 5 | Fallback: 0
+2026-03-29 20:46:01,878 - INFO - 
+[91] Pet cat | 38_1
+2026-03-29 20:46:02,610 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:02,613 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:02,730 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:03,736 - INFO - 
+[92] Pet cat | 429_1
+2026-03-29 20:46:04,554 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:04,558 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:04,656 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:05,664 - INFO - 
+[93] Pet cat | 437_1
+2026-03-29 20:46:06,502 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:06,505 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:06,606 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:07,615 - INFO - 
+[94] Pet cat | 451_1
+2026-03-29 20:46:08,257 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:08,260 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:08,372 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:09,380 - INFO - 
+[95] Pet cat | 469_2
+2026-03-29 20:46:09,982 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:09,987 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:10,083 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:11,092 - INFO - 
+[96] Pet cat | 479_2
+2026-03-29 20:46:12,031 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:12,034 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:12,145 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:13,154 - INFO - 
+[97] Pet cat | 502_1
+2026-03-29 20:46:13,874 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:13,878 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:13,976 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:14,985 - INFO - 
+[98] Pet cat | 612_1
+2026-03-29 20:46:15,718 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:15,721 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:15,813 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:16,820 - INFO - 
+[99] Pet cat | 856_2
+2026-03-29 20:46:17,562 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:17,565 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cat", "1000"],
+  "TOUCH": ["cat", "1000"]
+}
+```...
+2026-03-29 20:46:17,660 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:18,668 - INFO - 
+[100] Browse internet | 384_1
+2026-03-29 20:46:19,860 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:19,863 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "WALK": ["computer", "417"],
+  "SWITCHON": ["computer"...
+2026-03-29 20:46:20,064 - INFO -   ❌ [LOOKAT] <computer_417> (417) | MISSING_STEP
+2026-03-29 20:46:20,070 - INFO -   🔍 Strategy: reconstruct | Window: [4,4] | Unsat: ['facing_obj']
+2026-03-29 20:46:20,633 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:20,638 - INFO -   💡 LLM suggestions: {"TURNTO": ["computer_417"], "LOOKAT": ["computer_417"]}...
+2026-03-29 20:46:20,657 - INFO -   🌳 Tree found: [{'TURNTO': ['computer_417']}]
+2026-03-29 20:46:20,658 - INFO -   Spliced: 3 + 1 + 4 = 8
+2026-03-29 20:46:20,943 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:46:21,955 - INFO - Saved 160 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:46:21,956 - INFO - Progress: 100 | Tree: 6 | Fallback: 0
+2026-03-29 20:46:21,956 - INFO - 
+[101] Browse internet | 540_1
+2026-03-29 20:46:22,783 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:22,786 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "TURNTO": ["phone", "1000"],
+  "LOOKAT": ["phone", "10...
+2026-03-29 20:46:22,993 - INFO -   ❌ [GRAB] <phone_1000> (1000) | MISSING_STEP
+2026-03-29 20:46:22,999 - INFO -   🔍 Strategy: insert_prep | Window: [4,4] | Unsat: ['next_to_obj', 'grabbable']
+2026-03-29 20:46:23,703 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:23,704 - INFO -   💡 LLM suggestions: {"WALK": ["phone_1000"], "GRAB": ["phone_1000"]}...
+2026-03-29 20:46:23,716 - INFO -   🌳 Tree found: [{'WALK': ['phone_1000']}]
+2026-03-29 20:46:23,717 - INFO -   Spliced: 3 + 1 + 0 = 4
+2026-03-29 20:46:23,841 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:46:24,851 - INFO - 
+[102] Browse internet | 60_1
+2026-03-29 20:46:25,752 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:25,756 - INFO -   Initial plan: ```json
+{
+  "WALK": ["laptop", "1000"],
+  "TURNTO": ["laptop", "1000"],
+  "LOOKAT": ["laptop", "1000...
+2026-03-29 20:46:25,915 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:26,922 - INFO - 
+[103] Browse internet | 71_2
+2026-03-29 20:46:28,212 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:28,215 - INFO -   Initial plan: ```json
+{
+  "WALK": ["computer", "417"],
+  "LOOKAT": ["computer", "417"],
+  "SWITCHON": ["computer",...
+2026-03-29 20:46:28,327 - INFO -   ❌ [LOOKAT] <computer_417> (417) | MISSING_STEP
+2026-03-29 20:46:28,333 - INFO -   🔍 Strategy: reconstruct | Window: [1,3] | Unsat: ['facing_obj']
+2026-03-29 20:46:28,925 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:28,928 - INFO -   💡 LLM suggestions: {"TURNTO": ["computer_417"], "LOOKAT": ["computer_417"]}...
+2026-03-29 20:46:28,950 - INFO -   🌳 Tree found: [{'TURNTO': ['computer_417']}]
+2026-03-29 20:46:28,951 - INFO -   Spliced: 0 + 1 + 5 = 6
+2026-03-29 20:46:29,148 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:46:30,153 - INFO - 
+[104] Browse internet | 7_1
+2026-03-29 20:46:31,156 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:31,160 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "WALK": ["mouse", "413"],
+  "GRAB": ["mouse", "413"],
+...
+2026-03-29 20:46:31,420 - INFO -   ❌ [LOOKAT] <computer_417> (417) | MISSING_STEP
+2026-03-29 20:46:31,426 - INFO -   🔍 Strategy: reconstruct | Window: [4,6] | Unsat: ['facing_obj']
+2026-03-29 20:46:32,101 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:32,104 - INFO -   💡 LLM suggestions: {"TURNTO": ["computer_417"], "LOOKAT": ["computer_417"]}...
+2026-03-29 20:46:32,127 - INFO -   🌳 Tree found: [{'TURNTO': ['computer_417']}]
+2026-03-29 20:46:32,127 - INFO -   Spliced: 3 + 1 + 0 = 4
+2026-03-29 20:46:32,259 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:46:33,270 - INFO - 
+[105] Wash teeth | 1070_1
+2026-03-29 20:46:34,149 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:34,154 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toothbrush_1001"],
+  "GRAB": ["toothbrush_1001"]
+}
+```...
+2026-03-29 20:46:34,258 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:35,267 - INFO - 
+[106] Wash teeth | 313_2
+2026-03-29 20:46:36,197 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:36,201 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toothbrush", "1001"],
+  "GRAB": ["toothbrush", "1001"]
+}
+```...
+2026-03-29 20:46:36,298 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:37,305 - INFO - 
+[107] Wash teeth | 689_1
+2026-03-29 20:46:38,040 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:38,043 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toothbrush_1002"],
+  "GRAB": ["toothbrush_1002"]
+}
+```...
+2026-03-29 20:46:38,146 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:39,155 - INFO - 
+[108] Wash teeth | 718_1
+2026-03-29 20:46:39,987 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:39,990 - INFO -   Initial plan: ```json
+{
+  "WALK": ["toothbrush", "1001"],
+  "GRAB": ["toothbrush", "1001"]
+}
+```...
+2026-03-29 20:46:40,090 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:41,099 - INFO - 
+[109] Listen to music | 1049_1
+2026-03-29 20:46:41,853 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:41,857 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dvd_player", "1000"],
+  "SWITCHON": ["dvd_player", "1000"]
+}
+```...
+2026-03-29 20:46:41,957 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:42,968 - INFO - 
+[110] Listen to music | 113_1
+2026-03-29 20:46:43,778 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:43,783 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"]
+}
+```...
+2026-03-29 20:46:43,880 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:44,889 - INFO - Saved 170 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:46:44,889 - INFO - Progress: 110 | Tree: 9 | Fallback: 0
+2026-03-29 20:46:44,889 - INFO - 
+[111] Listen to music | 161_1
+2026-03-29 20:46:45,618 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:45,621 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:46:45,717 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:46,722 - INFO - 
+[112] Listen to music | 173_1
+2026-03-29 20:46:47,767 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:47,771 - INFO -   Initial plan: ```json
+{
+  "STANDUP": [],
+  "WALK": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"]
+}
+``...
+2026-03-29 20:46:47,927 - INFO -   ⏭️  Skipping: [SWITCHON] <cd_player_1000> (1000)
+2026-03-29 20:46:47,927 - INFO -   ✅ SUCCESS on attempt 1 (removed 1 skipped actions)
+2026-03-29 20:46:48,936 - INFO - 
+[113] Listen to music | 23_1
+2026-03-29 20:46:49,612 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:49,615 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:46:49,727 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:50,736 - INFO - 
+[114] Listen to music | 263_1
+2026-03-29 20:46:51,403 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:51,406 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:46:51,502 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:52,510 - INFO - 
+[115] Listen to music | 305_2
+2026-03-29 20:46:53,299 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:53,303 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:46:53,401 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:54,410 - INFO - 
+[116] Listen to music | 363_2
+2026-03-29 20:46:55,242 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:55,246 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dvd_player", "1001"],
+  "SWITCHON": ["dvd_player", "1001"]
+}
+```...
+2026-03-29 20:46:55,350 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:56,355 - INFO - 
+[117] Listen to music | 385_2
+2026-03-29 20:46:57,291 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:57,295 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"]
+}
+```...
+2026-03-29 20:46:57,395 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:46:58,399 - INFO - 
+[118] Listen to music | 403_1
+2026-03-29 20:46:59,134 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:46:59,137 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:46:59,254 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:00,261 - INFO - 
+[119] Listen to music | 415_1
+2026-03-29 20:47:01,080 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:01,083 - INFO -   Initial plan: ```json
+{
+  "WALK": ["headset", "1000"],
+  "GRAB": ["headset", "1000"],
+  "PUTON": ["headset", "1000...
+2026-03-29 20:47:01,207 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:02,215 - INFO - 
+[120] Listen to music | 462_2
+2026-03-29 20:47:03,117 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:03,121 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:47:03,222 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:04,236 - INFO - Saved 180 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:47:04,237 - INFO - Progress: 120 | Tree: 9 | Fallback: 0
+2026-03-29 20:47:04,237 - INFO - 
+[121] Listen to music | 463_2
+2026-03-29 20:47:04,953 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:04,956 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:47:05,057 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:06,066 - INFO - 
+[122] Listen to music | 503_2
+2026-03-29 20:47:06,877 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:06,881 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"]
+}
+```...
+2026-03-29 20:47:06,996 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:08,005 - INFO - 
+[123] Listen to music | 59_1
+2026-03-29 20:47:08,761 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:08,764 - INFO -   Initial plan: ```json
+{
+  "WALK": ["headset", "1001"],
+  "GRAB": ["headset", "1001"],
+  "PUTON": ["headset", "1001...
+2026-03-29 20:47:08,898 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:09,907 - INFO - 
+[124] Listen to music | 737_1
+2026-03-29 20:47:10,603 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:10,606 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:47:10,708 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:11,716 - INFO - 
+[125] Listen to music | 773_1
+2026-03-29 20:47:12,437 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:12,441 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:47:12,540 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:13,548 - INFO - 
+[126] Listen to music | 910_2
+2026-03-29 20:47:14,244 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:14,251 - INFO -   Initial plan: ```json
+{
+  "WALK": ["stereo", "1000"],
+  "SWITCHON": ["stereo", "1000"]
+}
+```...
+2026-03-29 20:47:14,355 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:15,363 - INFO - 
+[127] Listen to music | 953_1
+2026-03-29 20:47:16,132 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:16,135 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cd_player", "1001"],
+  "SWITCHON": ["cd_player", "1001"]
+}
+```...
+2026-03-29 20:47:16,236 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:17,244 - INFO - 
+[128] Watch TV | 1057_1
+2026-03-29 20:47:18,285 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:18,288 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:18,442 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:19,450 - INFO - 
+[129] Watch TV | 117_1
+2026-03-29 20:47:20,434 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:20,438 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:20,582 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:21,591 - INFO - 
+[130] Watch TV | 134_1
+2026-03-29 20:47:22,483 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:22,487 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "LOOKAT": ["televisi...
+2026-03-29 20:47:22,704 - INFO -   ⏭️  Skipping: [SWITCHON] <television_410> (410)
+2026-03-29 20:47:22,704 - INFO -   ✅ SUCCESS on attempt 1 (removed 1 skipped actions)
+2026-03-29 20:47:23,716 - INFO - Saved 190 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:47:23,716 - INFO - Progress: 130 | Tree: 9 | Fallback: 0
+2026-03-29 20:47:23,716 - INFO - 
+[131] Watch TV | 170_1
+2026-03-29 20:47:24,633 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:24,636 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:24,774 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:25,783 - INFO - 
+[132] Watch TV | 197_2
+2026-03-29 20:47:26,782 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:26,786 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"],
+  "TURNTO": ["televi...
+2026-03-29 20:47:26,939 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:27,947 - INFO - 
+[133] Watch TV | 21_2
+2026-03-29 20:47:28,728 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:28,732 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:28,871 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:29,880 - INFO - 
+[134] Watch TV | 225_2
+2026-03-29 20:47:30,673 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:30,677 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:30,816 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:31,826 - INFO - 
+[135] Watch TV | 259_1
+2026-03-29 20:47:32,721 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:32,723 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:32,755 - INFO - Check walk failed: <television_410> (410)
+2026-03-29 20:47:32,755 - INFO - <character> (65) is sitting when executing "[WALK] <television_410> (410) [1]"
+2026-03-29 20:47:32,777 - INFO -   ❌ [WALK] <television_410> (410) | MISSING_STEP
+2026-03-29 20:47:32,782 - INFO -   🔍 Strategy: insert_prep | Window: [1,1] | Unsat: ['not_sitting']
+2026-03-29 20:47:33,318 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:33,322 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["television_410"]}...
+2026-03-29 20:47:33,338 - INFO -   🌳 Tree found: [{'STANDUP': []}]
+2026-03-29 20:47:33,338 - INFO -   Spliced: 0 + 1 + 3 = 4
+2026-03-29 20:47:33,494 - INFO -   ❌ [SWITCHON] <television_410> (410) | MISSING_STEP
+2026-03-29 20:47:33,499 - INFO -   🔍 Strategy: reconstruct | Window: [2,4] | Unsat: ['next_to_obj', 'has_switch', 'off', 'plugged_in']
+2026-03-29 20:47:34,164 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:34,167 - INFO -   💡 LLM suggestions: {"WALK": ["television_410"], "SWITCHOFF": ["television_410"], "SWITCHON": ["tele...
+2026-03-29 20:47:34,186 - INFO -   🌳 Tree found: [{'WALK': ['television_410']}]
+2026-03-29 20:47:34,187 - INFO -   Spliced: 1 + 1 + 0 = 2
+2026-03-29 20:47:34,270 - INFO -   ✅ SUCCESS on attempt 3
+2026-03-29 20:47:35,278 - INFO - 
+[136] Watch TV | 307_2
+2026-03-29 20:47:36,103 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:36,107 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:36,266 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:37,274 - INFO - 
+[137] Watch TV | 329_1
+2026-03-29 20:47:38,355 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:38,359 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:38,498 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:39,507 - INFO - 
+[138] Watch TV | 342_2
+2026-03-29 20:47:40,917 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:40,922 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:41,061 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:42,075 - INFO - 
+[139] Watch TV | 377_2
+2026-03-29 20:47:42,965 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:42,969 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:43,105 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:44,112 - INFO - 
+[140] Watch TV | 383_2
+2026-03-29 20:47:44,905 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:44,909 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:45,072 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:46,091 - INFO - Saved 200 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:47:46,091 - INFO - Progress: 140 | Tree: 11 | Fallback: 0
+2026-03-29 20:47:46,091 - INFO - 
+[141] Watch TV | 411_1
+2026-03-29 20:47:46,958 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:46,962 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:47,107 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:48,121 - INFO - 
+[142] Watch TV | 454_2
+2026-03-29 20:47:49,105 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:49,109 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:49,254 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:50,269 - INFO - 
+[143] Watch TV | 459_1
+2026-03-29 20:47:51,259 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:51,264 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:51,410 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:52,423 - INFO - 
+[144] Watch TV | 548_2
+2026-03-29 20:47:53,205 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:53,209 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "248"],
+  "SWITCHON": ["television", "248"],
+  "LOOKAT": ["televi...
+2026-03-29 20:47:53,374 - INFO -   ❌ [LOOKAT] <television_248> (248) | MISSING_STEP
+2026-03-29 20:47:53,379 - INFO -   🔍 Strategy: reconstruct | Window: [3,3] | Unsat: ['facing_obj']
+2026-03-29 20:47:54,125 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:54,128 - INFO -   💡 LLM suggestions: ```json
+{"TURNTO": ["television_248"], "WATCH": ["television_248"]}
+```...
+2026-03-29 20:47:54,143 - INFO -   🌳 Tree found: [{'TURNTO': ['television_248']}]
+2026-03-29 20:47:54,143 - INFO -   Spliced: 2 + 1 + 0 = 3
+2026-03-29 20:47:54,249 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:47:55,259 - INFO - 
+[145] Watch TV | 595_1
+2026-03-29 20:47:56,079 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:56,083 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:56,235 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:57,240 - INFO - 
+[146] Watch TV | 684_2
+2026-03-29 20:47:58,016 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:58,019 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:47:58,173 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:47:59,183 - INFO - 
+[147] Watch TV | 74_1
+2026-03-29 20:47:59,859 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:47:59,863 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:48:00,006 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:01,010 - INFO - 
+[148] Watch TV | 806_1
+2026-03-29 20:48:01,803 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:01,806 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:48:01,962 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:02,975 - INFO - 
+[149] Watch TV | 98_1
+2026-03-29 20:48:03,751 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:03,754 - INFO -   Initial plan: ```json
+{
+  "WALK": ["television", "410"],
+  "TURNTO": ["television", "410"],
+  "SWITCHON": ["televi...
+2026-03-29 20:48:03,891 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:04,905 - INFO - 
+[150] Drink | 1064_1
+2026-03-29 20:48:05,746 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:05,750 - INFO -   Initial plan: ```json
+{
+  "WALK": ["water_glass", "1000"],
+  "GRAB": ["water_glass", "1000"],
+  "DRINK": ["water_g...
+2026-03-29 20:48:05,871 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:06,880 - INFO - Saved 210 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:48:06,881 - INFO - Progress: 150 | Tree: 12 | Fallback: 0
+2026-03-29 20:48:06,881 - INFO - 
+[151] Drink | 156_1
+2026-03-29 20:48:08,079 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:08,082 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cup", "1000"],
+  "GRAB": ["cup", "1000"],
+  "WALK": ["faucet", "232"],
+  "SWIT...
+2026-03-29 20:48:08,264 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:09,279 - INFO - 
+[152] Drink | 171_2
+2026-03-29 20:48:10,818 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:10,821 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard_229"],
+  "OPEN": ["cupboard_229"],
+  "WALK": ["cup_1000"],
+  "GRAB": ...
+2026-03-29 20:48:11,161 - INFO -   ❌ [POUR] <water_1001> (1001) <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:11,166 - INFO -   🔍 Strategy: already_satisfied | Window: [7,7] | Unsat: []
+2026-03-29 20:48:11,839 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:11,843 - INFO -   💡 LLM suggestions: {"WALK": ["water_1001"], "GRAB": ["water_1001"], "WALK": ["cup_1000"], "GRAB": [...
+2026-03-29 20:48:11,859 - INFO -   🌳 Tree found: [{'WALK': ['water_1001']}]
+2026-03-29 20:48:11,859 - INFO -   Spliced: 6 + 1 + 2 = 9
+2026-03-29 20:48:12,230 - INFO -   ❌ [SWITCHOFF] <faucet_232> (232) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:48:12,236 - INFO -   🔍 Strategy: insert_prep | Window: [8,8] | Unsat: ['next_to_obj', 'has_switch']
+2026-03-29 20:48:12,965 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:12,968 - INFO -   💡 LLM suggestions: ```json
+{"WALK": ["faucet_232"], "SWITCHOFF": ["faucet_232"]}
+```...
+2026-03-29 20:48:13,020 - INFO -   🌳 Tree found: [{'WALK': ['faucet_232']}]
+2026-03-29 20:48:13,021 - INFO -   Spliced: 7 + 1 + 1 = 9
+2026-03-29 20:48:13,258 - INFO -   ✅ SUCCESS on attempt 3
+2026-03-29 20:48:14,271 - INFO - 
+[153] Drink | 175_2
+2026-03-29 20:48:15,026 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:15,035 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "231"],
+  "GRAB": ["cup", "1000"],
+  "DRINK": ["cup", "1000"]
+}
+```...
+2026-03-29 20:48:15,176 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:16,189 - INFO - 
+[154] Drink | 181_2
+2026-03-29 20:48:17,257 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:17,263 - INFO -   Initial plan: ```json
+{
+  "WALK": ["freezer", "289"],
+  "GRAB": ["water_glass", "1000"],
+  "POUR": ["water", "1001...
+2026-03-29 20:48:17,422 - INFO -   ❌ [POUR] <water_1001> (1001) <water_glass_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:17,427 - INFO -   🔍 Strategy: already_satisfied | Window: [3,3] | Unsat: []
+2026-03-29 20:48:18,183 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:18,186 - INFO -   💡 LLM suggestions: {"WALK": ["water_glass_1000"], "GRAB": ["water_glass_1000"], "WALK": ["water_100...
+2026-03-29 20:48:18,203 - INFO -   🌳 Tree found: [{'WALK': ['water_glass_1000']}]
+2026-03-29 20:48:18,203 - INFO -   Spliced: 2 + 1 + 1 = 4
+2026-03-29 20:48:18,357 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:48:19,362 - INFO - 
+[155] Drink | 26_1
+2026-03-29 20:48:20,236 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:20,240 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cup", "1000"],
+  "GRAB": ["cup", "1000"],
+  "DRINK": ["cup", "1000"]
+}
+```...
+2026-03-29 20:48:20,287 - INFO - Check walk failed: <cup_1000> (1000)
+2026-03-29 20:48:20,287 - INFO - <character> (65) is sitting when executing "[WALK] <cup_1000> (1000) [1]"
+2026-03-29 20:48:20,310 - INFO -   ❌ [WALK] <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:20,316 - INFO -   🔍 Strategy: insert_prep | Window: [1,1] | Unsat: ['not_sitting']
+2026-03-29 20:48:20,851 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:20,855 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["cup_1000"]}...
+2026-03-29 20:48:20,875 - INFO -   🌳 Tree found: [{'STANDUP': []}]
+2026-03-29 20:48:20,875 - INFO -   Spliced: 0 + 1 + 2 = 3
+2026-03-29 20:48:20,991 - INFO -   ❌ [GRAB] <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:20,997 - INFO -   🔍 Strategy: insert_prep | Window: [2,2] | Unsat: ['next_to_obj', 'grabbable']
+2026-03-29 20:48:21,671 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:21,675 - INFO -   💡 LLM suggestions: {"WALK": ["cup_1000"], "GRAB": ["cup_1000"]}...
+2026-03-29 20:48:21,693 - INFO -   🌳 Tree found: [{'WALK': ['cup_1000']}]
+2026-03-29 20:48:21,693 - INFO -   Spliced: 1 + 1 + 1 = 3
+2026-03-29 20:48:21,835 - INFO -   ❌ [DRINK] <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:21,840 - INFO -   🔍 Strategy: wrong_action | Window: [3,3] | Unsat: []
+2026-03-29 20:48:22,386 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:22,390 - INFO -   💡 LLM suggestions: {"WALK": ["cup_1000"], "GRAB": ["cup_1000"], "DRINK": ["cup_1000"]}...
+2026-03-29 20:48:22,410 - INFO -   🌳 Tree found: [{'WALK': ['cup_1000']}]
+2026-03-29 20:48:22,410 - INFO -   Spliced: 2 + 1 + 0 = 3
+2026-03-29 20:48:22,519 - INFO -   ✅ SUCCESS on attempt 4
+2026-03-29 20:48:23,523 - INFO - 
+[156] Drink | 286_2
+2026-03-29 20:48:24,822 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:24,826 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["water_glass", "1...
+2026-03-29 20:48:25,198 - INFO -   ❌ [POUR] <water_1001> (1001) <water_glass_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:25,203 - INFO -   🔍 Strategy: already_satisfied | Window: [8,8] | Unsat: []
+2026-03-29 20:48:25,973 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:25,976 - INFO -   💡 LLM suggestions: {"WALK": ["water_glass_1000"], "GRAB": ["water_glass_1000"], "WALK": ["water_100...
+2026-03-29 20:48:25,990 - INFO -   🌳 Tree found: [{'WALK': ['water_glass_1000']}]
+2026-03-29 20:48:25,990 - INFO -   Spliced: 7 + 1 + 1 = 9
+2026-03-29 20:48:26,268 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:48:27,277 - INFO - 
+[157] Drink | 291_1
+2026-03-29 20:48:27,983 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:27,986 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dining_room", "201"],
+  "GRAB": ["water_glass", "1001"],
+  "DRINK": ["water_gl...
+2026-03-29 20:48:28,100 - INFO -   ❌ [GRAB] <water_glass_1001> (1001) | MISSING_STEP
+2026-03-29 20:48:28,105 - INFO -   🔍 Strategy: insert_prep | Window: [2,2] | Unsat: ['next_to_obj', 'grabbable']
+2026-03-29 20:48:28,736 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:28,740 - INFO -   💡 LLM suggestions: {"WALK": ["water_glass_1001"], "GRAB": ["water_glass_1001"]}...
+2026-03-29 20:48:28,760 - INFO -   🌳 Tree found: [{'WALK': ['water_glass_1001']}]
+2026-03-29 20:48:28,760 - INFO -   Spliced: 1 + 1 + 1 = 3
+2026-03-29 20:48:28,919 - INFO -   ❌ [DRINK] <water_glass_1001> (1001) | MISSING_STEP
+2026-03-29 20:48:28,924 - INFO -   🔍 Strategy: wrong_action | Window: [3,3] | Unsat: []
+2026-03-29 20:48:29,658 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:29,661 - INFO -   💡 LLM suggestions: {"WALK": ["water_glass_1001"], "GRAB": ["water_glass_1001"]}...
+2026-03-29 20:48:29,675 - INFO -   🌳 Tree found: [{'WALK': ['water_glass_1001']}]
+2026-03-29 20:48:29,676 - INFO -   Spliced: 2 + 1 + 0 = 3
+2026-03-29 20:48:29,783 - INFO -   ✅ SUCCESS on attempt 3
+2026-03-29 20:48:30,797 - INFO - 
+[158] Drink | 317_2
+2026-03-29 20:48:31,983 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:31,986 - INFO -   Initial plan: ```json
+{
+  "WALK": ["kitchen_cabinet_1000"],
+  "OPEN": ["kitchen_cabinet_1000"],
+  "WALK": ["cup_10...
+2026-03-29 20:48:32,315 - INFO -   ❌ [POUR] <sink_231> (231) <cup_1001> (1001) | AFFORDANCE_ERROR
+2026-03-29 20:48:32,320 - INFO -   🔍 Strategy: local | Window: [7,7] | Unsat: ['holds_obj', 'next_to_target']
+2026-03-29 20:48:32,935 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:32,938 - INFO -   💡 LLM suggestions: {"WALK": ["cup_1001"], "GRAB": ["cup_1001"], "WALK": ["sink_231"]}...
+2026-03-29 20:48:33,001 - INFO -   🌳 Tree failed — no fallback (tree-only mode)
+2026-03-29 20:48:33,308 - INFO -   ❌ [POUR] <sink_231> (231) <cup_1001> (1001) | AFFORDANCE_ERROR
+2026-03-29 20:48:33,314 - INFO -   🔍 Strategy: local | Window: [7,7] | Unsat: ['holds_obj', 'next_to_target']
+2026-03-29 20:48:33,964 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:33,968 - INFO -   💡 LLM suggestions: {"WALK": ["cup_1001"], "GRAB": ["cup_1001"], "WALK": ["sink_231"]}...
+2026-03-29 20:48:34,019 - INFO -   🌳 Tree failed — no fallback (tree-only mode)
+2026-03-29 20:48:34,336 - INFO -   ❌ [POUR] <sink_231> (231) <cup_1001> (1001) | AFFORDANCE_ERROR
+2026-03-29 20:48:34,342 - INFO -   🔍 Strategy: local | Window: [7,7] | Unsat: ['holds_obj', 'next_to_target']
+2026-03-29 20:48:34,879 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:34,882 - INFO -   💡 LLM suggestions: {"WALK": ["cup_1001"], "GRAB": ["cup_1001"], "WALK": ["sink_231"]}...
+2026-03-29 20:48:34,944 - INFO -   🌳 Tree failed — no fallback (tree-only mode)
+2026-03-29 20:48:35,249 - INFO -   ❌ [POUR] <sink_231> (231) <cup_1001> (1001) | AFFORDANCE_ERROR
+2026-03-29 20:48:35,249 - INFO -   ⚠️  Max replanning reached for 317_2
+2026-03-29 20:48:36,263 - INFO - 
+[159] Drink | 488_2
+2026-03-29 20:48:37,208 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:37,213 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dining_room", "201"],
+  "WALK": ["cup", "1000"],
+  "GRAB": ["cup", "1000"],
+  ...
+2026-03-29 20:48:37,452 - INFO -   ❌ [POUR] <water_1001> (1001) <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:37,457 - INFO -   🔍 Strategy: already_satisfied | Window: [5,5] | Unsat: []
+2026-03-29 20:48:38,094 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:38,097 - INFO -   💡 LLM suggestions: {"WALK": ["water_1001"], "GRAB": ["water_1001"], "WALK": ["cup_1000"], "GRAB": [...
+2026-03-29 20:48:38,115 - INFO -   🌳 Tree found: [{'WALK': ['water_1001']}]
+2026-03-29 20:48:38,116 - INFO -   Spliced: 4 + 1 + 1 = 6
+2026-03-29 20:48:38,297 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:48:39,313 - INFO - 
+[160] Drink | 510_1
+2026-03-29 20:48:40,514 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:40,517 - INFO -   Initial plan: ```json
+{
+  "WALK": ["drinking_glass", "1001"],
+  "GRAB": ["drinking_glass", "1001"],
+  "DRINK": ["d...
+2026-03-29 20:48:40,633 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:41,643 - INFO - Saved 220 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:48:41,644 - INFO - Progress: 160 | Tree: 22 | Fallback: 0
+2026-03-29 20:48:41,644 - INFO - 
+[161] Drink | 528_1
+2026-03-29 20:48:42,561 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:42,563 - INFO -   Initial plan: ```json
+{
+  "WALK": ["freezer_289"],
+  "OPEN": ["freezer_289"],
+  "GRAB": ["drinking_glass_1000"],
+ ...
+2026-03-29 20:48:42,706 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:43,720 - INFO - 
+[162] Drink | 532_1
+2026-03-29 20:48:45,533 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:45,537 - INFO -   Initial plan: ```json
+{
+  "WALK": ["kitchen_cabinet", "1000"],
+  "OPEN": ["kitchen_cabinet", "1000"],
+  "WALK": ["...
+2026-03-29 20:48:45,886 - INFO -   ❌ [POUR] <water_1002> (1002) <drinking_glass_1001> (1001) | MISSING_STEP
+2026-03-29 20:48:45,892 - INFO -   🔍 Strategy: already_satisfied | Window: [7,7] | Unsat: []
+2026-03-29 20:48:46,726 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:46,732 - INFO -   💡 LLM suggestions: {"WALK": ["water_1002"], "GRAB": ["water_1002"], "WALK": ["drinking_glass_1001"]...
+2026-03-29 20:48:46,749 - INFO -   🌳 Tree found: [{'WALK': ['water_1002']}]
+2026-03-29 20:48:46,749 - INFO -   Spliced: 6 + 1 + 2 = 9
+2026-03-29 20:48:47,132 - INFO -   ❌ [SWITCHOFF] <faucet_232> (232) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:48:47,138 - INFO -   🔍 Strategy: insert_prep | Window: [8,8] | Unsat: ['next_to_obj', 'has_switch']
+2026-03-29 20:48:47,722 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:47,724 - INFO -   💡 LLM suggestions: {"WALK": ["faucet_232"], "SWITCHOFF": ["faucet_232"]}...
+2026-03-29 20:48:47,734 - INFO -   🌳 Tree found: [{'WALK': ['faucet_232']}]
+2026-03-29 20:48:47,734 - INFO -   Spliced: 7 + 1 + 1 = 9
+2026-03-29 20:48:48,015 - INFO -   ✅ SUCCESS on attempt 3
+2026-03-29 20:48:49,033 - INFO - 
+[163] Drink | 589_1
+2026-03-29 20:48:50,243 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:50,248 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cup", "1000"],
+  "GRAB": ["cup", "1000"],
+  "WALK": ["water", "1001"],
+  "POUR...
+2026-03-29 20:48:50,443 - INFO -   ❌ [POUR] <water_1001> (1001) <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:48:50,449 - INFO -   🔍 Strategy: already_satisfied | Window: [4,4] | Unsat: []
+2026-03-29 20:48:51,368 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:51,372 - INFO -   💡 LLM suggestions: {"WALK": ["water_1001"], "GRAB": ["water_1001"], "WALK": ["cup_1000"], "GRAB": [...
+2026-03-29 20:48:51,387 - INFO -   🌳 Tree found: [{'WALK': ['water_1001']}]
+2026-03-29 20:48:51,387 - INFO -   Spliced: 3 + 1 + 1 = 5
+2026-03-29 20:48:51,545 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:48:52,560 - INFO - 
+[164] Drink | 600_1
+2026-03-29 20:48:53,420 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:53,425 - INFO -   Initial plan: ```json
+{
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "GRAB": ["water_glass", "100...
+2026-03-29 20:48:53,588 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:48:54,602 - INFO - 
+[165] Drink | 662_1
+2026-03-29 20:48:55,566 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:55,569 - INFO -   Initial plan: ```json
+{
+  "WALK": ["water_glass", "1000"],
+  "GRAB": ["water_glass", "1000"],
+  "DRINK": ["water_1...
+2026-03-29 20:48:55,730 - INFO -   ❌ [DRINK] <water_1001> (1001) | MISSING_STEP
+2026-03-29 20:48:55,735 - INFO -   🔍 Strategy: wrong_action | Window: [3,3] | Unsat: []
+2026-03-29 20:48:56,588 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:56,592 - INFO -   💡 LLM suggestions: {"WALK": ["water_1001"], "GRAB": ["water_1001"], "DRINK": ["water_1001"]}...
+2026-03-29 20:48:56,607 - INFO -   🌳 Tree found: [{'WALK': ['water_1001']}]
+2026-03-29 20:48:56,607 - INFO -   Spliced: 2 + 1 + 0 = 3
+2026-03-29 20:48:56,734 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:48:57,746 - INFO - 
+[166] Drink | 688_1
+2026-03-29 20:48:58,945 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:48:58,949 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["water_glass", "1...
+2026-03-29 20:48:59,112 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:00,126 - INFO - 
+[167] Drink | 787_1
+2026-03-29 20:49:00,992 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:00,989 - INFO -   Initial plan: ```json
+{
+  "WALK": ["water_glass", "1000"],
+  "GRAB": ["water_glass", "1000"],
+  "DRINK": ["water_g...
+2026-03-29 20:49:01,113 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:02,127 - INFO - 
+[168] Drink | 788_1
+2026-03-29 20:49:03,445 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:03,448 - INFO -   Initial plan: ```json
+{
+  "WALK": ["kitchen_cabinet_1000"],
+  "OPEN": ["kitchen_cabinet_1000"],
+  "WALK": ["drinki...
+2026-03-29 20:49:03,785 - INFO -   ❌ [POUR] <water_1002> (1002) <drinking_glass_1001> (1001) | MISSING_STEP
+2026-03-29 20:49:03,790 - INFO -   🔍 Strategy: already_satisfied | Window: [7,7] | Unsat: []
+2026-03-29 20:49:04,571 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:04,575 - INFO -   💡 LLM suggestions: {"WALK": ["faucet"], "GRAB": ["drinking_glass_1001"], "POUR": ["faucet", "drinki...
+2026-03-29 20:49:04,589 - INFO -   🌳 Tree found: [{'WALK': ['faucet']}]
+2026-03-29 20:49:04,589 - INFO -   Spliced: 6 + 1 + 1 = 8
+2026-03-29 20:49:04,815 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:49:05,831 - INFO - 
+[169] Drink | 814_1
+2026-03-29 20:49:06,825 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:06,828 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["water_glass", "1...
+2026-03-29 20:49:06,994 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:08,004 - INFO - 
+[170] Drink | 850_2
+2026-03-29 20:49:09,281 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:09,284 - INFO -   Initial plan: ```json
+{
+  "WALK": ["kitchen_cabinet_1000"],
+  "OPEN": ["kitchen_cabinet_1000"],
+  "WALK": ["water_...
+2026-03-29 20:49:09,445 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:10,460 - INFO - Saved 230 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:49:10,460 - INFO - Progress: 170 | Tree: 27 | Fallback: 0
+2026-03-29 20:49:10,460 - INFO - 
+[171] Drink | 861_2
+2026-03-29 20:49:11,535 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:11,539 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cup", "1000"],
+  "GRAB": ["cup", "1000"],
+  "WALK": ["faucet", "232"],
+  "SWIT...
+2026-03-29 20:49:11,795 - INFO -   ❌ [POUR] <water_1001> (1001) <cup_1000> (1000) | MISSING_STEP
+2026-03-29 20:49:11,800 - INFO -   🔍 Strategy: already_satisfied | Window: [5,5] | Unsat: []
+2026-03-29 20:49:12,558 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:12,561 - INFO -   💡 LLM suggestions: {"WALK": ["water_1001"], "GRAB": ["water_1001"], "WALK": ["cup_1000"], "GRAB": [...
+2026-03-29 20:49:12,575 - INFO -   🌳 Tree found: [{'WALK': ['water_1001']}]
+2026-03-29 20:49:12,575 - INFO -   Spliced: 4 + 1 + 2 = 7
+2026-03-29 20:49:12,858 - INFO -   ❌ [SWITCHOFF] <faucet_232> (232) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:49:12,863 - INFO -   🔍 Strategy: insert_prep | Window: [6,6] | Unsat: ['next_to_obj', 'has_switch']
+2026-03-29 20:49:13,582 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:13,585 - INFO -   💡 LLM suggestions: {"WALK": ["faucet_232"], "SWITCHOFF": ["faucet_232"]}...
+2026-03-29 20:49:13,607 - INFO -   🌳 Tree found: [{'WALK': ['faucet_232']}]
+2026-03-29 20:49:13,607 - INFO -   Spliced: 5 + 1 + 1 = 7
+2026-03-29 20:49:13,833 - INFO -   ✅ SUCCESS on attempt 3
+2026-03-29 20:49:14,842 - INFO - 
+[172] Drink | 878_2
+2026-03-29 20:49:15,730 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:15,733 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["water_glass", "1...
+2026-03-29 20:49:15,902 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:16,908 - INFO - 
+[173] Read book | 1073_1
+2026-03-29 20:49:17,882 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:17,885 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:18,008 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:19,016 - INFO - 
+[174] Read book | 1088_1
+2026-03-29 20:49:19,813 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:19,817 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:19,951 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:20,965 - INFO - 
+[175] Read book | 15_2
+2026-03-29 20:49:21,773 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:21,776 - INFO -   Initial plan: ```json
+{
+  "WALK": ["address_book", "1000"],
+  "GRAB": ["address_book", "1000"],
+  "READ": ["addres...
+2026-03-29 20:49:21,896 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:22,909 - INFO - 
+[176] Read book | 163_1
+2026-03-29 20:49:23,614 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:23,615 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:23,709 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:24,720 - INFO - 
+[177] Read book | 16_2
+2026-03-29 20:49:25,460 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:25,463 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:25,602 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:26,615 - INFO - 
+[178] Read book | 192_1
+2026-03-29 20:49:27,406 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:27,409 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:27,529 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:28,542 - INFO - 
+[179] Read book | 208_2
+2026-03-29 20:49:29,185 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:29,194 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1001"],
+  "GRAB": ["novel", "1001"],
+  "READ": ["novel", "1001"]
+}
+``...
+2026-03-29 20:49:29,316 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:30,330 - INFO - 
+[180] Read book | 221_2
+2026-03-29 20:49:31,029 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:31,033 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1001"],
+  "GRAB": ["novel", "1001"],
+  "READ": ["novel", "1001"]
+}
+``...
+2026-03-29 20:49:31,167 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:32,186 - INFO - Saved 240 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:49:32,187 - INFO - Progress: 180 | Tree: 29 | Fallback: 0
+2026-03-29 20:49:32,187 - INFO - 
+[181] Read book | 241_2
+2026-03-29 20:49:33,237 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:33,240 - INFO -   Initial plan: ```json
+{
+  "STANDUP": [],
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["nov...
+2026-03-29 20:49:33,379 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:34,384 - INFO - 
+[182] Read book | 341_1
+2026-03-29 20:49:35,797 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:35,800 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["spectacles", "10...
+2026-03-29 20:49:36,133 - INFO -   ❌ [LOOKAT] <novel_1001> (1001) | MISSING_STEP
+2026-03-29 20:49:36,138 - INFO -   🔍 Strategy: reconstruct | Window: [7,7] | Unsat: ['facing_obj']
+2026-03-29 20:49:36,719 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:36,722 - INFO -   💡 LLM suggestions: {"TURNTO": ["novel_1001"], "LOOKAT": ["novel_1001"]}...
+2026-03-29 20:49:36,740 - INFO -   🌳 Tree found: [{'TURNTO': ['novel_1001']}]
+2026-03-29 20:49:36,740 - INFO -   Spliced: 6 + 1 + 0 = 7
+2026-03-29 20:49:36,966 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:49:37,978 - INFO - 
+[183] Read book | 484_1
+2026-03-29 20:49:38,765 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:38,768 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:38,890 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:39,897 - INFO - 
+[184] Read book | 504_2
+2026-03-29 20:49:41,020 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:41,023 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:41,141 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:42,149 - INFO - 
+[185] Read book | 508_2
+2026-03-29 20:49:42,965 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:42,969 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:43,098 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:44,111 - INFO - 
+[186] Read book | 544_1
+2026-03-29 20:49:45,218 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:45,221 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:45,344 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:46,353 - INFO - 
+[187] Read book | 57_1
+2026-03-29 20:49:47,205 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:47,209 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:47,334 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:48,347 - INFO - 
+[188] Read book | 617_2
+2026-03-29 20:49:49,417 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:49,420 - INFO -   Initial plan: ```json
+{
+  "WALK": ["nightstand", "100"],
+  "OPEN": ["nightstand", "100"],
+  "WALK": ["novel", "100...
+2026-03-29 20:49:49,607 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:50,620 - INFO - 
+[189] Read book | 628_1
+2026-03-29 20:49:51,567 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:51,569 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:51,686 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:52,692 - INFO - 
+[190] Read book | 688_2
+2026-03-29 20:49:53,718 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:53,721 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:53,836 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:54,850 - INFO - Saved 250 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:49:54,850 - INFO - Progress: 190 | Tree: 30 | Fallback: 0
+2026-03-29 20:49:54,850 - INFO - 
+[191] Read book | 693_2
+2026-03-29 20:49:55,869 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:55,873 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:56,008 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:57,021 - INFO - 
+[192] Read book | 821_1
+2026-03-29 20:49:57,813 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:57,818 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:49:57,937 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:49:58,951 - INFO - 
+[193] Read book | 86_1
+2026-03-29 20:49:59,760 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:49:59,763 - INFO -   Initial plan: ```json
+{
+  "WALK": ["filing_cabinet", "399"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "100...
+2026-03-29 20:49:59,882 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:00,886 - INFO - 
+[194] Read book | 896_2
+2026-03-29 20:50:01,705 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:01,710 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:50:01,832 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:02,845 - INFO - 
+[195] Read book | 897_2
+2026-03-29 20:50:03,753 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:03,755 - INFO -   Initial plan: ```json
+{
+  "WALK": ["novel", "1000"],
+  "GRAB": ["novel", "1000"],
+  "READ": ["novel", "1000"]
+}
+``...
+2026-03-29 20:50:03,872 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:04,884 - INFO - 
+[196] Cook some food | 1083_2
+2026-03-29 20:50:06,212 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:06,215 - INFO -   Initial plan: ```json
+{
+  "WALK": ["oven", "295"],
+  "SWITCHON": ["oven", "295"],
+  "WALK": ["pot", "1003"],
+  "GR...
+2026-03-29 20:50:06,417 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:07,425 - INFO - 
+[197] Cook some food | 392_2
+2026-03-29 20:50:08,668 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:08,671 - INFO -   Initial plan: ```json
+{
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "WALK": ["pot", "1001"],
+  "...
+2026-03-29 20:50:08,901 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:09,907 - INFO - 
+[198] Cook some food | 755_2
+2026-03-29 20:50:11,734 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:11,739 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"],
+  "WALK": ["kitchen_cabinet", "1000"],
+  "OPEN": ["kitch...
+2026-03-29 20:50:12,055 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:13,062 - INFO - 
+[199] Relax on sofa | 124_1
+2026-03-29 20:50:13,789 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:13,792 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:13,887 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:14,895 - INFO - 
+[200] Relax on sofa | 137_1
+2026-03-29 20:50:15,732 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:15,734 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:15,837 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:16,858 - INFO - Saved 260 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:50:16,858 - INFO - Progress: 200 | Tree: 30 | Fallback: 0
+2026-03-29 20:50:16,858 - INFO - 
+[201] Relax on sofa | 204_2
+2026-03-29 20:50:17,679 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:17,683 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:17,784 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:18,797 - INFO - 
+[202] Relax on sofa | 268_1
+2026-03-29 20:50:19,625 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:19,627 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:19,722 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:20,726 - INFO - 
+[203] Relax on sofa | 297_2
+2026-03-29 20:50:21,445 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:21,452 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:21,551 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:22,562 - INFO - 
+[204] Relax on sofa | 299_1
+2026-03-29 20:50:23,415 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:23,420 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:23,526 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:24,539 - INFO - 
+[205] Relax on sofa | 300_1
+2026-03-29 20:50:25,359 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:25,362 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:25,463 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:26,475 - INFO - 
+[206] Relax on sofa | 321_1
+2026-03-29 20:50:27,203 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:27,205 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:27,297 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:28,310 - INFO - 
+[207] Relax on sofa | 332_2
+2026-03-29 20:50:29,046 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:29,050 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:29,148 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:30,161 - INFO - 
+[208] Relax on sofa | 379_2
+2026-03-29 20:50:31,325 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:31,329 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:31,432 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:32,444 - INFO - 
+[209] Relax on sofa | 387_1
+2026-03-29 20:50:33,204 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:33,211 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:33,315 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:34,328 - INFO - 
+[210] Relax on sofa | 390_2
+2026-03-29 20:50:34,984 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:34,987 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:35,080 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:36,100 - INFO - Saved 270 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:50:36,100 - INFO - Progress: 210 | Tree: 30 | Fallback: 0
+2026-03-29 20:50:36,100 - INFO - 
+[211] Relax on sofa | 3_1
+2026-03-29 20:50:36,826 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:36,829 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:36,931 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:37,943 - INFO - 
+[212] Relax on sofa | 416_1
+2026-03-29 20:50:38,787 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:38,793 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:38,889 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:39,894 - INFO - 
+[213] Relax on sofa | 438_1
+2026-03-29 20:50:40,717 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:40,720 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:40,817 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:41,827 - INFO - 
+[214] Relax on sofa | 442_1
+2026-03-29 20:50:42,476 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:42,479 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:42,574 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:43,578 - INFO - 
+[215] Relax on sofa | 447_2
+2026-03-29 20:50:44,357 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:44,361 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:44,459 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:45,468 - INFO - 
+[216] Relax on sofa | 449_1
+2026-03-29 20:50:46,350 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:46,352 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:46,452 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:47,457 - INFO - 
+[217] Relax on sofa | 455_1
+2026-03-29 20:50:48,500 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:48,504 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:48,605 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:49,610 - INFO - 
+[218] Relax on sofa | 456_2
+2026-03-29 20:50:50,549 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:50,552 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:50,651 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:51,655 - INFO - 
+[219] Relax on sofa | 473_1
+2026-03-29 20:50:52,357 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:52,366 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:52,467 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:53,475 - INFO - 
+[220] Relax on sofa | 490_1
+2026-03-29 20:50:54,440 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:54,443 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:54,546 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:55,562 - INFO - Saved 280 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:50:55,563 - INFO - Progress: 220 | Tree: 30 | Fallback: 0
+2026-03-29 20:50:55,563 - INFO - 
+[221] Relax on sofa | 563_1
+2026-03-29 20:50:56,388 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:56,404 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:56,500 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:57,508 - INFO - 
+[222] Relax on sofa | 567_2
+2026-03-29 20:50:58,434 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:50:58,437 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:50:58,542 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:50:59,550 - INFO - 
+[223] Relax on sofa | 570_1
+2026-03-29 20:51:00,275 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:00,277 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:00,377 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:01,385 - INFO - 
+[224] Relax on sofa | 674_2
+2026-03-29 20:51:02,324 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:02,328 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:02,424 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:03,432 - INFO - 
+[225] Relax on sofa | 6_1
+2026-03-29 20:51:04,373 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:04,377 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:04,475 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:05,481 - INFO - 
+[226] Relax on sofa | 742_1
+2026-03-29 20:51:06,215 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:06,219 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:06,319 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:07,326 - INFO - 
+[227] Relax on sofa | 762_2
+2026-03-29 20:51:08,059 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:08,062 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:08,156 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:09,164 - INFO - 
+[228] Relax on sofa | 793_2
+2026-03-29 20:51:09,799 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:09,803 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:09,901 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:10,909 - INFO - 
+[229] Relax on sofa | 798_2
+2026-03-29 20:51:11,643 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:11,646 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:11,750 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:12,755 - INFO - 
+[230] Relax on sofa | 932_2
+2026-03-29 20:51:13,384 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:13,387 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:13,498 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:14,514 - INFO - Saved 290 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:51:14,514 - INFO - Progress: 230 | Tree: 30 | Fallback: 0
+2026-03-29 20:51:14,514 - INFO - 
+[231] Relax on sofa | 941_2
+2026-03-29 20:51:15,739 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:15,742 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:15,840 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:16,848 - INFO - 
+[232] Relax on sofa | 96_1
+2026-03-29 20:51:17,891 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:17,894 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "SIT": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:17,994 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:19,002 - INFO - 
+[233] Relax on sofa | 976_1
+2026-03-29 20:51:19,623 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:19,629 - INFO -   Initial plan: ```json
+{
+  "WALK": ["couch", "352"],
+  "LIE": ["couch", "352"]
+}
+```...
+2026-03-29 20:51:19,729 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:20,737 - INFO - 
+[234] Pick up phone | 149_1
+2026-03-29 20:51:21,575 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:21,579 - INFO -   Initial plan: ```json
+{
+  "STANDUP": [],
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:21,698 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:22,706 - INFO - 
+[235] Pick up phone | 154_1
+2026-03-29 20:51:23,317 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:23,320 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:23,424 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:24,428 - INFO - 
+[236] Pick up phone | 180_1
+2026-03-29 20:51:25,264 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:25,267 - INFO -   Initial plan: ```json
+{
+  "STANDUP": [],
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:25,385 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:26,394 - INFO - 
+[237] Pick up phone | 195_1
+2026-03-29 20:51:27,209 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:27,212 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:27,309 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:28,317 - INFO - 
+[238] Pick up phone | 211_1
+2026-03-29 20:51:29,156 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:29,159 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:29,251 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:30,260 - INFO - 
+[239] Pick up phone | 241_1
+2026-03-29 20:51:30,996 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:30,999 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:31,101 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:32,110 - INFO - 
+[240] Pick up phone | 264_1
+2026-03-29 20:51:32,838 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:32,839 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:32,934 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:33,951 - INFO - Saved 300 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:51:33,951 - INFO - Progress: 240 | Tree: 30 | Fallback: 0
+2026-03-29 20:51:33,951 - INFO - 
+[241] Pick up phone | 265_2
+2026-03-29 20:51:34,786 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:34,790 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:34,890 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:35,899 - INFO - 
+[242] Pick up phone | 287_2
+2026-03-29 20:51:36,528 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:36,531 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:36,643 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:37,652 - INFO - 
+[243] Pick up phone | 352_1
+2026-03-29 20:51:38,473 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:38,478 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:38,582 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:39,591 - INFO - 
+[244] Pick up phone | 360_1
+2026-03-29 20:51:40,314 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:40,318 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:40,420 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:41,427 - INFO - 
+[245] Pick up phone | 388_1
+2026-03-29 20:51:42,261 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:42,265 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:42,381 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:43,389 - INFO - 
+[246] Pick up phone | 431_1
+2026-03-29 20:51:44,208 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:44,212 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:44,313 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:45,322 - INFO - 
+[247] Pick up phone | 436_1
+2026-03-29 20:51:46,154 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:46,156 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:46,265 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:47,274 - INFO - 
+[248] Pick up phone | 442_2
+2026-03-29 20:51:47,996 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:48,000 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:48,101 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:49,109 - INFO - 
+[249] Pick up phone | 474_2
+2026-03-29 20:51:49,802 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:49,806 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:49,907 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:50,915 - INFO - 
+[250] Pick up phone | 482_2
+2026-03-29 20:51:51,684 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:51,687 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:51,800 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:52,814 - INFO - Saved 310 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:51:52,814 - INFO - Progress: 250 | Tree: 30 | Fallback: 0
+2026-03-29 20:51:52,814 - INFO - 
+[251] Pick up phone | 497_1
+2026-03-29 20:51:53,549 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:53,557 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:53,659 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:54,668 - INFO - 
+[252] Pick up phone | 553_1
+2026-03-29 20:51:55,375 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:55,378 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:55,481 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:56,490 - INFO - 
+[253] Pick up phone | 601_2
+2026-03-29 20:51:57,416 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:57,419 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:51:57,521 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:51:58,527 - INFO - 
+[254] Pick up phone | 70_1
+2026-03-29 20:51:59,260 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:51:59,263 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:51:59,361 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:00,370 - INFO - 
+[255] Pick up phone | 864_2
+2026-03-29 20:52:00,999 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:01,002 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:52:01,093 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:02,102 - INFO - 
+[256] Pick up phone | 963_2
+2026-03-29 20:52:02,841 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:02,843 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:52:02,938 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:03,943 - INFO - 
+[257] Pick up phone | 974_1
+2026-03-29 20:52:04,788 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:04,791 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:52:04,890 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:05,893 - INFO - 
+[258] Pick up phone | 976_2
+2026-03-29 20:52:06,531 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:06,534 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "1000"],
+  "GRAB": ["phone", "1000"]
+}
+```...
+2026-03-29 20:52:06,636 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:07,641 - INFO - 
+[259] Pick up phone | 99_2
+2026-03-29 20:52:08,580 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:08,584 - INFO -   Initial plan: ```json
+{
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"]
+}
+```...
+2026-03-29 20:52:08,685 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:09,691 - INFO - 
+[260] Make coffee | 183_2
+2026-03-29 20:52:10,934 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:10,937 - INFO -   Initial plan: ```json
+{
+  "WALK": ["coffe_maker_290"],
+  "OPEN": ["coffe_maker_290"],
+  "WALK": ["water_1002"],
+  ...
+2026-03-29 20:52:11,293 - INFO -   ❌ [DROP] <water_1002> (1002) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:11,298 - INFO -   🔍 Strategy: wrong_action | Window: [7,7] | Unsat: []
+2026-03-29 20:52:11,854 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:11,856 - INFO -   💡 LLM suggestions: {"WALK": ["water_1002"], "GRAB": ["water_1002"], "DROP": ["water_1002"]}...
+2026-03-29 20:52:11,873 - INFO -   🌳 Tree found: [{'WALK': ['water_1002']}]
+2026-03-29 20:52:11,874 - INFO -   Spliced: 6 + 1 + 2 = 9
+2026-03-29 20:52:12,129 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:52:13,149 - INFO - Saved 320 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:52:13,149 - INFO - Progress: 260 | Tree: 31 | Fallback: 0
+2026-03-29 20:52:13,149 - INFO - 
+[261] Make coffee | 229_1
+2026-03-29 20:52:14,415 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:14,418 - INFO -   Initial plan: ```json
+{
+  "WALK": ["coffe_maker", "290"],
+  "OPEN": ["coffe_maker", "290"],
+  "WALK": ["water", "1...
+2026-03-29 20:52:14,748 - INFO -   ❌ [DROP] <water_1002> (1002) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:14,753 - INFO -   🔍 Strategy: wrong_action | Window: [7,7] | Unsat: []
+2026-03-29 20:52:15,336 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:15,339 - INFO -   💡 LLM suggestions: {"WALK": ["water_1002"], "GRAB": ["water_1002"], "DROP": ["water_1002"]}...
+2026-03-29 20:52:15,357 - INFO -   🌳 Tree found: [{'WALK': ['water_1002']}]
+2026-03-29 20:52:15,358 - INFO -   Spliced: 6 + 1 + 2 = 9
+2026-03-29 20:52:15,628 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:52:16,639 - INFO - 
+[262] Make coffee | 310_2
+2026-03-29 20:52:18,205 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:18,208 - INFO -   Initial plan: ```json
+{
+  "WALK": ["coffe_maker_290"],
+  "OPEN": ["coffe_maker_290"],
+  "WALK": ["ground_coffee_10...
+2026-03-29 20:52:18,586 - INFO -   ❌ [PUTBACK] <coffee_filter_1000> (1000) <coffe_maker_290> (290) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:18,591 - INFO -   🔍 Strategy: already_satisfied | Window: [8,8] | Unsat: []
+2026-03-29 20:52:19,432 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:19,436 - INFO -   💡 LLM suggestions: ```json
+{"WALK": ["coffee_maker_290"], "OPEN": ["coffee_maker_290"], "PUTIN": ["...
+2026-03-29 20:52:19,454 - INFO -   🌳 Tree found: [{'WALK': ['coffee_maker_290']}]
+2026-03-29 20:52:19,455 - WARNING - Subtree object resolution failed: Unknown object 'coffee_maker_290'
+2026-03-29 20:52:19,815 - INFO -   ❌ [PUTBACK] <coffee_filter_1000> (1000) <coffe_maker_290> (290) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:19,820 - INFO -   🔍 Strategy: already_satisfied | Window: [8,8] | Unsat: []
+2026-03-29 20:52:20,663 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:20,666 - INFO -   💡 LLM suggestions: ```json
+{"WALK": ["coffee_maker_290"], "OPEN": ["coffee_maker_290"], "PUTIN": ["...
+2026-03-29 20:52:20,679 - INFO -   🌳 Tree found: [{'WALK': ['coffee_maker_290']}]
+2026-03-29 20:52:20,680 - WARNING - Subtree object resolution failed: Unknown object 'coffee_maker_290'
+2026-03-29 20:52:21,051 - INFO -   ❌ [PUTBACK] <coffee_filter_1000> (1000) <coffe_maker_290> (290) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:21,056 - INFO -   🔍 Strategy: already_satisfied | Window: [8,8] | Unsat: []
+2026-03-29 20:52:21,788 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:21,790 - INFO -   💡 LLM suggestions: ```json
+{"WALK": ["coffee_maker_290"], "OPEN": ["coffee_maker_290"], "PUTBACK": ...
+2026-03-29 20:52:21,804 - INFO -   🌳 Tree found: [{'WALK': ['coffee_maker_290']}]
+2026-03-29 20:52:21,804 - WARNING - Subtree object resolution failed: Unknown object 'coffee_maker_290'
+2026-03-29 20:52:22,181 - INFO -   ❌ [PUTBACK] <coffee_filter_1000> (1000) <coffe_maker_290> (290) | WRONG_TEMPORAL_ORDER
+2026-03-29 20:52:22,181 - INFO -   ⚠️  Max replanning reached for 310_2
+2026-03-29 20:52:23,192 - INFO - 
+[263] Make coffee | 721_2
+2026-03-29 20:52:24,963 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:24,966 - INFO -   Initial plan: ```json
+{
+  "WALK": ["coffe_maker", "290"],
+  "OPEN": ["coffe_maker", "290"],
+  "WALK": ["ground_cof...
+2026-03-29 20:52:25,422 - INFO -   ⏭️  Skipping: [SWITCHON] <coffe_maker_290> (290)
+2026-03-29 20:52:25,422 - INFO -   ✅ SUCCESS on attempt 1 (removed 1 skipped actions)
+2026-03-29 20:52:26,430 - INFO - 
+[264] Make coffee | 764_2
+2026-03-29 20:52:27,654 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:27,657 - INFO -   Initial plan: ```json
+{
+  "WALK": ["coffe_maker_290"],
+  "OPEN": ["coffe_maker_290"],
+  "WALK": ["water_1002"],
+  ...
+2026-03-29 20:52:27,856 - INFO -   ❌ [POUR] <water_1002> (1002) <coffe_maker_290> (290) | MISSING_STEP
+2026-03-29 20:52:27,861 - INFO -   🔍 Strategy: already_satisfied | Window: [4,4] | Unsat: []
+2026-03-29 20:52:28,549 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:28,552 - INFO -   💡 LLM suggestions: {"WALK": ["coffe_maker_290"], "OPEN": ["coffe_maker_290"], "WALK": ["water_1002"...
+2026-03-29 20:52:28,566 - INFO -   🌳 Tree found: [{'WALK': ['coffe_maker_290']}]
+2026-03-29 20:52:28,566 - INFO -   Spliced: 3 + 1 + 2 = 6
+2026-03-29 20:52:28,758 - INFO -   ✅ SUCCESS on attempt 2
+2026-03-29 20:52:29,768 - INFO - 
+[265] Set up table | 419_2
+2026-03-29 20:52:31,966 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:31,969 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dining_room", "201"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_na...
+2026-03-29 20:52:32,536 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:33,548 - INFO - 
+[266] Set up table | 446_2
+2026-03-29 20:52:35,203 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:35,207 - INFO -   Initial plan: ```json
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["plate", "1001"],...
+2026-03-29 20:52:35,587 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:36,598 - INFO - 
+[267] Set up table | 710_2
+2026-03-29 20:52:37,658 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:37,662 - INFO -   Initial plan: ```json
+{
+  "WALK": ["kitchen_cabinet_1000"],
+  "OPEN": ["kitchen_cabinet_1000"],
+  "WALK": ["plate_...
+2026-03-29 20:52:37,875 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:38,885 - INFO - 
+[268] Set up table | 84_1
+2026-03-29 20:52:39,606 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:39,610 - INFO -   Initial plan: ```json
+{
+  "WALK": ["home_office", "319"]
+}
+```...
+2026-03-29 20:52:39,683 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:40,686 - INFO - 
+[269] Set up table | 93_1
+2026-03-29 20:52:41,346 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:41,349 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dining_room", "201"]
+}
+```...
+2026-03-29 20:52:41,420 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:42,423 - INFO - 
+[270] Get some water | 368_1
+2026-03-29 20:52:43,085 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:43,089 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dining_room", "201"]
+}
+```...
+2026-03-29 20:52:43,161 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:44,177 - INFO - Saved 330 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:52:44,177 - INFO - Progress: 270 | Tree: 36 | Fallback: 0
+2026-03-29 20:52:44,177 - INFO - 
+[271] Take shower | 729_2
+2026-03-29 20:52:44,826 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:44,830 - INFO -   Initial plan: ```json
+{
+  "WALK": ["shower", "36"]
+}
+```...
+2026-03-29 20:52:44,909 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:45,916 - INFO - 
+[272] Take shower | 975_2
+2026-03-29 20:52:46,671 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:46,675 - INFO -   Initial plan: ```json
+{
+  "WALK": ["shower", "36"]
+}
+```...
+2026-03-29 20:52:46,747 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:47,754 - INFO - 
+[273] Wash dishes by hand | 231_2
+2026-03-29 20:52:48,743 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:48,748 - INFO -   Initial plan: ```json
+{
+  "WALK": ["plate", "1000"],
+  "GRAB": ["plate", "1000"],
+  "WALK": ["dish_soap", "1001"],...
+2026-03-29 20:52:48,900 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:49,909 - INFO - 
+[274] Wash dishes by hand | 31_1
+2026-03-29 20:52:50,635 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:50,639 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "231"],
+  "GRAB": ["sponge", "1002"],
+  "WASH": ["sponge", "1002"]
+}
+``...
+2026-03-29 20:52:50,780 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:51,789 - INFO - 
+[275] Wash dishes by hand | 349_1
+2026-03-29 20:52:52,544 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:52,548 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dish_soap", "1000"],
+  "GRAB": ["dish_soap", "1000"],
+  "WALK": ["plate", "100...
+2026-03-29 20:52:52,697 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:53,703 - INFO - 
+[276] Wash dishes by hand | 397_1
+2026-03-29 20:52:54,556 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:54,560 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dish_soap", "1000"],
+  "GRAB": ["dish_soap", "1000"],
+  "WALK": ["plate", "100...
+2026-03-29 20:52:54,712 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:55,720 - INFO - 
+[277] Wash dishes by hand | 429_2
+2026-03-29 20:52:56,603 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:56,606 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dish_soap", "1001"],
+  "GRAB": ["dish_soap", "1001"],
+  "WALK": ["sink", "231"...
+2026-03-29 20:52:56,764 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:57,769 - INFO - 
+[278] Wash dishes by hand | 553_2
+2026-03-29 20:52:58,651 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:52:58,655 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sink", "231"],
+  "GRAB": ["soap", "1001"],
+  "WASH": ["plate", "1000"]
+}
+```...
+2026-03-29 20:52:58,776 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:52:59,784 - INFO - 
+[279] Wash dishes by hand | 594_2
+2026-03-29 20:53:00,799 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:53:00,802 - INFO -   Initial plan: ```json
+{
+  "WALK": ["dish_soap", "1000"],
+  "GRAB": ["dish_soap", "1000"],
+  "WALK": ["sink", "42"]...
+2026-03-29 20:53:00,946 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:53:01,955 - INFO - 
+[280] Wash dishes by hand | 746_1
+2026-03-29 20:53:02,900 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:53:02,905 - INFO -   Initial plan: ```json
+{
+  "WALK": ["sponge", "1002"],
+  "GRAB": ["sponge", "1002"],
+  "WALK": ["sink", "231"],
+  "...
+2026-03-29 20:53:03,032 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:53:04,048 - INFO - Saved 340 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:53:04,048 - INFO - Progress: 280 | Tree: 36 | Fallback: 0
+2026-03-29 20:53:04,048 - INFO - 
+[281] Wash dishes by hand | 961_1
+2026-03-29 20:53:05,002 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:53:05,005 - INFO -   Initial plan: ```json
+{
+  "WALK": ["food_kiwi", "2003"],
+  "GRAB": ["food_kiwi", "2003"],
+  "WALK": ["sink", "231"...
+2026-03-29 20:53:05,161 - INFO -   ✅ SUCCESS on attempt 1
+2026-03-29 20:53:06,166 - INFO - 
+[282] Wash dishes by hand | 988_1
+2026-03-29 20:53:07,254 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-29 20:53:07,257 - INFO -   Initial plan: ```json
+{
+  "WALK": ["bowl", "1001"],
+  "GRAB": ["bowl", "1001"],
+  "WALK": ["faucet", "232"],
+  "SW...
+2026-03-29 20:53:07,258 - WARNING - json_to_action failed: 'counter_1'
+2026-03-29 20:53:07,259 - WARNING -   Could not parse initial plan for 988_1
+2026-03-29 20:53:08,275 - INFO - Saved 342 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-sda-tree_m_outputs.json
+2026-03-29 20:53:08,275 - INFO - 
+=== DONE ===
+2026-03-29 20:53:08,275 - INFO - Total tasks    : 282
+2026-03-29 20:53:08,275 - INFO - Total replans  : 39
+2026-03-29 20:53:08,276 - INFO - Tree successes : 36
+2026-03-29 20:53:08,276 - INFO - LLM fallbacks  : 0
+2026-03-29 20:53:08,277 - INFO - Avg replans    : 0.14

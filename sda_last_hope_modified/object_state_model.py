@@ -488,6 +488,12 @@ _CAN_PLUGGED = frozenset(k for k, v in _VH_OBJECT_STATES.items()
 # Objects that are grabbable
 _CAN_GRAB    = frozenset(k for k, v in _VH_OBJECT_STATES.items()
                           if "grabbed" in v)
+# Objects SqueezeExecutor accepts in addition to CLOTHES (execution.py line 1971-1984)
+_SQUEEZABLE_CLASSES = frozenset({
+    "cleaning_solution", "tooth_paste", "shampoo", "food_peanut_butter",
+    "dish_soap", "soap", "towel", "rag", "paper", "sponge",
+    "food_lemon", "check",
+})
 
 
 class ObjectStateModel:
@@ -697,6 +703,25 @@ class ObjectStateModel:
     def holding_anything(self) -> bool:
         return self.hand_right is not None or self.hand_left is not None
 
+    def holding_knife(self) -> bool:
+        """True if either hand holds an object whose class name contains 'knife'.
+        Mirrors CutExecutor's runtime knife check (any held 'knife*' class)."""
+        return any(
+            held is not None and "knife" in held
+            for held in (self.hand_right, self.hand_left)
+        )
+
+    def _has_eatable_on(self, obj: str) -> bool:
+        """True if any object with EATABLE property is ON `obj`.
+        Matches EatExecutor's loophole that accepts e.g. EAT plate when food is on it.
+        """
+        obj = obj.lower()
+        for (a, b), rels in self.relations.items():
+            if b == obj and "ON" in rels:
+                if self.has_state(a, "EATABLE"):
+                    return True
+        return False
+
     def get_container(self, obj: str) -> str:
         """Return direct container of obj, or None if not inside anything."""
         return self.container_of.get(obj.lower())
@@ -751,10 +776,20 @@ class ObjectStateModel:
         # ── Hands / holding ──────────────────────────────────────────────────
         if precondition == "holds_obj":
             return self.is_holding(obj)
+        if precondition == "holds_any_obj":
+            # WIPE — executor requires holding ANY object as wiping tool
+            return self.holding_anything()
+        if precondition == "holds_knife":
+            # CUT — executor requires a held object whose class contains "knife"
+            return self.holding_knife()
         if precondition == "not_holds_obj":
             return not self.is_holding(obj)
         if precondition == "not_both_hands_full":
             return not self.hands_full()
+        if precondition == "on_char":
+            return "ON_CHAR" in self.relations.get(("character", obj), set())
+        if precondition == "not_on_char":
+            return "ON_CHAR" not in self.relations.get(("character", obj), set())
 
         # ── Container access ─────────────────────────────────────────────────
         if precondition == "obj_not_inside_closed_container":
@@ -777,6 +812,10 @@ class ObjectStateModel:
             return self.has_state(obj, "PLUGGED_IN")
         if precondition == "plugged_out":
             return self.has_state(obj, "PLUGGED_OUT")
+        if precondition == "not_plugged_out":
+            return not self.has_state(obj, "PLUGGED_OUT")
+        if precondition == "not_plugged_in":
+            return not self.has_state(obj, "PLUGGED_IN")
 
         # ── Character posture ─────────────────────────────────────────────────
         if precondition == "not_sitting":
@@ -790,7 +829,12 @@ class ObjectStateModel:
         if precondition == "can_open":
             return self.has_state(obj, "CAN_OPEN")
         if precondition == "has_switch":
+            # TypeExecutor special-cases keyboard: class_name=="keyboard" skips HAS_SWITCH check
+            if obj.lower() == "keyboard":
+                return True
             return self.has_state(obj, "HAS_SWITCH")
+        if precondition == "person":
+            return self.has_state(obj, "PERSON")
         if precondition == "has_plug":
             return self.has_state(obj, "HAS_PLUG")
         if precondition == "has_plug_or_has_switch":
@@ -817,6 +861,12 @@ class ObjectStateModel:
             return self.has_state(obj, "CUTTABLE")
         if precondition == "clothes":
             return self.has_state(obj, "CLOTHES")
+        if precondition == "clothes_or_squeezable":
+            # SqueezeExecutor accepts CLOTHES OR specific squeezable classes
+            return self.has_state(obj, "CLOTHES") or obj in _SQUEEZABLE_CLASSES
+        if precondition == "eatable_or_has_eatable_on":
+            # EatExecutor accepts EATABLE OR objects with eatable items ON them
+            return self.has_state(obj, "EATABLE") or self._has_eatable_on(obj)
         if precondition == "lookable":
             return self.has_state(obj, "LOOKABLE")
         if precondition == "pourable":
@@ -856,18 +906,27 @@ class ObjectStateModel:
             # We model this by clearing ALL previous character CLOSE relations
             # then adding the new one. Neighbours of obj (obj_next_to edges)
             # are preserved since we don't track obj_next_to separately.
+            # Executor (WalkExecutor) also deletes all FACING edges on walk,
+            # so a prior TURNTO no longer holds after moving away.
             old_close = [k for k in self.relations
                          if k[0] == "character" and "CLOSE" in self.relations[k]]
             for k in old_close:
                 self.relations[k].discard("CLOSE")
+            self._clear_char_facing()
             self.relations.setdefault(("character", obj), set()).add("CLOSE")
 
         elif action == "FIND":
             # FIND auto-navigates — EAI moves character next to obj internally.
-            # Just record the CLOSE relation without clearing others (no teleport).
+            # Record CLOSE without clearing others (no teleport), but the
+            # executor (_FindExecutor) does delete FACING edges, so clear those.
+            self._clear_char_facing()
             self.relations.setdefault(("character", obj), set()).add("CLOSE")
 
         elif action == "TURNTO":
+            # Executor (TurnToExecutor) deletes all prior FACING edges and
+            # faces ONLY the new object — model the same so a stale facing
+            # from an earlier TURNTO doesn't satisfy facing_obj for it.
+            self._clear_char_facing()
             self.relations.setdefault(("character", obj), set()).add("FACING")
 
         elif action == "POINTAT":
@@ -892,8 +951,19 @@ class ObjectStateModel:
             if target:
                 self.container_of[obj] = target
 
-        elif action in ("DROP", "PUTON", "PUTOFF", "POUR", "RELEASE"):
+        elif action in ("DROP", "POUR", "RELEASE"):
             self._release(obj)
+
+        elif action == "PUTON":
+            # executor: releases hold, adds obj ON char relation
+            self._release(obj)
+            self.relations.setdefault(("character", obj), set()).add("ON_CHAR")
+
+        elif action == "PUTOFF":
+            # executor: removes obj ON char relation
+            key = ("character", obj)
+            if key in self.relations:
+                self.relations[key].discard("ON_CHAR")
 
         # ── Containers ───────────────────────────────────────────────────────
         elif action == "OPEN":
@@ -918,28 +988,30 @@ class ObjectStateModel:
             s.discard("ON")
 
         elif action == "PLUGIN":
-            self.object_states.setdefault(obj, set()).add("PLUGGED_IN")
-            self.object_states[obj].discard("PLUGGED_OUT")
+            s = self.object_states.setdefault(obj, set())
+            s.add("PLUGGED_IN")
+            s.discard("PLUGGED_OUT")
 
         elif action == "PLUGOUT":
-            self.object_states.setdefault(obj, set()).add("PLUGGED_OUT")
-            self.object_states[obj].discard("PLUGGED_IN")
+            s = self.object_states.setdefault(obj, set())
+            s.add("PLUGGED_OUT")
+            s.discard("PLUGGED_IN")
 
         # ── Character posture ─────────────────────────────────────────────────
         elif action == "SIT":
             self.char_sitting = True
-            self.char_lying   = False
+            self.char_lying   = False  # executor SitExecutor discards LYING
 
         elif action == "LIE":
             self.char_lying   = True
-            self.char_sitting = False
+            self.char_sitting = False  # executor LieExecutor discards SITTING
 
-        elif action in ("STANDUP", "WAKEUP"):
+        elif action == "STANDUP":
             self.char_sitting = False
             self.char_lying   = False
 
-        elif action == "SLEEP":
-            pass  # posture unchanged; character stays sitting/lying
+        elif action in ("SLEEP", "WAKEUP"):
+            pass  # executor change_state([]) — no effect on posture
 
         # ── Cleaning ─────────────────────────────────────────────────────────
         elif action in ("WASH", "RINSE", "SCRUB", "WIPE"):
@@ -957,6 +1029,15 @@ class ObjectStateModel:
             self.hand_right = None
         elif self.hand_left == obj:
             self.hand_left = None
+
+    def _clear_char_facing(self):
+        """Drop every FACING relation from the character.
+        Mirrors WalkExecutor / _FindExecutor / TurnToExecutor, which all delete
+        the character's existing FACING edges before (re)establishing posture.
+        """
+        for k in self.relations:
+            if k[0] == "character":
+                self.relations[k].discard("FACING")
 
     # ──────────────────────────────────────────────────────────────────────────
     # Debug helpers

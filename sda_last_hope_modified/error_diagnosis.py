@@ -23,11 +23,12 @@ from sdg import get_preconditions, get_effects, is_prep_action, explain_precondi
 
 # States that change dynamically during execution
 DYNAMIC_PRECONDITIONS = {
-    "holds_obj", "not_both_hands_full", "not_sitting", "not_lying",
+    "holds_obj", "holds_any_obj", "holds_knife", "not_both_hands_full",
+    "not_sitting", "not_lying",
     "open", "closed", "on", "off", "next_to_obj", "next_to_target",
     "sitting_or_lying", "obj_not_inside_closed_container",
     "target_open_or_not_openable", "plugged_in", "plugged_out",
-    "facing_obj",
+    "facing_obj", "on_char",
 }
 
 # Static object properties — checked against the scene graph per object
@@ -35,7 +36,21 @@ STATIC_PROPERTIES = {
     "grabbable", "has_switch", "can_open", "has_plug",
     "eatable", "readable", "movable", "lookable",
     "sittable", "lieable", "clothes", "cuttable",
-    "hangable", "pourable", "drinkable",
+    "hangable", "pourable", "drinkable", "person",
+    "clothes_or_squeezable", "eatable_or_has_eatable_on",
+}
+
+# Effects ObjectStateModel.satisfies() can actually evaluate. satisfies()
+# returns True for unknown predicates, so the already-satisfied check must
+# only run when EVERY positive effect of the failed action is in this set.
+# Without this guard, any failed PUTBACK/PUTIN/POUR/SIT/LIE/WIPE was
+# misdiagnosed as already_satisfied (their effects like obj_ontop_target are
+# unknown → True) and silently deleted from the plan.
+EVALUABLE_EFFECTS = {
+    "open", "closed", "on", "off",
+    "plugged_in", "plugged_out",
+    "holds_obj", "on_char",
+    "next_to_obj", "facing_obj",
 }
 
 
@@ -84,15 +99,19 @@ class StateTracker:
 
     def __init__(
         self,
-        char_sitting: bool = False,
-        char_lying:   bool = False,
-        env_dict:     dict = None,
+        char_sitting:     bool = False,
+        char_lying:       bool = False,
+        env_dict:         dict = None,
+        initial_env_dict: dict = None,
     ):
         self.model   = ObjectStateModel.from_env_dict(
             env_dict or {},
             char_sitting = char_sitting,
             char_lying   = char_lying,
         )
+        # PRE-execution env (before history was applied). Used by find_t_source
+        # so replay starts from real initial state, not a blank model.
+        self.initial_env_dict = initial_env_dict
         self.history: list = []   # list of ActionStep in execution order
 
     def apply_action(self, step: ActionStep):
@@ -111,89 +130,34 @@ class StateTracker:
         return self.model.check_all(preconditions, obj, target)
 
     def find_t_source(self, precondition: str, obj: str,
-                      t_error: int) -> int:
+                      t_error: int, target: str = None) -> int:
         """
         Find the most recent timestep before t_error where the precondition
-        transitioned from satisfied to unsatisfied FOR THE SPECIFIC obj.
+        transitioned from satisfied to unsatisfied FOR THE SPECIFIC obj/target.
         Paper Eq. 2.
 
-        Strategy: replay the full history from scratch using a fresh model
-        copy, recording whenever the precondition flips from True → False.
-        Returns the timestep of the last such flip, or 1 if never satisfied
-        in the first place.
+        Target is required for target-specific preconditions like
+        next_to_target, target_open_or_not_openable, target_is_recipient —
+        otherwise satisfies() checks the wrong entity.
         """
-        # Reconstruct initial state from env_dict stored in current model
-        # We rebuild by replaying from a blank model that mirrors the
-        # original env (we have the history, not the original env_dict here,
-        # so we start from a model that has the same initial env as self.model
-        # but with no actions applied yet).
-        replay = ObjectStateModel()
-        replay.char_sitting = False
-        replay.char_lying   = False
+        # Build replay model from the real initial env so initial-env-derived
+        # preconditions (containers, spatial, posture, plug, switch) start
+        # accurate. Without this the replay would start blank and never see
+        # the True → False transition for those preconditions.
+        temp = ObjectStateModel.from_env_dict(self.initial_env_dict or {})
 
-        # Re-apply only env-derived states (not action history).
-        # Since we don't re-store env_dict, we clone model state before
-        # any history by replaying actions onto a blank copy and tracking flips.
-        # Simpler and correct: snapshot the satisfaction at each step.
-
-        # FIX 2: Use None sentinel instead of 1 as default.
-        # If the precondition was NEVER satisfied in the history (e.g. dish_soap
-        # was always inside a closed cabinet), the old code returned 1, causing
-        # t_start=1 and before=[] which discarded all prior successful steps
-        # (e.g. GRAB plate already in hand). Returning t_error instead means
-        # t_start = failed_step.index and before preserves everything up to that
-        # point — the fix only needs to be inserted RIGHT BEFORE the failed step.
-        last_violated_at = None  # None = always broken from initial state
-
-        # Start: check if precondition was satisfied BEFORE any action
-        was_ok = self.model.satisfies(precondition, obj)
-
-        # Replay by cloning the model without history then re-applying
-        snapshot = self.model.copy()
-        # Undo all history steps to get back to the initial state
-        # (We can't undo, so instead we replay from scratch using history)
-        # Build initial snapshot by importing env again — we use the
-        # pattern of replaying on a temp model seeded from the first
-        # env snapshot.  Since we don't store env_dict here we use
-        # the history-replay approach:
-
-        temp = ObjectStateModel()
-        temp.char_sitting = self.model.char_sitting
-        temp.char_lying   = self.model.char_lying
-        # Copy initial object_states (before any action effects) by
-        # reconstructing from history in reverse — instead just track
-        # the satisfaction value at each point forward.
-
-        # Simple and accurate: walk the history, apply each action, check flip
-        temp2 = ObjectStateModel()
-        # Seed posture from what we know of the original session start
-        # (char_sitting / char_lying before any history action)
-        # Re-derive by undoing posture actions in history:
-        sitting = self.model.char_sitting
-        lying   = self.model.char_lying
-        for step in reversed(self.history):
-            if step.action == "SIT":
-                sitting = False
-            elif step.action == "LIE":
-                lying = False
-            elif step.action in ("STANDUP", "WAKEUP"):
-                sitting = True   # could have been either; safe default
-        temp2.char_sitting = sitting
-        temp2.char_lying   = lying
-
-        prev_ok = temp2.satisfies(precondition, obj)
+        prev_ok          = temp.satisfies(precondition, obj, target)
+        last_violated_at = None
 
         for step in self.history:
             if step.index >= t_error:
                 break
-            temp2.apply(step.action, step.obj, step.target)
-            now_ok = temp2.satisfies(precondition, obj)
+            temp.apply(step.action, step.obj, step.target)
+            now_ok = temp.satisfies(precondition, obj, target)
             if prev_ok and not now_ok:
                 last_violated_at = step.index
             prev_ok = now_ok
 
-        # If the precondition was never satisfied from the start (no True→False
-        # flip found), return t_error so reconstruction starts at the failed step.
         if last_violated_at is None:
             return t_error
         return last_violated_at
@@ -230,13 +194,14 @@ def _find_container_in_env(obj_name: str, env_dict: dict):
 
 
 def diagnose_error(
-    action_history: list,
-    failed_step:    ActionStep,
-    error_type:     str,
-    full_plan:      list,
-    char_sitting:   bool = False,
-    char_lying:     bool = False,
-    env_dict:       dict = None,
+    action_history:   list,
+    failed_step:      ActionStep,
+    error_type:       str,
+    full_plan:        list,
+    char_sitting:     bool = False,
+    char_lying:       bool = False,
+    env_dict:         dict = None,
+    initial_env_dict: dict = None,
 ) -> DiagnosisResult:
     """
     Main diagnosis function implementing SDA-Planner paper Section 4.3.
@@ -263,14 +228,22 @@ def diagnose_error(
         result.unsatisfied_needs = []
         return result
 
-    # ── Replay history to build current per-object state ────────────────────
+    # ── Build current per-object state ──────────────────────────────────────
     tracker = StateTracker(
-        char_sitting = char_sitting,
-        char_lying   = char_lying,
-        env_dict     = env_dict,
+        char_sitting     = char_sitting,
+        char_lying       = char_lying,
+        env_dict         = env_dict,
+        initial_env_dict = initial_env_dict,
     )
-    for step in action_history:
-        tracker.apply_action(step)
+    if env_dict:
+        # env_dict is already the post-execution state — applying history on top
+        # would double-apply effects (GRAB fills both hands with same object, etc.).
+        # Just record history for find_t_source without re-applying to the model.
+        tracker.history = list(action_history)
+    else:
+        # No env snapshot: replay history from blank model to build state.
+        for step in action_history:
+            tracker.apply_action(step)
 
     # ── Find unsatisfied preconditions for the specific obj/target ────────────
     preconditions = get_preconditions(failed_step.action)
@@ -296,9 +269,19 @@ def diagnose_error(
     #      SWITCHOFF <light> fails because light is already OFF
     # In these cases the goal state is already achieved — remove the action
     # from the plan rather than trying to replan around it.
+    # Only trust this when the object's class has a single instance. The model
+    # aggregates state by class name (not instance id, which is lost upstream),
+    # so with 2+ same-class objects "on"/"open"/etc. is true if ANY instance has
+    # it — which wrongly deletes a goal action (e.g. SWITCHON tv_410 removed
+    # because a different television is on). The executor returning a MISSING
+    # precondition for the specific instance already contradicts "already done".
+    obj_instances = tracker.model.name_to_ids.get((failed_step.obj or "").lower(), [])
+    unambiguous_obj = len(obj_instances) <= 1
+
     positive_effects = [e for e in get_effects(failed_step.action)
                         if not e.startswith("not_")]
-    if positive_effects:
+    if (positive_effects and unambiguous_obj
+            and all(e in EVALUABLE_EFFECTS for e in positive_effects)):
         all_already_true = all(
             tracker.model.satisfies(e, failed_step.obj, failed_step.target)
             for e in positive_effects
@@ -347,10 +330,12 @@ def diagnose_error(
     # ── Simple prep action insertion ──────────────────────────────────────────
     # Only one dynamic precondition AND it is fixable by a single prep action.
     simple_prep = {
-        "not_sitting":    "STANDUP",
-        "not_lying":      "STANDUP",
-        "next_to_obj":    "WALK",
-        "next_to_target": "WALK",   # PUTBACK/PUTIN fail → just WALK to target
+        "not_sitting":        "STANDUP",
+        "not_lying":          "STANDUP",
+        "next_to_obj":        "WALK",
+        "next_to_target":     "WALK",         # PUTBACK/PUTIN fail → just WALK to target
+        "facing_obj":         "TURNTO",        # WATCH/LOOKAT fail → TURNTO (no preconditions)
+        "not_both_hands_full": "DROP",         # OPEN/GRAB/SQUEEZE/MOVE/CUT fail → DROP first
     }
     if key_prec in simple_prep and len(dynamic_unsat) <= 1:
         result.replan_strategy = "insert_prep"
@@ -364,9 +349,10 @@ def diagnose_error(
     result.replan_strategy = "reconstruct"
 
     # Find t_source: most recent step that corrupted key_prec for the
-    # specific obj involved (paper Eq. 2)
+    # specific obj/target involved (paper Eq. 2)
     t_source             = tracker.find_t_source(
-        key_prec, failed_step.obj, failed_step.index
+        key_prec, failed_step.obj, failed_step.index,
+        target=failed_step.target,
     )
     result.root_cause_at = t_source
     result.root_cause    = next(
@@ -414,6 +400,8 @@ if __name__ == "__main__":
     failed = ActionStep(7, "GRAB", "tomato")
     plan   = history + [failed, ActionStep(8, "PUTBACK", "tomato", "pan")]
 
+    # env_dict is the POST-execution snapshot (after the history above):
+    # character walked to tomato and is holding pan + box in both hands.
     env = {
         "nodes": [
             {"id": 1, "class_name": "character", "states": [], "properties": []},
@@ -422,7 +410,11 @@ if __name__ == "__main__":
             {"id": 4, "class_name": "box",     "states": [], "properties": ["GRABBABLE"]},
             {"id": 5, "class_name": "lamp",    "states": [], "properties": []},
         ],
-        "edges": [],
+        "edges": [
+            {"from_id": 1, "to_id": 3, "relation_type": "CLOSE"},
+            {"from_id": 1, "to_id": 2, "relation_type": "HOLDS_RH"},
+            {"from_id": 1, "to_id": 4, "relation_type": "HOLDS_LH"},
+        ],
     }
 
     result = diagnose_error(history, failed, "MISSING_STEP", plan, env_dict=env)

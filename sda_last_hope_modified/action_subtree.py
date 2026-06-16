@@ -388,6 +388,8 @@ def generate_replacement_subsequence(
     char_lying:           bool = False,
     max_depth:            int  = 6,
     max_nodes:            int  = 500,
+    failed_obj:           str  = None,
+    failed_target:        str  = None,
 ) -> list:
     """
     Generate replacement subsequence using BFS search tree.
@@ -427,6 +429,32 @@ def generate_replacement_subsequence(
         for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
             guaranteed_candidates.append(("DROP", str(held_obj), None))
 
+    if "holds_knife" in needs_set:
+        # CUT needs a held knife. Find any knife class in the scene so BFS can
+        # WALK to it and GRAB it deterministically (executor accepts any "knife*").
+        knife_name = next(
+            (n for n in initial_model.name_to_ids if "knife" in n),
+            None,
+        )
+        if knife_name:
+            guaranteed_candidates.append(("WALK", str(knife_name), None))
+            guaranteed_candidates.append(("GRAB", str(knife_name), None))
+
+    if "not_on" in needs_set:
+        for obj in normalized_error_objects:
+            guaranteed_candidates.append(("WALK", obj, None))
+            guaranteed_candidates.append(("SWITCHOFF", obj, None))
+
+    if "plugged_in" in needs_set:
+        for obj in normalized_error_objects:
+            guaranteed_candidates.append(("WALK", obj, None))
+            guaranteed_candidates.append(("PLUGIN", obj, None))
+
+    if "plugged_out" in needs_set:
+        for obj in normalized_error_objects:
+            guaranteed_candidates.append(("WALK", obj, None))
+            guaranteed_candidates.append(("PLUGOUT", obj, None))
+
     candidates = generate_candidate_nodes(
         llm_suggestions=llm_suggestions,
         original_subsequence=original_subsequence,
@@ -442,15 +470,31 @@ def generate_replacement_subsequence(
             seen_keys.add(c)
             all_candidates.append(c)
 
+    # Bind spatial/global checks to the failed action's own objects so BFS
+    # terminates on the state the retried action actually needs — not on
+    # whichever candidate node happens to satisfy the predicate for its own
+    # object (e.g. WALK(tool) must not satisfy a next_to(failed_obj) goal).
+    _fobj = failed_obj if failed_obj and failed_obj != "unknown" else None
+    _ftgt = failed_target if failed_target else None
+
     target_effects = []
     for need in unsatisfied_needs:
         if need in ("not_sitting", "not_lying"):
-            target_effects.append(("check", need, None))
+            target_effects.append(("check", need, "character"))
 
         elif need == "holds_obj":
             for obj in normalized_error_objects:
                 target_effects.append(("check", "holds_obj", obj))
             break
+
+        elif need == "holds_any_obj":
+            # WIPE: BFS just needs character to grab anything (e.g. a sponge)
+            target_effects.append(("check", "holds_any_obj", "character"))
+
+        elif need == "holds_knife":
+            # CUT: BFS needs character holding a knife (checked against hands,
+            # obj argument is ignored by the holds_knife predicate)
+            target_effects.append(("check", "holds_knife", "character"))
 
         elif need == "open":
             for obj in normalized_error_objects:
@@ -462,17 +506,22 @@ def generate_replacement_subsequence(
                 target_effects.append(("check", "off", obj))
             break
 
-        elif need in ("next_to_obj", "next_to_target"):
-            target_effects.append(("check", "next_to_obj", None))
+        elif need == "next_to_obj":
+            target_effects.append(("check", "next_to_obj", _fobj))
+
+        elif need == "next_to_target":
+            target_effects.append(("check", "next_to_obj", _ftgt))
 
         elif need == "obj_not_inside_closed_container":
             for obj in normalized_error_objects:
                 obj_name, _ = _split_name_id(obj)
                 container = container_targets.get(obj) or initial_model.get_container(obj_name)
                 if container:
+                    # BFS stops at OPEN(container); failed_eai retries the original action
                     target_effects.append(("check", "open", str(container)))
-                if obj != "character":
-                    target_effects.append(("check", "holds_obj", obj))
+                else:
+                    if obj != "character":
+                        target_effects.append(("check", "holds_obj", obj))
 
         elif need == "target_open_or_not_openable":
             for obj in normalized_error_objects:
@@ -482,15 +531,41 @@ def generate_replacement_subsequence(
                     target_effects.append(("check", "open", str(container)))
 
         elif need == "not_both_hands_full":
-            target_effects.append(("check", "not_holds_obj", None))
+            # Goal is "at least one free hand" — checking not_holds_obj against
+            # an arbitrary node.obj let WALK(x) terminate the search without
+            # freeing a hand. not_both_hands_full ignores its obj argument.
+            target_effects.append(("check", "not_both_hands_full", "character"))
 
         elif need == "facing_obj":
-            target_effects.append(("check", "facing_obj", None))
+            target_effects.append(("check", "facing_obj", _fobj))
 
         elif need == "plugged_in":
             for obj in normalized_error_objects:
                 target_effects.append(("check", "plugged_in", obj))
             break
+
+        elif need == "plugged_out":
+            for obj in normalized_error_objects:
+                target_effects.append(("check", "plugged_out", obj))
+            break
+
+        elif need == "on":
+            for obj in normalized_error_objects:
+                target_effects.append(("check", "on", obj))
+            break
+
+        elif need == "closed":
+            for obj in normalized_error_objects:
+                target_effects.append(("check", "closed", obj))
+            break
+
+        elif need == "on_char":
+            for obj in normalized_error_objects:
+                target_effects.append(("check", "on_char", obj))
+            break
+
+        elif need == "sitting_or_lying":
+            target_effects.append(("check", "sitting_or_lying", "character"))
 
     seen_te = set()
     deduped_te = []

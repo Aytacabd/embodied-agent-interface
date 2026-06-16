@@ -29,7 +29,7 @@ valid_actions = {
     "PUSH": ("PUSH", 1),
     "PULL": ("PULL", 1),
     "MOVE": ("MOVE", 1),
-    "SQUEEZE": ("SQEEZE", 1),
+    "SQUEEZE": ("SQUEEZE", 1),
     "SLEEP": ("SLEEP", 0),
     "WAKEUP": ("WAKEUP", 0),
     "RINSE": ("RINSE", 1),

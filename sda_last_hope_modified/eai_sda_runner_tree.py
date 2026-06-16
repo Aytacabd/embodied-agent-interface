@@ -53,10 +53,12 @@ logger = logging.getLogger(__name__)
 
 API_PROVIDER = "openai"
 API_KEY = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
-MODEL = "gpt-4o"
+MODEL = "gpt-4o-mini"
 MODEL_NAME = f"{MODEL}-sda-tree_m_modifiedsdg"
 
 MAX_REPLAN = 3
+MAX_FREE_REMOVALS = 8   # plan cleanups (already-satisfied / affordance skips) that don't consume the repair budget
+MAX_TOKENS = 1024
 SCENEGRAPH_ID = 1
 TREE_MAX_DEPTH = 6
 TREE_MAX_NODES = 500
@@ -89,47 +91,27 @@ EAI_VALID_ACTIONS = {
     "WASH", "GRAB", "SWITCHOFF", "SWITCHON", "CLOSE", "FIND", "WALK", "OPEN",
     "POINTAT", "PUTBACK", "PUTIN", "PUTOBJBACK", "RUN", "SIT", "STANDUP",
     "TURNTO", "WIPE", "PUTON", "PUTOFF", "GREET", "DROP", "LIE", "POUR",
-    "RELEASE", "PLUGIN", "PLUGOUT",
+    "PLUGIN", "PLUGOUT", "RELEASE",
 }
 
-SYSTEM_PROMPT = """You are an embodied task planning assistant for a household robot in VirtualHome.
+SYSTEM_PROMPT = """You are fixing a failed action in a VirtualHome robot plan. Suggest a short corrective subsequence (2-5 actions) as JSON only.
 
-CRITICAL — READ GOALS FIRST:
-Before generating your plan, identify ALL objects mentioned in the node goals and edge goals.
-Your plan MUST include actions for EVERY goal object.
-A plan that ignores any goal object will FAIL even if it executes without errors.
+Action argument counts:
+- 0 args: STANDUP, SLEEP, WAKEUP
+- 1 arg:  DRINK, EAT, CUT, TOUCH, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, LOOKAT, POINTAT, GREET, SQUEEZE, PLUGIN, PLUGOUT, RELEASE
+- 2 args: PUTBACK, PUTIN, POUR
 
-OUTPUT FORMAT - respond with ONLY a JSON object:
-{"ACTION": ["object"], "ACTION": ["object1", "object2"]}
+Common repair patterns:
+- WALK to an object before any interaction with it.
+- If an object is inside a closed container, OPEN the container before GRAB.
+- DRINK, READ, PUTIN, PUTBACK, WIPE require something held first (WALK + GRAB).
+- WIPE also needs a wiping tool (sponge, rag, towel, cloth, paper) — not the surface itself.
+- TURNTO before WATCH or LOOKAT.
+- CUT requires holding a knife.
+- Max 2 held objects — DROP one before grabbing a third.
+- PUTBACK is for surfaces (table, counter, shelf); PUTIN is for enclosed containers (fridge, cabinet, microwave).
 
-VALID ACTIONS:
-- 1 argument: DRINK, EAT, CUT, TOUCH, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
-- 2 arguments: PUTBACK, PUTIN, POUR
-- 0 arguments: STANDUP, SLEEP, WAKEUP
-
-RULE 1 — ALWAYS WALK FIRST:
-Every plan MUST start with WALK to the first object you will interact with.
-NEVER start with OPEN, GRAB, SWITCHON, TYPE or any other action — always WALK first.
-Example: WALK dishwasher → OPEN dishwasher → WALK plate → GRAB plate
-
-RULE 2 — PUTIN vs PUTBACK (CRITICAL):
-- PUTIN <object> <container> = place object INSIDE an enclosed container
-  Use PUTIN for: washing_machine, dishwasher, fridge, freezer, microwave, cabinet, box, bag, trashcan
-- PUTBACK <object> <surface> = place object ON TOP of an open surface
-  Use PUTBACK for: table, counter, desk, shelf, nightstand, sofa, bench, chair
-- NEVER use PUTBACK with washing_machine, dishwasher, fridge, freezer, microwave, cabinet
-- NEVER use PUTON with any appliance — PUTON is only for wearing clothes on your body
-
-RULE 3 — GRAB from containers:
-If an object is stored inside a closed container (cabinet, fridge, etc.), you MUST:
-WALK <container> → OPEN <container> → WALK <object> → GRAB <object>
-Never attempt GRAB without first opening the container the object is in.
-
-RULE 4 — Devices are plugged in by default. Only use PLUGIN if the scene explicitly shows a device as PLUGGED_OUT. PLUGOUT is rarely needed.
-
-RULE 5 — Max 2 objects held at once. DROP or PUTBACK before grabbing a third.
-
-Output ONLY the JSON, nothing else"""
+Output ONLY the JSON object."""
 
 SUGGESTION_PROMPT = """You are fixing a failed action in a VirtualHome robot plan.
 
@@ -140,8 +122,7 @@ Error type: {error_type}
 
 Unsatisfied preconditions:
 {unsat_explanation}
-
-Generate a SHORT list of corrective actions (2-5 actions) that would fix this error.
+{repair_history_section}Generate a SHORT list of corrective actions (2-5 actions) that would fix this error.
 These will be used as candidate nodes in a search tree.
 
 Output ONLY a JSON object with the corrective actions.
@@ -218,7 +199,7 @@ class LLMClient:
             response = self.client.chat.completions.create(
                 model=MODEL,
                 temperature=0,
-                max_tokens=512,
+                max_tokens=MAX_TOKENS,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
@@ -235,7 +216,7 @@ class LLMClient:
         full = system_prompt + "\n\n" + user_prompt
         payload = json.dumps({
             "contents": [{"parts": [{"text": full}]}],
-            "generationConfig": {"temperature": 0, "maxOutputTokens": 512},
+            "generationConfig": {"temperature": 0, "maxOutputTokens": MAX_TOKENS},
         }).encode()
 
         try:
@@ -256,6 +237,31 @@ class LLMClient:
 # =============================================================================
 # Helpers
 # =============================================================================
+
+def _format_repair_history(prev_attempts: list) -> str:
+    """
+    Format list of previously tried repair sequences for inclusion in
+    SUGGESTION_PROMPT so the LLM does not regenerate the same candidates.
+
+    Each entry in prev_attempts is a list of dicts like [{"WALK": ["tv"]}, {"PLUGIN": ["tv"]}].
+    Returns an empty string when there is no history.
+    """
+    if not prev_attempts:
+        return ""
+    lines = [
+        "Previously attempted repairs that did NOT fix this error (do NOT repeat these):"
+    ]
+    for i, attempt in enumerate(prev_attempts, 1):
+        steps = []
+        for item in attempt:
+            if isinstance(item, dict):
+                for action, args in item.items():
+                    obj_str = "(" + ", ".join(str(a) for a in args) + ")" if args else ""
+                    steps.append(f"{action}{obj_str}")
+        lines.append(f"  Attempt {i}: {' → '.join(steps)}")
+    lines.append("Suggest a DIFFERENT corrective sequence.\n")
+    return "\n".join(lines)
+
 
 def parse_llm_output(raw: str):
     raw = re.sub(r"```[a-z]*", "", raw).strip().strip("`").strip()
@@ -297,6 +303,95 @@ def parse_eai_action(action, index: int):
         obj=om[0].strip() if om else "unknown",
         target=om[1].strip() if len(om) > 1 else None,
     )
+
+
+def _extract_plan_ids_and_actions(eai_actions):
+    """Walk the plan once; return (set of object IDs touched, list of action names in order)."""
+    id_pat = re.compile(r"<[^>]+>\s*\((\d+)\)")
+    act_pat = re.compile(r"\[(\w+)\]")
+    touched_ids = set()
+    action_seq = []
+    for a in eai_actions:
+        s = str(a)
+        touched_ids.update(int(m) for m in id_pat.findall(s))
+        am = act_pat.search(s)
+        if am:
+            action_seq.append(am.group(1).upper())
+    return touched_ids, action_seq
+
+
+def check_goal_coverage(eai_actions, node_goals, edge_goals, ignore_ids=None):
+    """Return set of goal object IDs that the plan never touches.
+
+    Node goals: {"id": ..., "state": ...}
+    Edge goals: {"from_id": ..., "to_id": ..., "relation_type": ...}
+    Plan executes successfully and still fails grading if it ignores a goal object.
+
+    ignore_ids: ids never expected as action arguments (the character itself).
+    Character-state goals (character ON toilet, INSIDE bathroom, FACING tv …)
+    have from_id = character, but rule 1 forbids passing character as an
+    argument, so it can NEVER appear in touched_ids — without this exclusion the
+    coverage check fires a wasted retry on essentially every such task.
+    """
+    ignore_ids = ignore_ids or set()
+    goal_ids = set()
+    for g in node_goals:
+        if "id" in g:
+            goal_ids.add(g["id"])
+    for g in edge_goals:
+        if "from_id" in g:
+            goal_ids.add(g["from_id"])
+        if "to_id" in g:
+            goal_ids.add(g["to_id"])
+    goal_ids -= ignore_ids
+    touched_ids, _ = _extract_plan_ids_and_actions(eai_actions)
+    return goal_ids - touched_ids
+
+
+def format_missed_goals(missing_ids, node_goals, edge_goals, id_to_name):
+    """Build a human-readable description of the goal entries the plan ignored."""
+    lines = []
+    for g in node_goals:
+        if g.get("id") in missing_ids:
+            name = g.get("class_name") or id_to_name.get(g["id"], "?")
+            lines.append(f"- {name}_{g['id']} must reach state {g['state']}")
+    for g in edge_goals:
+        from_id, to_id = g.get("from_id"), g.get("to_id")
+        if from_id in missing_ids or to_id in missing_ids:
+            from_name = id_to_name.get(from_id, "?")
+            to_name = id_to_name.get(to_id, "?")
+            rel = g.get("relation_type", "?")
+            lines.append(f"- {from_name}_{from_id} must be {rel} {to_name}_{to_id}")
+    return "\n".join(lines)
+
+
+def check_action_goal_ordering(eai_actions, action_goals):
+    """Return list of (line_idx, required_set) entries that don't appear in the
+    plan in the specified relative order.
+
+    action_goals format: ["GRAB", "TYPE|TOUCH", "OPEN"] — each entry is one
+    required action, or "|"-separated OR-alternatives (include exactly one).
+    """
+    if not action_goals:
+        return []
+    _, plan_actions = _extract_plan_ids_and_actions(eai_actions)
+    issues = []
+    cursor = 0
+    for i, line in enumerate(action_goals):
+        required = {a.strip().upper() for a in line.split("|") if a.strip()}
+        if not required:
+            continue
+        # Find the next occurrence at or after cursor.
+        found_at = next(
+            (j for j in range(cursor, len(plan_actions))
+             if plan_actions[j] in required),
+            None,
+        )
+        if found_at is None:
+            issues.append((i, required))
+        else:
+            cursor = found_at + 1
+    return issues
 
 
 def get_char_state(env_state_dict: dict):
@@ -415,7 +510,7 @@ def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_g
     for node_id in existing_nodes:
         node_dict = motion_planner.env_graph.get_node(node_id).to_dict()
         change_in_init += (
-            f"{node_dict['class_name']}, states: {node_dict['states']}, "
+            f"{node_dict['class_name']}_{node_dict['id']}, states: {node_dict['states']}, "
             f"properties:{node_dict['properties']}\n"
         )
     change_in_init += "\n"
@@ -494,7 +589,13 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
                     cur = str(args[i]).strip()
                     nxt = str(args[i + 1]).strip() if i + 1 < len(args) else None
                     if nxt is not None and nxt.isdigit():
-                        combined.append(f"{cur}_{nxt}")
+                        # LLM sometimes echoes the name already carrying the id
+                        # (e.g. "toilet_1000") AND passes the id again ("1000").
+                        # Avoid producing a double suffix "toilet_1000_1000".
+                        if cur.endswith(f"_{nxt}"):
+                            combined.append(cur)
+                        else:
+                            combined.append(f"{cur}_{nxt}")
                         i += 2
                     else:
                         combined.append(_normalize_name_id_token(cur))
@@ -506,8 +607,12 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
 
     CONTAINER_OBJECTS = {
         "washing_machine", "fridge", "freezer", "dishwasher",
-        "microwave", "stove", "cabinet", "kitchencabinets",
-        "bathroomcabinet", "garbagecan", "box", "bag", "trashcan",
+        "microwave", "stove", "cabinet",
+        "kitchen_cabinet", "kitchencabinets",
+        "bathroom_cabinet", "bathroomcabinet",
+        "garbage_can", "garbagecan",
+        "box", "bag", "trashcan",
+        "pantry", "closet", "dresser", "cupboard", "filing_cabinet",
     }
 
     corrected = []
@@ -560,12 +665,14 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
         return None
 
 
-def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict) -> str:
+def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict, preferred: dict = None) -> str:
     """
     Strict resolution:
       - pass through exact class_id keys
       - resolve plain class name only if exactly one match exists
-      - reject ambiguity instead of silently picking one
+      - on ambiguity, prefer the goal-relevant instance if exactly one of the
+        candidates appears in `preferred` (the task's relevant_name_to_id);
+        otherwise reject instead of silently picking one
     """
     obj_name = _normalize_name_id_token(obj_name)
 
@@ -581,12 +688,16 @@ def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict) -> str:
         return matches[0]
 
     if len(matches) > 1:
+        if preferred:
+            goal_matches = [m for m in matches if m in preferred]
+            if len(goal_matches) == 1:
+                return goal_matches[0]
         raise ValueError(f"Ambiguous object '{obj_name}' with candidates {matches}")
 
     raise ValueError(f"Unknown object '{obj_name}'")
 
 
-def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
+def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict, preferred: dict = None):
     if not subtree_result:
         return None
 
@@ -597,19 +708,22 @@ def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
     ZERO_ARG = {"STANDUP", "SLEEP", "WAKEUP"}
     processed = []
 
-    try:
-        for item in (filtered if isinstance(filtered, list) else [{k: v} for k, v in filtered.items()]):
-            for action, args in item.items():
-                if action.upper() in ZERO_ARG:
-                    processed.append({action: []})
-                else:
+    for item in (filtered if isinstance(filtered, list) else [{k: v} for k, v in filtered.items()]):
+        for action, args in item.items():
+            if action.upper() in ZERO_ARG:
+                processed.append({action: []})
+            else:
+                try:
                     resolved = [
-                        _resolve_to_name_id(obj, relevant_name_to_id)
+                        _resolve_to_name_id(obj, relevant_name_to_id, preferred)
                         for obj in args
                     ]
                     processed.append({action: resolved})
-    except ValueError as e:
-        logger.warning(f"Subtree object resolution failed: {e}")
+                except ValueError as e:
+                    logger.warning(f"  Skipping {action} — {e}")
+
+    if not processed:
+        logger.warning("Subtree resolution produced no usable actions")
         return None
 
     try:
@@ -735,7 +849,7 @@ class EAISDATreeRunner:
         else:
             outputs, done_ids = [], set()
 
-        total = replan_total = tree_success = fallback_count = 0
+        total = replan_total = tree_success = 0
 
         for task_name, task_files in self.task_dicts.items():
             for file_id, task_goal_dict in task_files.items():
@@ -753,12 +867,11 @@ class EAISDATreeRunner:
                 total += 1
                 logger.info(f"\n[{total}] {task_name} | {file_id}")
 
-                result, rc, ts, fb = self.run_single_task(
+                result, rc, ts = self.run_single_task(
                     file_id, task_name, task_goal_dict
                 )
                 replan_total += rc
                 tree_success += ts
-                fallback_count += fb
                 outputs.append({"identifier": file_id, "llm_output": result})
 
                 time.sleep(1)
@@ -766,8 +879,7 @@ class EAISDATreeRunner:
                 if total % 10 == 0:
                     self._save(outputs)
                     logger.info(
-                        f"Progress: {total} | "
-                        f"Tree: {tree_success} | Fallback: {fallback_count}"
+                        f"Progress: {total} | Tree: {tree_success}"
                     )
 
         self._save(outputs)
@@ -775,11 +887,10 @@ class EAISDATreeRunner:
         logger.info(f"Total tasks    : {total}")
         logger.info(f"Total replans  : {replan_total}")
         logger.info(f"Tree successes : {tree_success}")
-        logger.info(f"LLM fallbacks  : {fallback_count}")
         logger.info(f"Avg replans    : {replan_total / max(total, 1):.2f}")
 
     def run_single_task(self, file_id, task_name, task_goal_dict):
-        """Returns (raw_output, replan_count, tree_success_count, fallback_count)"""
+        """Returns (raw_output, replan_count, tree_success_count)"""
         goals = task_goal_dict["vh_goal"]
         node_goals = [g for g in goals["goal"] if "id" in g and "state" in g]
         edge_goals = [g for g in goals["goal"] if "from_id" in g and "relation_type" in g]
@@ -795,7 +906,7 @@ class EAISDATreeRunner:
             )
         except Exception as e:
             logger.error(f"Planner build failed: {e}")
-            return "", 0, 0, 0
+            return "", 0, 0
 
         object_in_scene, cur_change, node_goal_str, edge_goal_str, action_goal_str, relevant_name_to_id = (
             build_id_aware_goal_strings(
@@ -805,6 +916,15 @@ class EAISDATreeRunner:
                 action_goals=goals["actions"],
             )
         )
+
+        # Full scene map so BFS-generated repairs can reference objects that are
+        # not task-goal nodes (e.g. a microwave containing the target grocery).
+        # relevant_name_to_id takes precedence for any overlapping keys.
+        full_scene_name_to_id = {
+            f"{n.class_name}_{n.id}": n.id
+            for n in motion_planner.env_graph.get_nodes()
+        }
+        scene_name_to_id = {**full_scene_name_to_id, **relevant_name_to_id}
 
         import virtualhome_eval.evaluation.action_sequencing.prompts.one_shot as one_shot
 
@@ -817,7 +937,6 @@ class EAISDATreeRunner:
 
         replan_count = 0
         tree_success = 0
-        fallback_count = 0
         raw_output = ""
 
         if VERBOSE:
@@ -826,20 +945,104 @@ class EAISDATreeRunner:
             print(f"{'='*60}", flush=True)
 
         # ── Generate initial plan ─────────────────────────────────────────────
-        raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
+        raw_output = self.llm.call(base_prompt, system_prompt="", label="INITIAL PLAN")
         logger.info(f"  Initial plan: {raw_output}")
 
         actions = parse_and_validate(raw_output, relevant_name_to_id)
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id}")
-            return raw_output, 0, 0, 0
+            return raw_output, 0, 0
+
+        # ── Static plan alignment checks ───────────────────────────────────────
+        # One targeted retry for goal coverage — if the plan ignores any goal
+        # object, the executor will pass but the EAI grader will fail. A single
+        # focused re-prompt is much cheaper than discovering this at scoring.
+        # Exclude the character's own id: character-state goals can never be
+        # "touched" by an argument (rule 1 forbids character as an arg).
+        char_ids = {
+            n.id for n in motion_planner.env_graph.get_nodes()
+            if n.class_name == "character"
+        }
+        missing_goal_ids = check_goal_coverage(
+            actions, node_goals, edge_goals, ignore_ids=char_ids
+        )
+        if missing_goal_ids:
+            id_to_name = {
+                n.id: n.class_name
+                for n in motion_planner.env_graph.get_nodes()
+            }
+            missed_desc = format_missed_goals(
+                missing_goal_ids, node_goals, edge_goals, id_to_name
+            )
+            logger.warning(
+                f"  ⚠️  Plan ignores goal object IDs: {sorted(missing_goal_ids)} — "
+                f"requesting one targeted retry"
+            )
+            if VERBOSE:
+                print(f"\n  GOAL COVERAGE RETRY — missing:\n{missed_desc}")
+
+            retry_prompt = (
+                base_prompt
+                + "\n\nNOTE: Your previous attempt produced this plan:\n"
+                + raw_output.strip()
+                + "\n\nThat plan does NOT include any action touching the following "
+                + "required goal objects:\n"
+                + missed_desc
+                + "\n\nGenerate a NEW complete plan that achieves ALL goals "
+                + "(including the missed objects above). Output ONLY the JSON.\n"
+            )
+            retry_raw = self.llm.call(
+                retry_prompt, system_prompt="", label="GOAL COVERAGE RETRY"
+            )
+            retry_actions = parse_and_validate(retry_raw, relevant_name_to_id)
+            if retry_actions:
+                still_missing = check_goal_coverage(
+                    retry_actions, node_goals, edge_goals, ignore_ids=char_ids
+                )
+                if len(still_missing) < len(missing_goal_ids):
+                    logger.info(
+                        f"  🔁 Retry improved coverage: "
+                        f"{len(missing_goal_ids)} → {len(still_missing)} missing"
+                    )
+                    actions = retry_actions
+                    raw_output = retry_raw
+                else:
+                    logger.warning(
+                        f"  Retry did not improve coverage — keeping original plan"
+                    )
+            else:
+                logger.warning("  Retry produced unparseable output — keeping original")
+
+        ordering_issues = check_action_goal_ordering(actions, goals.get("actions") or [])
+        if ordering_issues:
+            for line_idx, required in ordering_issues:
+                logger.warning(
+                    f"  ⚠️  Action goal #{line_idx + 1} not satisfied in order: "
+                    f"expected one of {sorted(required)}"
+                )
+                if VERBOSE:
+                    print(
+                        f"\n  ACTION ORDER WARNING: required action "
+                        f"{sorted(required)} (#{line_idx + 1}) missing or out of order"
+                    )
 
         current_plan_eai = actions
         initial_env_state = None
 
-        for attempt in range(MAX_REPLAN + 1):
+        # Tracks repair sequences already tried for each failing action so
+        # the LLM can see what has been attempted and suggest something different.
+        repair_attempts: dict = {}   # action_key -> list of tried repair sequences
+
+        # attempt counts LLM-repair iterations (capped by MAX_REPLAN);
+        # free_removals counts plan cleanups (already-satisfied / affordance
+        # skips) that re-execute the plan without consuming the repair budget.
+        attempt = 0
+        free_removals = 0
+
+        while True:
             motion_planner.reset()
             history_actions = []
+            executed_plan_indices = []   # plan-space index of each executed action
             history_env_states = [copy.deepcopy(motion_planner.env_state.to_dict())]
 
             if initial_env_state is None:
@@ -847,6 +1050,7 @@ class EAISDATreeRunner:
 
             executable = True
             failed_action = None
+            failed_plan_idx = None       # plan-space index of the failed action
             err_type = None
             skipped_indices = set()
 
@@ -890,12 +1094,14 @@ class EAISDATreeRunner:
                         print(f"FAILED [{err_type}]")
                     executable = False
                     failed_action = action
+                    failed_plan_idx = action_idx
                     logger.info(f"  ❌ {action} | {err_type}")
                     break
                 else:
                     if VERBOSE:
                         print("OK")
                     history_actions.append(action)
+                    executed_plan_indices.append(action_idx)
                     history_env_states.append(
                         copy.deepcopy(motion_planner.env_state.to_dict())
                     )
@@ -918,7 +1124,7 @@ class EAISDATreeRunner:
                     print(f"  {raw_output}", flush=True)
                 break
 
-            if attempt == MAX_REPLAN:
+            if attempt >= MAX_REPLAN:
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
                 if VERBOSE:
                     print(f"\n  FINAL OUTPUT SAVED (max replans reached):", flush=True)
@@ -933,11 +1139,15 @@ class EAISDATreeRunner:
             )
             char_sitting, char_lying = get_char_state(env_at_failure)
 
+            # All step indices are plan-space (1-indexed over current_plan_eai).
+            # Using history positions here desynchronised slicing whenever
+            # actions were skipped (ADDITIONAL_STEP / UNSEEN_OBJECT) earlier
+            # in the plan, removing/splicing at the wrong position.
             exec_steps = [
-                parse_eai_action(a, i + 1)
-                for i, a in enumerate(history_actions)
+                parse_eai_action(a, pidx + 1)
+                for a, pidx in zip(history_actions, executed_plan_indices)
             ]
-            failed_step = parse_eai_action(failed_action, len(exec_steps) + 1)
+            failed_step = parse_eai_action(failed_action, failed_plan_idx + 1)
             full_plan_steps = [
                 parse_eai_action(a, i + 1)
                 for i, a in enumerate(current_plan_eai)
@@ -952,6 +1162,7 @@ class EAISDATreeRunner:
                     char_sitting=char_sitting,
                     char_lying=char_lying,
                     env_dict=env_at_failure,
+                    initial_env_dict=initial_env_state,
                 )
                 logger.info(
                     f"  🔍 Strategy: {diagnosis.replan_strategy} | "
@@ -972,11 +1183,14 @@ class EAISDATreeRunner:
 
             error_objects = set(str(x) for x in error_objects)
 
-            # ── Compute splice window ─────────────────────────────────────────
+            # ── Compute splice window (plan-space, 1-indexed) ─────────────────
             t_start = diagnosis.t_start if diagnosis.t_start is not None else failed_step.index
             t_end = diagnosis.t_end if diagnosis.t_end is not None else failed_step.index
 
-            before = history_actions[:max(0, t_start - 1)]
+            before = [
+                a for a, pidx in zip(history_actions, executed_plan_indices)
+                if pidx + 1 < t_start
+            ]
             after = current_plan_eai[t_end:]
 
             # ── Action already satisfied: goal is already true, just remove it ─
@@ -987,10 +1201,15 @@ class EAISDATreeRunner:
                 raw_output = plan_to_json_str(current_plan_eai)
                 if VERBOSE:
                     print(f"\n  ACTION ALREADY SATISFIED — removed: {failed_action}")
+                if free_removals < MAX_FREE_REMOVALS:
+                    free_removals += 1
+                else:
+                    attempt += 1
                 continue
 
             # ── Special handling: semantically wrong action ───────────────────
             if diagnosis.replan_strategy == "wrong_action":
+                action_key = str(failed_action)
                 wrong_prompt = WRONG_ACTION_PROMPT.format(
                     failed_action=failed_action,
                     reason=get_unsatisfied_explanation(diagnosis.unsatisfied_needs),
@@ -999,38 +1218,79 @@ class EAISDATreeRunner:
                 new_subseq = parse_and_validate(wrong_raw, relevant_name_to_id)
 
                 if new_subseq:
+                    repair_attempts.setdefault(action_key, []).append(new_subseq)
                     current_plan_eai = history_actions + new_subseq + after
                     raw_output = plan_to_json_str(current_plan_eai)
                     logger.info(f"  🔄 Replaced with: {wrong_raw}")
+                    attempt += 1
                 else:
-                    fallback_raw = self.llm.call(base_prompt)
-                    new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id)
-                    if new_subseq:
-                        current_plan_eai = new_subseq
-                        raw_output = plan_to_json_str(current_plan_eai)
+                    # Fix unparseable — remove the wrong action so execution
+                    # can continue rather than looping until max replans.
+                    replan_count -= 1
+                    idx = failed_step.index - 1
+                    current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
+                    raw_output = plan_to_json_str(current_plan_eai)
+                    logger.info(f"  ⚡ WRONG ACTION SKIP — removed: {failed_action}")
+                    if VERBOSE:
+                        print(f"\n  WRONG ACTION SKIP — removed: {failed_action}")
+                    if free_removals < MAX_FREE_REMOVALS:
+                        free_removals += 1
+                    else:
+                        attempt += 1
                 continue
 
-            # ── Step 1: LLM corrective suggestions ───────────────────────────
-            suggestion_prompt = SUGGESTION_PROMPT.format(
-                failed_action=failed_action,
-                error_type=err_type,
-                unsat_explanation=get_unsatisfied_explanation(
-                    diagnosis.unsatisfied_needs
-                ),
-            )
-            suggestion_raw = self.llm.call(suggestion_prompt, system_prompt=SYSTEM_PROMPT, label=f"SUGGESTION (replan {replan_count})")
-            llm_suggestions = parse_llm_output(suggestion_raw)
-            llm_suggestions = filter_valid_actions(llm_suggestions) if llm_suggestions else []
-            if isinstance(llm_suggestions, dict):
-                llm_suggestions = [{k: v} for k, v in llm_suggestions.items()]
+            # ── Step 1: LLM corrective suggestions (or deterministic for insert_prep) ──
+            action_key = str(failed_action)
 
-            logger.info(f"  💡 LLM suggestions: {suggestion_raw}")
+            # insert_prep: prep action is fully determined by the key precondition.
+            # Skip the LLM API call and feed BFS the exact candidate directly.
+            _insert_prep_suggestions = None
+            if diagnosis.replan_strategy == "insert_prep" and diagnosis.unsatisfied_needs:
+                _key = diagnosis.unsatisfied_needs[0]
+                if _key in ("not_sitting", "not_lying"):
+                    _insert_prep_suggestions = [{"STANDUP": []}]
+                elif _key == "next_to_obj":
+                    _insert_prep_suggestions = [{"WALK": [str(failed_step.obj)]}]
+                elif _key == "next_to_target" and failed_step.target:
+                    _insert_prep_suggestions = [{"WALK": [str(failed_step.target)]}]
+                elif _key == "facing_obj":
+                    _insert_prep_suggestions = [{"TURNTO": [str(failed_step.obj)]}]
+                elif _key == "not_both_hands_full":
+                    # guaranteed_candidates already include DROP for held objects
+                    _insert_prep_suggestions = []
+
+            if _insert_prep_suggestions is not None:
+                llm_suggestions = _insert_prep_suggestions
+                logger.info(f"  ⚡ INSERT_PREP fast path: {llm_suggestions}")
+                if VERBOSE:
+                    print(f"\n  INSERT_PREP fast path: {llm_suggestions}")
+            else:
+                suggestion_prompt = SUGGESTION_PROMPT.format(
+                    failed_action=failed_action,
+                    error_type=err_type,
+                    unsat_explanation=get_unsatisfied_explanation(
+                        diagnosis.unsatisfied_needs
+                    ),
+                    repair_history_section=_format_repair_history(
+                        repair_attempts.get(action_key, [])
+                    ),
+                )
+                suggestion_raw = self.llm.call(suggestion_prompt, system_prompt=SYSTEM_PROMPT, label=f"SUGGESTION (replan {replan_count})")
+                llm_suggestions = parse_llm_output(suggestion_raw)
+                llm_suggestions = filter_valid_actions(llm_suggestions) if llm_suggestions else []
+                if isinstance(llm_suggestions, dict):
+                    llm_suggestions = [{k: v} for k, v in llm_suggestions.items()]
+                logger.info(f"  💡 LLM suggestions: {suggestion_raw}")
 
             # ── Step 2: BFS search tree ───────────────────────────────────────
-            tstart_hist_idx = t_start - 1
+            # Env state just before plan position t_start = state after the
+            # executed actions whose plan position precedes t_start.
+            n_exec_before = sum(
+                1 for pidx in executed_plan_indices if pidx + 1 < t_start
+            )
             state_at_tstart = (
-                history_env_states[tstart_hist_idx]
-                if tstart_hist_idx < len(history_env_states)
+                history_env_states[n_exec_before]
+                if n_exec_before < len(history_env_states)
                 else env_at_failure
             )
 
@@ -1051,14 +1311,23 @@ class EAISDATreeRunner:
                 char_lying=char_lying,
                 max_depth=TREE_MAX_DEPTH,
                 max_nodes=TREE_MAX_NODES,
+                failed_obj=str(failed_step.obj) if failed_step.obj else None,
+                failed_target=str(failed_step.target) if failed_step.target else None,
             )
+
+            # Always record the LLM suggestion so the LLM sees what it already
+            # tried and doesn't repeat the same candidates next replan cycle.
+            if llm_suggestions:
+                repair_attempts.setdefault(action_key, []).append(llm_suggestions)
 
             if tree_result:
                 logger.info(f"  🌳 Tree found: {tree_result}")
                 if VERBOSE:
                     print(f"\n  TREE SEARCH RESULT: {tree_result}")
                 tree_success += 1
-                new_subseq = subtree_results_to_eai(tree_result, relevant_name_to_id)
+                new_subseq = subtree_results_to_eai(
+                    tree_result, scene_name_to_id, preferred=relevant_name_to_id
+                )
             else:
                 logger.info("  🌳 Tree failed — no fallback (tree-only mode)")
                 if VERBOSE:
@@ -1066,6 +1335,24 @@ class EAISDATreeRunner:
                 new_subseq = None
 
             if not new_subseq:
+                # No usable repair (BFS found nothing, or found something but
+                # object resolution failed). For AFFORDANCE_ERROR the missing
+                # property is permanent — no action can acquire it — so remove
+                # the action rather than looping forever.
+                if err_type == "AFFORDANCE_ERROR":
+                    replan_count -= 1
+                    idx = failed_step.index - 1
+                    current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
+                    raw_output = plan_to_json_str(current_plan_eai)
+                    logger.info(f"  ⚡ AFFORDANCE SKIP — removed: {failed_action}")
+                    if VERBOSE:
+                        print(f"\n  AFFORDANCE SKIP — removed: {failed_action}")
+                    if free_removals < MAX_FREE_REMOVALS:
+                        free_removals += 1
+                    else:
+                        attempt += 1
+                    continue
+                attempt += 1
                 continue
 
             # ── Splice replacement into plan ──────────────────────────────────
@@ -1079,8 +1366,9 @@ class EAISDATreeRunner:
                 f"  Spliced: {len(before)} + {len(new_subseq)} + "
                 f"{len(failed_eai)} (retry) + {len(after)} = {len(current_plan_eai)}"
             )
+            attempt += 1
 
-        return raw_output, replan_count, tree_success, fallback_count
+        return raw_output, replan_count, tree_success
 
     def _save(self, outputs: list):
         path = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")

@@ -32,17 +32,12 @@ SDG = {
         "effects": ["next_to_obj", "inside_room"],
         "is_prep": True,
     },
-# PDDL find: requires next_to and has no effect.
-# If using EAI auto-navigation, use needs=[] and effects=["next_to_obj"] instead.
-    # "FIND": {
-    #     "needs":   ["next_to_obj"], # 
-    #     "effects": ["next_to_obj"],
-    #     "is_prep": True,
-    # },
+    # Executor FindExecutor auto-walks to object if not close (JoinedExecutor: WalkExecutor + _FindExecutor).
+    # Walk requires not_sitting/not_lying; _FindExecutor adds CLOSE relation (= next_to_obj).
     "FIND": {
-    "needs": ["next_to_obj"],
-    "effects": [],
-    "is_prep": False,
+        "needs":   ["not_sitting", "not_lying"],
+        "effects": ["next_to_obj"],
+        "is_prep": True,
     },
     # PDDL turn_to: no precondition
     "TURNTO": {
@@ -50,8 +45,9 @@ SDG = {
         "effects": ["facing_obj"],
         "is_prep": True,
     },
+    # executor PointAtExecutor = LookAtExecutor — only checks facing, same as LOOKAT
     "POINTAT": {
-        "needs":   ["next_to_obj"],
+        "needs":   ["facing_obj"],
         "effects": [],
         "is_prep": False,
     },
@@ -89,32 +85,23 @@ SDG = {
         "effects": ["not_holds_obj"],
         "is_prep": False,
     },
-    # PDDL put_on_character: holds_obj only (putting on self)
+    # executor put_on_character: holds_obj + clothes (executor adds CLOTHES check)
     "PUTON": {
-        "needs":   ["holds_obj"],
+        "needs":   ["holds_obj", "clothes"],
         "effects": ["not_holds_obj", "on_char"],
         "is_prep": False,
     },
-    # "PUTOFF": {
-    #     "needs":   [],
-    #     "effects": ["not_holds_obj"],
-    #     "is_prep": False,
-    # },
-    # PDDL drop: holds_obj + obj_inside(?obj, ?room) — object must be in the current room
+    # executor drop: only checks holds — no room check despite PDDL requiring it
     "DROP": {
-        "needs":   ["holds_obj", "obj_inside_room"],
+        "needs":   ["holds_obj"],
         "effects": ["not_holds_obj"],
         "is_prep": False,
     },
 
-"PUTOFF": {
-    "needs": ["on_char"],
-    "effects": ["not_on_char", "holds_obj"],
-    "is_prep": False,
-},
-    "RELEASE": {
-        "needs":   ["holds_obj"],
-        "effects": ["not_holds_obj"],
+    # executor put_off: obj ON char + CLOTHES (no PDDL equivalent)
+    "PUTOFF": {
+        "needs":   ["on_char", "clothes"],
+        "effects": ["not_on_char"],
         "is_prep": False,
     },
     # PDDL pour: (pourable OR drinkable) + holds + recipient(target) + next_to
@@ -123,39 +110,40 @@ SDG = {
         "effects": ["obj_inside_target"],
         "is_prep": False,
     },
-    # PDDL move: movable + next_to + not inside closed container
+    # executor move: movable + next_to + not inside closed + free hand required
     "MOVE": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
     "PUSH": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
     "PULL": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
+    # executor greet: checks PERSON property — fails with AFFORDANCE_ERROR if not a person
     "GREET": {
-        "needs":   ["next_to_obj"],
+        "needs":   ["person"],
         "effects": [],
         "is_prep": False,
     },
 
     # ── Container interaction ─────────────────────────────────────────────────
-    # PDDL open: can_open + closed + next_to + not(on)
+    # executor open: can_open + closed + next_to + not(on) + free hand required
     "OPEN": {
-        "needs":   ["next_to_obj", "can_open", "closed", "not_on"],
+        "needs":   ["next_to_obj", "can_open", "closed", "not_on", "not_both_hands_full"],
         "effects": ["open", "not_closed"],
         "is_prep": False,
     },
-    # PDDL close: can_open + open + next_to; effect: closed + not(on) — NOT not_open
+    # executor close: can_open + open + next_to; effect: closed only — does NOT turn off
     "CLOSE": {
         "needs":   ["next_to_obj", "can_open", "open"],
-        "effects": ["closed", "not_on"],
+        "effects": ["closed"],
         "is_prep": False,
     },
 
@@ -172,26 +160,14 @@ SDG = {
         "effects": ["off", "not_on"],
         "is_prep": False,
     },
-    # PDDL plug_in: next_to + (has_plug OR has_switch) + plugged_out
-    "PLUGIN": {
-        "needs":   ["next_to_obj", "has_plug_or_has_switch", "plugged_out"],
-        "effects": ["plugged_in", "not_plugged_out"],
-        "is_prep": False,
-    },
-    # PDDL plug_out: next_to + has_plug + plugged_in + not(on)
-    "PLUGOUT": {
-        "needs":   ["next_to_obj", "has_plug", "plugged_in", "not_on"],
-        "effects": ["plugged_out", "not_plugged_in"],
-        "is_prep": False,
-    },
-
     # ── Character posture ─────────────────────────────────────────────────────
     # PDDL sit: next_to + sittable + not(sitting). Effect: sitting only (not_lying is NOT in PDDL)
+    # executor SitExecutor discards LYING before adding SITTING
     "SIT": {
-        "needs": ["next_to_obj", "sittable", "not_sitting"],
-        "effects": ["sitting", "ontop_obj"],
+        "needs":   ["next_to_obj", "sittable", "not_sitting"],
+        "effects": ["sitting", "ontop_obj", "not_lying"],
         "is_prep": False,
-    } , 
+    },
     # PDDL standup: sitting OR lying
     "STANDUP": {
         "needs":   ["sitting_or_lying"],
@@ -235,21 +211,22 @@ SDG = {
         "effects": ["clean", "not_dirty"],
         "is_prep": False,
     },
-    # PDDL wipe: next_to ?obj1 (surface) + holds_lh/rh ?obj2 (any held object — no property constraint)
+    # executor wipe: next_to surface + hold ANY object (wiping tool — not the surface itself)
     "WIPE": {
-        "needs":   ["next_to_obj", "holds_obj"],
+        "needs":   ["next_to_obj", "holds_any_obj"],
         "effects": ["clean", "not_dirty"],
         "is_prep": False,
     },
-    # PDDL squeeze: next_to + clothes
+    # executor squeeze: next_to + free hand + (CLOTHES OR sponge/rag/towel/soap/etc.)
     "SQUEEZE": {
-        "needs":   ["next_to_obj", "clothes"],
+        "needs":   ["next_to_obj", "clothes_or_squeezable", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
-    # PDDL cut: next_to + eatable + cuttable
+    # executor cut: next_to + eatable + cuttable + free hand + holding a knife
+    # holds_knife is satisfied by any held object whose class name contains "knife"
     "CUT": {
-        "needs":   ["next_to_obj", "eatable", "cuttable"],
+        "needs":   ["next_to_obj", "eatable", "cuttable", "not_both_hands_full", "holds_knife"],
         "effects": [],
         "is_prep": False,
     },
@@ -261,9 +238,9 @@ SDG = {
         "effects": [],
         "is_prep": False,
     },
-    # PDDL eat: next_to + eatable
+    # executor eat: next_to + (EATABLE OR something with EATABLE on the obj — e.g. plate with food)
     "EAT": {
-        "needs":   ["next_to_obj", "eatable"],
+        "needs":   ["next_to_obj", "eatable_or_has_eatable_on"],
         "effects": [],
         "is_prep": False,
     },
@@ -273,15 +250,17 @@ SDG = {
         "effects": [],
         "is_prep": False,
     },
-    # PDDL touch: readable + holds_lh/rh + not inside closed container
+    # executor touch: only close_to + not_inside_closed (readable/holds NOT enforced)
     "TOUCH": {
-        "needs":   ["readable", "holds_obj", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "obj_not_inside_closed_container"],
         "effects": [],
         "is_prep": False,
     },
-    # PDDL watch: lookable + facing + not inside closed container
+    # executor watch: lookable + facing + same room + not inside closed container (lines 1778-1784)
+    # same_room is not yet tracked by ObjectStateModel (unknown predicates satisfy → True),
+    # so it documents intent without changing repair behaviour; WALK handles room navigation.
     "WATCH": {
-        "needs":   ["lookable", "facing_obj", "obj_not_inside_closed_container"],
+        "needs":   ["lookable", "facing_obj", "obj_not_inside_closed_container", "same_room"],
         "effects": [],
         "is_prep": False,
     },
@@ -295,6 +274,26 @@ SDG = {
     "TYPE": {
         "needs":   ["next_to_obj", "has_switch"],
         "effects": [],
+        "is_prep": False,
+    },
+
+    # executor PlugExecutor: HAS_PLUG + close + free hand + currently PLUGGED_OUT
+    "PLUGIN": {
+        "needs":   ["next_to_obj", "has_plug", "not_both_hands_full", "plugged_out"],
+        "effects": ["plugged_in", "not_plugged_out"],
+        "is_prep": False,
+    },
+    # executor PlugExecutor: HAS_PLUG + close + free hand + currently PLUGGED_IN
+    # (ON check logs a warning but does NOT return False — not a hard precondition)
+    "PLUGOUT": {
+        "needs":   ["next_to_obj", "has_plug", "not_both_hands_full", "plugged_in"],
+        "effects": ["plugged_out", "not_plugged_in"],
+        "is_prep": False,
+    },
+    # executor RELEASE maps to DropExecutor — same as DROP
+    "RELEASE": {
+        "needs":   ["holds_obj"],
+        "effects": ["not_holds_obj"],
         "is_prep": False,
     },
 }
@@ -311,6 +310,10 @@ PRECONDITION_EXPLANATIONS = {
     "grabbable":                       "The object must be grabbable.",
     "not_both_hands_full":             "Both hands are full — use PUTBACK or DROP first.",
     "holds_obj":                       "The character must be holding the object — use GRAB first.",
+    "holds_any_obj":                   "The character must be holding a wiping tool (sponge, rag, towel, cloth, napkin, brush, paper_towel) — GRAB one first.",
+    "holds_knife":                     "The character must be holding a knife to CUT — WALK to a knife and GRAB it first.",
+    "clothes_or_squeezable":           "The object must be clothes, a sponge, rag, towel, soap, paper, or similar squeezable item.",
+    "eatable_or_has_eatable_on":       "The object must be eatable, or have an eatable item on it.",
     "obj_not_inside_closed_container": "The object is inside a closed container — use OPEN first.",
     "target_open_or_not_openable":     "The target container must be open — use OPEN first.",
     "can_open":                        "The object must be openable.",
@@ -320,7 +323,10 @@ PRECONDITION_EXPLANATIONS = {
     "has_switch":                      "The object must have a switch.",
     "off":                             "The object must be off — use SWITCHOFF first.",
     "on":                              "The object must be on — use SWITCHON first.",
-    "plugged_in":                      "The object must be plugged in — use PLUGIN first.",
+    "plugged_in":                      "The object must be PLUGGED_IN. SWITCHON cannot proceed if the device is PLUGGED_OUT.",
+    "plugged_out":                     "The object must be PLUGGED_OUT — use PLUGIN to connect it first.",
+    "not_plugged_out":                 "The object must not be PLUGGED_OUT.",
+    "not_plugged_in":                  "The object must not be PLUGGED_IN.",
     "not_sitting":                     "The character is sitting — use STANDUP first.",
     "not_lying":                       "The character is lying — use STANDUP first.",
     "sitting_or_lying":                "The character must be sitting or lying first.",
@@ -337,6 +343,7 @@ PRECONDITION_EXPLANATIONS = {
     "drinkable":                       "The object must be drinkable.",
     "hangable":                        "The object must be hangable.",
     "has_plug":                        "The object must have a plug.",
+    "person":                          "The target must be a person.",
     "obj_inside_room":                 "The object must be inside the current room.",
     "pourable_or_drinkable":           "The source object must be pourable or drinkable.",
     "target_is_recipient":             "The target must be a recipient (container for liquids).",
@@ -375,33 +382,35 @@ if __name__ == "__main__":
     print("=== SDG Verification against PDDL ===")
     checks = [
         ("WALK",      ["not_sitting", "not_lying"]),
-        ("FIND", ["next_to_obj"]),
+        ("FIND", ["not_sitting", "not_lying"]),
         ("GRAB",      ["next_to_obj", "grabbable", "not_both_hands_full",
                        "obj_not_inside_closed_container"]),
-        ("OPEN",      ["next_to_obj", "can_open", "closed", "not_on"]),
+        ("OPEN",      ["next_to_obj", "can_open", "closed", "not_on", "not_both_hands_full"]),
         ("SWITCHON",  ["next_to_obj", "has_switch", "off", "plugged_in"]),
         ("SWITCHOFF", ["next_to_obj", "has_switch", "on"]),
         ("STANDUP",   ["sitting_or_lying"]),
         ("TYPE",      ["next_to_obj", "has_switch"]),
-        ("WATCH",     ["lookable", "facing_obj", "obj_not_inside_closed_container"]),
+        ("WATCH",     ["lookable", "facing_obj", "obj_not_inside_closed_container", "same_room"]),
         ("READ",      ["holds_obj", "readable"]),
         ("WAKEUP",    ["sitting_or_lying"]),
         ("CLOSE",     ["next_to_obj", "can_open", "open"]),
         ("PUTBACK",   ["holds_obj", "next_to_target"]),
         ("PUTIN",     ["holds_obj", "next_to_target", "target_open_or_not_openable"]),
-        ("RELEASE",   ["holds_obj"]),
-        ("DROP", ["holds_obj", "obj_inside_room"]),
+        ("DROP",      ["holds_obj"]),
         ("DRINK",     ["holds_obj", "drinkable_or_recipient"]),
         ("POUR",      ["holds_obj", "pourable_or_drinkable", "next_to_target", "target_is_recipient"]),
-        ("PLUGIN",    ["next_to_obj", "has_plug_or_has_switch", "plugged_out"]),
-        ("PLUGOUT",   ["next_to_obj", "has_plug", "plugged_in", "not_on"]),
-        ("TOUCH",     ["readable", "holds_obj", "obj_not_inside_closed_container"]),
-        ("MOVE",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
-        ("PUSH",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
-        ("PULL",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
+        ("TOUCH",     ["next_to_obj", "obj_not_inside_closed_container"]),
+        ("MOVE",      ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"]),
+        ("PUSH",      ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"]),
+        ("PULL",      ["next_to_obj", "movable", "obj_not_inside_closed_container", "not_both_hands_full"]),
         ("SIT",       ["next_to_obj", "sittable", "not_sitting"]),
         ("LIE",       ["next_to_obj", "lieable", "not_lying"]),
-        ("WIPE", ["next_to_obj", "holds_obj"]),
+        ("WIPE",      ["next_to_obj", "holds_any_obj"]),
+        ("SQUEEZE",   ["next_to_obj", "clothes_or_squeezable", "not_both_hands_full"]),
+        ("CUT",       ["next_to_obj", "eatable", "cuttable", "not_both_hands_full", "holds_knife"]),
+        ("PUTON",     ["holds_obj", "clothes"]),
+        ("PUTOFF",    ["on_char", "clothes"]),
+        ("GREET",     ["person"]),
     ]
     all_ok = True
     for action, expected in checks:

@@ -17,13 +17,14 @@ from sdg import get_preconditions, get_effects, is_prep_action, explain_precondi
 
 
 def diagnose_error_tree(
-    action_history: list,
-    failed_step:    ActionStep,
-    error_type:     str,
-    full_plan:      list,
-    char_sitting:   bool = False,
-    char_lying:     bool = False,
-    env_dict:       dict = None,
+    action_history:   list,
+    failed_step:      ActionStep,
+    error_type:       str,
+    full_plan:        list,
+    char_sitting:     bool = False,
+    char_lying:       bool = False,
+    env_dict:         dict = None,
+    initial_env_dict: dict = None,
 ) -> tuple:
     """
     Extended diagnosis returning:
@@ -33,13 +34,14 @@ def diagnose_error_tree(
     error_objects        : set of object names involved in the error
     """
     result = diagnose_error(
-        action_history = action_history,
-        failed_step    = failed_step,
-        error_type     = error_type,
-        full_plan      = full_plan,
-        char_sitting   = char_sitting,
-        char_lying     = char_lying,
-        env_dict       = env_dict,
+        action_history   = action_history,
+        failed_step      = failed_step,
+        error_type       = error_type,
+        full_plan        = full_plan,
+        char_sitting     = char_sitting,
+        char_lying       = char_lying,
+        env_dict         = env_dict,
+        initial_env_dict = initial_env_dict,
     )
 
     t_start = result.t_start if result.t_start is not None else failed_step.index
