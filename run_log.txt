@@ -2,7 +2,7 @@
 2026-06-16 21:27:19,298 - INFO - Loading EAI resources...
 2026-06-16 21:27:19,304 - INFO - EAI resources loaded.
 2026-06-16 21:27:19,304 - INFO - === EAI + SDA-Planner (Full Search Tree) ===
-2026-06-16 21:27:19,304 - INFO - Model      : gpt-4o-sda-tree_m_modifiedsdg
+2026-06-16 21:27:19,304 - INFO - Model      : gpt-4omini-sda-tree_m_modifiedsdg
 2026-06-16 21:27:19,304 - INFO - Provider   : openai
 2026-06-16 21:27:19,304 - INFO - Max replan : 3
 2026-06-16 21:27:19,304 - INFO - Tree depth : 6 | Tree nodes: 500
