@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(cd /Users/aytaj/Desktop/embodied-agent-interface-my-version/sda_last_hope_modified *)",
+      "Read(//Users/aytaj/Desktop/src/virtualhome_eval/simulation/**)",
+      "Bash(python3 -)",
+      "Bash(cd /Users/aytaj/Desktop/embodied-agent-interface-my-version *)",
+      "Read(//Users/aytaj/Desktop/embodied-agent-interface-my-version/sda_last_hope_modified/**)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('eai_sda_runner_tree.py'\\).read\\(\\)\\); ast.parse\\(open\\('action_subtree.py'\\).read\\(\\)\\); print\\('syntax OK'\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('eai_sda_runner_tree.py'\\).read\\(\\)\\); print\\('syntax OK'\\)\")",
+      "Bash(python3 -c \"import ast; [ast.parse\\(open\\(f\\).read\\(\\)\\) for f in ['action_subtree.py','error_diagnosis.py','error_diagnosis_tree.py','eai_sda_runner_tree.py']]; print\\('OK'\\)\")",
+      "Bash(python3 -c \"import ast; [ast.parse\\(open\\(f\\).read\\(\\)\\) for f in ['object_state_model.py','error_diagnosis.py','error_diagnosis_tree.py','action_subtree.py']]; print\\('syntax OK'\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('action_subtree.py'\\).read\\(\\)\\); print\\('syntax OK'\\)\")"
+    ]
+  }
+}

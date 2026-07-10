@@ -52,16 +52,20 @@ def diagnose_error_tree(
         if t_start <= s.index <= t_end
     ]
 
-    error_objects = {failed_step.obj}
+    # Instance-qualified (e.g. "light_245") so tree candidates target the exact
+    # failing instance rather than an ambiguous bare class name.
+    error_objects = {failed_step.obj_full}
     if failed_step.target:
-        error_objects.add(failed_step.target)
+        error_objects.add(failed_step.target_full)
 
     # FIX 3: add the actual container to error_objects when the object is
     # inside a closed container. Without this, action_subtree.py only knows
     # about the object itself (e.g. "dish_soap") and not which container to
     # open — causing the tree and LLM to hallucinate generic "container" names.
     if "obj_not_inside_closed_container" in (result.unsatisfied_needs or []):
-        container_name = _find_container_in_env(failed_step.obj, env_dict)
+        # Instance-qualified so multi-instance scenes find THIS object's
+        # container, not a sibling's.
+        container_name = _find_container_in_env(failed_step.obj_full, env_dict)
         if container_name:
             error_objects.add(container_name)
 

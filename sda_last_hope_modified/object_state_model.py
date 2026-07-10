@@ -496,6 +496,16 @@ _SQUEEZABLE_CLASSES = frozenset({
 })
 
 
+def _split_nid(obj):
+    """'light_245' -> ('light', '245'); 'light' -> ('light', None)."""
+    s = str(obj or "").strip()
+    if "_" in s:
+        base, maybe = s.rsplit("_", 1)
+        if maybe.isdigit():
+            return base, maybe
+    return s, None
+
+
 class ObjectStateModel:
     """
     Tracks state per object, not globally.
@@ -506,6 +516,10 @@ class ObjectStateModel:
     relations     : { (from_name, to_name) -> set of relation types }
         e.g. {("character", "apple"): {"HOLDS_RH"},
                ("character", "fridge"): {"CLOSE"}}
+        Keys are stored at BOTH granularities when instance ids are known:
+        ("character", "light") and ("character", "light_245") — so queries
+        with an instance-qualified name (light_411) are answered per-instance
+        while bare class-name queries keep the merged/legacy behaviour.
 
     container_of  : { obj_name -> container_name }
         e.g. {"apple": "fridge"}  — apple is inside fridge
@@ -644,6 +658,15 @@ class ObjectStateModel:
             key = (from_name, to_name)
             m.relations.setdefault(key, set()).add(rel)
 
+            # Instance-qualified duplicate keys (character stays bare) so
+            # queries like is_next_to("light_411") answer per-instance.
+            from_full = from_name if from_name == "character" or from_id is None \
+                else f"{from_name}_{from_id}"
+            to_full = to_name if to_name == "character" or to_id is None \
+                else f"{to_name}_{to_id}"
+            if (from_full, to_full) != key:
+                m.relations.setdefault((from_full, to_full), set()).add(rel)
+
             if rel == "INSIDE":
                 # FIX: Only store as container if to_name is an actual container
                 # (has CAN_OPEN or CONTAINERS property). This prevents room membership
@@ -653,6 +676,8 @@ class ObjectStateModel:
                 to_states = m.object_states.get(to_name, set())
                 if "CAN_OPEN" in to_states or "CONTAINERS" in to_states:
                     m.container_of[from_name] = to_name
+                    if from_full != from_name:
+                        m.container_of[from_full] = to_name
 
             if from_name == "character":
                 if rel == "HOLDS_RH":
@@ -681,7 +706,17 @@ class ObjectStateModel:
     # ──────────────────────────────────────────────────────────────────────────
 
     def has_state(self, obj: str, state: str) -> bool:
-        return state.upper() in self.object_states.get(obj.lower(), set())
+        """Instance-aware: 'light_245' checks that instance's states when the
+        id is known to the model; bare 'light' keeps the merged class view."""
+        name, oid = _split_nid(obj.lower())
+        if oid is not None:
+            try:
+                by_id = self.object_states_by_id.get(int(oid))
+            except ValueError:
+                by_id = None
+            if by_id is not None:
+                return state.upper() in by_id
+        return state.upper() in self.object_states.get(name, set())
 
     def has_relation(self, from_obj: str, to_obj: str, rel: str) -> bool:
         return rel.upper() in self.relations.get(
@@ -695,7 +730,9 @@ class ObjectStateModel:
         return self.has_relation("character", obj, "FACING")
 
     def is_holding(self, obj: str) -> bool:
-        return obj.lower() in (self.hand_right, self.hand_left)
+        # Hands store bare class names — strip any instance id for comparison.
+        name, _ = _split_nid(obj.lower())
+        return name in (self.hand_right, self.hand_left)
 
     def hands_full(self) -> bool:
         return self.hand_right is not None and self.hand_left is not None
@@ -723,8 +760,13 @@ class ObjectStateModel:
         return False
 
     def get_container(self, obj: str) -> str:
-        """Return direct container of obj, or None if not inside anything."""
-        return self.container_of.get(obj.lower())
+        """Return direct container of obj, or None if not inside anything.
+        Tries the instance-qualified key first, then the bare class name."""
+        obj = obj.lower()
+        if obj in self.container_of:
+            return self.container_of[obj]
+        name, _ = _split_nid(obj)
+        return self.container_of.get(name)
 
     # def container_is_open(self, obj: str) -> bool:
     #     """True if obj has no container, or its immediate container is OPEN."""
@@ -830,7 +872,7 @@ class ObjectStateModel:
             return self.has_state(obj, "CAN_OPEN")
         if precondition == "has_switch":
             # TypeExecutor special-cases keyboard: class_name=="keyboard" skips HAS_SWITCH check
-            if obj.lower() == "keyboard":
+            if _split_nid(obj.lower())[0] == "keyboard":
                 return True
             return self.has_state(obj, "HAS_SWITCH")
         if precondition == "person":
@@ -844,7 +886,9 @@ class ObjectStateModel:
         if precondition == "drinkable_or_recipient":
             return self.has_state(obj, "DRINKABLE") or self.has_state(obj, "RECIPIENT")
         if precondition == "target_is_recipient":
-            return self.has_state(target, "RECIPIENT")
+            # executor PourExecutor: RECIPIENT property OR one of these classes
+            return (self.has_state(target, "RECIPIENT")
+                    or _split_nid(target)[0] in ("hands_both", "sponge", "face"))
         if precondition == "grabbable":
             return self.has_state(obj, "GRABBABLE")
         if precondition == "sittable":
@@ -863,7 +907,8 @@ class ObjectStateModel:
             return self.has_state(obj, "CLOTHES")
         if precondition == "clothes_or_squeezable":
             # SqueezeExecutor accepts CLOTHES OR specific squeezable classes
-            return self.has_state(obj, "CLOTHES") or obj in _SQUEEZABLE_CLASSES
+            return (self.has_state(obj, "CLOTHES")
+                    or _split_nid(obj)[0] in _SQUEEZABLE_CLASSES)
         if precondition == "eatable_or_has_eatable_on":
             # EatExecutor accepts EATABLE OR objects with eatable items ON them
             return self.has_state(obj, "EATABLE") or self._has_eatable_on(obj)
@@ -891,8 +936,33 @@ class ObjectStateModel:
     # Mutators — apply action effects
     # ──────────────────────────────────────────────────────────────────────────
 
+    def _char_rel_keys(self, obj: str):
+        """Both relation keys for a character→obj edge: instance + class."""
+        keys = [("character", obj)]
+        name, oid = _split_nid(obj)
+        if oid is not None and name != obj:
+            keys.append(("character", name))
+        return keys
+
+    def _mutate_states(self, obj: str, add=(), discard=()):
+        """Mutate the class-level state bucket and, when an instance id is
+        given, the per-instance bucket too — keeps both views consistent."""
+        name, oid = _split_nid(obj)
+        buckets = [self.object_states.setdefault(name, set())]
+        if oid is not None:
+            try:
+                buckets.append(self.object_states_by_id.setdefault(int(oid), set()))
+            except ValueError:
+                pass
+        for s in buckets:
+            for a in add:
+                s.add(a)
+            for d in discard:
+                s.discard(d)
+
     def apply(self, action: str, obj: str, target: str = None):
-        """Update model state after executing action on obj (and target)."""
+        """Update model state after executing action on obj (and target).
+        obj/target may be bare class names or instance-qualified (light_245)."""
         action = action.upper()
         obj    = (obj    or "").lower().strip()
         target = (target or "").lower().strip()
@@ -913,33 +983,39 @@ class ObjectStateModel:
             for k in old_close:
                 self.relations[k].discard("CLOSE")
             self._clear_char_facing()
-            self.relations.setdefault(("character", obj), set()).add("CLOSE")
+            for k in self._char_rel_keys(obj):
+                self.relations.setdefault(k, set()).add("CLOSE")
 
         elif action == "FIND":
             # FIND auto-navigates — EAI moves character next to obj internally.
             # Record CLOSE without clearing others (no teleport), but the
             # executor (_FindExecutor) does delete FACING edges, so clear those.
             self._clear_char_facing()
-            self.relations.setdefault(("character", obj), set()).add("CLOSE")
+            for k in self._char_rel_keys(obj):
+                self.relations.setdefault(k, set()).add("CLOSE")
 
         elif action == "TURNTO":
             # Executor (TurnToExecutor) deletes all prior FACING edges and
             # faces ONLY the new object — model the same so a stale facing
             # from an earlier TURNTO doesn't satisfy facing_obj for it.
             self._clear_char_facing()
-            self.relations.setdefault(("character", obj), set()).add("FACING")
+            for k in self._char_rel_keys(obj):
+                self.relations.setdefault(k, set()).add("FACING")
 
         elif action == "POINTAT":
             pass  # no state change
 
         # ── Grabbing / placing ───────────────────────────────────────────────
         elif action == "GRAB":
+            # Hands store bare class names (is_holding strips ids to match).
+            held, _ = _split_nid(obj)
             if self.hand_right is None:
-                self.hand_right = obj
+                self.hand_right = held
             elif self.hand_left is None:
-                self.hand_left = obj
+                self.hand_left = held
             # Object leaves its container when grabbed
             self.container_of.pop(obj, None)
+            self.container_of.pop(held, None)
 
         elif action in ("PUTBACK", "PUTOBJBACK"):
             self._release(obj)
@@ -950,52 +1026,53 @@ class ObjectStateModel:
             self._release(obj)
             if target:
                 self.container_of[obj] = target
+                name, _ = _split_nid(obj)
+                if name != obj:
+                    self.container_of[name] = target
 
-        elif action in ("DROP", "POUR", "RELEASE"):
+        elif action in ("DROP", "RELEASE"):
             self._release(obj)
+
+        elif action == "POUR":
+            # executor PourExecutor: poured obj goes INSIDE target; the hand
+            # is released ONLY when class_name == "water" — other pourables
+            # (bottle, cup, …) stay held.
+            if target:
+                self.container_of[obj] = target
+            if _split_nid(obj)[0] == "water":
+                self._release(obj)
 
         elif action == "PUTON":
             # executor: releases hold, adds obj ON char relation
             self._release(obj)
-            self.relations.setdefault(("character", obj), set()).add("ON_CHAR")
+            for k in self._char_rel_keys(obj):
+                self.relations.setdefault(k, set()).add("ON_CHAR")
 
         elif action == "PUTOFF":
             # executor: removes obj ON char relation
-            key = ("character", obj)
-            if key in self.relations:
-                self.relations[key].discard("ON_CHAR")
+            for k in self._char_rel_keys(obj):
+                if k in self.relations:
+                    self.relations[k].discard("ON_CHAR")
 
         # ── Containers ───────────────────────────────────────────────────────
         elif action == "OPEN":
-            s = self.object_states.setdefault(obj, set())
-            s.add("OPEN")
-            s.discard("CLOSED")
+            self._mutate_states(obj, add=("OPEN",), discard=("CLOSED",))
 
         elif action == "CLOSE":
-            s = self.object_states.setdefault(obj, set())
-            s.add("CLOSED")
-            s.discard("OPEN")
+            self._mutate_states(obj, add=("CLOSED",), discard=("OPEN",))
 
         # ── Appliances ───────────────────────────────────────────────────────
         elif action == "SWITCHON":
-            s = self.object_states.setdefault(obj, set())
-            s.add("ON")
-            s.discard("OFF")
+            self._mutate_states(obj, add=("ON",), discard=("OFF",))
 
         elif action == "SWITCHOFF":
-            s = self.object_states.setdefault(obj, set())
-            s.add("OFF")
-            s.discard("ON")
+            self._mutate_states(obj, add=("OFF",), discard=("ON",))
 
         elif action == "PLUGIN":
-            s = self.object_states.setdefault(obj, set())
-            s.add("PLUGGED_IN")
-            s.discard("PLUGGED_OUT")
+            self._mutate_states(obj, add=("PLUGGED_IN",), discard=("PLUGGED_OUT",))
 
         elif action == "PLUGOUT":
-            s = self.object_states.setdefault(obj, set())
-            s.add("PLUGGED_OUT")
-            s.discard("PLUGGED_IN")
+            self._mutate_states(obj, add=("PLUGGED_OUT",), discard=("PLUGGED_IN",))
 
         # ── Character posture ─────────────────────────────────────────────────
         elif action == "SIT":
@@ -1015,19 +1092,17 @@ class ObjectStateModel:
 
         # ── Cleaning ─────────────────────────────────────────────────────────
         elif action in ("WASH", "RINSE", "SCRUB", "WIPE"):
-            s = self.object_states.setdefault(obj, set())
-            s.add("CLEAN")
-            s.discard("DIRTY")
+            self._mutate_states(obj, add=("CLEAN",), discard=("DIRTY",))
 
         # All other actions (EAT, DRINK, READ, WATCH, TOUCH …) have no tracked
         # state change in the scene graph model.
 
     def _release(self, obj: str):
-        """Free one hand holding obj."""
-        obj = obj.lower()
-        if self.hand_right == obj:
+        """Free one hand holding obj (hands store bare class names)."""
+        name, _ = _split_nid(obj.lower())
+        if self.hand_right == name:
             self.hand_right = None
-        elif self.hand_left == obj:
+        elif self.hand_left == name:
             self.hand_left = None
 
     def _clear_char_facing(self):

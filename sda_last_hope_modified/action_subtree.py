@@ -45,6 +45,59 @@ def _is_name_id(obj):
     return oid is not None
 
 
+def _repair_class(obj):
+    """Class name of an object, id stripped and lowercased (None -> None)."""
+    if obj is None:
+        return None
+    name, _ = _split_name_id(str(obj))
+    return (name or "").lower().strip() or None
+
+
+def _canonical_repair_seq(seq):
+    """
+    Canonicalize a repair sequence for equality comparison.
+
+    Accepts a sequence whose items are either EAI action dicts
+    (e.g. {"WALK": ["tv"]}, {"PUTIN": ["apple", "7", "fridge", "2"]}) or
+    (action, obj, target) tuples (the internal BFS path form). Returns a
+    tuple of (ACTION, obj_class, target_class) steps with object ids stripped,
+    so a "repeat" is detected by action + object class rather than exact id
+    string (which differs between LLM suggestions and BFS-built paths).
+    """
+    steps = []
+    for item in seq:
+        if isinstance(item, dict):
+            for action, args in item.items():
+                a = str(action).upper()
+                if not isinstance(args, list):
+                    args = []
+                if len(args) == 0:
+                    steps.append((a, None, None))
+                elif len(args) == 1:
+                    steps.append((a, _repair_class(args[0]), None))
+                elif len(args) == 2:
+                    # [name, id] one-object, or [obj, target] two-object
+                    if str(args[1]).strip().isdigit():
+                        steps.append((a, _repair_class(args[0]), None))
+                    else:
+                        steps.append((a, _repair_class(args[0]), _repair_class(args[1])))
+                elif len(args) == 4:
+                    steps.append((a, _repair_class(args[0]), _repair_class(args[2])))
+                else:
+                    steps.append((
+                        a,
+                        _repair_class(args[0]),
+                        _repair_class(args[1]) if len(args) > 1 else None,
+                    ))
+                break
+        elif isinstance(item, (tuple, list)) and len(item) >= 2:
+            a = str(item[0]).upper()
+            o = item[1]
+            t = item[2] if len(item) > 2 else None
+            steps.append((a, _repair_class(o), _repair_class(t)))
+    return tuple(steps)
+
+
 # =============================================================================
 # State wrapper for BFS — thin layer over ObjectStateModel
 # =============================================================================
@@ -54,11 +107,10 @@ class TreeState:
     Wraps ObjectStateModel for use in the BFS search tree.
     All precondition checks are per-object, not global.
 
-    IMPORTANT:
-    ObjectStateModel may still expect plain object names in your setup.
-    So before calling into the model, we strip "name_id" -> "name".
-    That preserves compatibility while still keeping instance identity
-    inside subtree candidate generation and path output.
+    ObjectStateModel is instance-aware: it accepts both bare class names
+    ("light") and instance-qualified names ("light_245"), answering
+    per-instance for the latter. Names are passed through unmodified so
+    BFS simulation stays instance-accurate in multi-instance scenes.
     """
 
     def __init__(self, model: ObjectStateModel):
@@ -68,14 +120,10 @@ class TreeState:
         return TreeState(self.model.copy())
 
     def apply(self, action: str, obj: str, target: str = None):
-        obj_name, _ = _split_name_id(obj)
-        tgt_name, _ = _split_name_id(target) if target is not None else (None, None)
-        self.model.apply(action, obj_name, tgt_name)
+        self.model.apply(action, obj, target)
 
     def satisfies(self, preconditions: list, obj: str, target: str = None) -> bool:
-        obj_name, _ = _split_name_id(obj)
-        tgt_name, _ = _split_name_id(target) if target is not None else (None, None)
-        return len(self.model.check_all(preconditions, obj_name, tgt_name)) == 0
+        return len(self.model.check_all(preconditions, obj, target)) == 0
 
     def achieves(self, target_effects: list, obj: str, target: str = None) -> bool:
         return self.satisfies(target_effects, obj, target)
@@ -157,8 +205,26 @@ def generate_candidate_nodes(
     candidates = []
     seen       = set()
 
+    # Bind bare class names to the failing instance: when a suggestion says
+    # "light" and exactly one error object is an instance of that class
+    # (light_411), upgrade it — otherwise resolution later rejects the bare
+    # name as ambiguous and the repair is silently dropped.
+    _instance_by_class = {}
+    for _e in error_objects or ():
+        _name, _oid = _split_name_id(str(_e))
+        if _oid is not None:
+            _instance_by_class.setdefault(_name, set()).add(str(_e))
+
+    def _bind_instance(token):
+        if token is None or _is_name_id(token):
+            return token
+        matches = _instance_by_class.get(str(token).strip())
+        if matches and len(matches) == 1:
+            return next(iter(matches))
+        return token
+
     def add(action, obj, target=None):
-        key = (action.upper(), obj, target)
+        key = (action.upper(), _bind_instance(obj), _bind_instance(target))
         if key not in seen:
             seen.add(key)
             candidates.append(key)
@@ -260,6 +326,7 @@ def build_and_search_tree(
     error_objects:  set = None,
     max_depth:      int = 6,
     max_nodes:      int = 500,
+    excluded_paths: set = None,
 ) -> list:
     """
     BFS to find shortest valid replacement subsequence.
@@ -267,9 +334,15 @@ def build_and_search_tree(
     target_effects is a list of tuples: ("check", precondition, specific_obj)
       - specific_obj=None means check against the candidate's own obj
       - specific_obj=<name_id> means always check against that specific object
+
+    excluded_paths: set of canonical repair tuples (see _canonical_repair_seq)
+      that already failed on prior replan attempts. A solution path whose
+      canonical form is in this set is rejected and the search continues, so
+      the same repair is never returned twice for the same failing action.
     """
     initial_state = TreeState(initial_model.copy())
     error_objects = error_objects or set()
+    excluded_paths = excluded_paths or set()
 
     root = TreeNode(
         action="ROOT",
@@ -284,17 +357,42 @@ def build_and_search_tree(
         for (_, precondition, specific_obj) in target_effects:
             check_obj = specific_obj if specific_obj else node.obj
             check_tgt = node.target if not specific_obj else None
-            obj_name, _ = _split_name_id(check_obj)
-            tgt_name, _ = _split_name_id(check_tgt) if check_tgt is not None else (None, None)
-            if not state.model.satisfies(precondition, obj_name, tgt_name):
+            # Pass names through unmodified — the model is instance-aware,
+            # so "light_411" is checked per-instance, "light" class-level.
+            if not state.model.satisfies(precondition, check_obj, check_tgt):
                 return False
         return True
 
     if not target_effects:
         for (action, obj, target) in candidates:
             if satisfied(action, root.state, obj, target) and changes_state(action):
+                if _canonical_repair_seq([(action, obj, target)]) in excluded_paths:
+                    continue
                 return [(action, obj, target)]
         return []
+
+    def _state_signature(state: TreeState) -> tuple:
+        """Hashable snapshot of everything satisfies() can read."""
+        m = state.model
+        return (
+            tuple(sorted((k, tuple(sorted(v)))
+                         for k, v in m.object_states.items() if v)),
+            tuple(sorted((k, tuple(sorted(v)))
+                         for k, v in m.relations.items() if v)),
+            tuple(sorted(m.container_of.items())),
+            m.hand_right, m.hand_left, m.char_sitting, m.char_lying,
+        )
+
+    # Visited-state dedup (efficiency only). Disabled when:
+    #  - excluded_paths is set: a *different* path to the same state is exactly
+    #    what the exclusion mechanism needs BFS to find, or
+    #  - any target effect binds to the candidate's own obj (specific_obj None):
+    #    goal achievement then depends on the node, not just the state.
+    use_dedup = (
+        not excluded_paths
+        and all(so is not None for (_, _, so) in target_effects)
+    )
+    visited = {_state_signature(initial_state)} if use_dedup else None
 
     queue          = deque([root])
     nodes_expanded = 0
@@ -304,7 +402,12 @@ def build_and_search_tree(
         nodes_expanded += 1
 
         if current.depth > 0 and _achieves(current.state, current):
-            return _extract_path(current)
+            path = _extract_path(current)
+            if _canonical_repair_seq(path) not in excluded_paths:
+                return path
+            # Previously-failed repair — skip it and keep searching for a
+            # different path (do not expand this already-achieved goal node).
+            continue
 
         if current.depth >= max_depth:
             continue
@@ -334,6 +437,12 @@ def build_and_search_tree(
 
             new_state = current.state.copy()
             new_state.apply(action, obj, target)
+
+            if use_dedup:
+                sig = _state_signature(new_state)
+                if sig in visited:
+                    continue
+                visited.add(sig)
 
             child = TreeNode(
                 action=action,
@@ -390,13 +499,24 @@ def generate_replacement_subsequence(
     max_nodes:            int  = 500,
     failed_obj:           str  = None,
     failed_target:        str  = None,
+    excluded_repairs:     list = None,
 ) -> list:
     """
     Generate replacement subsequence using BFS search tree.
     Returns list of dict actions using ID-safe object strings, e.g.:
       {"WALK": ["light_245"]}
       {"PUTIN": ["apple_7", "fridge_2"]}
+
+    excluded_repairs: list of previously-tried repair sequences (EAI dicts)
+      that failed for this same action. Any BFS solution matching one of them
+      (by action + object class) is rejected, guaranteeing the search never
+      returns a repair that already failed.
     """
+    excluded_paths = {
+        _canonical_repair_seq(seq)
+        for seq in (excluded_repairs or [])
+        if seq
+    }
     initial_model = _build_initial_state(
         initial_state_dict, char_sitting, char_lying
     )
@@ -412,7 +532,7 @@ def generate_replacement_subsequence(
        "target_open_or_not_openable" in needs_set:
         for obj in normalized_error_objects:
             obj_name, _ = _split_name_id(obj)
-            container = initial_model.get_container(obj_name)
+            container = initial_model.get_container(obj)
             if container and not initial_model.satisfies("open", container):
                 # container from model may be plain name; keep as plain unless you have IDs for it
                 container_targets[obj] = str(container)
@@ -424,6 +544,20 @@ def generate_replacement_subsequence(
                 continue
             guaranteed_candidates.append(("WALK", obj, None))
             guaranteed_candidates.append(("GRAB", obj, None))
+
+    # target_open_or_not_openable: the failed TARGET is itself the container
+    # that must be opened (e.g. PUTIN x into a CLOSED washing_machine). The
+    # block above only handles objects INSIDE a container, never the target.
+    if "target_open_or_not_openable" in needs_set and failed_target:
+        tgt_name, _ = _split_name_id(failed_target)
+        if not initial_model.satisfies("open", tgt_name):
+            # If the appliance is ON, OPEN is blocked (not_on precondition)
+            # until it is switched off first.
+            if initial_model.satisfies("on", tgt_name):
+                guaranteed_candidates.append(("WALK", str(failed_target), None))
+                guaranteed_candidates.append(("SWITCHOFF", str(failed_target), None))
+            guaranteed_candidates.append(("WALK", str(failed_target), None))
+            guaranteed_candidates.append(("OPEN", str(failed_target), None))
 
     if "not_both_hands_full" in needs_set:
         for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
@@ -515,20 +649,29 @@ def generate_replacement_subsequence(
         elif need == "obj_not_inside_closed_container":
             for obj in normalized_error_objects:
                 obj_name, _ = _split_name_id(obj)
-                container = container_targets.get(obj) or initial_model.get_container(obj_name)
+                container = container_targets.get(obj) or initial_model.get_container(obj)
                 if container:
                     # BFS stops at OPEN(container); failed_eai retries the original action
                     target_effects.append(("check", "open", str(container)))
-                else:
-                    if obj != "character":
-                        target_effects.append(("check", "holds_obj", obj))
+                elif obj != "character" and initial_model.satisfies("grabbable", obj_name):
+                    # Only grabbable objects can satisfy holds_obj. Guarding this
+                    # prevents an impossible goal (e.g. "hold the dining_room")
+                    # from being handed to BFS, which would make it return [].
+                    target_effects.append(("check", "holds_obj", obj))
 
         elif need == "target_open_or_not_openable":
+            appended = False
             for obj in normalized_error_objects:
                 obj_name, _ = _split_name_id(obj)
-                container = container_targets.get(obj) or initial_model.get_container(obj_name)
+                container = container_targets.get(obj) or initial_model.get_container(obj)
                 if container:
                     target_effects.append(("check", "open", str(container)))
+                    appended = True
+            if not appended and _ftgt:
+                # No error object is inside a container — the failed target is
+                # itself the container to open (PUTIN into a closed appliance).
+                tgt_name, _ = _split_name_id(_ftgt)
+                target_effects.append(("check", "open", tgt_name))
 
         elif need == "not_both_hands_full":
             # Goal is "at least one free hand" — checking not_holds_obj against
@@ -582,6 +725,7 @@ def generate_replacement_subsequence(
         error_objects=normalized_error_objects,
         max_depth=max_depth,
         max_nodes=max_nodes,
+        excluded_paths=excluded_paths,
     )
 
     if not path:

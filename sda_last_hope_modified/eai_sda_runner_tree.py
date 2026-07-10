@@ -37,6 +37,7 @@ from virtualhome_eval.simulation.evolving_graph.eval_utils import (
 )
 from virtualhome_eval.simulation.evolving_graph.checker import TemporalOrderChecker
 
+from error_diagnosis import DYNAMIC_PRECONDITIONS
 from error_diagnosis_tree import diagnose_error_tree, get_unsatisfied_explanation
 from action_subtree import generate_replacement_subsequence
 
@@ -296,12 +297,19 @@ def parse_eai_action(action, index: int):
     from error_diagnosis import ActionStep
     s = str(action)
     am = re.search(r"\[(\w+)\]", s)
-    om = re.findall(r"<([^>]+)>", s)
+    # Capture "<name> (id)" pairs so the instance id is preserved for repairs.
+    pairs = re.findall(r"<([^>]+)>\s*(?:\((\d+)\))?", s)
+    obj       = pairs[0][0].strip() if pairs else "unknown"
+    obj_id    = (pairs[0][1].strip() or None) if pairs else None
+    target    = pairs[1][0].strip() if len(pairs) > 1 else None
+    target_id = (pairs[1][1].strip() or None) if len(pairs) > 1 else None
     return ActionStep(
         index=index,
         action=am.group(1).upper() if am else "UNKNOWN",
-        obj=om[0].strip() if om else "unknown",
-        target=om[1].strip() if len(om) > 1 else None,
+        obj=obj,
+        target=target,
+        obj_id=obj_id,
+        target_id=target_id,
     )
 
 
@@ -346,6 +354,64 @@ def check_goal_coverage(eai_actions, node_goals, edge_goals, ignore_ids=None):
     goal_ids -= ignore_ids
     touched_ids, _ = _extract_plan_ids_and_actions(eai_actions)
     return goal_ids - touched_ids
+
+
+# Relations between two objects that can only be created by a placement action
+# carrying BOTH object ids (PUTBACK/PUTIN). A 1-arg action such as
+# PUTON <clothes> touches the object but can never establish these.
+_PLACEMENT_RELATIONS = {"ON", "INSIDE", "ONTOP", "ON_TOP", "NEXT_TO"}
+
+
+def _extract_action_id_groups(eai_actions):
+    """Per action, the set of numeric object ids it references."""
+    id_pat = re.compile(r"<[^>]+>\s*\((\d+)\)")
+    groups = []
+    for a in eai_actions:
+        ids = {int(m) for m in id_pat.findall(str(a))}
+        if ids:
+            groups.append(ids)
+    return groups
+
+
+def check_relation_coverage(eai_actions, edge_goals, initial_edges=None, ignore_ids=None):
+    """Return placement edge goals whose relation the plan cannot structurally
+    establish: no single action carries BOTH from_id and to_id, and the relation
+    does not already hold in the initial graph. Catches e.g. using PUTON <clothes>
+    (1 arg) to try to satisfy (clothes ON washing_machine) — it executes fine but
+    never creates the relation, so grading silently fails.
+    """
+    ignore_ids = ignore_ids or set()
+    initial_edges = initial_edges or set()
+    groups = _extract_action_id_groups(eai_actions)
+    missing = []
+    for g in edge_goals:
+        rel = str(g.get("relation_type", "")).upper()
+        if rel not in _PLACEMENT_RELATIONS:
+            continue
+        fi, ti = g.get("from_id"), g.get("to_id")
+        if fi is None or ti is None or fi in ignore_ids or ti in ignore_ids:
+            continue
+        if (fi, rel, ti) in initial_edges:
+            continue  # already satisfied in the initial state
+        if not any(fi in grp and ti in grp for grp in groups):
+            missing.append(g)
+    return missing
+
+
+def format_missed_relations(missing_edges, id_to_name):
+    """Human-readable description of edge goals the plan can't structurally satisfy."""
+    lines = []
+    for g in missing_edges:
+        fi, ti = g.get("from_id"), g.get("to_id")
+        fn = id_to_name.get(fi, "?")
+        tn = id_to_name.get(ti, "?")
+        rel = g.get("relation_type", "?")
+        lines.append(
+            f"- {fn}_{fi} must be {rel} {tn}_{ti} "
+            f"(use PUTIN or PUTBACK with BOTH objects, e.g. "
+            f'"PUTIN": ["{fn}", "{fi}", "{tn}", "{ti}"] — NOT PUTON)'
+        )
+    return "\n".join(lines)
 
 
 def format_missed_goals(missing_ids, node_goals, edge_goals, id_to_name):
@@ -569,10 +635,15 @@ def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_g
     )
 
 
-def parse_and_validate(raw: str, relevant_name_to_id: dict):
+def parse_and_validate(raw: str, relevant_name_to_id: dict, err_out: list = None):
+    def _fail(reason):
+        if err_out is not None:
+            err_out.append(reason)
+        return None
+
     parsed = parse_llm_output(raw)
     if not parsed:
-        return None
+        return _fail("Output was not valid JSON / no actions found.")
 
     parsed = filter_valid_actions(parsed)
 
@@ -653,16 +724,16 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
         ok, err = _check_grammar_combined(parsed)
         if not ok:
             logger.warning(f"Grammar check failed: {err}")
-            return None
+            return _fail(f"Grammar error: {err}")
     except KeyError as e:
         logger.warning(f"Unknown action in grammar check: {e}")
-        return None
+        return _fail(f"Unknown action: {e}")
 
     try:
         return json_to_action(parsed, relevant_name_to_id=relevant_name_to_id)
     except Exception as e:
         logger.warning(f"json_to_action failed: {e}")
-        return None
+        return _fail(f"Could not resolve object: {e}")
 
 
 def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict, preferred: dict = None) -> str:
@@ -928,7 +999,22 @@ class EAISDATreeRunner:
 
         import virtualhome_eval.evaluation.action_sequencing.prompts.one_shot as one_shot
 
-        base_prompt = one_shot.prompt
+        # SDA_PROMPT_VARIANT=original  -> verbatim EAI upstream prompt
+        #                                 (paper-comparable baseline runs)
+        # SDA_PROMPT_VARIANT=calibrated (default) -> executor-calibrated prompt
+        #                                 (the 92.7% configuration)
+        _variant = os.environ.get("SDA_PROMPT_VARIANT", "calibrated").lower()
+        if _variant == "original":
+            if not hasattr(one_shot, "prompt_original"):
+                raise RuntimeError(
+                    "SDA_PROMPT_VARIANT=original but the installed "
+                    "virtualhome_eval one_shot.py has no prompt_original — "
+                    "sync the updated one_shot.py into the environment."
+                )
+            base_prompt = one_shot.prompt_original
+        else:
+            base_prompt = one_shot.prompt
+        logger.info(f"Prompt variant: {_variant}")
         base_prompt = base_prompt.replace("<object_in_scene>", object_in_scene)
         base_prompt = base_prompt.replace("<cur_change>", cur_change)
         base_prompt = base_prompt.replace("<node_goals>", node_goal_str)
@@ -948,10 +1034,41 @@ class EAISDATreeRunner:
         raw_output = self.llm.call(base_prompt, system_prompt="", label="INITIAL PLAN")
         logger.info(f"  Initial plan: {raw_output}")
 
-        actions = parse_and_validate(raw_output, relevant_name_to_id)
+        _perr = []
+        actions = parse_and_validate(raw_output, relevant_name_to_id, err_out=_perr)
         if not actions:
-            logger.warning(f"  Could not parse initial plan for {file_id}")
-            return raw_output, 0, 0
+            # One targeted format-reminder retry before giving up. Echo the exact
+            # parse error (bad name/id format, wrong argument count, unknown
+            # action, unresolvable object) so the LLM fixes the real problem
+            # rather than guessing. Far cheaper than losing the task outright.
+            reason = _perr[-1] if _perr else "The output could not be parsed."
+            logger.warning(
+                f"  Initial plan parse failed for {file_id} ({reason}) — one format-reminder retry"
+            )
+            fmt_retry_prompt = (
+                base_prompt
+                + "\n\nNOTE: Your previous output was rejected. Reason: "
+                + reason
+                + "\n\nYour previous output was:\n"
+                + raw_output.strip()
+                + "\n\nFix the problem. Every argument must be exactly "
+                + '[bare_class_name, numeric_id] — e.g. ["light", "245"], NOT '
+                + '["light_245", "2"]. Put the bare class name (no id suffix) in '
+                + "the name field and the object's real numeric id (from the scene "
+                + "and goals) in the id field. Include the correct number of "
+                + "arguments for each action (0-arg actions like STANDUP use []). "
+                + "Output ONLY the JSON.\n"
+            )
+            raw_retry = self.llm.call(
+                fmt_retry_prompt, system_prompt="", label="INITIAL PLAN FORMAT RETRY"
+            )
+            logger.info(f"  Format-retry plan: {raw_retry}")
+            actions = parse_and_validate(raw_retry, relevant_name_to_id)
+            if actions:
+                raw_output = raw_retry
+            else:
+                logger.warning(f"  Could not parse initial plan for {file_id} (after retry)")
+                return raw_output, 0, 0
 
         # ── Static plan alignment checks ───────────────────────────────────────
         # One targeted retry for goal coverage — if the plan ignores any goal
@@ -963,20 +1080,38 @@ class EAISDATreeRunner:
             n.id for n in motion_planner.env_graph.get_nodes()
             if n.class_name == "character"
         }
+        # Relations already true in the initial scene need no placement action.
+        initial_edges = {
+            (e.get("from_id"), str(e.get("relation_type", "")).upper(), e.get("to_id"))
+            for e in motion_planner.init_state.to_dict().get("edges", [])
+        }
         missing_goal_ids = check_goal_coverage(
             actions, node_goals, edge_goals, ignore_ids=char_ids
         )
-        if missing_goal_ids:
+        missing_relations = check_relation_coverage(
+            actions, edge_goals, initial_edges=initial_edges, ignore_ids=char_ids
+        )
+        if missing_goal_ids or missing_relations:
             id_to_name = {
                 n.id: n.class_name
                 for n in motion_planner.env_graph.get_nodes()
             }
-            missed_desc = format_missed_goals(
-                missing_goal_ids, node_goals, edge_goals, id_to_name
-            )
+            parts = []
+            if missing_goal_ids:
+                parts.append(
+                    "These required goal objects are never touched by any action:\n"
+                    + format_missed_goals(missing_goal_ids, node_goals, edge_goals, id_to_name)
+                )
+            if missing_relations:
+                parts.append(
+                    "These required relations cannot be established by the plan "
+                    "(no action places both objects together):\n"
+                    + format_missed_relations(missing_relations, id_to_name)
+                )
+            missed_desc = "\n".join(parts)
             logger.warning(
-                f"  ⚠️  Plan ignores goal object IDs: {sorted(missing_goal_ids)} — "
-                f"requesting one targeted retry"
+                f"  ⚠️  Plan alignment gap (ids={sorted(missing_goal_ids)}, "
+                f"relations={len(missing_relations)}) — one targeted retry:\n{missed_desc}"
             )
             if VERBOSE:
                 print(f"\n  GOAL COVERAGE RETRY — missing:\n{missed_desc}")
@@ -985,30 +1120,35 @@ class EAISDATreeRunner:
                 base_prompt
                 + "\n\nNOTE: Your previous attempt produced this plan:\n"
                 + raw_output.strip()
-                + "\n\nThat plan does NOT include any action touching the following "
-                + "required goal objects:\n"
+                + "\n\nThat plan does not satisfy all goals:\n"
                 + missed_desc
                 + "\n\nGenerate a NEW complete plan that achieves ALL goals "
-                + "(including the missed objects above). Output ONLY the JSON.\n"
+                + "(including the items above). Output ONLY the JSON.\n"
             )
             retry_raw = self.llm.call(
                 retry_prompt, system_prompt="", label="GOAL COVERAGE RETRY"
             )
             retry_actions = parse_and_validate(retry_raw, relevant_name_to_id)
             if retry_actions:
-                still_missing = check_goal_coverage(
+                still_ids = check_goal_coverage(
                     retry_actions, node_goals, edge_goals, ignore_ids=char_ids
                 )
-                if len(still_missing) < len(missing_goal_ids):
+                still_rel = check_relation_coverage(
+                    retry_actions, edge_goals, initial_edges=initial_edges, ignore_ids=char_ids
+                )
+                before = len(missing_goal_ids) + len(missing_relations)
+                after = len(still_ids) + len(still_rel)
+                if after < before:
                     logger.info(
-                        f"  🔁 Retry improved coverage: "
-                        f"{len(missing_goal_ids)} → {len(still_missing)} missing"
+                        f"  🔁 Retry improved alignment: {before} → {after} gaps "
+                        f"(ids {len(missing_goal_ids)}→{len(still_ids)}, "
+                        f"relations {len(missing_relations)}→{len(still_rel)})"
                     )
                     actions = retry_actions
                     raw_output = retry_raw
                 else:
                     logger.warning(
-                        f"  Retry did not improve coverage — keeping original plan"
+                        f"  Retry did not improve alignment — keeping original plan"
                     )
             else:
                 logger.warning("  Retry produced unparseable output — keeping original")
@@ -1246,15 +1386,23 @@ class EAISDATreeRunner:
             # Skip the LLM API call and feed BFS the exact candidate directly.
             _insert_prep_suggestions = None
             if diagnosis.replan_strategy == "insert_prep" and diagnosis.unsatisfied_needs:
-                _key = diagnosis.unsatisfied_needs[0]
+                # Same key selection as diagnose_error (dynamic-first) — using
+                # unsatisfied_needs[0] here silently missed the fast path when a
+                # static property (e.g. lookable) preceded the dynamic key.
+                _dyn = [p for p in diagnosis.unsatisfied_needs
+                        if p in DYNAMIC_PRECONDITIONS]
+                _key = _dyn[0] if _dyn else diagnosis.unsatisfied_needs[0]
+                # Use the instance-qualified form (e.g. "light_245") so the
+                # repair WALK/TURNTO targets the exact failing instance instead
+                # of an ambiguous bare class name that resolution then drops.
                 if _key in ("not_sitting", "not_lying"):
                     _insert_prep_suggestions = [{"STANDUP": []}]
                 elif _key == "next_to_obj":
-                    _insert_prep_suggestions = [{"WALK": [str(failed_step.obj)]}]
+                    _insert_prep_suggestions = [{"WALK": [str(failed_step.obj_full)]}]
                 elif _key == "next_to_target" and failed_step.target:
-                    _insert_prep_suggestions = [{"WALK": [str(failed_step.target)]}]
+                    _insert_prep_suggestions = [{"WALK": [str(failed_step.target_full)]}]
                 elif _key == "facing_obj":
-                    _insert_prep_suggestions = [{"TURNTO": [str(failed_step.obj)]}]
+                    _insert_prep_suggestions = [{"TURNTO": [str(failed_step.obj_full)]}]
                 elif _key == "not_both_hands_full":
                     # guaranteed_candidates already include DROP for held objects
                     _insert_prep_suggestions = []
@@ -1296,10 +1444,14 @@ class EAISDATreeRunner:
 
             orig_subseq_dicts = []
             for s in orig_subseq:
+                # Use instance-qualified names so original-subsequence candidates
+                # also resolve to the exact instance during tree search.
+                s_obj = s.obj_full if hasattr(s, "obj_full") else s.obj
                 if hasattr(s, "target") and s.target:
-                    orig_subseq_dicts.append({s.action: [s.obj, s.target]})
+                    s_tgt = s.target_full if hasattr(s, "target_full") else s.target
+                    orig_subseq_dicts.append({s.action: [s_obj, s_tgt]})
                 elif hasattr(s, "obj"):
-                    orig_subseq_dicts.append({s.action: [s.obj]})
+                    orig_subseq_dicts.append({s.action: [s_obj]})
 
             tree_result = generate_replacement_subsequence(
                 llm_suggestions=llm_suggestions,
@@ -1311,8 +1463,11 @@ class EAISDATreeRunner:
                 char_lying=char_lying,
                 max_depth=TREE_MAX_DEPTH,
                 max_nodes=TREE_MAX_NODES,
-                failed_obj=str(failed_step.obj) if failed_step.obj else None,
-                failed_target=str(failed_step.target) if failed_step.target else None,
+                failed_obj=str(failed_step.obj_full) if failed_step.obj else None,
+                failed_target=str(failed_step.target_full) if failed_step.target else None,
+                # Prior repairs for THIS failing action that already failed —
+                # BFS will refuse to return any of them again (hard no-repeat).
+                excluded_repairs=list(repair_attempts.get(action_key, [])),
             )
 
             # Always record the LLM suggestion so the LLM sees what it already
@@ -1325,6 +1480,11 @@ class EAISDATreeRunner:
                 if VERBOSE:
                     print(f"\n  TREE SEARCH RESULT: {tree_result}")
                 tree_success += 1
+                # Record the repair that is ACTUALLY applied (not just the raw
+                # LLM suggestions) so a failed splice is hard-excluded from the
+                # next BFS run for this same action. If it works, the action
+                # never fails again and the entry is simply never consulted.
+                repair_attempts.setdefault(action_key, []).append(tree_result)
                 new_subseq = subtree_results_to_eai(
                     tree_result, scene_name_to_id, preferred=relevant_name_to_id
                 )

@@ -25,7 +25,7 @@ from sdg import get_preconditions, get_effects, is_prep_action, explain_precondi
 DYNAMIC_PRECONDITIONS = {
     "holds_obj", "holds_any_obj", "holds_knife", "not_both_hands_full",
     "not_sitting", "not_lying",
-    "open", "closed", "on", "off", "next_to_obj", "next_to_target",
+    "open", "closed", "on", "off", "not_on", "next_to_obj", "next_to_target",
     "sitting_or_lying", "obj_not_inside_closed_container",
     "target_open_or_not_openable", "plugged_in", "plugged_out",
     "facing_obj", "on_char",
@@ -38,6 +38,7 @@ STATIC_PROPERTIES = {
     "sittable", "lieable", "clothes", "cuttable",
     "hangable", "pourable", "drinkable", "person",
     "clothes_or_squeezable", "eatable_or_has_eatable_on",
+    "pourable_or_drinkable", "drinkable_or_recipient", "target_is_recipient",
 }
 
 # Effects ObjectStateModel.satisfies() can actually evaluate. satisfies()
@@ -55,18 +56,47 @@ EVALUABLE_EFFECTS = {
 
 
 class ActionStep:
-    """Represents a single action in the plan."""
+    """Represents a single action in the plan.
 
-    def __init__(self, index: int, action: str, obj: str, target: str = None):
-        self.index  = index
-        self.action = action.upper()
-        self.obj    = obj
-        self.target = target
+    obj/target hold the bare CLASS name (e.g. "light") so the class-keyed
+    ObjectStateModel diagnosis works. obj_id/target_id hold the numeric
+    instance id (e.g. "245") when known, so repairs can target the exact
+    instance rather than an ambiguous class name.
+    """
+
+    def __init__(self, index: int, action: str, obj: str, target: str = None,
+                 obj_id: str = None, target_id: str = None):
+        self.index     = index
+        self.action    = action.upper()
+        self.obj       = obj
+        self.target    = target
+        self.obj_id    = obj_id
+        self.target_id = target_id
+
+    @staticmethod
+    def _combine(name, oid):
+        """name + numeric id -> 'name_id' (instance-qualified), else name."""
+        if name is None:
+            return None
+        if oid is not None and str(oid).strip():
+            return f"{name}_{oid}"
+        return name
+
+    @property
+    def obj_full(self):
+        """Instance-qualified object (e.g. 'light_245') when the id is known."""
+        return self._combine(self.obj, self.obj_id)
+
+    @property
+    def target_full(self):
+        """Instance-qualified target (e.g. 'washing_machine_1000')."""
+        return self._combine(self.target, self.target_id)
 
     def __repr__(self):
+        o = self.obj_full
         if self.target:
-            return f"[t={self.index}] {self.action}({self.obj}, {self.target})"
-        return f"[t={self.index}] {self.action}({self.obj})"
+            return f"[t={self.index}] {self.action}({o}, {self.target_full})"
+        return f"[t={self.index}] {self.action}({o})"
 
 
 class DiagnosisResult:
@@ -152,14 +182,21 @@ class StateTracker:
         for step in self.history:
             if step.index >= t_error:
                 break
-            temp.apply(step.action, step.obj, step.target)
+            # Replay with instance-qualified names when available so the
+            # per-instance relation/state keys stay consistent with queries.
+            s_obj = getattr(step, "obj_full", step.obj)
+            s_tgt = getattr(step, "target_full", step.target)
+            temp.apply(step.action, s_obj, s_tgt)
             now_ok = temp.satisfies(precondition, obj, target)
             if prev_ok and not now_ok:
                 last_violated_at = step.index
             prev_ok = now_ok
 
         if last_violated_at is None:
-            return t_error
+            # Paper Eq. 2: Λ = ∅ → t_source = 1. The precondition was never
+            # satisfied at any point, so the corruption predates the plan and
+            # reconstruction starts from the beginning.
+            return 1
         return last_violated_at
 
 
@@ -176,21 +213,51 @@ def _find_container_in_env(obj_name: str, env_dict: dict):
         return None
     nodes = env_dict.get("nodes", [])
     edges = env_dict.get("edges", [])
-    obj_id = next(
-        (n["id"] for n in nodes if n.get("class_name") == obj_name),
-        None,
-    )
+    by_id = {n["id"]: n for n in nodes}
+    # Instance-qualified names ("clothes_pants_1002") resolve to that exact
+    # node; a bare class name falls back to the first instance. Without this,
+    # multi-instance scenes could return a SIBLING's container.
+    base, oid = obj_name, None
+    if "_" in str(obj_name):
+        b, m = str(obj_name).rsplit("_", 1)
+        if m.isdigit():
+            base, oid = b, int(m)
+    if oid is not None and oid in by_id:
+        obj_id = oid
+    else:
+        obj_id = next(
+            (n["id"] for n in nodes if n.get("class_name") == base),
+            None,
+        )
     if obj_id is None:
         return None
-    for edge in edges:
-        if (edge.get("relation_type") == "INSIDE"
-                and edge.get("from_id") == obj_id):
-            container_id = edge.get("to_id")
-            return next(
-                (n["class_name"] for n in nodes if n["id"] == container_id),
-                None,
-            )
-    return None
+
+    def _is_container(node):
+        # Mirror ObjectStateModel: only CAN_OPEN / CONTAINERS nodes are real
+        # containers. This excludes room membership (obj INSIDE dining_room),
+        # which otherwise made the tree try to OPEN a room.
+        if node is None or node.get("category") == "Rooms":
+            return False
+        flags = {p.upper() for p in node.get("properties", [])} | \
+                {s.upper() for s in node.get("states", [])}
+        return "CAN_OPEN" in flags or "CONTAINERS" in flags
+
+    # Collect all INSIDE containers, preferring a CLOSED one (the real trap)
+    # over an open/undefined one.
+    containers = [
+        by_id.get(e.get("to_id"))
+        for e in edges
+        if e.get("relation_type") == "INSIDE" and e.get("from_id") == obj_id
+    ]
+    containers = [c for c in containers if _is_container(c)]
+    if not containers:
+        return None
+    closed = next(
+        (c for c in containers
+         if "CLOSED" in {s.upper() for s in c.get("states", [])}),
+        None,
+    )
+    return (closed or containers[0]).get("class_name")
 
 
 def diagnose_error(
@@ -219,6 +286,9 @@ def diagnose_error(
     result.failed_at     = failed_step.index
 
     # ── ADDITIONAL_STEP: skip action, local replan ────────────────────────────
+    # NOTE: unreachable via eai_sda_runner_tree (it skips ADDITIONAL_STEP
+    # actions before calling diagnosis). Kept for API completeness so other
+    # callers of diagnose_error handle the type correctly.
     if error_type == "ADDITIONAL_STEP":
         result.replan_strategy   = "local"
         result.root_cause        = failed_step
@@ -246,11 +316,14 @@ def diagnose_error(
             tracker.apply_action(step)
 
     # ── Find unsatisfied preconditions for the specific obj/target ────────────
+    # Instance-qualified (light_245) so multi-instance scenes are diagnosed
+    # per-instance: being next to light_245 no longer satisfies next_to for
+    # light_411. The model falls back to class-level for bare names.
     preconditions = get_preconditions(failed_step.action)
     unsatisfied   = tracker.get_unsatisfied(
         preconditions,
-        failed_step.obj,
-        failed_step.target,
+        failed_step.obj_full,
+        failed_step.target_full,
     )
     result.unsatisfied_needs = unsatisfied
 
@@ -276,14 +349,16 @@ def diagnose_error(
     # because a different television is on). The executor returning a MISSING
     # precondition for the specific instance already contradicts "already done".
     obj_instances = tracker.model.name_to_ids.get((failed_step.obj or "").lower(), [])
-    unambiguous_obj = len(obj_instances) <= 1
+    # A known instance id makes the check unambiguous even with same-class
+    # siblings, because satisfies() now evaluates that exact instance.
+    unambiguous_obj = failed_step.obj_id is not None or len(obj_instances) <= 1
 
     positive_effects = [e for e in get_effects(failed_step.action)
                         if not e.startswith("not_")]
     if (positive_effects and unambiguous_obj
             and all(e in EVALUABLE_EFFECTS for e in positive_effects)):
         all_already_true = all(
-            tracker.model.satisfies(e, failed_step.obj, failed_step.target)
+            tracker.model.satisfies(e, failed_step.obj_full, failed_step.target_full)
             for e in positive_effects
         )
         if all_already_true:
@@ -303,8 +378,8 @@ def diagnose_error(
     # can ask the LLM to replace the whole action rather than patch it.
     if "holds_obj" in unsatisfied:
         obj_is_grabbable = tracker.model.satisfies("grabbable",
-                                                    failed_step.obj,
-                                                    failed_step.target)
+                                                    failed_step.obj_full,
+                                                    failed_step.target_full)
         if not obj_is_grabbable:
             result.replan_strategy   = "wrong_action"
             result.root_cause        = failed_step
@@ -351,8 +426,8 @@ def diagnose_error(
     # Find t_source: most recent step that corrupted key_prec for the
     # specific obj/target involved (paper Eq. 2)
     t_source             = tracker.find_t_source(
-        key_prec, failed_step.obj, failed_step.index,
-        target=failed_step.target,
+        key_prec, failed_step.obj_full, failed_step.index,
+        target=failed_step.target_full,
     )
     result.root_cause_at = t_source
     result.root_cause    = next(
@@ -370,17 +445,33 @@ def diagnose_error(
             break
     result.t_start = t_start
 
-    # Calculate t_end: extend forward past all actions on error objects (Eq. 4)
+    # O — the error-item set (Eq. 4): o_error plus the items tied to s_error,
+    # approximated by the root-cause action's objects (e.g. the pan occupying
+    # the hand in the paper's pick-tomato example).
     error_objects = {failed_step.obj}
     if failed_step.target:
         error_objects.add(failed_step.target)
+    if result.root_cause is not None:
+        error_objects.add(result.root_cause.obj)
+        if result.root_cause.target:
+            error_objects.add(result.root_cause.target)
 
+    # t_end (Eq. 4): max{t | ALL objects of actions in (t_error, t] ⊆ O} —
+    # extend forward only over a CONTIGUOUS run of error-item actions and stop
+    # at the first later action that touches an unrelated object.
     t_end = failed_step.index
-    for step in full_plan:
-        if step.index > failed_step.index:
-            if (step.obj in error_objects or
-                    (step.target and step.target in error_objects)):
-                t_end = step.index
+    for step in sorted(
+        (s for s in full_plan if s.index > failed_step.index),
+        key=lambda s: s.index,
+    ):
+        step_objects_in_O = (
+            step.obj in error_objects
+            and (not step.target or step.target in error_objects)
+        )
+        if step_objects_in_O:
+            t_end = step.index
+        else:
+            break
     result.t_end = t_end
 
     return result
