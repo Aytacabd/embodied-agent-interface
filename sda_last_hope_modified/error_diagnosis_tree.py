@@ -23,7 +23,8 @@ def diagnose_error_tree(
     full_plan:      list,
     char_sitting:   bool = False,
     char_lying:     bool = False,
-    env_dict:       dict = None,
+    env_dict:       dict = None,        # environment AT FAILURE
+    initial_env_dict: dict = None,      # environment BEFORE any action
 ) -> tuple:
     """
     Extended diagnosis returning:
@@ -40,6 +41,7 @@ def diagnose_error_tree(
         char_sitting   = char_sitting,
         char_lying     = char_lying,
         env_dict       = env_dict,
+        initial_env_dict = initial_env_dict,
     )
 
     t_start = result.t_start if result.t_start is not None else failed_step.index

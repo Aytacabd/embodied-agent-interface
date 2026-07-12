@@ -800,8 +800,10 @@ def scene_evaluate_wID(
     for gd_edge_goal in accurate_edge_goals:
         assert isinstance(gd_edge_goal, dict)
         if gd_edge_goal in final_state_dict["edges"]:
+            # FIX: upstream EAI had `break` here, which stopped checking after
+            # the FIRST satisfied edge goal — capping edge_match_num at 1 and
+            # making all_success impossible for tasks with >1 edge goal.
             edge_match_num += 1
-            break
         else:
             logger.info(f"GOAL FAIL! Not found: {gd_edge_goal}")
             unsatisfied_edge_goals.append(gd_edge_goal)

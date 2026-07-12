@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/Users/aytaj/Desktop/embodied-agent-interface-my-version/sda_last_hope_modified/object_states.json'\\)\\); ks=list\\(d.keys\\(\\)\\); print\\(len\\(ks\\), 'objects'\\); print\\(ks[:10]\\); print\\(d[ks[0]]\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 /private/tmp/claude-501/-Users-aytaj-Desktop-embodied-agent-interface-my-version/3942019b-7557-4723-bd15-055c6467987d/scratchpad/dup_analysis.py)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py action_subtree.py)",
+      "Bash(python3 /private/tmp/claude-501/-Users-aytaj-Desktop-embodied-agent-interface-my-version/3942019b-7557-4723-bd15-055c6467987d/scratchpad/test_id_keyed.py)",
+      "Bash(python3 -)",
+      "Bash(git log *)",
+      "Bash(awk '/class PutExecutor|class PutBackExecutor|class PutInExecutor/,/^class [A-Z][a-zA-Z]*Executor/' src/virtualhome_eval/simulation/evolving_graph/execution.py)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py action_subtree.py error_diagnosis.py ../src/virtualhome_eval/simulation/evolving_graph/eval_utils.py ../src/virtualhome_eval/evaluation/action_sequencing/prompts/one_shot.py)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py action_subtree.py ../src/virtualhome_eval/evaluation/action_sequencing/prompts/one_shot.py)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py)",
+      "Bash(docker exec *)",
+      "Bash(docker cp *)",
+      "Read(//Users/aytaj/Desktop/**)"
+    ]
+  }
+}

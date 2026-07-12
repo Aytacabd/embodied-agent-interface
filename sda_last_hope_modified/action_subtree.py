@@ -54,11 +54,8 @@ class TreeState:
     Wraps ObjectStateModel for use in the BFS search tree.
     All precondition checks are per-object, not global.
 
-    IMPORTANT:
-    ObjectStateModel may still expect plain object names in your setup.
-    So before calling into the model, we strip "name_id" -> "name".
-    That preserves compatibility while still keeping instance identity
-    inside subtree candidate generation and path output.
+    ObjectStateModel is ID-keyed: "name_id" tokens are checked/applied
+    against that specific instance, so we pass tokens straight through.
     """
 
     def __init__(self, model: ObjectStateModel):
@@ -68,14 +65,10 @@ class TreeState:
         return TreeState(self.model.copy())
 
     def apply(self, action: str, obj: str, target: str = None):
-        obj_name, _ = _split_name_id(obj)
-        tgt_name, _ = _split_name_id(target) if target is not None else (None, None)
-        self.model.apply(action, obj_name, tgt_name)
+        self.model.apply(action, obj, target)
 
     def satisfies(self, preconditions: list, obj: str, target: str = None) -> bool:
-        obj_name, _ = _split_name_id(obj)
-        tgt_name, _ = _split_name_id(target) if target is not None else (None, None)
-        return len(self.model.check_all(preconditions, obj_name, tgt_name)) == 0
+        return len(self.model.check_all(preconditions, obj, target)) == 0
 
     def achieves(self, target_effects: list, obj: str, target: str = None) -> bool:
         return self.satisfies(target_effects, obj, target)
@@ -260,6 +253,7 @@ def build_and_search_tree(
     error_objects:  set = None,
     max_depth:      int = 6,
     max_nodes:      int = 500,
+    banned_paths:   set = None,
 ) -> list:
     """
     BFS to find shortest valid replacement subsequence.
@@ -267,9 +261,15 @@ def build_and_search_tree(
     target_effects is a list of tuples: ("check", precondition, specific_obj)
       - specific_obj=None means check against the candidate's own obj
       - specific_obj=<name_id> means always check against that specific object
+
+    banned_paths: set of path keys (tuples of (ACTION, obj, target) triples)
+    that were already tried and did not resolve the failure. A goal node
+    whose path is banned is skipped but its subtree keeps expanding, so BFS
+    naturally yields the next-shortest untried repair.
     """
     initial_state = TreeState(initial_model.copy())
     error_objects = error_objects or set()
+    banned_paths  = banned_paths or set()
 
     root = TreeNode(
         action="ROOT",
@@ -284,14 +284,14 @@ def build_and_search_tree(
         for (_, precondition, specific_obj) in target_effects:
             check_obj = specific_obj if specific_obj else node.obj
             check_tgt = node.target if not specific_obj else None
-            obj_name, _ = _split_name_id(check_obj)
-            tgt_name, _ = _split_name_id(check_tgt) if check_tgt is not None else (None, None)
-            if not state.model.satisfies(precondition, obj_name, tgt_name):
+            if not state.model.satisfies(precondition, check_obj, check_tgt):
                 return False
         return True
 
     if not target_effects:
         for (action, obj, target) in candidates:
+            if ((action, obj, target),) in banned_paths:
+                continue
             if satisfied(action, root.state, obj, target) and changes_state(action):
                 return [(action, obj, target)]
         return []
@@ -304,7 +304,11 @@ def build_and_search_tree(
         nodes_expanded += 1
 
         if current.depth > 0 and _achieves(current.state, current):
-            return _extract_path(current)
+            path = _extract_path(current)
+            if tuple(path) not in banned_paths:
+                return path
+            # Banned repair — skip it but keep expanding so BFS can
+            # surface the next-shortest alternative.
 
         if current.depth >= max_depth:
             continue
@@ -388,12 +392,22 @@ def generate_replacement_subsequence(
     char_lying:           bool = False,
     max_depth:            int  = 6,
     max_nodes:            int  = 500,
+    failed_obj:           str  = None,
+    failed_target:        str  = None,
+    banned_paths:         set  = None,
+    banned_candidates:    set  = None,
 ) -> list:
     """
     Generate replacement subsequence using BFS search tree.
     Returns list of dict actions using ID-safe object strings, e.g.:
       {"WALK": ["light_245"]}
       {"PUTIN": ["apple_7", "fridge_2"]}
+
+    failed_obj / failed_target: obj and target of the action that failed.
+    error_objects mixes both roles together, but the BFS goal must be
+    role-aware — only the obj needs to be HELD, only the target needs to
+    be OPEN. Without this the goal can demand e.g. holding a washing
+    machine, which is unsatisfiable and wastes every replan attempt.
     """
     initial_model = _build_initial_state(
         initial_state_dict, char_sitting, char_lying
@@ -409,11 +423,15 @@ def generate_replacement_subsequence(
     if "obj_not_inside_closed_container" in needs_set or \
        "target_open_or_not_openable" in needs_set:
         for obj in normalized_error_objects:
-            obj_name, _ = _split_name_id(obj)
-            container = initial_model.get_container(obj_name)
+            container = initial_model.get_container(obj)
             if container and not initial_model.satisfies("open", container):
-                # container from model may be plain name; keep as plain unless you have IDs for it
+                # ID-keyed model returns container as "name_id" token,
+                # so these candidates resolve exactly at the output boundary.
+                # PDDL open requires not_on — a running container (washing
+                # machine SWITCHONed too early) must be switched off first.
                 container_targets[obj] = str(container)
+                if initial_model.satisfies("on", container):
+                    guaranteed_candidates.append(("SWITCHOFF", str(container), None))
                 guaranteed_candidates.append(("WALK", str(container), None))
                 guaranteed_candidates.append(("OPEN", str(container), None))
 
@@ -427,6 +445,30 @@ def generate_replacement_subsequence(
         for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
             guaranteed_candidates.append(("DROP", str(held_obj), None))
 
+    # The failed action's target itself is a closed container (e.g. PUTIN
+    # into a closed washing machine): guarantee the opening sequence.
+    # PDDL open requires not_on, so a running appliance needs SWITCHOFF first.
+    if "target_open_or_not_openable" in needs_set:
+        open_targets = [failed_target] if failed_target else list(normalized_error_objects)
+        for obj in open_targets:
+            if (initial_model.satisfies("can_open", obj)
+                    and not initial_model.satisfies("open", obj)):
+                if initial_model.satisfies("on", obj):
+                    guaranteed_candidates.append(("SWITCHOFF", obj, None))
+                guaranteed_candidates.append(("WALK", obj, None))
+                guaranteed_candidates.append(("OPEN", obj, None))
+
+    # The failed action needs its object in hand: guarantee WALK + GRAB.
+    if "holds_obj" in needs_set and failed_obj and failed_obj != "character":
+        if (initial_model.satisfies("grabbable", failed_obj)
+                and not initial_model.satisfies("holds_obj", failed_obj)):
+            guaranteed_candidates.append(("WALK", failed_obj, None))
+            guaranteed_candidates.append(("GRAB", failed_obj, None))
+
+    # The failed action (WATCH/LOOKAT) needs the character facing its object.
+    if "facing_obj" in needs_set and failed_obj and failed_obj != "character":
+        guaranteed_candidates.append(("TURNTO", failed_obj, None))
+
     candidates = generate_candidate_nodes(
         llm_suggestions=llm_suggestions,
         original_subsequence=original_subsequence,
@@ -435,62 +477,105 @@ def generate_replacement_subsequence(
         char_lying=char_lying,
     )
 
+    # ── Expand plain-name candidates to concrete instances ───────────────────
+    # LLM suggestions often carry bare class names ({"GRAB": ["plate"]}).
+    # With the ID-keyed model we expand them to per-instance candidates
+    # ("plate_57", "plate_58") so the BFS simulates the right instance and
+    # the output resolves exactly at the boundary instead of being rejected
+    # as ambiguous. Capped per class to bound the branching factor.
+    MAX_INSTANCES_PER_CLASS = 4
+
+    def _instance_tokens(obj):
+        if obj is None:
+            return [None]
+        toks = initial_model.resolve(obj)
+        return toks[:MAX_INSTANCES_PER_CLASS] if toks else [str(obj)]
+
     seen_keys = set()
     all_candidates = []
-    for c in guaranteed_candidates + candidates:
-        if c not in seen_keys:
-            seen_keys.add(c)
-            all_candidates.append(c)
+    for (action, obj, target) in guaranteed_candidates + candidates:
+        for obj_tok in _instance_tokens(obj):
+            for tgt_tok in _instance_tokens(target):
+                c = (action, obj_tok, tgt_tok)
+                if c not in seen_keys:
+                    seen_keys.add(c)
+                    all_candidates.append(c)
 
+    # Candidates that were part of an earlier repair and then failed in the
+    # real environment are excluded outright — stronger than path-level
+    # banning, since a bad action can appear on many paths.
+    if banned_candidates:
+        all_candidates = [c for c in all_candidates if c not in banned_candidates]
+
+    # NOTE: no `break` in this loop — EVERY unsatisfied need must become a
+    # BFS goal. Breaking after the first need meant e.g. that for
+    # ['holds_obj', 'target_open_or_not_openable'] the open-target goal was
+    # silently dropped and the found repair could never fix the real error.
+    # Property filters (grabbable / can_open / has_switch) keep goals
+    # satisfiable when error_objects mixes objects of different roles.
     target_effects = []
     for need in unsatisfied_needs:
         if need in ("not_sitting", "not_lying"):
             target_effects.append(("check", need, None))
 
         elif need == "holds_obj":
-            for obj in normalized_error_objects:
-                target_effects.append(("check", "holds_obj", obj))
-            break
+            # Only the failed action's own object must end up held —
+            # never its target (a PUTIN's washing machine is in
+            # error_objects too, and can't be grabbed).
+            holds_objs = [failed_obj] if failed_obj else list(normalized_error_objects)
+            for obj in holds_objs:
+                if obj != "character" and initial_model.satisfies("grabbable", obj):
+                    target_effects.append(("check", "holds_obj", obj))
 
         elif need == "open":
             for obj in normalized_error_objects:
-                target_effects.append(("check", "open", obj))
-            break
+                if initial_model.satisfies("can_open", obj):
+                    target_effects.append(("check", "open", obj))
 
         elif need in ("not_on", "off"):
             for obj in normalized_error_objects:
-                target_effects.append(("check", "off", obj))
-            break
+                if initial_model.satisfies("has_switch", obj):
+                    target_effects.append(("check", "off", obj))
 
         elif need in ("next_to_obj", "next_to_target"):
             target_effects.append(("check", "next_to_obj", None))
 
         elif need == "obj_not_inside_closed_container":
+            # error_objects contains BOTH the blocked object and its container
+            # (FIX 3). Only the object that is actually inside a container
+            # must end up held — requiring holds_obj on the container itself
+            # (e.g. a cabinet) makes the BFS goal unsatisfiable.
             for obj in normalized_error_objects:
-                obj_name, _ = _split_name_id(obj)
-                container = container_targets.get(obj) or initial_model.get_container(obj_name)
+                container = container_targets.get(obj) or initial_model.get_container(obj)
                 if container:
                     target_effects.append(("check", "open", str(container)))
-                if obj != "character":
-                    target_effects.append(("check", "holds_obj", obj))
+                    if obj != "character":
+                        target_effects.append(("check", "holds_obj", obj))
 
         elif need == "target_open_or_not_openable":
-            for obj in normalized_error_objects:
-                obj_name, _ = _split_name_id(obj)
-                container = container_targets.get(obj) or initial_model.get_container(obj_name)
-                if container:
-                    target_effects.append(("check", "open", str(container)))
+            # The TARGET of the failed action must be open. Two cases:
+            # the target itself is the openable container (washing machine,
+            # fridge), or — legacy — an error object sits inside one.
+            if failed_target and initial_model.satisfies("can_open", failed_target):
+                target_effects.append(("check", "open", failed_target))
+            else:
+                for obj in normalized_error_objects:
+                    if initial_model.satisfies("can_open", obj):
+                        target_effects.append(("check", "open", obj))
+                    container = container_targets.get(obj) or initial_model.get_container(obj)
+                    if container:
+                        target_effects.append(("check", "open", str(container)))
 
         elif need == "not_both_hands_full":
             target_effects.append(("check", "not_holds_obj", None))
 
         elif need == "facing_obj":
-            target_effects.append(("check", "facing_obj", None))
+            target_effects.append(("check", "facing_obj", failed_obj or None))
 
         elif need == "plugged_in":
             for obj in normalized_error_objects:
-                target_effects.append(("check", "plugged_in", obj))
-            break
+                if initial_model.satisfies("has_plug_or_has_switch", obj):
+                    target_effects.append(("check", "plugged_in", obj))
 
     seen_te = set()
     deduped_te = []
@@ -507,6 +592,7 @@ def generate_replacement_subsequence(
         error_objects=normalized_error_objects,
         max_depth=max_depth,
         max_nodes=max_nodes,
+        banned_paths=banned_paths,
     )
 
     if not path:

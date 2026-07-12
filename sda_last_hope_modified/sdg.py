@@ -32,17 +32,15 @@ SDG = {
         "effects": ["next_to_obj", "inside_room"],
         "is_prep": True,
     },
-# PDDL find: requires next_to and has no effect.
-# If using EAI auto-navigation, use needs=[] and effects=["next_to_obj"] instead.
-    # "FIND": {
-    #     "needs":   ["next_to_obj"], # 
-    #     "effects": ["next_to_obj"],
-    #     "is_prep": True,
-    # },
+    # PDDL find requires next_to with no effect, but the EAI executor
+    # AUTO-NAVIGATES: FindExecutor delegates to WALK+FIND when the character
+    # is not close (execution.py _walk_find_executor), so at runtime FIND
+    # needs nothing and ends with the character next to the object.
+    # The executor is the arbiter → model it like WALK.
     "FIND": {
-    "needs": ["next_to_obj"],
-    "effects": [],
-    "is_prep": False,
+        "needs":   [],
+        "effects": ["next_to_obj"],
+        "is_prep": True,
     },
     # PDDL turn_to: no precondition
     "TURNTO": {
@@ -375,7 +373,7 @@ if __name__ == "__main__":
     print("=== SDG Verification against PDDL ===")
     checks = [
         ("WALK",      ["not_sitting", "not_lying"]),
-        ("FIND", ["next_to_obj"]),
+        ("FIND",      []),   # executor auto-navigates (deviation from PDDL)
         ("GRAB",      ["next_to_obj", "grabbable", "not_both_hands_full",
                        "obj_not_inside_closed_container"]),
         ("OPEN",      ["next_to_obj", "can_open", "closed", "not_on"]),

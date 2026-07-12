@@ -71,7 +71,7 @@ Note: When multiple properties appear in the same inner list (e.g., ['POURABLE',
 Supported Actions List:
 CLOSE: (1, [['CAN_OPEN']]) # Change state from OPEN to CLOSED
 DRINK: (1, [['DRINKABLE', 'RECIPIENT']]) # Consume from an item that is DRINKABLE or is a RECIPIENT
-FIND: (1, [[]]) # Confirm presence of a nearby object; robot must already be next to it, no state-changing effect
+FIND: (1, [[]]) # Locate an object; walks to it automatically if not already near (like WALK)
 WALK: (1, [[]]) # Move towards something
 GRAB: (1, [['GRABBABLE']]) # Take hold of an item that can be grabbed
 LOOKAT: (1, [[]]) # Direct your gaze towards something
@@ -125,18 +125,20 @@ Important rules:
 
 4. When multiple objects share the same class name, use the exact object ID shown in the goals or scene description. Do not substitute a different instance of the same class. Your plan must satisfy the specific goal instances, not just any object of the same class.
 
-5. Use PUTIN for enclosed containers such as fridge, dishwasher, washing_machine, microwave, cabinet, box, bag, or trashcan.
-Use PUTBACK for surfaces such as table, counter, desk, shelf, sofa, bench, chair, or nightstand.
+5. PUTBACK places the object ON TOP of the target (creates relation ON). PUTIN places the object INSIDE the target (creates relation INSIDE). Choose the action that produces the relation required by the edge goals:
+- If an edge goal says "X is ON to Y", use PUTBACK — even if Y is an appliance such as a washing_machine.
+- If an edge goal says "X is INSIDE to Y", use PUTIN.
+- If no edge goal mentions the pair, use PUTIN for enclosed containers such as fridge, dishwasher, washing_machine, microwave, stove, cabinet, box, bag, or trashcan, and PUTBACK for surfaces such as table, counter, desk, shelf, sofa, bench, chair, or nightstand.
 
 6. Before using SWITCHON on an appliance, ensure it is plugged in. If the object is PLUGGED_OUT, use PLUGIN first, then SWITCHON.
 
 7. Before using WATCH or LOOKAT on an object, you must first use TURNTO to face that object.
 
-8. Use WALK for navigation. FIND requires the robot to already be near the object and has no state-changing effect. Only use FIND if it is explicitly required by the action goals.
+8. Use WALK for navigation. FIND also navigates to the object (it walks automatically if the robot is not near), but prefer WALK; use FIND when the action goals explicitly require it.
 
 9. DRINK, READ, and TOUCH require holding the object. PUTIN and PUTBACK require holding the first object. Use WALK + GRAB before these actions when needed. WIPE requires holding a wiping tool such as a rag, sponge, towel, cloth, napkin, brush, or paper_towel; then WALK to the target surface and WIPE it.
 
-10. DROP and RELEASE both free your hand. Use DROP when you want the object to fall to the floor. Use RELEASE to let go of an object while staying in the current room (no specific surface needed).
+10. DROP and RELEASE both free your hand. Use DROP when you want the object to fall to the floor. Use RELEASE to let go of an object while staying in the current room (no specific surface needed). Never use DROP or RELEASE to place something into or onto a target — use POUR for liquids into a container, and PUTIN/PUTBACK for objects.
 
 11. Before PUTIN into an openable container, if the container is CLOSED, WALK to the container and OPEN it first.
 

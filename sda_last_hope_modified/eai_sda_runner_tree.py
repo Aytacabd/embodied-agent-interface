@@ -23,11 +23,12 @@ import json
 import copy
 import re
 import time
+import difflib
 import logging
 import argparse
 import os.path as osp
 
-sys.path.insert(0, "/opt/iGibson/sda_eai_m")
+sys.path.insert(0, "/opt/iGibson/sda_eai")
 
 import virtualhome_eval.simulation.evolving_graph.utils as utils
 from virtualhome_eval.simulation.evolving_graph.eval_utils import (
@@ -54,7 +55,7 @@ logger = logging.getLogger(__name__)
 API_PROVIDER = "openai"
 API_KEY = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
 MODEL = "gpt-4o"
-MODEL_NAME = f"{MODEL}-sda-tree_m_modifiedsdg"
+MODEL_NAME = f"{MODEL}-sda-tree_modifiedsdg_notmini"
 
 MAX_REPLAN = 3
 SCENEGRAPH_ID = 1
@@ -99,25 +100,26 @@ Before generating your plan, identify ALL objects mentioned in the node goals an
 Your plan MUST include actions for EVERY goal object.
 A plan that ignores any goal object will FAIL even if it executes without errors.
 
-OUTPUT FORMAT - respond with ONLY a JSON object:
-{"ACTION": ["object"], "ACTION": ["object1", "object2"]}
+OUTPUT FORMAT - respond with ONLY a JSON object. Every argument is the object name followed by its numeric ID:
+{"ACTION": ["object_name", "object_id"], "ACTION2": ["obj1_name", "obj1_id", "obj2_name", "obj2_id"]}
 
 VALID ACTIONS:
-- 1 argument: DRINK, EAT, CUT, TOUCH, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
-- 2 arguments: PUTBACK, PUTIN, POUR
-- 0 arguments: STANDUP, SLEEP, WAKEUP
+- 1 object: DRINK, EAT, CUT, TOUCH, LOOKAT, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, SQUEEZE, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, GREET, POINTAT, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
+- 2 objects: PUTBACK, PUTIN, POUR
+- 0 objects: STANDUP, SLEEP, WAKEUP
 
-RULE 1 — ALWAYS WALK FIRST:
-Every plan MUST start with WALK to the first object you will interact with.
-NEVER start with OPEN, GRAB, SWITCHON, TYPE or any other action — always WALK first.
+RULE 1 — STANDUP IF NEEDED, THEN ALWAYS WALK FIRST:
+If the current state shows the character SITTING or LYING, output STANDUP first — WALK fails while sitting or lying.
+NEVER apply SWITCHON, GRAB, OPEN, TYPE or any other action to an object before WALKing to that object.
+Every object interaction MUST be preceded by WALK to that object, unless the state explicitly shows the robot is already NEAR it.
 Example: WALK dishwasher → OPEN dishwasher → WALK plate → GRAB plate
 
-RULE 2 — PUTIN vs PUTBACK (CRITICAL):
-- PUTIN <object> <container> = place object INSIDE an enclosed container
-  Use PUTIN for: washing_machine, dishwasher, fridge, freezer, microwave, cabinet, box, bag, trashcan
-- PUTBACK <object> <surface> = place object ON TOP of an open surface
-  Use PUTBACK for: table, counter, desk, shelf, nightstand, sofa, bench, chair
-- NEVER use PUTBACK with washing_machine, dishwasher, fridge, freezer, microwave, cabinet
+RULE 2 — MATCH THE GOAL RELATION (CRITICAL):
+- PUTBACK <object> <target> places the object ON TOP of the target (creates relation ON)
+- PUTIN <object> <target> places the object INSIDE the target (creates relation INSIDE)
+- If an edge goal says "X is ON to Y", you MUST use PUTBACK — even if Y is an appliance like a washing_machine.
+- If an edge goal says "X is INSIDE to Y", you MUST use PUTIN.
+- If no edge goal mentions the pair: use PUTIN for enclosed containers (washing_machine, dishwasher, fridge, freezer, microwave, stove, cabinet, box, bag, trashcan) and PUTBACK for surfaces (table, counter, desk, shelf, nightstand, sofa, bench, chair)
 - NEVER use PUTON with any appliance — PUTON is only for wearing clothes on your body
 
 RULE 3 — GRAB from containers:
@@ -159,10 +161,16 @@ Common mistakes and corrections:
 - PUTON should only be used with wearable clothing items (e.g. PUTON clothes_pants)
 - To wash clothes: GRAB <clothes> then PUTIN <clothes> <washing_machine>
 - To put food in fridge: GRAB <food> then PUTIN <food> <fridge>
+- DROP <object> only discards a held object onto the floor — it is almost never the right action
+- To transfer water or another liquid into an appliance or container: GRAB <liquid> then POUR <liquid> <target>
+  Example: {{"GRAB": ["water", "1002"], "POUR": ["water", "1002", "coffee_maker", "290"]}}
+- NEVER output the same wrong action again.
+
+Every argument must be the object name followed by its numeric ID from the scene.
 
 Generate a corrected sequence of 2-6 actions that achieves the same goal correctly.
 Output ONLY a JSON object.
-Example: {{"WALK": ["washing_machine"], "GRAB": ["clothes_pants"], "PUTIN": ["clothes_pants", "washing_machine"]}}"""
+Example: {{"WALK": ["washing_machine", "1000"], "GRAB": ["clothes_pants", "1001"], "PUTIN": ["clothes_pants", "1001", "washing_machine", "1000"]}}"""
 
 
 # =============================================================================
@@ -287,15 +295,28 @@ def filter_valid_actions(parsed):
 
 
 def parse_eai_action(action, index: int):
+    """
+    Parse EAI action string keeping instance identity:
+      [walk] <light> (245)            -> obj  = "light_245"
+      [putin] <apple> (7) <fridge> (2)-> obj  = "apple_7", target = "fridge_2"
+    So diagnosis and tree search operate per instance, not per class name.
+    """
     from error_diagnosis import ActionStep
     s = str(action)
     am = re.search(r"\[(\w+)\]", s)
-    om = re.findall(r"<([^>]+)>", s)
+    pairs = re.findall(r"<([^>]+)>\s*\((\d+)\)", s)
+    if pairs:
+        obj = f"{pairs[0][0].strip()}_{pairs[0][1]}"
+        target = f"{pairs[1][0].strip()}_{pairs[1][1]}" if len(pairs) > 1 else None
+    else:
+        om = re.findall(r"<([^>]+)>", s)
+        obj = om[0].strip() if om else "unknown"
+        target = om[1].strip() if len(om) > 1 else None
     return ActionStep(
         index=index,
         action=am.group(1).upper() if am else "UNKNOWN",
-        obj=om[0].strip() if om else "unknown",
-        target=om[1].strip() if len(om) > 1 else None,
+        obj=obj,
+        target=target,
     )
 
 
@@ -414,8 +435,10 @@ def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_g
     change_in_init += "Nodes:\n"
     for node_id in existing_nodes:
         node_dict = motion_planner.env_graph.get_node(node_id).to_dict()
+        # Instance-specific: with duplicate classes (3 lights) the model must
+        # know WHICH instance is in which state, same as goals/objects lists
         change_in_init += (
-            f"{node_dict['class_name']}, states: {node_dict['states']}, "
+            f"{node_dict['class_name']}_{node_dict['id']}, states: {node_dict['states']}, "
             f"properties:{node_dict['properties']}\n"
         )
     change_in_init += "\n"
@@ -474,7 +497,15 @@ def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_g
     )
 
 
-def parse_and_validate(raw: str, relevant_name_to_id: dict):
+def parse_and_validate(raw: str, relevant_name_to_id: dict,
+                       goal_edge_relations: dict = None):
+    """
+    goal_edge_relations: {(from_id, to_id): relation_type} built from the
+    task's edge goals. PUTBACK creates an ON edge and PUTIN an INSIDE edge,
+    and the evaluator matches edge goals EXACTLY — so when a goal exists for
+    the (obj, target) pair, the placing action is corrected to whichever one
+    produces the goal's relation.
+    """
     parsed = parse_llm_output(raw)
     if not parsed:
         return None
@@ -494,7 +525,10 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
                     cur = str(args[i]).strip()
                     nxt = str(args[i + 1]).strip() if i + 1 < len(args) else None
                     if nxt is not None and nxt.isdigit():
-                        combined.append(f"{cur}_{nxt}")
+                        # Normalize: the LLM may echo instance names from the
+                        # prompt, e.g. ["light_245", "245"] -> "light_245_245".
+                        # The dedup regex collapses that back to "light_245".
+                        combined.append(_normalize_name_id_token(f"{cur}_{nxt}"))
                         i += 2
                     else:
                         combined.append(_normalize_name_id_token(cur))
@@ -510,20 +544,37 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
         "bathroomcabinet", "garbagecan", "box", "bag", "trashcan",
     }
 
+    def _token_id(tok):
+        m = re.match(r"^.+_(\d+)$", str(tok).strip())
+        return int(m.group(1)) if m else None
+
     corrected = []
     for item in (parsed if isinstance(parsed, list) else [{k: v} for k, v in parsed.items()]):
         for action, args in item.items():
-            if (
-                action.upper() == "PUTBACK"
-                and isinstance(args, list)
-                and len(args) == 2
-            ):
-                target_name = str(args[1]).rsplit("_", 1)[0]
-                if target_name.lower() in CONTAINER_OBJECTS:
-                    corrected.append({"PUTIN": args})
-                    logger.info(f"  🔄 Auto-corrected PUTBACK→PUTIN for container: {args[1]}")
-                else:
-                    corrected.append({action: args})
+            au = action.upper()
+            if au in ("PUTBACK", "PUTIN") and isinstance(args, list) and len(args) == 2:
+                new_action = action
+                goal_rel = None
+                if goal_edge_relations:
+                    obj_id, tgt_id = _token_id(args[0]), _token_id(args[1])
+                    if obj_id is not None and tgt_id is not None:
+                        goal_rel = goal_edge_relations.get((obj_id, tgt_id))
+                if goal_rel == "ON":
+                    new_action = "PUTBACK"
+                elif goal_rel == "INSIDE":
+                    new_action = "PUTIN"
+                elif au == "PUTBACK":
+                    # No goal edge for this pair — fall back to the old
+                    # container heuristic
+                    target_name = str(args[1]).rsplit("_", 1)[0]
+                    if target_name.lower() in CONTAINER_OBJECTS:
+                        new_action = "PUTIN"
+                if new_action.upper() != au:
+                    logger.info(
+                        f"  🔄 Corrected {au}→{new_action.upper()} for {args[0]}→{args[1]}"
+                        f" ({'goal relation ' + goal_rel if goal_rel else 'container heuristic'})"
+                    )
+                corrected.append({new_action.upper(): args})
             else:
                 corrected.append({action: args})
     parsed = corrected
@@ -560,33 +611,90 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict):
         return None
 
 
-def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict) -> str:
+def _repair_key(tree_result: list) -> tuple:
+    """
+    Canonical key for a tree repair, matching the (ACTION, obj, target)
+    triples used inside the BFS, so it can be banned on later attempts.
+    """
+    key = []
+    for d in tree_result:
+        action = list(d.keys())[0].upper()
+        args = list(d.values())[0]
+        obj = args[0] if args else "character"
+        target = args[1] if len(args) > 1 else None
+        key.append((action, obj, target))
+    return tuple(key)
+
+
+def _resolve_to_name_id(obj_name: str, relevant_name_to_id: dict,
+                        full_name_to_id: dict = None) -> str:
     """
     Strict resolution:
-      - pass through exact class_id keys
+      - pass through exact class_id keys (relevant map first, then the
+        full-scene map — the tree may legitimately reference a container
+        that is not among the goal-relevant objects)
       - resolve plain class name only if exactly one match exists
+        (checked in the relevant map first, then the full map)
       - reject ambiguity instead of silently picking one
     """
     obj_name = _normalize_name_id_token(obj_name)
 
     if obj_name in relevant_name_to_id:
         return obj_name
+    if full_name_to_id and obj_name in full_name_to_id:
+        return obj_name
 
-    matches = [
-        k for k in relevant_name_to_id
-        if k == obj_name or k.startswith(f"{obj_name}_")
-    ]
+    # Suffix must be purely numeric: "light" may match "light_245" but never
+    # "light_bulb_31" (VH has prefix-colliding classes: light/light_bulb,
+    # floor/floor_lamp, table/table_cloth, wall/wall_clock, ...)
+    id_pattern = re.compile(rf"^{re.escape(obj_name)}_\d+$")
+    for mapping in (relevant_name_to_id, full_name_to_id or {}):
+        matches = [
+            k for k in mapping
+            if k == obj_name or id_pattern.match(k)
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        if len(matches) > 1:
+            raise ValueError(f"Ambiguous object '{obj_name}' with candidates {matches}")
 
-    if len(matches) == 1:
-        return matches[0]
-
-    if len(matches) > 1:
-        raise ValueError(f"Ambiguous object '{obj_name}' with candidates {matches}")
+    # Typo tolerance: VirtualHome scene classes contain misspellings
+    # ("coffe_maker") while LLMs emit the correct spelling ("coffee_maker"),
+    # which discarded otherwise-valid repairs (observed on 721_2).
+    # Conservative: accept only when the fuzzy match maps to exactly ONE
+    # class name AND that class resolves to exactly one instance.
+    m_id = re.match(r"^(.+)_(\d+)$", obj_name)
+    base = m_id.group(1) if m_id else obj_name
+    known_classes = set()
+    for mapping in (relevant_name_to_id, full_name_to_id or {}):
+        for k in mapping:
+            known_classes.add(re.sub(r"_\d+$", "", k))
+    close = difflib.get_close_matches(base, sorted(known_classes), n=2, cutoff=0.85)
+    if len(close) == 1:
+        cls = close[0]
+        if m_id:
+            cand = f"{cls}_{m_id.group(2)}"
+            for mapping in (relevant_name_to_id, full_name_to_id or {}):
+                if cand in mapping:
+                    logger.info(f"  ✏️  Fuzzy-resolved '{obj_name}' → '{cand}'")
+                    return cand
+        cls_pattern = re.compile(rf"^{re.escape(cls)}_\d+$")
+        for mapping in (relevant_name_to_id, full_name_to_id or {}):
+            matches = [k for k in mapping if k == cls or cls_pattern.match(k)]
+            if len(matches) == 1:
+                logger.info(f"  ✏️  Fuzzy-resolved '{obj_name}' → '{matches[0]}'")
+                return matches[0]
+            if len(matches) > 1:
+                raise ValueError(
+                    f"Ambiguous object '{obj_name}' (≈{cls}) with candidates {matches}"
+                )
 
     raise ValueError(f"Unknown object '{obj_name}'")
 
 
-def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
+def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict,
+                           full_name_to_id: dict = None,
+                           goal_edge_relations: dict = None):
     if not subtree_result:
         return None
 
@@ -597,6 +705,10 @@ def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
     ZERO_ARG = {"STANDUP", "SLEEP", "WAKEUP"}
     processed = []
 
+    def _token_id(tok):
+        m = re.match(r"^.+_(\d+)$", str(tok).strip())
+        return int(m.group(1)) if m else None
+
     try:
         for item in (filtered if isinstance(filtered, list) else [{k: v} for k, v in filtered.items()]):
             for action, args in item.items():
@@ -604,20 +716,39 @@ def subtree_results_to_eai(subtree_result: list, relevant_name_to_id: dict):
                     processed.append({action: []})
                 else:
                     resolved = [
-                        _resolve_to_name_id(obj, relevant_name_to_id)
+                        _resolve_to_name_id(obj, relevant_name_to_id, full_name_to_id)
                         for obj in args
                     ]
+                    # Same goal-relation correction as parse_and_validate:
+                    # a repair's PUTIN toward an ON goal (or vice versa)
+                    # would execute but silently miss the goal edge.
+                    au = action.upper()
+                    if (goal_edge_relations and au in ("PUTBACK", "PUTIN")
+                            and len(resolved) == 2):
+                        ids = (_token_id(resolved[0]), _token_id(resolved[1]))
+                        goal_rel = (goal_edge_relations.get(ids)
+                                    if None not in ids else None)
+                        if goal_rel == "ON" and au != "PUTBACK":
+                            logger.info(f"  🔄 Repair corrected PUTIN→PUTBACK (goal ON): {resolved}")
+                            action = "PUTBACK"
+                        elif goal_rel == "INSIDE" and au != "PUTIN":
+                            logger.info(f"  🔄 Repair corrected PUTBACK→PUTIN (goal INSIDE): {resolved}")
+                            action = "PUTIN"
                     processed.append({action: resolved})
     except ValueError as e:
         logger.warning(f"Subtree object resolution failed: {e}")
         return None
+
+    # json_to_action needs a map that contains whichever key resolution chose
+    merged_map = dict(full_name_to_id or {})
+    merged_map.update(relevant_name_to_id)
 
     try:
         ok, err = _check_grammar_combined(processed)
         if not ok:
             logger.warning(f"Subtree grammar failed: {err}")
             return None
-        return json_to_action(processed, relevant_name_to_id=relevant_name_to_id)
+        return json_to_action(processed, relevant_name_to_id=merged_map)
     except Exception as e:
         logger.warning(f"Subtree result conversion failed: {e}")
         return None
@@ -783,6 +914,10 @@ class EAISDATreeRunner:
         goals = task_goal_dict["vh_goal"]
         node_goals = [g for g in goals["goal"] if "id" in g and "state" in g]
         edge_goals = [g for g in goals["goal"] if "from_id" in g and "relation_type" in g]
+        # (from_id, to_id) -> required relation, for goal-aware PUTBACK/PUTIN
+        goal_edge_relations = {
+            (g["from_id"], g["to_id"]): g["relation_type"] for g in edge_goals
+        }
 
         try:
             motion_planner, _, _, _, _ = construct_planner(
@@ -805,6 +940,15 @@ class EAISDATreeRunner:
                 action_goals=goals["actions"],
             )
         )
+
+        # Full-scene name_id map: lets subtree repairs reference objects the
+        # goal diff didn't include (e.g. the cabinet a goal object is inside)
+        full_name_to_id = {}
+        try:
+            for node in motion_planner.env_graph.get_nodes():
+                full_name_to_id[f"{node.class_name}_{node.id}"] = node.id
+        except Exception as e:
+            logger.warning(f"  Could not build full scene map: {e}")
 
         import virtualhome_eval.evaluation.action_sequencing.prompts.one_shot as one_shot
 
@@ -829,15 +973,25 @@ class EAISDATreeRunner:
         raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
         logger.info(f"  Initial plan: {raw_output}")
 
-        actions = parse_and_validate(raw_output, relevant_name_to_id)
+        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0
 
         current_plan_eai = actions
         initial_env_state = None
+        last_failure_sig = None
+        tried_repairs = {}   # failure_sig -> set of repair keys already spliced
+        banned_cands = {}    # failure_sig -> set of (ACTION, obj, target) that failed in env
+        last_spliced = None  # (failure_sig, set of repair action strings)
 
-        for attempt in range(MAX_REPLAN + 1):
+        # L4: removals (already_satisfied / loop-breaker drops) do NOT consume
+        # the repair budget — only actual repair attempts (LLM calls) do.
+        # total-iteration cap guards against pathological removal cascades.
+        attempt = -1
+        max_total_iters = MAX_REPLAN + len(current_plan_eai) + 4
+        while True:
+            attempt += 1
             motion_planner.reset()
             history_actions = []
             history_env_states = [copy.deepcopy(motion_planner.env_state.to_dict())]
@@ -847,6 +1001,7 @@ class EAISDATreeRunner:
 
             executable = True
             failed_action = None
+            failed_plan_idx = None   # 0-based position in current_plan_eai
             err_type = None
             skipped_indices = set()
 
@@ -890,6 +1045,10 @@ class EAISDATreeRunner:
                         print(f"FAILED [{err_type}]")
                     executable = False
                     failed_action = action
+                    # failed_step.index counts only SUCCESSFUL actions, so it
+                    # drifts from the plan position when steps were skipped.
+                    # Keep the true 0-based plan index for exact removal.
+                    failed_plan_idx = action_idx
                     logger.info(f"  ❌ {action} | {err_type}")
                     break
                 else:
@@ -918,7 +1077,7 @@ class EAISDATreeRunner:
                     print(f"  {raw_output}", flush=True)
                 break
 
-            if attempt == MAX_REPLAN:
+            if replan_count >= MAX_REPLAN or attempt >= max_total_iters:
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
                 if VERBOSE:
                     print(f"\n  FINAL OUTPUT SAVED (max replans reached):", flush=True)
@@ -926,8 +1085,6 @@ class EAISDATreeRunner:
                 break
 
             # ── SDA Error Backtrack and Diagnosis ─────────────────────────────
-            replan_count += 1
-
             env_at_failure = (
                 history_env_states[-1] if history_env_states else initial_env_state
             )
@@ -952,6 +1109,7 @@ class EAISDATreeRunner:
                     char_sitting=char_sitting,
                     char_lying=char_lying,
                     env_dict=env_at_failure,
+                    initial_env_dict=history_env_states[0],
                 )
                 logger.info(
                     f"  🔍 Strategy: {diagnosis.replan_strategy} | "
@@ -972,6 +1130,35 @@ class EAISDATreeRunner:
 
             error_objects = set(str(x) for x in error_objects)
 
+            # ── Repair memory ─────────────────────────────────────────────────
+            # Everything is deterministic (temp-0 LLM + simulator), so a
+            # repeated failure signature means the last repair did not help.
+            # Instead of dropping immediately, the tree is re-queried with the
+            # already-tried repairs BANNED, so BFS yields the next-shortest
+            # alternative. Only when no alternative exists is the action
+            # dropped (see the tree-result handling below).
+            failure_sig = (
+                str(failed_action),
+                err_type,
+                tuple(diagnosis.unsatisfied_needs or []),
+            )
+            repeat_failure = (failure_sig == last_failure_sig)
+            last_failure_sig = failure_sig
+
+            # Alternation case (A→B→A): the action that just failed was
+            # itself inserted by the previous repair. Ban that specific
+            # candidate for the signature the repair was generated for, so
+            # the next repair for THAT problem routes around it.
+            if last_spliced is not None and str(failed_action) in last_spliced[1]:
+                fs = parse_eai_action(failed_action, 0)
+                banned_cands.setdefault(last_spliced[0], set()).add(
+                    (fs.action, fs.obj, fs.target)
+                )
+                logger.info(
+                    f"  🚫 Repair action failed in env — banned "
+                    f"{(fs.action, fs.obj, fs.target)} for {last_spliced[0][0]}"
+                )
+
             # ── Compute splice window ─────────────────────────────────────────
             t_start = diagnosis.t_start if diagnosis.t_start is not None else failed_step.index
             t_end = diagnosis.t_end if diagnosis.t_end is not None else failed_step.index
@@ -981,8 +1168,7 @@ class EAISDATreeRunner:
 
             # ── Action already satisfied: goal is already true, just remove it ─
             if diagnosis.replan_strategy == "already_satisfied":
-                replan_count -= 1
-                idx = failed_step.index - 1
+                idx = failed_plan_idx if failed_plan_idx is not None else failed_step.index - 1
                 current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
                 raw_output = plan_to_json_str(current_plan_eai)
                 if VERBOSE:
@@ -991,20 +1177,54 @@ class EAISDATreeRunner:
 
             # ── Special handling: semantically wrong action ───────────────────
             if diagnosis.replan_strategy == "wrong_action":
+                # The replacement was already tried once for this exact
+                # failure — a second identical failure means the LLM cannot
+                # produce a working substitute. Drop the action.
+                if repeat_failure:
+                    idx = failed_plan_idx if failed_plan_idx is not None else failed_step.index - 1
+                    dropped = current_plan_eai[idx]
+                    current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
+                    raw_output = plan_to_json_str(current_plan_eai)
+                    last_spliced = None
+                    logger.info(f"  🔁 Wrong-action fix did not help — dropped: {dropped}")
+                    if VERBOSE:
+                        print(f"\n  WRONG-ACTION FIX FAILED TWICE — dropping: {dropped}")
+                    continue
+
                 wrong_prompt = WRONG_ACTION_PROMPT.format(
                     failed_action=failed_action,
                     reason=get_unsatisfied_explanation(diagnosis.unsatisfied_needs),
                 )
+                replan_count += 1
                 wrong_raw = self.llm.call(wrong_prompt, system_prompt=SYSTEM_PROMPT, label="WRONG ACTION FIX")
-                new_subseq = parse_and_validate(wrong_raw, relevant_name_to_id)
+                # Resolve against the full scene too — the correct replacement
+                # may reference an object outside the goal diff
+                wrong_map = dict(full_name_to_id)
+                wrong_map.update(relevant_name_to_id)
+                new_subseq = parse_and_validate(wrong_raw, wrong_map, goal_edge_relations)
 
                 if new_subseq:
-                    current_plan_eai = history_actions + new_subseq + after
+                    # Never re-accept the action just diagnosed as wrong —
+                    # otherwise the next attempt replays the same failure
+                    failed_str = str(failed_action)
+                    kept = [a for a in new_subseq if str(a) != failed_str]
+                    if len(kept) != len(new_subseq):
+                        logger.info("  🚫 Wrong-action fix repeated the failed action — removed it")
+                    new_subseq = kept
+
+                # Slice the tail by true plan position (failed_step.index
+                # drifts when earlier steps were skipped)
+                after_idx = (failed_plan_idx + 1) if failed_plan_idx is not None else t_end
+                after_wrong = current_plan_eai[after_idx:]
+
+                if new_subseq:
+                    current_plan_eai = history_actions + new_subseq + after_wrong
                     raw_output = plan_to_json_str(current_plan_eai)
                     logger.info(f"  🔄 Replaced with: {wrong_raw}")
                 else:
+                    fallback_count += 1
                     fallback_raw = self.llm.call(base_prompt)
-                    new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id)
+                    new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id, goal_edge_relations)
                     if new_subseq:
                         current_plan_eai = new_subseq
                         raw_output = plan_to_json_str(current_plan_eai)
@@ -1018,6 +1238,7 @@ class EAISDATreeRunner:
                     diagnosis.unsatisfied_needs
                 ),
             )
+            replan_count += 1
             suggestion_raw = self.llm.call(suggestion_prompt, system_prompt=SYSTEM_PROMPT, label=f"SUGGESTION (replan {replan_count})")
             llm_suggestions = parse_llm_output(suggestion_raw)
             llm_suggestions = filter_valid_actions(llm_suggestions) if llm_suggestions else []
@@ -1051,6 +1272,10 @@ class EAISDATreeRunner:
                 char_lying=char_lying,
                 max_depth=TREE_MAX_DEPTH,
                 max_nodes=TREE_MAX_NODES,
+                failed_obj=failed_step.obj,
+                failed_target=failed_step.target,
+                banned_paths=tried_repairs.get(failure_sig, set()),
+                banned_candidates=banned_cands.get(failure_sig, set()),
             )
 
             if tree_result:
@@ -1058,12 +1283,26 @@ class EAISDATreeRunner:
                 if VERBOSE:
                     print(f"\n  TREE SEARCH RESULT: {tree_result}")
                 tree_success += 1
-                new_subseq = subtree_results_to_eai(tree_result, relevant_name_to_id)
+                # Record BEFORE resolution: if resolution fails, the next
+                # attempt must get a different path, not this one again.
+                tried_repairs.setdefault(failure_sig, set()).add(_repair_key(tree_result))
+                new_subseq = subtree_results_to_eai(
+                    tree_result, relevant_name_to_id, full_name_to_id,
+                    goal_edge_relations,
+                )
             else:
-                logger.info("  🌳 Tree failed — no fallback (tree-only mode)")
+                # Tree exhausted: every viable repair was already tried (or
+                # none exists). The plan cannot change, so the next attempt
+                # would replay the identical failure — drop the action.
+                idx = failed_plan_idx if failed_plan_idx is not None else failed_step.index - 1
+                dropped = current_plan_eai[idx]
+                current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
+                raw_output = plan_to_json_str(current_plan_eai)
+                last_spliced = None
+                logger.info(f"  🌳 Tree exhausted — dropped failed action: {dropped}")
                 if VERBOSE:
-                    print(f"\n  TREE SEARCH: no solution found")
-                new_subseq = None
+                    print(f"\n  TREE EXHAUSTED — dropping action: {dropped}")
+                continue
 
             if not new_subseq:
                 continue
@@ -1075,6 +1314,10 @@ class EAISDATreeRunner:
             failed_eai = current_plan_eai[t_start - 1 : t_end]
             current_plan_eai = before + new_subseq + failed_eai + after
             raw_output = plan_to_json_str(current_plan_eai)
+            # Remember what this repair was for, so if one of ITS actions
+            # fails next attempt, that candidate gets banned for this
+            # signature (alternation guard above).
+            last_spliced = (failure_sig, {str(a) for a in new_subseq})
             logger.info(
                 f"  Spliced: {len(before)} + {len(new_subseq)} + "
                 f"{len(failed_eai)} (retry) + {len(after)} = {len(current_plan_eai)}"
