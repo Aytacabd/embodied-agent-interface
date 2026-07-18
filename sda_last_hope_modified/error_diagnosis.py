@@ -25,7 +25,8 @@ from sdg import get_preconditions, get_effects, is_prep_action, explain_precondi
 
 # States that change dynamically during execution
 DYNAMIC_PRECONDITIONS = {
-    "holds_obj", "not_both_hands_full", "not_sitting", "not_lying",
+    "holds_obj", "not_both_hands_full", "holding_anything",
+    "not_sitting", "not_lying",
     "open", "closed", "on", "off", "next_to_obj", "next_to_target",
     "sitting_or_lying", "obj_not_inside_closed_container",
     "target_open_or_not_openable", "plugged_in", "plugged_out",
@@ -57,7 +58,17 @@ class ActionStep:
 
 
 class DiagnosisResult:
-    """Structured result from error diagnosis."""
+    """Structured result from error diagnosis.
+
+    Coordinate convention (they differ once steps have been skipped):
+      t_start — 1-based index into the SUCCESSFUL-action history; used by the
+                runner to slice history_actions / history_env_states.
+      t_end   — 1-based PLAN position (index into the full current plan) when
+                diagnose_error was given failed_plan_pos; used by the runner
+                to slice the plan tail. Falls back to history coordinates
+                when failed_plan_pos is absent (identical when nothing was
+                skipped).
+    """
 
     def __init__(self):
         self.error_type        = None
@@ -232,15 +243,23 @@ def diagnose_error(
     char_lying:     bool = False,
     env_dict:       dict = None,        # environment AT FAILURE (ground truth)
     initial_env_dict: dict = None,      # environment BEFORE any action (Eq. 2 replay)
+    failed_plan_pos: int = None,        # 1-based PLAN position of the failed action
 ) -> DiagnosisResult:
     """
     Main diagnosis function implementing SDA-Planner paper Section 4.3.
 
     Returns DiagnosisResult with:
       - replan_strategy: "local" | "insert_prep" | "reconstruct"
-      - t_start, t_end: reconstruction window (1-indexed)
+      - t_start, t_end: reconstruction window (see DiagnosisResult for the
+        t_start-history / t_end-plan coordinate convention)
       - unsatisfied_needs: list of violated preconditions for the specific
         failed obj/target (not a global flat check)
+
+    failed_plan_pos anchors t_end in plan coordinates. failed_step.index
+    counts only SUCCESSFUL steps, so after skipped steps it lags the true
+    plan position and the t_end scan over full_plan (plan-indexed) compared
+    apples to oranges. When omitted, falls back to failed_step.index
+    (identical when nothing was skipped).
     """
 
     result               = DiagnosisResult()
@@ -248,13 +267,16 @@ def diagnose_error(
     result.failed_action = failed_step
     result.failed_at     = failed_step.index
 
+    # t_end anchor in plan coordinates (see docstring)
+    plan_anchor = failed_plan_pos if failed_plan_pos is not None else failed_step.index
+
     # ── ADDITIONAL_STEP: skip action, local replan ────────────────────────────
     if error_type == "ADDITIONAL_STEP":
         result.replan_strategy   = "local"
         result.root_cause        = failed_step
         result.root_cause_at     = failed_step.index
         result.t_start           = failed_step.index
-        result.t_end             = failed_step.index
+        result.t_end             = plan_anchor
         result.unsatisfied_needs = []
         return result
 
@@ -325,7 +347,7 @@ def diagnose_error(
             result.root_cause        = failed_step
             result.root_cause_at     = failed_step.index
             result.t_start           = failed_step.index
-            result.t_end             = failed_step.index
+            result.t_end             = plan_anchor
             result.unsatisfied_needs = []
             return result
 
@@ -335,7 +357,7 @@ def diagnose_error(
         result.root_cause      = failed_step
         result.root_cause_at   = failed_step.index
         result.t_start         = failed_step.index
-        result.t_end           = failed_step.index
+        result.t_end           = plan_anchor
         return result
 
     # ── WRONG ACTION: action is semantically wrong for this object ────────────
@@ -353,9 +375,24 @@ def diagnose_error(
             result.root_cause        = failed_step
             result.root_cause_at     = failed_step.index
             result.t_start           = failed_step.index
-            result.t_end             = failed_step.index
+            result.t_end             = plan_anchor
             result.unsatisfied_needs = []   # not a precondition problem
             return result
+
+    # ── PUTOBJBACK: hidden executor preconditions the SDG cannot model ───────
+    # The executor needs a recorded original placement for the object;
+    # holds_obj alone can be satisfied while the action still fails, giving
+    # Unsat=[] and an endless local-replan loop (7 wasted replans in the
+    # hard-50 run). Route to wrong_action so the LLM substitutes an explicit
+    # PUTBACK/PUTIN.
+    if failed_step.action == "PUTOBJBACK" and not unsatisfied:
+        result.replan_strategy   = "wrong_action"
+        result.root_cause        = failed_step
+        result.root_cause_at     = failed_step.index
+        result.t_start           = failed_step.index
+        result.t_end             = plan_anchor
+        result.unsatisfied_needs = []
+        return result
 
     # ── No unsatisfied preconditions → env state mismatch → local ────────────
     if not unsatisfied:
@@ -363,7 +400,7 @@ def diagnose_error(
         result.root_cause      = failed_step
         result.root_cause_at   = failed_step.index
         result.t_start         = failed_step.index
-        result.t_end           = failed_step.index
+        result.t_end           = plan_anchor
         return result
 
     # ── Select key precondition (prefer dynamic over static) ─────────────────
@@ -384,7 +421,7 @@ def diagnose_error(
         result.root_cause      = failed_step
         result.root_cause_at   = failed_step.index
         result.t_start         = failed_step.index
-        result.t_end           = failed_step.index
+        result.t_end           = plan_anchor
         return result
 
     # ── Full reconstruction ───────────────────────────────────────────────────
@@ -411,14 +448,17 @@ def diagnose_error(
             break
     result.t_start = t_start
 
-    # Calculate t_end: extend forward past all actions on error objects (Eq. 4)
+    # Calculate t_end: extend forward past all actions on error objects (Eq. 4).
+    # full_plan steps are PLAN-indexed, so the anchor must be too — comparing
+    # against the history-indexed failed_step.index undercounted the window
+    # whenever steps had been skipped earlier in the attempt.
     error_objects = {failed_step.obj}
     if failed_step.target:
         error_objects.add(failed_step.target)
 
-    t_end = failed_step.index
+    t_end = plan_anchor
     for step in full_plan:
-        if step.index > failed_step.index:
+        if step.index > plan_anchor:
             if (step.obj in error_objects or
                     (step.target and step.target in error_objects)):
                 t_end = step.index
@@ -488,5 +528,77 @@ if __name__ == "__main__":
     assert "obj_not_inside_closed_container" in result2.unsatisfied_needs, \
         f"Expected obj_not_inside_closed_container, got {result2.unsatisfied_needs}"
     print("✅ Test 2 passed\n")
+
+    # ── Test 3: OPEN with both hands full (executor rule, not in PDDL) ───────
+    print("Test 3 — OPEN cupboard with both hands full:")
+    env3 = {
+        "nodes": [
+            {"id": 65,   "class_name": "character",    "states": [], "properties": []},
+            {"id": 229,  "class_name": "cupboard",     "states": ["CLOSED"],
+             "properties": ["CAN_OPEN"]},
+            {"id": 1001, "class_name": "cloth_napkin", "states": [],
+             "properties": ["GRABBABLE"]},
+            {"id": 1005, "class_name": "cup",          "states": [],
+             "properties": ["GRABBABLE"]},
+        ],
+        "edges": [
+            {"from_id": 65, "to_id": 1001, "relation_type": "HOLDS_RH"},
+            {"from_id": 65, "to_id": 1005, "relation_type": "HOLDS_LH"},
+            {"from_id": 65, "to_id": 229,  "relation_type": "CLOSE"},
+        ],
+    }
+    history3 = [ActionStep(1, "WALK", "cupboard_229")]
+    failed3  = ActionStep(2, "OPEN", "cupboard_229")
+    result3  = diagnose_error(history3, failed3, "MISSING_STEP",
+                              history3 + [failed3], env_dict=env3,
+                              initial_env_dict=env3)
+    print(result3)
+    assert "not_both_hands_full" in result3.unsatisfied_needs, \
+        f"Expected not_both_hands_full, got {result3.unsatisfied_needs}"
+    assert result3.replan_strategy == "reconstruct", \
+        f"Expected reconstruct, got {result3.replan_strategy}"
+    print("✅ Test 3 passed\n")
+
+    # ── Test 4: WIPE with empty hands must NOT misroute to wrong_action ──────
+    print("Test 4 — WIPE table with empty hands:")
+    env4 = {
+        "nodes": [
+            {"id": 65,  "class_name": "character", "states": [], "properties": []},
+            {"id": 355, "class_name": "table",     "states": [],
+             "properties": ["SURFACES"]},
+        ],
+        "edges": [
+            {"from_id": 65, "to_id": 355, "relation_type": "CLOSE"},
+        ],
+    }
+    failed4 = ActionStep(1, "WIPE", "table_355")
+    result4 = diagnose_error([], failed4, "MISSING_STEP", [failed4],
+                             env_dict=env4, initial_env_dict=env4)
+    print(result4)
+    assert result4.replan_strategy != "wrong_action", \
+        f"WIPE misrouted to wrong_action: {result4}"
+    assert "holding_anything" in result4.unsatisfied_needs, \
+        f"Expected holding_anything, got {result4.unsatisfied_needs}"
+    print("✅ Test 4 passed\n")
+
+    # ── Test 5: PUTOBJBACK failing with satisfied SDG needs → wrong_action ───
+    print("Test 5 — PUTOBJBACK with hidden executor precondition:")
+    env5 = {
+        "nodes": [
+            {"id": 65,   "class_name": "character",   "states": [], "properties": []},
+            {"id": 1000, "class_name": "water_glass", "states": [],
+             "properties": ["GRABBABLE"]},
+        ],
+        "edges": [
+            {"from_id": 65, "to_id": 1000, "relation_type": "HOLDS_RH"},
+        ],
+    }
+    failed5 = ActionStep(1, "PUTOBJBACK", "water_glass_1000")
+    result5 = diagnose_error([], failed5, "MISSING_STEP", [failed5],
+                             env_dict=env5, initial_env_dict=env5)
+    print(result5)
+    assert result5.replan_strategy == "wrong_action", \
+        f"Expected wrong_action, got {result5.replan_strategy}"
+    print("✅ Test 5 passed\n")
 
     print("All tests passed ✅")

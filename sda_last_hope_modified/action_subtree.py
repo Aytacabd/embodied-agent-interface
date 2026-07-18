@@ -103,9 +103,38 @@ def satisfied(action: str, state: TreeState, obj: str, target: str = None) -> bo
     return state.satisfies(get_preconditions(action.upper()), obj, target)
 
 
-def changes_state(action: str) -> bool:
-    """Eq. 5: change(Aj, G) — action must have at least one effect."""
-    return len(get_effects(action.upper())) > 0
+# Effects the state model can actually verify (mirrors the VERIFIABLE_EFFECTS
+# gate in error_diagnosis.diagnose_error). satisfies() answers optimistic True
+# for unknown predicates, so without this whitelist actions whose effects are
+# all unverifiable (PUTBACK/PUTIN: obj_ontop_target, obj_inside_target) would
+# read as no-ops and get pruned from the tree.
+_VERIFIABLE_EFFECTS = {
+    "open", "closed", "on", "off",
+    "plugged_in", "plugged_out",
+    "holds_obj", "next_to_obj", "facing_obj",
+    "on_char",
+}
+
+
+def changes_state(action: str, state: TreeState = None,
+                  obj: str = None, target: str = None) -> bool:
+    """Eq. 5: change(Aj, G) — action must be able to change the CURRENT state.
+
+    With a state given, at least one verifiable positive effect must not
+    already hold — prunes no-op repairs (WALK to an object the character is
+    already next to, OPEN on an already-open container). Without a state
+    (or when no effect is verifiable) falls back to the static check.
+    """
+    effects = get_effects(action.upper())
+    if not effects:
+        return False
+    if state is None:
+        return True
+    verifiable = [e for e in effects
+                  if not e.startswith("not_") and e in _VERIFIABLE_EFFECTS]
+    if not verifiable:
+        return True
+    return any(not state.model.satisfies(e, obj, target) for e in verifiable)
 
 
 def not_covered(parent_action: str, child_action: str) -> bool:
@@ -292,7 +321,8 @@ def build_and_search_tree(
         for (action, obj, target) in candidates:
             if ((action, obj, target),) in banned_paths:
                 continue
-            if satisfied(action, root.state, obj, target) and changes_state(action):
+            if (satisfied(action, root.state, obj, target)
+                    and changes_state(action, root.state, obj, target)):
                 return [(action, obj, target)]
         return []
 
@@ -330,7 +360,7 @@ def build_and_search_tree(
             )
             is_terminal = _achieves(simulated, temp_node)
 
-            if not changes_state(action) and not is_terminal:
+            if not changes_state(action, current.state, obj, target) and not is_terminal:
                 continue
 
             if not not_covered(current.action, action):
@@ -441,10 +471,6 @@ def generate_replacement_subsequence(
             guaranteed_candidates.append(("WALK", obj, None))
             guaranteed_candidates.append(("GRAB", obj, None))
 
-    if "not_both_hands_full" in needs_set:
-        for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
-            guaranteed_candidates.append(("DROP", str(held_obj), None))
-
     # The failed action's target itself is a closed container (e.g. PUTIN
     # into a closed washing machine): guarantee the opening sequence.
     # PDDL open requires not_on, so a running appliance needs SWITCHOFF first.
@@ -457,6 +483,19 @@ def generate_replacement_subsequence(
                     guaranteed_candidates.append(("SWITCHOFF", obj, None))
                 guaranteed_candidates.append(("WALK", obj, None))
                 guaranteed_candidates.append(("OPEN", obj, None))
+
+    # Hand-freeing candidates. Needed when the failed action itself demands a
+    # free hand, AND whenever a guaranteed repair chain contains an OPEN while
+    # both hands are full — OPEN requires a free hand (executor rule, modeled
+    # in the SDG), so those chains are unsatisfiable without a DROP first.
+    # Never drop the object the failed action needs to hold (failed_obj).
+    _needs_open_chain = any(a == "OPEN" for (a, _, _) in guaranteed_candidates)
+    if ("not_both_hands_full" in needs_set
+            or (_needs_open_chain and initial_model.hands_full())):
+        for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
+            if failed_obj and str(held_obj) == str(failed_obj):
+                continue
+            guaranteed_candidates.append(("DROP", str(held_obj), None))
 
     # The failed action needs its object in hand: guarantee WALK + GRAB.
     if "holds_obj" in needs_set and failed_obj and failed_obj != "character":
@@ -537,8 +576,19 @@ def generate_replacement_subsequence(
                 if initial_model.satisfies("has_switch", obj):
                     target_effects.append(("check", "off", obj))
 
-        elif need in ("next_to_obj", "next_to_target"):
-            target_effects.append(("check", "next_to_obj", None))
+        elif need == "next_to_obj":
+            # Pin to the failed action's own object. With None the check ran
+            # against each node's obj, so a path ending anywhere (e.g. the
+            # GRAB it just did) "achieved" the goal and repairs for compound
+            # failures like [holds_obj, next_to_target] stopped one WALK
+            # short — costing a full extra replan per failure.
+            target_effects.append(("check", "next_to_obj", failed_obj or None))
+
+        elif need == "next_to_target":
+            # The failed action's TARGET is where the character must end up
+            # (PUTBACK/PUTIN place-site). The state model clears CLOSE on
+            # every WALK, so BFS is forced to order this WALK last.
+            target_effects.append(("check", "next_to_obj", failed_target or None))
 
         elif need == "obj_not_inside_closed_container":
             # error_objects contains BOTH the blocked object and its container
@@ -567,7 +617,14 @@ def generate_replacement_subsequence(
                         target_effects.append(("check", "open", str(container)))
 
         elif need == "not_both_hands_full":
-            target_effects.append(("check", "not_holds_obj", None))
+            # Global hands check. Pinning specific_obj to "character" matters:
+            # with None the check runs against each node's own obj, and any
+            # node whose obj isn't held (WALK cupboard) trivially "achieved"
+            # the goal without freeing a hand.
+            target_effects.append(("check", "not_both_hands_full", "character"))
+
+        elif need == "holding_anything":
+            target_effects.append(("check", "holding_anything", "character"))
 
         elif need == "facing_obj":
             target_effects.append(("check", "facing_obj", failed_obj or None))
@@ -576,6 +633,16 @@ def generate_replacement_subsequence(
             for obj in normalized_error_objects:
                 if initial_model.satisfies("has_plug_or_has_switch", obj):
                     target_effects.append(("check", "plugged_in", obj))
+
+    # A holds_obj goal consumes the freed hand: demanding not_both_hands_full
+    # in the FINAL state alongside it contradicts the grab whenever the other
+    # hand stays occupied (forcing a needless second DROP past the search
+    # budget). Hands-free AT GRAB TIME is already enforced inside the path by
+    # GRAB's own SDG precondition, so keep the hands goal only when nothing
+    # in the repair re-fills the hand (e.g. a failed OPEN).
+    if any(p == "holds_obj" for (_, p, _) in target_effects):
+        target_effects = [te for te in target_effects
+                          if te[1] != "not_both_hands_full"]
 
     seen_te = set()
     deduped_te = []

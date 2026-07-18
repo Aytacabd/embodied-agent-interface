@@ -144,9 +144,14 @@ SDG = {
     },
 
     # ── Container interaction ─────────────────────────────────────────────────
-    # PDDL open: can_open + closed + next_to + not(on)
+    # PDDL open: can_open + closed + next_to + not(on).
+    # The EAI executor ADDITIONALLY requires a free hand (OpenExecutor.
+    # check_openable: _find_free_hand is None → fail, OPEN only, not CLOSE).
+    # The executor is the arbiter — without this need, an OPEN-with-both-
+    # hands-full failure diagnoses as Unsat=[] and the repair loop goes blind.
     "OPEN": {
-        "needs":   ["next_to_obj", "can_open", "closed", "not_on"],
+        "needs":   ["next_to_obj", "can_open", "closed", "not_on",
+                    "not_both_hands_full"],
         "effects": ["open", "not_closed"],
         "is_prep": False,
     },
@@ -233,9 +238,12 @@ SDG = {
         "effects": ["clean", "not_dirty"],
         "is_prep": False,
     },
-    # PDDL wipe: next_to ?obj1 (surface) + holds_lh/rh ?obj2 (any held object — no property constraint)
+    # PDDL wipe: next_to ?obj1 (surface) + holds_lh/rh ?obj2 (any held object —
+    # no property constraint). ?obj2 is a DIFFERENT variable from the wiped
+    # surface: holds_obj(surface) is always false and routed WIPE failures to
+    # wrong_action (surface not grabbable). holding_anything models ?obj2.
     "WIPE": {
-        "needs":   ["next_to_obj", "holds_obj"],
+        "needs":   ["next_to_obj", "holding_anything"],
         "effects": ["clean", "not_dirty"],
         "is_prep": False,
     },
@@ -323,6 +331,7 @@ PRECONDITION_EXPLANATIONS = {
     "not_lying":                       "The character is lying — use STANDUP first.",
     "sitting_or_lying":                "The character must be sitting or lying first.",
     "not_holds_obj":                   "The character must not be holding the object.",
+    "holding_anything":                "The character must be holding something (e.g. a wiping tool) — GRAB one first.",
     "sittable":                        "The object must be sittable.",
     "lieable":                         "The object must be lieable.",
     "movable":                         "The object must be movable.",
@@ -376,7 +385,8 @@ if __name__ == "__main__":
         ("FIND",      []),   # executor auto-navigates (deviation from PDDL)
         ("GRAB",      ["next_to_obj", "grabbable", "not_both_hands_full",
                        "obj_not_inside_closed_container"]),
-        ("OPEN",      ["next_to_obj", "can_open", "closed", "not_on"]),
+        ("OPEN",      ["next_to_obj", "can_open", "closed", "not_on",
+                       "not_both_hands_full"]),
         ("SWITCHON",  ["next_to_obj", "has_switch", "off", "plugged_in"]),
         ("SWITCHOFF", ["next_to_obj", "has_switch", "on"]),
         ("STANDUP",   ["sitting_or_lying"]),
@@ -399,7 +409,7 @@ if __name__ == "__main__":
         ("PULL",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
         ("SIT",       ["next_to_obj", "sittable", "not_sitting"]),
         ("LIE",       ["next_to_obj", "lieable", "not_lying"]),
-        ("WIPE", ["next_to_obj", "holds_obj"]),
+        ("WIPE", ["next_to_obj", "holding_anything"]),
     ]
     all_ok = True
     for action, expected in checks:

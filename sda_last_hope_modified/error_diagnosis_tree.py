@@ -25,12 +25,16 @@ def diagnose_error_tree(
     char_lying:     bool = False,
     env_dict:       dict = None,        # environment AT FAILURE
     initial_env_dict: dict = None,      # environment BEFORE any action
+    failed_plan_pos: int = None,        # 1-based PLAN position of the failed action
 ) -> tuple:
     """
     Extended diagnosis returning:
       (DiagnosisResult, original_subsequence, error_objects)
 
-    original_subsequence : ActionSteps from [t_start, t_end] in full_plan
+    original_subsequence : ActionSteps from [t_start, t_end] in full_plan.
+      NOTE: this slice treats t_start (history coordinates) as a plan
+      position — exact only when no steps were skipped. The runner
+      recomputes the window skip-aware and overrides it.
     error_objects        : set of object names involved in the error
     """
     result = diagnose_error(
@@ -42,6 +46,7 @@ def diagnose_error_tree(
         char_lying     = char_lying,
         env_dict       = env_dict,
         initial_env_dict = initial_env_dict,
+        failed_plan_pos = failed_plan_pos,
     )
 
     t_start = result.t_start if result.t_start is not None else failed_step.index

@@ -1,0 +1,14 @@
+Hard precision toggles
+Set every listed device to exactly the requested state; identical devices differ only by ID.
+
+
+[WALK] <wall_clock> (1.2019)
+[SWITCHOFF] <wall_clock> (1.2019)
+[WALK] <light> (1.64)
+[SWITCHOFF] <light> (1.64)
+[WALK] <light> (1.169)
+[SWITCHOFF] <light> (1.169)
+[WALK] <light> (1.411)
+[SWITCHOFF] <light> (1.411)
+[WALK] <light> (1.1000)
+[SWITCHON] <light> (1.1000)

@@ -1,0 +1,24 @@
+Hard scatter restore
+Collect items from several closed containers onto the table, then close everything again.
+
+
+[WALK] <oven> (1.295)
+[OPEN] <oven> (1.295)
+[WALK] <cup> (1.1007)
+[GRAB] <cup> (1.1007)
+[WALK] <table> (1.355)
+[PUTBACK] <cup> (1.1007) <table> (1.355)
+[WALK] <cup> (1.1008)
+[GRAB] <cup> (1.1008)
+[WALK] <table> (1.355)
+[PUTBACK] <cup> (1.1008) <table> (1.355)
+[WALK] <cup> (1.1009)
+[GRAB] <cup> (1.1009)
+[WALK] <table> (1.355)
+[PUTBACK] <cup> (1.1009) <table> (1.355)
+[WALK] <cup> (1.1010)
+[GRAB] <cup> (1.1010)
+[WALK] <table> (1.355)
+[PUTBACK] <cup> (1.1010) <table> (1.355)
+[WALK] <oven> (1.295)
+[CLOSE] <oven> (1.295)

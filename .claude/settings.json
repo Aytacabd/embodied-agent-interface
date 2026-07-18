@@ -15,7 +15,29 @@
       "Bash(python3 -m py_compile eai_sda_runner_tree.py)",
       "Bash(docker exec *)",
       "Bash(docker cp *)",
-      "Read(//Users/aytaj/Desktop/**)"
+      "Read(//Users/aytaj/Desktop/**)",
+      "Bash(PYTHONPATH=src python3 -c ' *)",
+      "Bash(python3 -m pip install --quiet --user numpy)",
+      "Bash(python3 difficult_tasks/generate_difficult_tasks.py)",
+      "Bash(python3 -c \"import sys; sys.path.insert\\(0,'src'\\); import virtualhome_eval.simulation.evolving_graph.eval_utils as eu; print\\('ok', eu.__file__\\)\")",
+      "Bash(git ls-tree *)",
+      "Bash(xargs -I{} echo {})",
+      "Bash(python3 -m py_compile sda_last_hope_modified/eai_sda_runner_hard.py)",
+      "Bash(python3 -m py_compile eai_sda_runner_hard.py)",
+      "Bash(python3 -m py_compile sdg.py object_state_model.py error_diagnosis.py error_diagnosis_tree.py action_subtree.py eai_sda_runner_tree.py eai_sda_runner_hard.py)",
+      "Bash(python3 test_sda_fixes.py)",
+      "Bash(python3 /private/tmp/claude-501/-Users-aytaj-Desktop-embodied-agent-interface-my-version/f6fef82f-4e1a-40a3-b7fd-d2778de52465/scratchpad/test_sda_fixes.py)",
+      "Bash(ls /Users/aytaj/Desktop/embodied-agent-interface/sda_final/evaluate_results_sda.py 2>/dev/null && echo \"EXISTS in other repo\" *)",
+      "Read(//Users/aytaj/Desktop/embodied-agent-interface/sda_final/**)",
+      "Bash(python3 -m py_compile src/virtualhome_eval/evaluation/action_sequencing/scripts/evaluate_results.py)",
+      "Bash(docker exec bd0e40ed487c bash -c ' *)",
+      "Bash(python3 eai_sda_runner_hard.py --help)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py eai_sda_runner_hard.py)",
+      "Bash(PYTHONPATH=../src python3 eai_sda_runner_hard.py --help)",
+      "Bash(python3 /private/tmp/claude-501/-Users-aytaj-Desktop-embodied-agent-interface-my-version/f6fef82f-4e1a-40a3-b7fd-d2778de52465/scratchpad/verify_hard50.py)",
+      "Bash(docker exec bd0e40ed487c python3 -c ' *)",
+      "Bash(PYTHONPATH=../src python3 -c ' *)",
+      "Bash(grep '^?? [^/]*$')"
     ]
   }
 }

@@ -1,0 +1,26 @@
+Hard rough morning
+Wake up, free your hands, fetch groceries from closed containers into the freezer, and set devices.
+
+
+[WALK] <cupboard> (1.229)
+[OPEN] <cupboard> (1.229)
+[WALK] <freezer> (1.289)
+[OPEN] <freezer> (1.289)
+[WALK] <food_food> (1.2009)
+[GRAB] <food_food> (1.2009)
+[WALK] <freezer> (1.289)
+[PUTIN] <food_food> (1.2009) <freezer> (1.289)
+[WALK] <food_food> (1.2013)
+[GRAB] <food_food> (1.2013)
+[WALK] <freezer> (1.289)
+[PUTIN] <food_food> (1.2013) <freezer> (1.289)
+[WALK] <food_food> (1.2016)
+[GRAB] <food_food> (1.2016)
+[WALK] <freezer> (1.289)
+[PUTIN] <food_food> (1.2016) <freezer> (1.289)
+[WALK] <cupboard> (1.229)
+[CLOSE] <cupboard> (1.229)
+[WALK] <freezer> (1.289)
+[CLOSE] <freezer> (1.289)
+[WALK] <phone> (1.2015)
+[SWITCHOFF] <phone> (1.2015)

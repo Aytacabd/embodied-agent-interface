@@ -1,0 +1,14 @@
+Hard precision toggles
+Set every listed device to exactly the requested state; identical devices differ only by ID.
+
+
+[WALK] <electric_shaver> (1.2002)
+[PLUGIN] <electric_shaver> (1.2002)
+[WALK] <electric_shaver> (1.2002)
+[SWITCHON] <electric_shaver> (1.2002)
+[WALK] <television> (1.410)
+[SWITCHON] <television> (1.410)
+[WALK] <light> (1.411)
+[SWITCHOFF] <light> (1.411)
+[WALK] <light> (1.169)
+[SWITCHOFF] <light> (1.169)

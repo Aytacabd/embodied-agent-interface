@@ -1,0 +1,2207 @@
+{
+    "9001_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <knife> (1003)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <knife> (1003) <table> (355)"
+    },
+    "9002_1": {
+        "executable": true,
+        "actions": [
+            "[DROP] <cloth_napkin> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[DROP] <fork> (1004)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9003_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[PUTBACK] <fork> (1004) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <plate> (1002) <table> (355)"
+    },
+    "9004_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <table> (355)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <plate> (1002)",
+            "[DROP] <plate> (1002)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <cup> (1005)",
+            "[DROP] <cup> (1005)",
+            "[WALK] <plate> (1002)",
+            "[DROP] <plate> (1002)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[DROP] <plate> (1002)"
+    },
+    "9005_1": {
+        "executable": true,
+        "actions": [
+            "[DROP] <cloth_napkin> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <cup> (1005)",
+            "[GRAB] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9006_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[DROP] <cloth_napkin> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <bedroom> (67)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9007_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <check> (2001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <cup> (1005)",
+            "[GRAB] <cup> (1005)",
+            "[WALK] <cup> (1005)",
+            "[GRAB] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <cup> (1005)",
+            "[GRAB] <cup> (1005)",
+            "[PUTIN] <cup> (1005) <freezer> (289)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[GRAB] <plate> (1002)"
+    },
+    "9008_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <knife> (1003)",
+            "[DROP] <knife> (1003)",
+            "[WALK] <couch> (352)",
+            "[WALK] <fork> (1004)",
+            "[WALK] <couch> (352)",
+            "[DROP] <fork> (1004)",
+            "[DROP] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cup> (1005)",
+            "[WALK] <plate> (1002)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[DROP] <knife> (1003)"
+    },
+    "9009_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[WALK] <fork> (1004)",
+            "[PUTBACK] <fork> (1004) <table> (355)",
+            "[WALK] <cup> (1005)",
+            "[PUTBACK] <cup> (1005) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <fork> (1004) <table> (355)"
+    },
+    "9010_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <bedroom> (67)",
+            "[DROP] <cup> (1005)",
+            "[WALK] <bedroom> (67)",
+            "[WALK] <cup> (1005)",
+            "[GRAB] <cup> (1005)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1005) <table> (355)",
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <plate> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1002) <table> (355)",
+            "[WALK] <knife> (1003)",
+            "[GRAB] <knife> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1003) <table> (355)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1004) <table> (355)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9011_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "basket_for_clothes_1000",
+                    "1000"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "basket_for_clothes_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PLUGIN": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_dress_1002",
+                    "1002"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_dress_1002",
+                    "1002"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_dress_1002",
+                    "1002",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_pants_1003",
+                    "1003"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_pants_1003",
+                    "1003"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_pants_1003",
+                    "1003",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_shirt_1004",
+                    "1004"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_shirt_1004",
+                    "1004"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_shirt_1004",
+                    "1004",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_underwear_1005",
+                    "1005"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_underwear_1005",
+                    "1005"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_underwear_1005",
+                    "1005",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "soap_1006",
+                    "1006"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap_1006",
+                    "1006"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9012_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <soap> (1006)",
+            "[GRAB] <soap> (1006)",
+            "[WALK] <washing_machine> (1001)",
+            "[OPEN] <washing_machine> (1001)",
+            "[PUTIN] <soap> (1006) <washing_machine> (1001)",
+            "[WALK] <basket_for_clothes> (1000)",
+            "[OPEN] <basket_for_clothes> (1000)",
+            "[WALK] <clothes_dress> (1002)",
+            "[GRAB] <clothes_dress> (1002)",
+            "[WALK] <clothes_dress> (1002)",
+            "[WALK] <basket_for_clothes> (1000)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)",
+            "[WALK] <clothes_pants> (1003)",
+            "[GRAB] <clothes_pants> (1003)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)",
+            "[WALK] <clothes_shirt> (1004)",
+            "[GRAB] <clothes_shirt> (1004)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)",
+            "[WALK] <clothes_underwear> (1005)",
+            "[GRAB] <clothes_underwear> (1005)",
+            "[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)",
+            "[WALK] <basket_for_clothes> (1000)",
+            "[CLOSE] <basket_for_clothes> (1000)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[WALK] <washing_machine> (1001)",
+            "[SWITCHON] <washing_machine> (1001)",
+            "[CLOSE] <washing_machine> (1001)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)"
+    },
+    "9013_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <clothes_dress> (1002)",
+            "[GRAB] <clothes_dress> (1002)",
+            "[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)",
+            "[WALK] <clothes_pants> (1003)",
+            "[GRAB] <clothes_pants> (1003)",
+            "[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)",
+            "[WALK] <clothes_shirt> (1004)",
+            "[GRAB] <clothes_shirt> (1004)",
+            "[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)",
+            "[WALK] <clothes_underwear> (1005)",
+            "[GRAB] <clothes_underwear> (1005)",
+            "[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <soap> (1006)",
+            "[GRAB] <soap> (1006)",
+            "[PUTIN] <soap> (1006) <washing_machine> (1001)",
+            "[CLOSE] <washing_machine> (1001)",
+            "[SWITCHON] <washing_machine> (1001)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <soap> (1006) <washing_machine> (1001)"
+    },
+    "9014_1": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "WALK": [
+                    "basket_for_clothes_1000",
+                    "1000"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "basket_for_clothes_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_dress_1002",
+                    "1002"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_dress_1002",
+                    "1002"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_dress_1002",
+                    "1002",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_pants_1003",
+                    "1003"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_pants_1003",
+                    "1003"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_pants_1003",
+                    "1003",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_shirt_1004",
+                    "1004"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_shirt_1004",
+                    "1004"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_shirt_1004",
+                    "1004",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "clothes_underwear_1005",
+                    "1005"
+                ]
+            },
+            {
+                "GRAB": [
+                    "clothes_underwear_1005",
+                    "1005"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "clothes_underwear_1005",
+                    "1005",
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "soap_1006",
+                    "1006"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap_1006",
+                    "1006"
+                ]
+            },
+            {
+                "WALK": [
+                    "washing_machine_1001",
+                    "1001"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9015_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <basket_for_clothes> (1000)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <washing_machine> (1001)",
+            "[WALK] <clothes_pants> (1003)",
+            "[GRAB] <clothes_pants> (1003)",
+            "[WALK] <washing_machine> (1001)",
+            "[OPEN] <washing_machine> (1001)",
+            "[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)",
+            "[WALK] <basket_for_clothes> (1000)",
+            "[OPEN] <basket_for_clothes> (1000)",
+            "[WALK] <clothes_dress> (1002)",
+            "[GRAB] <clothes_dress> (1002)",
+            "[WALK] <clothes_dress> (1002)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)",
+            "[WALK] <clothes_shirt> (1004)",
+            "[GRAB] <clothes_shirt> (1004)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)",
+            "[WALK] <clothes_underwear> (1005)",
+            "[GRAB] <clothes_underwear> (1005)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <soap> (1006)",
+            "[GRAB] <soap> (1006)",
+            "[WALK] <soap> (1006)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTIN] <soap> (1006) <washing_machine> (1001)",
+            "[SWITCHON] <washing_machine> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9016_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1003",
+                    "1003",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1004",
+                    "1004",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cup_1007",
+                    "1007",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cup_1008",
+                    "1008",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "dish_soap_1016",
+                    "1016"
+                ]
+            },
+            {
+                "GRAB": [
+                    "dish_soap_1016",
+                    "1016"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "dish_soap_1016",
+                    "1016",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "nightstand_102",
+                    "102"
+                ]
+            },
+            {
+                "CLOSE": [
+                    "nightstand_102",
+                    "102"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9017_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <fork> (1001)",
+            "[GRAB] <fork> (1001)",
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[PUTIN] <fork> (1001) <dishwasher> (1000)",
+            "[WALK] <fork> (1002)",
+            "[GRAB] <fork> (1002)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <fork> (1002) <dishwasher> (1000)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <spoon> (1013) <dishwasher> (1000)",
+            "[WALK] <spoon> (1014)",
+            "[GRAB] <spoon> (1014)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <spoon> (1014) <dishwasher> (1000)",
+            "[WALK] <oven> (295)",
+            "[OPEN] <oven> (295)",
+            "[WALK] <knife> (1011)",
+            "[GRAB] <knife> (1011)",
+            "[WALK] <knife> (1011)",
+            "[GRAB] <knife> (1011)",
+            "[PUTIN] <knife> (1011) <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <oven> (295)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <oven> (295)",
+            "[CLOSE] <oven> (295)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <knife> (1011) <dishwasher> (1000)"
+    },
+    "9018_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <dish_soap> (1016)",
+            "[GRAB] <dish_soap> (1016)",
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[PUTIN] <dish_soap> (1016) <dishwasher> (1000)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <cup> (1009)",
+            "[GRAB] <cup> (1009)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <cup> (1009) <dishwasher> (1000)",
+            "[WALK] <cup> (1010)",
+            "[GRAB] <cup> (1010)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <cup> (1010) <dishwasher> (1000)",
+            "[WALK] <nightstand> (102)",
+            "[OPEN] <nightstand> (102)",
+            "[WALK] <plate> (1005)",
+            "[GRAB] <plate> (1005)",
+            "[WALK] <plate> (1005)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <plate> (1005) <dishwasher> (1000)",
+            "[WALK] <plate> (1006)",
+            "[GRAB] <plate> (1006)",
+            "[PUTIN] <plate> (1006) <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[CLOSE] <freezer> (289)",
+            "[CLOSE] <cupboard> (229)",
+            "[CLOSE] <nightstand> (102)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <plate> (1006) <dishwasher> (1000)"
+    },
+    "9019_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[PUTIN] <plate> (1003) <dishwasher> (1000)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <plate> (1004) <dishwasher> (1000)",
+            "[WALK] <cup> (1007)",
+            "[GRAB] <cup> (1007)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <cup> (1007) <dishwasher> (1000)",
+            "[WALK] <cup> (1008)",
+            "[GRAB] <cup> (1008)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTIN] <cup> (1008) <dishwasher> (1000)",
+            "[WALK] <nightstand> (102)",
+            "[OPEN] <nightstand> (102)",
+            "[WALK] <dish_soap> (1016)",
+            "[GRAB] <dish_soap> (1016)",
+            "[WALK] <dish_soap> (1016)",
+            "[GRAB] <dish_soap> (1016)",
+            "[PUTIN] <dish_soap> (1016) <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <nightstand> (102)",
+            "[CLOSE] <nightstand> (102)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <dish_soap> (1016) <dishwasher> (1000)"
+    },
+    "9020_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cupboard_229",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1003",
+                    "1003",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1004",
+                    "1004",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1005",
+                    "1005"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1005",
+                    "1005"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1005",
+                    "1005",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1006",
+                    "1006"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1006",
+                    "1006"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "plate_1006",
+                    "1006",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cup_1007",
+                    "1007",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "PUTIN": [
+                    "cup_1008",
+                    "1008",
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "fork_1001",
+                    "1001"
+                ]
+            },
+            {
+                "GRAB": [
+                    "fork_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "dishwasher_1000",
+                    "1000"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9021_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <plate> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1003) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <plate> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1004) <table> (355)",
+            "[WALK] <plate> (1005)",
+            "[GRAB] <plate> (1005)",
+            "[WALK] <plate> (1005)",
+            "[PUTBACK] <plate> (1005) <table> (355)",
+            "[WALK] <cup> (1007)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <cup> (1008)",
+            "[PUTBACK] <cup> (1008) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <plate> (1005) <table> (355)"
+    },
+    "9022_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <nightstand> (102)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <nightstand> (102)",
+            "[OPEN] <nightstand> (102)",
+            "[WALK] <fork> (1001)",
+            "[GRAB] <fork> (1001)",
+            "[WALK] <table> (355)",
+            "[WALK] <fork> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1001) <table> (355)",
+            "[WALK] <fork> (1002)",
+            "[GRAB] <fork> (1002)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1002) <table> (355)",
+            "[WALK] <knife> (1011)",
+            "[GRAB] <knife> (1011)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1011) <table> (355)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <spoon> (1013) <table> (355)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9023_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <oven> (295)",
+            "[OPEN] <oven> (295)",
+            "[WALK] <cup> (1007)",
+            "[GRAB] <cup> (1007)",
+            "[WALK] <cup> (1008)",
+            "[GRAB] <cup> (1008)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <cup> (1009)",
+            "[GRAB] <cup> (1009)",
+            "[WALK] <oven> (295)",
+            "[CLOSE] <oven> (295)",
+            "[WALK] <cup> (1007)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <cup> (1008)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1008) <table> (355)",
+            "[WALK] <cup> (1009)",
+            "[GRAB] <cup> (1009)",
+            "[PUTBACK] <cup> (1009) <table> (355)",
+            "[WALK] <cup> (1010)",
+            "[GRAB] <cup> (1010)",
+            "[PUTBACK] <cup> (1010) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <cup> (1007) <table> (355)"
+    },
+    "9024_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <plate> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1003) <table> (355)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <plate> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1004) <table> (355)",
+            "[WALK] <plate> (1005)",
+            "[GRAB] <plate> (1005)",
+            "[WALK] <plate> (1005)",
+            "[PUTBACK] <plate> (1005) <table> (355)",
+            "[WALK] <cup> (1007)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <cup> (1008)",
+            "[PUTBACK] <cup> (1008) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <plate> (1005) <table> (355)"
+    },
+    "9025_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[WALK] <spoon> (1014)",
+            "[GRAB] <spoon> (1014)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <table> (355)",
+            "[WALK] <spoon> (1013)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <spoon> (1013) <table> (355)",
+            "[WALK] <spoon> (1014)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <spoon> (1014) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[PUTBACK] <plate> (1003) <table> (355)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <plate> (1003) <table> (355)"
+    },
+    "9026_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <table> (355)",
+            "[WALK] <cup> (2006)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (2006) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <plate> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1003) <table> (355)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <plate> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1004) <table> (355)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9027_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1003) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1004) <table> (355)",
+            "[WALK] <nightstand> (102)",
+            "[OPEN] <nightstand> (102)",
+            "[WALK] <fork> (1001)",
+            "[GRAB] <fork> (1001)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <fork> (1001) <table> (355)",
+            "[WALK] <knife> (1011)",
+            "[GRAB] <knife> (1011)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <knife> (1011) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[PUTBACK] <spoon> (1013) <table> (355)",
+            "[WALK] <cup> (1007)",
+            "[GRAB] <cup> (1007)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <nightstand> (102)",
+            "[CLOSE] <nightstand> (102)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <spoon> (1013) <table> (355)"
+    },
+    "9028_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <oven> (295)",
+            "[SWITCHON] <oven> (295)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1003) <table> (355)",
+            "[WALK] <bowl> (2007)",
+            "[GRAB] <bowl> (2007)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <bowl> (2007) <table> (355)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <plate> (1004) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9029_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <oven> (295)",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <oven> (295)",
+            "[OPEN] <oven> (295)",
+            "[WALK] <cup> (1007)",
+            "[GRAB] <cup> (1007)",
+            "[WALK] <dining_room> (201)",
+            "[WALK] <cup> (1007)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1007) <table> (355)",
+            "[WALK] <cup> (1008)",
+            "[GRAB] <cup> (1008)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1008) <table> (355)",
+            "[WALK] <cup> (1009)",
+            "[GRAB] <cup> (1009)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1009) <table> (355)",
+            "[WALK] <cup> (1010)",
+            "[GRAB] <cup> (1010)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <cup> (1010) <table> (355)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9030_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "freezer",
+                    "289"
+                ]
+            },
+            {
+                "OPEN": [
+                    "freezer",
+                    "289"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1007",
+                    "1007"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "cup_1007",
+                    "1007",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "GRAB": [
+                    "cup_1008",
+                    "1008"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "cup_1008",
+                    "1008",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1003",
+                    "1003"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "plate_1003",
+                    "1003",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1004",
+                    "1004"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "plate_1004",
+                    "1004",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate_1005",
+                    "1005"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1005",
+                    "1005"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "plate_1005",
+                    "1005",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "fork_1001",
+                    "1001"
+                ]
+            },
+            {
+                "GRAB": [
+                    "fork_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "fork_1001",
+                    "1001",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "spoon_1013",
+                    "1013"
+                ]
+            },
+            {
+                "GRAB": [
+                    "spoon_1013",
+                    "1013"
+                ]
+            },
+            {
+                "WALK": [
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "PUTBACK": [
+                    "spoon_1013",
+                    "1013",
+                    "table_355",
+                    "355"
+                ]
+            },
+            {
+                "WALK": [
+                    "knife_1011",
+                    "1011"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9031_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "light_245",
+                    "64"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light_245",
+                    "64"
+                ]
+            },
+            {
+                "WALK": [
+                    "light_1000",
+                    "1000"
+                ]
+            },
+            {
+                "SWITCHON": [
+                    "light_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "light_411",
+                    "411"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "light_411",
+                    "411"
+                ]
+            },
+            {
+                "WALK": [
+                    "light_64",
+                    "64"
+                ]
+            },
+            {
+                "SWITCHOFF": [
+                    "light_64",
+                    "64"
+                ]
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "9033_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <electric_shaver> (2002)",
+            "[PLUGIN] <electric_shaver> (2002)",
+            "[SWITCHON] <electric_shaver> (2002)",
+            "[SWITCHOFF] <light> (411)",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9036_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (411)",
+            "[SWITCHOFF] <light> (411)",
+            "[WALK] <light> (64)",
+            "[SWITCHOFF] <light> (64)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9037_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <electric_shaver> (2002)",
+            "[PLUGIN] <electric_shaver> (2002)",
+            "[SWITCHON] <electric_shaver> (2002)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <light> (411)",
+            "[SWITCHOFF] <light> (411)",
+            "[WALK] <light> (169)",
+            "[SWITCHOFF] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9038_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <light> (64)",
+            "[SWITCHOFF] <light> (64)",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (1001)",
+            "[SWITCHON] <light> (1001)",
+            "[WALK] <light> (169)",
+            "[SWITCHOFF] <light> (169)",
+            "[SWITCHOFF] <light> (411)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[SWITCHOFF] <light> (411)"
+    },
+    "9039_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (1001)",
+            "[SWITCHON] <light> (1001)",
+            "[WALK] <light> (169)",
+            "[SWITCHOFF] <light> (169)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <electric_shaver> (2002)",
+            "[PLUGIN] <electric_shaver> (2002)",
+            "[SWITCHON] <electric_shaver> (2002)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9040_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <electric_shaver> (2002)",
+            "[PLUGIN] <electric_shaver> (2002)",
+            "[SWITCHON] <electric_shaver> (2002)",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (411)",
+            "[SWITCHOFF] <light> (411)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <wall_clock> (2019)",
+            "[SWITCHOFF] <wall_clock> (2019)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9041_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[WALK] <couch> (352)",
+            "[WALK] <box> (2014)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <dining_room> (201)",
+            "[WALK] <water_glass> (1000)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[WALK] <bedroom> (67)",
+            "[WALK] <food_food> (2009)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <food_food> (2013)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (2013) <freezer> (289)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[PUTIN] <food_food> (2013) <freezer> (289)"
+    },
+    "9042_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <water_glass> (1000)",
+            "[WALK] <bathroom> (1)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <food_donut> (2007)",
+            "[GRAB] <food_donut> (2007)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <food_donut> (2007) <table> (355)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9043_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <phone> (2015)",
+            "[SWITCHOFF] <phone> (2015)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <food_food> (2009)",
+            "[GRAB] <food_food> (2009)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <food_food> (2009)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (2009) <freezer> (289)",
+            "[WALK] <food_food> (2013)",
+            "[GRAB] <food_food> (2013)",
+            "[WALK] <food_food> (2013)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (2013) <freezer> (289)",
+            "[WALK] <food_food> (2016)",
+            "[GRAB] <food_food> (2016)",
+            "[WALK] <food_food> (2016)",
+            "[PUTIN] <food_food> (2016) <freezer> (289)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <food_food> (2016) <freezer> (289)"
+    },
+    "9044_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <box> (2014)",
+            "[OPEN] <box> (2014)",
+            "[WALK] <food_food> (2016)",
+            "[GRAB] <food_food> (2016)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[PUTIN] <food_food> (2016) <freezer> (289)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <food_donut> (2007)",
+            "[GRAB] <food_donut> (2007)",
+            "[PUTIN] <food_donut> (2007) <freezer> (289)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)",
+            "[WALK] <box> (2014)",
+            "[CLOSE] <box> (2014)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)",
+            "[CLOSE] <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9045_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <box> (2014)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <phone> (2015)",
+            "[SWITCHOFF] <phone> (2015)",
+            "[WALK] <water_glass> (1000)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[WALK] <food_food> (2009)",
+            "[WALK] <food_food> (2013)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9046_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <cupboard> (229)",
+            "[WALK] <box> (2014)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)",
+            "[WALK] <phone> (2015)",
+            "[SWITCHOFF] <phone> (2015)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[WALK] <water_glass> (1000)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[WALK] <food_food> (2009)",
+            "[WALK] <bedroom> (67)",
+            "[WALK] <box> (2014)",
+            "[WALK] <food_food> (2013)",
+            "[WALK] <bedroom> (67)",
+            "[WALK] <box> (2014)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9047_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)",
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <food_donut> (2007)",
+            "[GRAB] <food_donut> (2007)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <food_donut> (2007) <table> (355)",
+            "[WALK] <food_food> (2016)",
+            "[GRAB] <food_food> (2016)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <food_food> (2016) <table> (355)",
+            "[WALK] <cupboard> (229)",
+            "[CLOSE] <cupboard> (229)"
+        ],
+        "error_type": null,
+        "error_action": null
+    },
+    "9048_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <box> (2014)",
+            "[OPEN] <box> (2014)",
+            "[WALK] <food_food> (2009)",
+            "[GRAB] <food_food> (2009)",
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[PUTIN] <food_food> (2009) <freezer> (289)",
+            "[WALK] <food_food> (2013)",
+            "[GRAB] <food_food> (2013)",
+            "[PUTIN] <food_food> (2013) <freezer> (289)",
+            "[WALK] <food_food> (2016)",
+            "[GRAB] <food_food> (2016)",
+            "[PUTIN] <food_food> (2016) <freezer> (289)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)",
+            "[WALK] <phone> (2015)",
+            "[SWITCHOFF] <phone> (2015)",
+            "[WALK] <box> (2014)",
+            "[CLOSE] <box> (2014)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTIN] <food_food> (2013) <freezer> (289)"
+    },
+    "9049_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <water_glass> (1000)",
+            "[WALK] <table> (355)",
+            "[WALK] <water_glass> (1000)",
+            "[DROP] <water_glass> (1000)",
+            "[WALK] <bathroom> (1)",
+            "[WALK] <water_glass> (1000)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[WALK] <pencil> (2008)",
+            "[OPEN] <bathroom> (1)",
+            "[WALK] <pencil> (2008)",
+            "[PUTBACK] <pencil> (2008) <nightstand> (102)",
+            "[WALK] <food_food> (2009)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <food_food> (2009)",
+            "[PUTIN] <food_food> (2009) <freezer> (289)",
+            "[CLOSE] <cupboard> (229)",
+            "[CLOSE] <freezer> (289)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <water_glass> (1000) <table> (355)"
+    },
+    "9050_1": {
+        "executable": false,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <couch> (352)",
+            "[WALK] <table> (107)",
+            "[WALK] <table> (226)",
+            "[WALK] <food_carrot> (2000)",
+            "[WALK] <table> (355)",
+            "[PUTBACK] <water_glass> (1000) <table> (355)",
+            "[PUTOBJBACK] <water_glass> (1000)",
+            "[WALK] <box> (2014)",
+            "[OPEN] <box> (2014)",
+            "[WALK] <food_food> (2009)",
+            "[GRAB] <food_food> (2009)",
+            "[PUTIN] <food_food> (2009) <freezer> (289)",
+            "[WALK] <food_food> (2013)",
+            "[GRAB] <food_food> (2013)",
+            "[PUTIN] <food_food> (2013) <freezer> (289)",
+            "[WALK] <food_food> (2016)",
+            "[GRAB] <food_food> (2016)",
+            "[PUTIN] <food_food> (2016) <freezer> (289)",
+            "[WALK] <console> (2010)",
+            "[SWITCHON] <console> (2010)",
+            "[WALK] <phone> (2015)",
+            "[SWITCHOFF] <phone> (2015)",
+            "[WALK] <box> (2014)",
+            "[CLOSE] <box> (2014)",
+            "[WALK] <freezer> (289)",
+            "[CLOSE] <freezer> (289)"
+        ],
+        "error_type": "unknown_error",
+        "error_action": "[PUTOBJBACK] <water_glass> (1000)"
+    }
+}

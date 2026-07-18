@@ -59,7 +59,9 @@ def evaluate_results(args):
             0: 0,
             1: 0,
             2: 0,
+            3: 0,
             4: 0,
+            5: 0,
         }
         logger.info(f'Model name is {model_name}')
         llm_response_json = os.path.join(
@@ -252,9 +254,16 @@ def evaluate_results(args):
                             formal_info = formal_info_checker.run_checker()
                             failed_error_code = formal_info.get_error_type()
                             ADDITIONAL_ERRROR_CODE = 4
-                            assert (
-                                failed_error_code in error_code_to_number
-                            ), f"Unknown error code {failed_error_code}"
+                            if failed_error_code not in error_code_to_number:
+                                # TemporalOrderChecker cannot classify some
+                                # failures (e.g. PUTOBJBACK with empty hands
+                                # yields None) — count as UNKNOWN_ERROR
+                                # instead of aborting the whole evaluation.
+                                logger.info(
+                                    f"Unclassified error code {failed_error_code} "
+                                    f"for {action} — counting as UNKNOWN_ERROR"
+                                )
+                                failed_error_code = 5
                             error_code_to_number[failed_error_code] += 1
                             logger.info(
                                 f"Encounter error: {error_code_to_type[failed_error_code]}"
@@ -388,27 +397,33 @@ def evaluate_results(args):
         )
 
         # keep three decimal digits
+        # A goal category can be empty (e.g. task sets authored with only
+        # node+edge goals have zero action goals) — report -1 as N/A instead
+        # of dividing by zero, matching eval_utils' convention.
+        def _rate(matched, total):
+            return round(100.0 * matched / total, 4) if total else -1
+
         logger.info("For scene metrics:")
         logger.info(
-            f"Matched node: {all_matched_node}, rate = {100.0 *all_matched_node/all_node_goals:.2f}"
+            f"Matched node: {all_matched_node}, rate = {_rate(all_matched_node, all_node_goals)}"
         )
         logger.info(
-            f"Matched edge: {all_matched_edge}, rate = {100.0 *all_matched_edge/all_edge_goals:.2f}"
+            f"Matched edge: {all_matched_edge}, rate = {_rate(all_matched_edge, all_edge_goals)}"
         )
         logger.info(
-            f"Matched action: {all_matched_action}, rate = {100.0 *all_matched_action/all_action_goals:.2f}"
+            f"Matched action: {all_matched_action}, rate = {_rate(all_matched_action, all_action_goals)}"
         )
         logger.info(
-            f"Matched all: {all_matched_all}, rate = {100.0 *all_matched_all/all_goals:.2f}"
+            f"Matched all: {all_matched_all}, rate = {_rate(all_matched_all, all_goals)}"
         )
 
         summary = {
             "goal_evaluation": {
                 "task_success_rate": round(100.0 * all_correct_plan / program_num, 4),
-                "state_goal": round(100.0 * all_matched_node / all_node_goals, 4),
-                "relation_goal": round(100.0 * all_matched_edge / all_edge_goals, 4),
-                "action_goal": round(100.0 * all_matched_action / all_action_goals, 4),
-                "total_goal": round(100.0 * all_matched_all / all_goals, 4),
+                "state_goal": _rate(all_matched_node, all_node_goals),
+                "relation_goal": _rate(all_matched_edge, all_edge_goals),
+                "action_goal": _rate(all_matched_action, all_action_goals),
+                "total_goal": _rate(all_matched_all, all_goals),
             },
             "trajectory_evaluation": {
                 "execution_success_rate": round(

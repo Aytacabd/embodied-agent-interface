@@ -54,7 +54,7 @@ logger = logging.getLogger(__name__)
 
 API_PROVIDER = "openai"
 API_KEY = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
-MODEL = "gpt-4o"
+MODEL = "gpt-4o-mini"
 MODEL_NAME = f"{MODEL}-sda-tree_modifiedsdg_notmini"
 
 MAX_REPLAN = 3
@@ -104,9 +104,11 @@ OUTPUT FORMAT - respond with ONLY a JSON object. Every argument is the object na
 {"ACTION": ["object_name", "object_id"], "ACTION2": ["obj1_name", "obj1_id", "obj2_name", "obj2_id"]}
 
 VALID ACTIONS:
-- 1 object: DRINK, EAT, CUT, TOUCH, LOOKAT, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, SQUEEZE, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, GREET, POINTAT, DROP, LIE, SIT, PUTOBJBACK, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
+- 1 object: DRINK, EAT, CUT, TOUCH, LOOKAT, WATCH, READ, TYPE, MOVE, WASH, RINSE, SCRUB, SQUEEZE, GRAB, SWITCHOFF, SWITCHON, CLOSE, FIND, WALK, OPEN, PUSH, PULL, WIPE, PUTON, PUTOFF, GREET, POINTAT, DROP, LIE, SIT, RUN, TURNTO, RELEASE, PLUGIN, PLUGOUT
 - 2 objects: PUTBACK, PUTIN, POUR
 - 0 objects: STANDUP, SLEEP, WAKEUP
+
+NEVER use PUTOBJBACK — always place a held object explicitly: PUTBACK <object> <surface> or PUTIN <object> <container>.
 
 RULE 1 — STANDUP IF NEEDED, THEN ALWAYS WALK FIRST:
 If the current state shows the character SITTING or LYING, output STANDUP first — WALK fails while sitting or lying.
@@ -162,6 +164,7 @@ Common mistakes and corrections:
 - To wash clothes: GRAB <clothes> then PUTIN <clothes> <washing_machine>
 - To put food in fridge: GRAB <food> then PUTIN <food> <fridge>
 - DROP <object> only discards a held object onto the floor — it is almost never the right action
+- PUTOBJBACK is unreliable and must be REPLACED: use PUTBACK <object> <surface> (or PUTIN <object> <container>) with an explicit target
 - To transfer water or another liquid into an appliance or container: GRAB <liquid> then POUR <liquid> <target>
   Example: {{"GRAB": ["water", "1002"], "POUR": ["water", "1002", "coffee_maker", "290"]}}
 - NEVER output the same wrong action again.
@@ -226,7 +229,10 @@ class LLMClient:
             response = self.client.chat.completions.create(
                 model=MODEL,
                 temperature=0,
-                max_tokens=512,
+                # 512 truncated 30-50-step plans mid-JSON (hard tasks 9011/
+                # 9014/9016/9020/9030/9031) — the saved fragment then scored
+                # as hallucination. Plans this long are legitimate output.
+                max_tokens=2048,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
@@ -268,6 +274,12 @@ class LLMClient:
 def parse_llm_output(raw: str):
     raw = re.sub(r"```[a-z]*", "", raw).strip().strip("`").strip()
     match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if not match:
+        # Salvage a truncated response (no closing brace): take everything
+        # from the first "{" — the pair-regex below only extracts COMPLETE
+        # "ACTION": [...] entries, so the incomplete trailing pair is dropped
+        # and the plan prefix stays runnable.
+        match = re.search(r"\{.*", raw, re.DOTALL)
     if not match:
         return []
     try:
@@ -349,6 +361,14 @@ def _normalize_name_id_token(token: str) -> str:
     m = re.match(r"^(.+?)_(\d+)_\2$", s)
     if m:
         return f"{m.group(1)}_{m.group(2)}"
+    # Already-complete token + stray trailing number: mini sometimes pairs the
+    # name_id it was shown with a step COUNTER ("electric_shaver_2002", "1")
+    # -> combined "electric_shaver_2002_1". VH class names never end in
+    # digits, so name_<id>_<other-digits> keeps the embedded id and drops the
+    # counter. (Equal-id echoes are handled above.)
+    m = re.match(r"^(.+?_\d+)_\d+$", s)
+    if m:
+        return m.group(1)
     # Normalize dot notation: light.245 -> light_245
     m = re.match(r"^(.+)\.(\d+)$", s)
     if m:
@@ -609,6 +629,47 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict,
     except Exception as e:
         logger.warning(f"json_to_action failed: {e}")
         return None
+
+
+def hist_pos_to_plan_pos(h: int, hist_to_plan: list, failed_plan_idx) -> int:
+    """
+    1-based successful-history index -> 1-based plan position.
+
+    hist_to_plan[k] = 0-based plan index of the (k+1)-th successful action
+    of the attempt (i.e. plan positions before the failure that were not
+    skipped). Identity mapping when nothing was skipped. A history position
+    past the recorded successes maps to the failed action itself.
+    """
+    if 1 <= h <= len(hist_to_plan):
+        return hist_to_plan[h - 1] + 1
+    if failed_plan_idx is not None:
+        return failed_plan_idx + 1
+    return h
+
+
+_GOAL_STATE_EFFECTS = {
+    "CLOSE": "CLOSED", "OPEN": "OPEN",
+    "SWITCHON": "ON", "SWITCHOFF": "OFF",
+    "PLUGIN": "PLUGGED_IN", "PLUGOUT": "PLUGGED_OUT",
+}
+
+
+def goal_state_action_pair(action, goal_state_pairs: set):
+    """
+    (obj_id, STATE) that this EAI action achieves, if that pair is one of the
+    task's node goals; None otherwise. Used by the goal guard to stop
+    goal-achieving actions from being silently deleted by skips/drops.
+    """
+    s = str(action)
+    am = re.search(r"\[(\w+)\]", s)
+    om = re.search(r"\((?:1\.)?(\d+)\)", s)
+    if not am or not om:
+        return None
+    state = _GOAL_STATE_EFFECTS.get(am.group(1).upper())
+    if state is None:
+        return None
+    pair = (int(om.group(1)), state)
+    return pair if pair in goal_state_pairs else None
 
 
 def _repair_key(tree_result: list) -> tuple:
@@ -918,6 +979,11 @@ class EAISDATreeRunner:
         goal_edge_relations = {
             (g["from_id"], g["to_id"]): g["relation_type"] for g in edge_goals
         }
+        # (id, STATE) node goals — the goal guard relocates actions achieving
+        # these instead of letting skips/drops delete them permanently
+        goal_state_pairs = {
+            (g["id"], str(g["state"]).upper()) for g in node_goals
+        }
 
         try:
             motion_planner, _, _, _, _ = construct_planner(
@@ -975,6 +1041,17 @@ class EAISDATreeRunner:
 
         actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
         if not actions:
+            # One corrective retry — temp-0 re-asks must change the prompt or
+            # they reproduce the same broken output verbatim.
+            logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
+            retry_prompt = base_prompt + (
+                "\n\nIMPORTANT: your previous response was invalid or truncated."
+                " Respond with ONE complete, syntactically valid JSON object and"
+                " nothing else. If the plan is long, keep it complete anyway."
+            )
+            raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
+            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0
 
@@ -984,6 +1061,7 @@ class EAISDATreeRunner:
         tried_repairs = {}   # failure_sig -> set of repair keys already spliced
         banned_cands = {}    # failure_sig -> set of (ACTION, obj, target) that failed in env
         last_spliced = None  # (failure_sig, set of repair action strings)
+        deferred_goal_actions = []  # goal-achieving actions removed by drops (goal guard)
 
         # L4: removals (already_satisfied / loop-breaker drops) do NOT consume
         # the repair budget — only actual repair attempts (LLM calls) do.
@@ -1064,6 +1142,62 @@ class EAISDATreeRunner:
                     a for i, a in enumerate(current_plan_eai)
                     if i not in skipped_indices
                 ]
+
+                # ── Goal guard ────────────────────────────────────────────
+                # Goal-achieving actions vanish from plans two ways: skipped
+                # as ADDITIONAL_STEP because the LLM placed them at a moment
+                # they were redundant (CLOSE before the cupboard was ever
+                # opened — 16× cupboard-CLOSED misses in the hard-50 run),
+                # or dropped during repair. If the node goal is still unmet
+                # at plan end, relocate the action there and re-execute —
+                # wrong-temporal-order repair using only the LLM's own
+                # actions, never new planning.
+                guard_candidates = [
+                    current_plan_eai[i] for i in skipped_indices
+                ] + deferred_goal_actions
+                guard_added = []
+                seen_pairs = set()
+                env_nodes = {
+                    n["id"]: n
+                    for n in motion_planner.env_state.to_dict()["nodes"]
+                }
+                for act in guard_candidates:
+                    pair = goal_state_action_pair(act, goal_state_pairs)
+                    if not pair or pair in seen_pairs:
+                        continue
+                    seen_pairs.add(pair)
+                    oid, state = pair
+                    node = env_nodes.get(oid)
+                    if node is None or state in {
+                        str(x).upper() for x in node.get("states", [])
+                    }:
+                        continue  # object gone or goal already satisfied
+                    gmap = dict(full_name_to_id)
+                    gmap.update(relevant_name_to_id)
+                    walk = parse_and_validate(
+                        json.dumps({"WALK": [f"{node['class_name']}_{oid}"]}),
+                        gmap, goal_edge_relations,
+                    )
+                    seq = (walk or []) + [act]
+                    done = []
+                    for a in seq:
+                        okf, _ = motion_planner.my_execute_primitive_action_eval(a)
+                        if not okf:
+                            break
+                        done.append(a)
+                    # commit only complete WALK+action pairs — a lone WALK
+                    # pollutes the plan without achieving anything
+                    if len(done) == len(seq):
+                        guard_added.extend(done)
+                if guard_added:
+                    clean_plan = clean_plan + guard_added
+                    logger.info(
+                        f"  🛡️ Goal guard re-appended: "
+                        f"{[str(a) for a in guard_added]}"
+                    )
+                    if VERBOSE:
+                        print(f"\n  GOAL GUARD re-appended: {[str(a) for a in guard_added]}")
+
                 raw_output = plan_to_json_str(clean_plan)
                 logger.info(
                     f"  ✅ SUCCESS on attempt {attempt + 1}"
@@ -1110,6 +1244,10 @@ class EAISDATreeRunner:
                     char_lying=char_lying,
                     env_dict=env_at_failure,
                     initial_env_dict=history_env_states[0],
+                    failed_plan_pos=(
+                        failed_plan_idx + 1 if failed_plan_idx is not None
+                        else None
+                    ),
                 )
                 logger.info(
                     f"  🔍 Strategy: {diagnosis.replan_strategy} | "
@@ -1160,11 +1298,27 @@ class EAISDATreeRunner:
                 )
 
             # ── Compute splice window ─────────────────────────────────────────
+            # t_start is in HISTORY coordinates (slices history_actions /
+            # history_env_states); t_end is in PLAN coordinates (slices
+            # current_plan_eai). They coincide until steps get skipped, so the
+            # window's plan-side start must be converted explicitly.
             t_start = diagnosis.t_start if diagnosis.t_start is not None else failed_step.index
-            t_end = diagnosis.t_end if diagnosis.t_end is not None else failed_step.index
+            t_end = diagnosis.t_end if diagnosis.t_end is not None else (
+                failed_plan_idx + 1 if failed_plan_idx is not None else failed_step.index
+            )
+
+            hist_to_plan = [
+                i for i in range(failed_plan_idx if failed_plan_idx is not None else 0)
+                if i not in skipped_indices
+            ]
+            win_start_plan = hist_pos_to_plan_pos(t_start, hist_to_plan, failed_plan_idx)
 
             before = history_actions[:max(0, t_start - 1)]
             after = current_plan_eai[t_end:]
+
+            # Skip-aware window in plan coordinates; overrides the wrapper's
+            # slice, which assumes history == plan positions.
+            orig_subseq = full_plan_steps[win_start_plan - 1 : t_end]
 
             # ── Action already satisfied: goal is already true, just remove it ─
             if diagnosis.replan_strategy == "already_satisfied":
@@ -1186,6 +1340,8 @@ class EAISDATreeRunner:
                     current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
                     raw_output = plan_to_json_str(current_plan_eai)
                     last_spliced = None
+                    if goal_state_action_pair(dropped, goal_state_pairs):
+                        deferred_goal_actions.append(dropped)
                     logger.info(f"  🔁 Wrong-action fix did not help — dropped: {dropped}")
                     if VERBOSE:
                         print(f"\n  WRONG-ACTION FIX FAILED TWICE — dropping: {dropped}")
@@ -1299,6 +1455,8 @@ class EAISDATreeRunner:
                 current_plan_eai = current_plan_eai[:idx] + current_plan_eai[idx + 1:]
                 raw_output = plan_to_json_str(current_plan_eai)
                 last_spliced = None
+                if goal_state_action_pair(dropped, goal_state_pairs):
+                    deferred_goal_actions.append(dropped)
                 logger.info(f"  🌳 Tree exhausted — dropped failed action: {dropped}")
                 if VERBOSE:
                     print(f"\n  TREE EXHAUSTED — dropping action: {dropped}")
@@ -1311,7 +1469,8 @@ class EAISDATreeRunner:
             # Retain the failed action(s) after the repair sequence so that
             # prep-style fixes (WALK, OPEN, etc.) are followed by a retry of
             # the original action rather than silently dropping it.
-            failed_eai = current_plan_eai[t_start - 1 : t_end]
+            # win_start_plan is t_start converted to plan coordinates.
+            failed_eai = current_plan_eai[win_start_plan - 1 : t_end]
             current_plan_eai = before + new_subseq + failed_eai + after
             raw_output = plan_to_json_str(current_plan_eai)
             # Remember what this repair was for, so if one of ITS actions

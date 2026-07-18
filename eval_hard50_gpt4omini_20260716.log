@@ -1,0 +1,2096 @@
+load llm response from /opt/iGibson/output_sda_hard50/virtualhome/action_sequencing
+Model name is gpt-4o-mini-sda-tree_hard50
+Task is Hard busy hands, file_id is 9001_1
+actions=[{'WALK': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['knife', '1003']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['fork', '1004']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc22cd00>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <knife> (1003) <table> (355) has wrong order error on task 9001_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <knife> (1003)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1003, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1004, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=0, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=1, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9002_1
+actions=[{'DROP': ['cloth_napkin', '1001']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['fork', '1004']}, {'DROP': ['fork', '1004']}, {'WALK': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[DROP] <cloth_napkin> (1001)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <fork> (1004)', '[DROP] <fork> (1004)', '[WALK] <freezer> (289)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[DROP] <cloth_napkin> (1001)'
+Current action [DROP] <cloth_napkin> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[DROP] <fork> (1004)'
+Current action [DROP] <fork> (1004) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Executable!
+GOAL FAIL! Not found: {'from_id': 1004, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=2, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9003_1
+actions=[{'WALK': ['freezer', '289']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['plate', '1002']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['fork', '1004']}, {'PUTBACK': ['fork', '1004', 'table', '355']}]
+actions=['[WALK] <freezer> (289)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)']
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc114f70>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <plate> (1002) <table> (355) has wrong order error on task 9003_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <freezer> (289)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <plate> (1002)']
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1002, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1004, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=1, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9004_1
+actions=[{'WALK': ['table', '355']}, {'WALK': ['cloth_napkin', '1001']}, {'WALK': ['cupboard', '229']}, {'WALK': ['plate', '1002']}, {'DROP': ['plate', '1002']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['fork', '1004']}, {'GRAB': ['fork', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['cup', '1005']}, {'DROP': ['cup', '1005']}, {'WALK': ['plate', '1002']}, {'DROP': ['plate', '1002']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[WALK] <table> (355)', '[WALK] <cloth_napkin> (1001)', '[WALK] <cupboard> (229)', '[WALK] <plate> (1002)', '[DROP] <plate> (1002)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <cup> (1005)', '[DROP] <cup> (1005)', '[WALK] <plate> (1002)', '[DROP] <plate> (1002)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[DROP] <plate> (1002)'
+Current action [DROP] <plate> (1002) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[GRAB] <fork> (1004)'
+Current action [GRAB] <fork> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[DROP] <cup> (1005)'
+Current action [DROP] <cup> (1005) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[DROP] <plate> (1002)'
+Current action [DROP] <plate> (1002) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc408fd0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [DROP] <plate> (1002) has wrong order error on task 9004_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <table> (355)', '[WALK] <cloth_napkin> (1001)', '[WALK] <cupboard> (229)', '[WALK] <plate> (1002)', '[DROP] <plate> (1002)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <cup> (1005)', '[DROP] <cup> (1005)', '[WALK] <plate> (1002)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 410, 'class_name': 'television', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1002, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=0, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9005_1
+actions=[{'DROP': ['cloth_napkin', '1001']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['fork', '1004']}, {'GRAB': ['fork', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['cup', '1005']}, {'GRAB': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[DROP] <cloth_napkin> (1001)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[DROP] <cloth_napkin> (1001)'
+Current action [DROP] <cloth_napkin> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[GRAB] <fork> (1004)'
+Current action [GRAB] <fork> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[GRAB] <cup> (1005)'
+Current action [GRAB] <cup> (1005) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[CLOSE] <freezer> (289)'
+Current action [CLOSE] <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Executable!
+Predicted: node_match_num=2, edge_match_num=5, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard busy hands, file_id is 9006_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'DROP': ['cloth_napkin', '1001']}, {'WALK': ['cupboard', '229']}, {'WALK': ['bedroom', '67']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['fork', '1004']}, {'GRAB': ['fork', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[DROP] <cloth_napkin> (1001)', '[WALK] <cupboard> (229)', '[WALK] <bedroom> (67)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[DROP] <cloth_napkin> (1001)'
+Current action [DROP] <cloth_napkin> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[GRAB] <fork> (1004)'
+Current action [GRAB] <fork> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+Predicted: node_match_num=0, edge_match_num=5, action_match_num=0
+Gold: len(gold_node_goals)=1, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9007_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['check', '2001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['cup', '1005']}, {'GRAB': ['cup', '1005']}, {'WALK': ['cup', '1005']}, {'GRAB': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['cup', '1005']}, {'GRAB': ['cup', '1005']}, {'PUTIN': ['cup', '1005', 'freezer', '289']}, {'CLOSE': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'PUTBACK': ['plate', '1002', 'cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <check> (2001)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[PUTIN] <cup> (1005) <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <check> (2001)'
+Current action [WALK] <check> (2001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[GRAB] <cup> (1005)'
+Current action [GRAB] <cup> (1005) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[GRAB] <cup> (1005)'
+Current action [GRAB] <cup> (1005) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc1fcd60>
+Encounter error: ADDITIONAL_STEP
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc22c370>
+Encounter error: MISSING_STEP
+failed_error_code=1
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <check> (2001)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[WALK] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <plate> (1002)']
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1001, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1002, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1003, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=1, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9008_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['knife', '1003']}, {'DROP': ['knife', '1003']}, {'WALK': ['couch', '352']}, {'WALK': ['fork', '1004']}, {'WALK': ['couch', '352']}, {'DROP': ['fork', '1004']}, {'DROP': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cup', '1005']}, {'WALK': ['plate', '1002']}, {'WALK': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <knife> (1003)', '[DROP] <knife> (1003)', '[WALK] <couch> (352)', '[WALK] <fork> (1004)', '[WALK] <couch> (352)', '[DROP] <fork> (1004)', '[DROP] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cup> (1005)', '[WALK] <plate> (1002)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[DROP] <knife> (1003)'
+Current action [DROP] <knife> (1003) executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[DROP] <fork> (1004)'
+Current action [DROP] <fork> (1004) executable.
+Current action='[DROP] <knife> (1003)'
+Current action [DROP] <knife> (1003) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffba7f460>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [DROP] <knife> (1003) has wrong order error on task 9008_1.
+failed_error_code=0
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <knife> (1003)', '[DROP] <knife> (1003)', '[WALK] <couch> (352)', '[WALK] <fork> (1004)', '[WALK] <couch> (352)', '[DROP] <fork> (1004)']
+GOAL FAIL! Not matched: {'id': 410, 'class_name': 'television', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1004, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1003, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1001, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1002, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=1, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9009_1
+actions=[{'WALK': ['cupboard', '229']}, {'WALK': ['freezer', '289']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['fork', '1004']}, {'GRAB': ['fork', '1004']}, {'WALK': ['fork', '1004']}, {'PUTBACK': ['fork', '1004', 'table', '355']}, {'WALK': ['cup', '1005']}, {'PUTBACK': ['cup', '1005', 'table', '355']}]
+actions=['[WALK] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[WALK] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)']
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[GRAB] <fork> (1004)'
+Current action [GRAB] <fork> (1004) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe7074220>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <fork> (1004) <table> (355) has wrong order error on task 9009_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <fork> (1004)']
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1004, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=2, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard busy hands, file_id is 9010_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['freezer', '289']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['bedroom', '67']}, {'DROP': ['cup', '1005']}, {'WALK': ['bedroom', '67']}, {'WALK': ['cup', '1005']}, {'GRAB': ['cup', '1005']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1005', 'table', '355']}, {'WALK': ['cloth_napkin', '1001']}, {'GRAB': ['cloth_napkin', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cloth_napkin', '1001', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['plate', '1002']}, {'GRAB': ['plate', '1002']}, {'WALK': ['plate', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1002', 'table', '355']}, {'WALK': ['knife', '1003']}, {'GRAB': ['knife', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1003', 'table', '355']}, {'WALK': ['fork', '1004']}, {'GRAB': ['fork', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1004', 'table', '355']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <freezer> (289)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <bedroom> (67)', '[DROP] <cup> (1005)', '[WALK] <bedroom> (67)', '[WALK] <cup> (1005)', '[GRAB] <cup> (1005)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1005) <table> (355)', '[WALK] <cloth_napkin> (1001)', '[GRAB] <cloth_napkin> (1001)', '[WALK] <table> (355)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <plate> (1002)', '[GRAB] <plate> (1002)', '[WALK] <plate> (1002)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1002) <table> (355)', '[WALK] <knife> (1003)', '[GRAB] <knife> (1003)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1003) <table> (355)', '[WALK] <fork> (1004)', '[GRAB] <fork> (1004)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1004) <table> (355)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[DROP] <cup> (1005)'
+Current action [DROP] <cup> (1005) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[WALK] <cup> (1005)'
+Current action [WALK] <cup> (1005) executable.
+Current action='[GRAB] <cup> (1005)'
+Current action [GRAB] <cup> (1005) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1005) <table> (355)'
+Current action [PUTBACK] <cup> (1005) <table> (355) executable.
+Current action='[WALK] <cloth_napkin> (1001)'
+Current action [WALK] <cloth_napkin> (1001) executable.
+Current action='[GRAB] <cloth_napkin> (1001)'
+Current action [GRAB] <cloth_napkin> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cloth_napkin> (1001) <table> (355)'
+Current action [PUTBACK] <cloth_napkin> (1001) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[GRAB] <plate> (1002)'
+Current action [GRAB] <plate> (1002) executable.
+Current action='[WALK] <plate> (1002)'
+Current action [WALK] <plate> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1002) <table> (355)'
+Current action [PUTBACK] <plate> (1002) <table> (355) executable.
+Current action='[WALK] <knife> (1003)'
+Current action [WALK] <knife> (1003) executable.
+Current action='[GRAB] <knife> (1003)'
+Current action [GRAB] <knife> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1003) <table> (355)'
+Current action [PUTBACK] <knife> (1003) <table> (355) executable.
+Current action='[WALK] <fork> (1004)'
+Current action [WALK] <fork> (1004) executable.
+Current action='[GRAB] <fork> (1004)'
+Current action [GRAB] <fork> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1004) <table> (355)'
+Current action [PUTBACK] <fork> (1004) <table> (355) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=5, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9011_1
+Task Hard appliance load
+, file 9011_1 has hallucination error
+Task is Hard appliance load, file_id is 9012_1
+actions=[{'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['soap', '1006']}, {'GRAB': ['soap', '1006']}, {'WALK': ['washing_machine', '1001']}, {'OPEN': ['washing_machine', '1001']}, {'PUTIN': ['soap', '1006', 'washing_machine', '1001']}, {'WALK': ['basket_for_clothes', '1000']}, {'OPEN': ['basket_for_clothes', '1000']}, {'WALK': ['clothes_dress', '1002']}, {'GRAB': ['clothes_dress', '1002']}, {'WALK': ['clothes_dress', '1002']}, {'WALK': ['basket_for_clothes', '1000']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_dress', '1002', 'washing_machine', '1001']}, {'WALK': ['clothes_pants', '1003']}, {'GRAB': ['clothes_pants', '1003']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_pants', '1003', 'washing_machine', '1001']}, {'WALK': ['clothes_shirt', '1004']}, {'GRAB': ['clothes_shirt', '1004']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_shirt', '1004', 'washing_machine', '1001']}, {'WALK': ['clothes_underwear', '1005']}, {'GRAB': ['clothes_underwear', '1005']}, {'PUTIN': ['clothes_underwear', '1005', 'washing_machine', '1001']}, {'WALK': ['basket_for_clothes', '1000']}, {'CLOSE': ['basket_for_clothes', '1000']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'WALK': ['washing_machine', '1001']}, {'SWITCHON': ['washing_machine', '1001']}, {'CLOSE': ['washing_machine', '1001']}]
+actions=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <soap> (1006)', '[GRAB] <soap> (1006)', '[WALK] <washing_machine> (1001)', '[OPEN] <washing_machine> (1001)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[WALK] <basket_for_clothes> (1000)', '[OPEN] <basket_for_clothes> (1000)', '[WALK] <clothes_dress> (1002)', '[GRAB] <clothes_dress> (1002)', '[WALK] <clothes_dress> (1002)', '[WALK] <basket_for_clothes> (1000)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[WALK] <clothes_pants> (1003)', '[GRAB] <clothes_pants> (1003)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[WALK] <clothes_shirt> (1004)', '[GRAB] <clothes_shirt> (1004)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[WALK] <clothes_underwear> (1005)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[WALK] <basket_for_clothes> (1000)', '[CLOSE] <basket_for_clothes> (1000)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <washing_machine> (1001)', '[SWITCHON] <washing_machine> (1001)', '[CLOSE] <washing_machine> (1001)']
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <soap> (1006)'
+Current action [WALK] <soap> (1006) executable.
+Current action='[GRAB] <soap> (1006)'
+Current action [GRAB] <soap> (1006) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[OPEN] <washing_machine> (1001)'
+Current action [OPEN] <washing_machine> (1001) executable.
+Current action='[PUTIN] <soap> (1006) <washing_machine> (1001)'
+Current action [PUTIN] <soap> (1006) <washing_machine> (1001) executable.
+Current action='[WALK] <basket_for_clothes> (1000)'
+Current action [WALK] <basket_for_clothes> (1000) executable.
+Current action='[OPEN] <basket_for_clothes> (1000)'
+Current action [OPEN] <basket_for_clothes> (1000) executable.
+Current action='[WALK] <clothes_dress> (1002)'
+Current action [WALK] <clothes_dress> (1002) executable.
+Current action='[GRAB] <clothes_dress> (1002)'
+Current action [GRAB] <clothes_dress> (1002) executable.
+Current action='[WALK] <clothes_dress> (1002)'
+Current action [WALK] <clothes_dress> (1002) executable.
+Current action='[WALK] <basket_for_clothes> (1000)'
+Current action [WALK] <basket_for_clothes> (1000) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_dress> (1002) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_pants> (1003)'
+Current action [WALK] <clothes_pants> (1003) executable.
+Current action='[GRAB] <clothes_pants> (1003)'
+Current action [GRAB] <clothes_pants> (1003) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_pants> (1003) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_shirt> (1004)'
+Current action [WALK] <clothes_shirt> (1004) executable.
+Current action='[GRAB] <clothes_shirt> (1004)'
+Current action [GRAB] <clothes_shirt> (1004) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_underwear> (1005)'
+Current action [WALK] <clothes_underwear> (1005) executable.
+Current action='[GRAB] <clothes_underwear> (1005)'
+Current action [GRAB] <clothes_underwear> (1005) executable.
+Current action='[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffbc42d60>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001) has wrong order error on task 9012_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <soap> (1006)', '[GRAB] <soap> (1006)', '[WALK] <washing_machine> (1001)', '[OPEN] <washing_machine> (1001)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[WALK] <basket_for_clothes> (1000)', '[OPEN] <basket_for_clothes> (1000)', '[WALK] <clothes_dress> (1002)', '[GRAB] <clothes_dress> (1002)', '[WALK] <clothes_dress> (1002)', '[WALK] <basket_for_clothes> (1000)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[WALK] <clothes_pants> (1003)', '[GRAB] <clothes_pants> (1003)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[WALK] <clothes_shirt> (1004)', '[GRAB] <clothes_shirt> (1004)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[WALK] <clothes_underwear> (1005)', '[GRAB] <clothes_underwear> (1005)']
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'basket_for_clothes', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'INSIDE', 'to_id': 1001}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9013_1
+actions=[{'WALK': ['clothes_dress', '1002']}, {'GRAB': ['clothes_dress', '1002']}, {'PUTIN': ['clothes_dress', '1002', 'washing_machine', '1001']}, {'WALK': ['clothes_pants', '1003']}, {'GRAB': ['clothes_pants', '1003']}, {'PUTIN': ['clothes_pants', '1003', 'washing_machine', '1001']}, {'WALK': ['clothes_shirt', '1004']}, {'GRAB': ['clothes_shirt', '1004']}, {'PUTIN': ['clothes_shirt', '1004', 'washing_machine', '1001']}, {'WALK': ['clothes_underwear', '1005']}, {'GRAB': ['clothes_underwear', '1005']}, {'PUTIN': ['clothes_underwear', '1005', 'washing_machine', '1001']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['soap', '1006']}, {'GRAB': ['soap', '1006']}, {'PUTIN': ['soap', '1006', 'washing_machine', '1001']}, {'CLOSE': ['washing_machine', '1001']}, {'SWITCHON': ['washing_machine', '1001']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[WALK] <clothes_dress> (1002)', '[GRAB] <clothes_dress> (1002)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[WALK] <clothes_pants> (1003)', '[GRAB] <clothes_pants> (1003)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[WALK] <clothes_shirt> (1004)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[WALK] <clothes_underwear> (1005)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <soap> (1006)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[CLOSE] <washing_machine> (1001)', '[SWITCHON] <washing_machine> (1001)', '[CLOSE] <cupboard> (229)']
+Current action='[WALK] <clothes_dress> (1002)'
+Current action [WALK] <clothes_dress> (1002) executable.
+Current action='[GRAB] <clothes_dress> (1002)'
+Current action [GRAB] <clothes_dress> (1002) executable.
+Current action='[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_dress> (1002) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_pants> (1003)'
+Current action [WALK] <clothes_pants> (1003) executable.
+Current action='[GRAB] <clothes_pants> (1003)'
+Current action [GRAB] <clothes_pants> (1003) executable.
+Current action='[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_pants> (1003) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_shirt> (1004)'
+Current action [WALK] <clothes_shirt> (1004) executable.
+Current action='[GRAB] <clothes_shirt> (1004)'
+Current action [GRAB] <clothes_shirt> (1004) executable.
+Current action='[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_underwear> (1005)'
+Current action [WALK] <clothes_underwear> (1005) executable.
+Current action='[GRAB] <clothes_underwear> (1005)'
+Current action [GRAB] <clothes_underwear> (1005) executable.
+Current action='[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <soap> (1006)'
+Current action [WALK] <soap> (1006) executable.
+Current action='[GRAB] <soap> (1006)'
+Current action [GRAB] <soap> (1006) executable.
+Current action='[PUTIN] <soap> (1006) <washing_machine> (1001)'
+Current action [PUTIN] <soap> (1006) <washing_machine> (1001) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe5a6c6d0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <soap> (1006) <washing_machine> (1001) has wrong order error on task 9013_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <clothes_dress> (1002)', '[GRAB] <clothes_dress> (1002)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[WALK] <clothes_pants> (1003)', '[GRAB] <clothes_pants> (1003)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[WALK] <clothes_shirt> (1004)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[WALK] <clothes_underwear> (1005)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <soap> (1006)', '[GRAB] <soap> (1006)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1006, 'relation_type': 'INSIDE', 'to_id': 1001}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9014_1
+Task Hard appliance load
+, file 9014_1 has hallucination error
+Task is Hard appliance load, file_id is 9015_1
+actions=[{'WALK': ['basket_for_clothes', '1000']}, {'WALK': ['cupboard', '229']}, {'WALK': ['washing_machine', '1001']}, {'WALK': ['clothes_pants', '1003']}, {'GRAB': ['clothes_pants', '1003']}, {'WALK': ['washing_machine', '1001']}, {'OPEN': ['washing_machine', '1001']}, {'PUTIN': ['clothes_pants', '1003', 'washing_machine', '1001']}, {'WALK': ['basket_for_clothes', '1000']}, {'OPEN': ['basket_for_clothes', '1000']}, {'WALK': ['clothes_dress', '1002']}, {'GRAB': ['clothes_dress', '1002']}, {'WALK': ['clothes_dress', '1002']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_dress', '1002', 'washing_machine', '1001']}, {'WALK': ['clothes_shirt', '1004']}, {'GRAB': ['clothes_shirt', '1004']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_shirt', '1004', 'washing_machine', '1001']}, {'WALK': ['clothes_underwear', '1005']}, {'GRAB': ['clothes_underwear', '1005']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['clothes_underwear', '1005', 'washing_machine', '1001']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['soap', '1006']}, {'GRAB': ['soap', '1006']}, {'WALK': ['soap', '1006']}, {'WALK': ['washing_machine', '1001']}, {'PUTIN': ['soap', '1006', 'washing_machine', '1001']}, {'SWITCHON': ['washing_machine', '1001']}]
+actions=['[WALK] <basket_for_clothes> (1000)', '[WALK] <cupboard> (229)', '[WALK] <washing_machine> (1001)', '[WALK] <clothes_pants> (1003)', '[GRAB] <clothes_pants> (1003)', '[WALK] <washing_machine> (1001)', '[OPEN] <washing_machine> (1001)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[WALK] <basket_for_clothes> (1000)', '[OPEN] <basket_for_clothes> (1000)', '[WALK] <clothes_dress> (1002)', '[GRAB] <clothes_dress> (1002)', '[WALK] <clothes_dress> (1002)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[WALK] <clothes_shirt> (1004)', '[GRAB] <clothes_shirt> (1004)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[WALK] <clothes_underwear> (1005)', '[GRAB] <clothes_underwear> (1005)', '[WALK] <washing_machine> (1001)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <soap> (1006)', '[GRAB] <soap> (1006)', '[WALK] <soap> (1006)', '[WALK] <washing_machine> (1001)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[SWITCHON] <washing_machine> (1001)']
+Current action='[WALK] <basket_for_clothes> (1000)'
+Current action [WALK] <basket_for_clothes> (1000) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_pants> (1003)'
+Current action [WALK] <clothes_pants> (1003) executable.
+Current action='[GRAB] <clothes_pants> (1003)'
+Current action [GRAB] <clothes_pants> (1003) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[OPEN] <washing_machine> (1001)'
+Current action [OPEN] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_pants> (1003) <washing_machine> (1001) executable.
+Current action='[WALK] <basket_for_clothes> (1000)'
+Current action [WALK] <basket_for_clothes> (1000) executable.
+Current action='[OPEN] <basket_for_clothes> (1000)'
+Current action [OPEN] <basket_for_clothes> (1000) executable.
+Current action='[WALK] <clothes_dress> (1002)'
+Current action [WALK] <clothes_dress> (1002) executable.
+Current action='[GRAB] <clothes_dress> (1002)'
+Current action [GRAB] <clothes_dress> (1002) executable.
+Current action='[WALK] <clothes_dress> (1002)'
+Current action [WALK] <clothes_dress> (1002) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_dress> (1002) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_shirt> (1004)'
+Current action [WALK] <clothes_shirt> (1004) executable.
+Current action='[GRAB] <clothes_shirt> (1004)'
+Current action [GRAB] <clothes_shirt> (1004) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001) executable.
+Current action='[WALK] <clothes_underwear> (1005)'
+Current action [WALK] <clothes_underwear> (1005) executable.
+Current action='[GRAB] <clothes_underwear> (1005)'
+Current action [GRAB] <clothes_underwear> (1005) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)'
+Current action [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <soap> (1006)'
+Current action [WALK] <soap> (1006) executable.
+Current action='[GRAB] <soap> (1006)'
+Current action [GRAB] <soap> (1006) executable.
+Current action='[WALK] <soap> (1006)'
+Current action [WALK] <soap> (1006) executable.
+Current action='[WALK] <washing_machine> (1001)'
+Current action [WALK] <washing_machine> (1001) executable.
+Current action='[PUTIN] <soap> (1006) <washing_machine> (1001)'
+Current action [PUTIN] <soap> (1006) <washing_machine> (1001) executable.
+Current action='[SWITCHON] <washing_machine> (1001)'
+Current action [SWITCHON] <washing_machine> (1001) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'basket_for_clothes', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=5, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9016_1
+Task Hard appliance load
+, file 9016_1 has hallucination error
+Task is Hard appliance load, file_id is 9017_1
+actions=[{'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['fork', '1001']}, {'GRAB': ['fork', '1001']}, {'WALK': ['dishwasher', '1000']}, {'OPEN': ['dishwasher', '1000']}, {'PUTIN': ['fork', '1001', 'dishwasher', '1000']}, {'WALK': ['fork', '1002']}, {'GRAB': ['fork', '1002']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['fork', '1002', 'dishwasher', '1000']}, {'WALK': ['spoon', '1013']}, {'GRAB': ['spoon', '1013']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['spoon', '1013', 'dishwasher', '1000']}, {'WALK': ['spoon', '1014']}, {'GRAB': ['spoon', '1014']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['spoon', '1014', 'dishwasher', '1000']}, {'WALK': ['oven', '295']}, {'OPEN': ['oven', '295']}, {'WALK': ['knife', '1011']}, {'GRAB': ['knife', '1011']}, {'WALK': ['knife', '1011']}, {'GRAB': ['knife', '1011']}, {'PUTIN': ['knife', '1011', 'dishwasher', '1000']}, {'WALK': ['dishwasher', '1000']}, {'SWITCHON': ['dishwasher', '1000']}, {'WALK': ['oven', '295']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}, {'WALK': ['oven', '295']}, {'CLOSE': ['oven', '295']}, {'WALK': ['dishwasher', '1000']}, {'CLOSE': ['dishwasher', '1000']}]
+actions=['[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <fork> (1001)', '[GRAB] <fork> (1001)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <fork> (1001) <dishwasher> (1000)', '[WALK] <fork> (1002)', '[GRAB] <fork> (1002)', '[WALK] <dishwasher> (1000)', '[PUTIN] <fork> (1002) <dishwasher> (1000)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <dishwasher> (1000)', '[PUTIN] <spoon> (1013) <dishwasher> (1000)', '[WALK] <spoon> (1014)', '[GRAB] <spoon> (1014)', '[WALK] <dishwasher> (1000)', '[PUTIN] <spoon> (1014) <dishwasher> (1000)', '[WALK] <oven> (295)', '[OPEN] <oven> (295)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[PUTIN] <knife> (1011) <dishwasher> (1000)', '[WALK] <dishwasher> (1000)', '[SWITCHON] <dishwasher> (1000)', '[WALK] <oven> (295)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <oven> (295)', '[CLOSE] <oven> (295)', '[WALK] <dishwasher> (1000)', '[CLOSE] <dishwasher> (1000)']
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <fork> (1001)'
+Current action [WALK] <fork> (1001) executable.
+Current action='[GRAB] <fork> (1001)'
+Current action [GRAB] <fork> (1001) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[OPEN] <dishwasher> (1000)'
+Current action [OPEN] <dishwasher> (1000) executable.
+Current action='[PUTIN] <fork> (1001) <dishwasher> (1000)'
+Current action [PUTIN] <fork> (1001) <dishwasher> (1000) executable.
+Current action='[WALK] <fork> (1002)'
+Current action [WALK] <fork> (1002) executable.
+Current action='[GRAB] <fork> (1002)'
+Current action [GRAB] <fork> (1002) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <fork> (1002) <dishwasher> (1000)'
+Current action [PUTIN] <fork> (1002) <dishwasher> (1000) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[GRAB] <spoon> (1013)'
+Current action [GRAB] <spoon> (1013) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <spoon> (1013) <dishwasher> (1000)'
+Current action [PUTIN] <spoon> (1013) <dishwasher> (1000) executable.
+Current action='[WALK] <spoon> (1014)'
+Current action [WALK] <spoon> (1014) executable.
+Current action='[GRAB] <spoon> (1014)'
+Current action [GRAB] <spoon> (1014) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <spoon> (1014) <dishwasher> (1000)'
+Current action [PUTIN] <spoon> (1014) <dishwasher> (1000) executable.
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[OPEN] <oven> (295)'
+Current action [OPEN] <oven> (295) executable.
+Current action='[WALK] <knife> (1011)'
+Current action [WALK] <knife> (1011) executable.
+Current action='[GRAB] <knife> (1011)'
+Current action [GRAB] <knife> (1011) executable.
+Current action='[WALK] <knife> (1011)'
+Current action [WALK] <knife> (1011) executable.
+Current action='[GRAB] <knife> (1011)'
+Current action [GRAB] <knife> (1011) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe74a0820>
+Encounter error: ADDITIONAL_STEP
+Current action='[PUTIN] <knife> (1011) <dishwasher> (1000)'
+Current action [PUTIN] <knife> (1011) <dishwasher> (1000) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe74a0c40>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <knife> (1011) <dishwasher> (1000) has wrong order error on task 9017_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <fork> (1001)', '[GRAB] <fork> (1001)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <fork> (1001) <dishwasher> (1000)', '[WALK] <fork> (1002)', '[GRAB] <fork> (1002)', '[WALK] <dishwasher> (1000)', '[PUTIN] <fork> (1002) <dishwasher> (1000)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <dishwasher> (1000)', '[PUTIN] <spoon> (1013) <dishwasher> (1000)', '[WALK] <spoon> (1014)', '[GRAB] <spoon> (1014)', '[WALK] <dishwasher> (1000)', '[PUTIN] <spoon> (1014) <dishwasher> (1000)', '[WALK] <oven> (295)', '[OPEN] <oven> (295)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[WALK] <knife> (1011)']
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 295, 'class_name': 'oven', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1011, 'relation_type': 'INSIDE', 'to_id': 1000}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9018_1
+actions=[{'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['dish_soap', '1016']}, {'GRAB': ['dish_soap', '1016']}, {'WALK': ['dishwasher', '1000']}, {'OPEN': ['dishwasher', '1000']}, {'PUTIN': ['dish_soap', '1016', 'dishwasher', '1000']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['cup', '1009']}, {'GRAB': ['cup', '1009']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['cup', '1009', 'dishwasher', '1000']}, {'WALK': ['cup', '1010']}, {'GRAB': ['cup', '1010']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['cup', '1010', 'dishwasher', '1000']}, {'WALK': ['nightstand', '102']}, {'OPEN': ['nightstand', '102']}, {'WALK': ['plate', '1005']}, {'GRAB': ['plate', '1005']}, {'WALK': ['plate', '1005']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['plate', '1005', 'dishwasher', '1000']}, {'WALK': ['plate', '1006']}, {'GRAB': ['plate', '1006']}, {'PUTIN': ['plate', '1006', 'dishwasher', '1000']}, {'WALK': ['dishwasher', '1000']}, {'SWITCHON': ['dishwasher', '1000']}, {'CLOSE': ['freezer', '289']}, {'CLOSE': ['cupboard', '229']}, {'CLOSE': ['nightstand', '102']}, {'CLOSE': ['dishwasher', '1000']}]
+actions=['[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <dish_soap> (1016)', '[GRAB] <dish_soap> (1016)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1009) <dishwasher> (1000)', '[WALK] <cup> (1010)', '[GRAB] <cup> (1010)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1010) <dishwasher> (1000)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)', '[WALK] <dishwasher> (1000)', '[PUTIN] <plate> (1005) <dishwasher> (1000)', '[WALK] <plate> (1006)', '[GRAB] <plate> (1006)', '[PUTIN] <plate> (1006) <dishwasher> (1000)', '[WALK] <dishwasher> (1000)', '[SWITCHON] <dishwasher> (1000)', '[CLOSE] <freezer> (289)', '[CLOSE] <cupboard> (229)', '[CLOSE] <nightstand> (102)', '[CLOSE] <dishwasher> (1000)']
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <dish_soap> (1016)'
+Current action [WALK] <dish_soap> (1016) executable.
+Current action='[GRAB] <dish_soap> (1016)'
+Current action [GRAB] <dish_soap> (1016) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[OPEN] <dishwasher> (1000)'
+Current action [OPEN] <dishwasher> (1000) executable.
+Current action='[PUTIN] <dish_soap> (1016) <dishwasher> (1000)'
+Current action [PUTIN] <dish_soap> (1016) <dishwasher> (1000) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <cup> (1009)'
+Current action [WALK] <cup> (1009) executable.
+Current action='[GRAB] <cup> (1009)'
+Current action [GRAB] <cup> (1009) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <cup> (1009) <dishwasher> (1000)'
+Current action [PUTIN] <cup> (1009) <dishwasher> (1000) executable.
+Current action='[WALK] <cup> (1010)'
+Current action [WALK] <cup> (1010) executable.
+Current action='[GRAB] <cup> (1010)'
+Current action [GRAB] <cup> (1010) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <cup> (1010) <dishwasher> (1000)'
+Current action [PUTIN] <cup> (1010) <dishwasher> (1000) executable.
+Current action='[WALK] <nightstand> (102)'
+Current action [WALK] <nightstand> (102) executable.
+Current action='[OPEN] <nightstand> (102)'
+Current action [OPEN] <nightstand> (102) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[GRAB] <plate> (1005)'
+Current action [GRAB] <plate> (1005) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <plate> (1005) <dishwasher> (1000)'
+Current action [PUTIN] <plate> (1005) <dishwasher> (1000) executable.
+Current action='[WALK] <plate> (1006)'
+Current action [WALK] <plate> (1006) executable.
+Current action='[GRAB] <plate> (1006)'
+Current action [GRAB] <plate> (1006) executable.
+Current action='[PUTIN] <plate> (1006) <dishwasher> (1000)'
+Current action [PUTIN] <plate> (1006) <dishwasher> (1000) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffbb95160>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <plate> (1006) <dishwasher> (1000) has wrong order error on task 9018_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <dish_soap> (1016)', '[GRAB] <dish_soap> (1016)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1009) <dishwasher> (1000)', '[WALK] <cup> (1010)', '[GRAB] <cup> (1010)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1010) <dishwasher> (1000)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)', '[WALK] <dishwasher> (1000)', '[PUTIN] <plate> (1005) <dishwasher> (1000)', '[WALK] <plate> (1006)', '[GRAB] <plate> (1006)']
+GOAL FAIL! Not matched: {'id': 102, 'class_name': 'nightstand', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1006, 'relation_type': 'INSIDE', 'to_id': 1000}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=5, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9019_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['dishwasher', '1000']}, {'OPEN': ['dishwasher', '1000']}, {'PUTIN': ['plate', '1003', 'dishwasher', '1000']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['plate', '1004', 'dishwasher', '1000']}, {'WALK': ['cup', '1007']}, {'GRAB': ['cup', '1007']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['cup', '1007', 'dishwasher', '1000']}, {'WALK': ['cup', '1008']}, {'GRAB': ['cup', '1008']}, {'WALK': ['dishwasher', '1000']}, {'PUTIN': ['cup', '1008', 'dishwasher', '1000']}, {'WALK': ['nightstand', '102']}, {'OPEN': ['nightstand', '102']}, {'WALK': ['dish_soap', '1016']}, {'GRAB': ['dish_soap', '1016']}, {'WALK': ['dish_soap', '1016']}, {'GRAB': ['dish_soap', '1016']}, {'PUTIN': ['dish_soap', '1016', 'dishwasher', '1000']}, {'WALK': ['dishwasher', '1000']}, {'SWITCHON': ['dishwasher', '1000']}, {'WALK': ['nightstand', '102']}, {'CLOSE': ['nightstand', '102']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'WALK': ['dishwasher', '1000']}, {'CLOSE': ['dishwasher', '1000']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <plate> (1003) <dishwasher> (1000)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <dishwasher> (1000)', '[PUTIN] <plate> (1004) <dishwasher> (1000)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1007) <dishwasher> (1000)', '[WALK] <cup> (1008)', '[GRAB] <cup> (1008)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1008) <dishwasher> (1000)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <dish_soap> (1016)', '[GRAB] <dish_soap> (1016)', '[WALK] <dish_soap> (1016)', '[GRAB] <dish_soap> (1016)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)', '[WALK] <dishwasher> (1000)', '[SWITCHON] <dishwasher> (1000)', '[WALK] <nightstand> (102)', '[CLOSE] <nightstand> (102)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <dishwasher> (1000)', '[CLOSE] <dishwasher> (1000)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[OPEN] <dishwasher> (1000)'
+Current action [OPEN] <dishwasher> (1000) executable.
+Current action='[PUTIN] <plate> (1003) <dishwasher> (1000)'
+Current action [PUTIN] <plate> (1003) <dishwasher> (1000) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <plate> (1004) <dishwasher> (1000)'
+Current action [PUTIN] <plate> (1004) <dishwasher> (1000) executable.
+Current action='[WALK] <cup> (1007)'
+Current action [WALK] <cup> (1007) executable.
+Current action='[GRAB] <cup> (1007)'
+Current action [GRAB] <cup> (1007) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <cup> (1007) <dishwasher> (1000)'
+Current action [PUTIN] <cup> (1007) <dishwasher> (1000) executable.
+Current action='[WALK] <cup> (1008)'
+Current action [WALK] <cup> (1008) executable.
+Current action='[GRAB] <cup> (1008)'
+Current action [GRAB] <cup> (1008) executable.
+Current action='[WALK] <dishwasher> (1000)'
+Current action [WALK] <dishwasher> (1000) executable.
+Current action='[PUTIN] <cup> (1008) <dishwasher> (1000)'
+Current action [PUTIN] <cup> (1008) <dishwasher> (1000) executable.
+Current action='[WALK] <nightstand> (102)'
+Current action [WALK] <nightstand> (102) executable.
+Current action='[OPEN] <nightstand> (102)'
+Current action [OPEN] <nightstand> (102) executable.
+Current action='[WALK] <dish_soap> (1016)'
+Current action [WALK] <dish_soap> (1016) executable.
+Current action='[GRAB] <dish_soap> (1016)'
+Current action [GRAB] <dish_soap> (1016) executable.
+Current action='[WALK] <dish_soap> (1016)'
+Current action [WALK] <dish_soap> (1016) executable.
+Current action='[GRAB] <dish_soap> (1016)'
+Current action [GRAB] <dish_soap> (1016) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe5f56700>
+Encounter error: ADDITIONAL_STEP
+Current action='[PUTIN] <dish_soap> (1016) <dishwasher> (1000)'
+Current action [PUTIN] <dish_soap> (1016) <dishwasher> (1000) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffb871190>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <dish_soap> (1016) <dishwasher> (1000) has wrong order error on task 9019_1.
+failed_error_code=0
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <dishwasher> (1000)', '[OPEN] <dishwasher> (1000)', '[PUTIN] <plate> (1003) <dishwasher> (1000)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <dishwasher> (1000)', '[PUTIN] <plate> (1004) <dishwasher> (1000)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1007) <dishwasher> (1000)', '[WALK] <cup> (1008)', '[GRAB] <cup> (1008)', '[WALK] <dishwasher> (1000)', '[PUTIN] <cup> (1008) <dishwasher> (1000)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <dish_soap> (1016)', '[GRAB] <dish_soap> (1016)', '[WALK] <dish_soap> (1016)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 102, 'class_name': 'nightstand', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'dishwasher', 'state': 'ON'}
+GOAL FAIL! Not found: {'from_id': 1016, 'relation_type': 'INSIDE', 'to_id': 1000}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard appliance load, file_id is 9020_1
+Task Hard appliance load
+, file 9020_1 has hallucination error
+Task is Hard scatter restore, file_id is 9021_1
+actions=[{'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'WALK': ['freezer', '289']}, {'WALK': ['plate', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1003', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['plate', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1004', 'table', '355']}, {'WALK': ['plate', '1005']}, {'GRAB': ['plate', '1005']}, {'WALK': ['plate', '1005']}, {'PUTBACK': ['plate', '1005', 'table', '355']}, {'WALK': ['cup', '1007']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['cup', '1008']}, {'PUTBACK': ['cup', '1008', 'table', '355']}]
+actions=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)', '[PUTBACK] <plate> (1005) <table> (355)', '[WALK] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1008)', '[PUTBACK] <cup> (1008) <table> (355)']
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1004) <table> (355)'
+Current action [PUTBACK] <plate> (1004) <table> (355) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[GRAB] <plate> (1005)'
+Current action [GRAB] <plate> (1005) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[PUTBACK] <plate> (1005) <table> (355)'
+Current action [PUTBACK] <plate> (1005) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffb5f0400>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <plate> (1005) <table> (355) has wrong order error on task 9021_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1007, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1008, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=1, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9022_1
+actions=[{'WALK': ['nightstand', '102']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['nightstand', '102']}, {'OPEN': ['nightstand', '102']}, {'WALK': ['fork', '1001']}, {'GRAB': ['fork', '1001']}, {'WALK': ['table', '355']}, {'WALK': ['fork', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1001', 'table', '355']}, {'WALK': ['fork', '1002']}, {'GRAB': ['fork', '1002']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1002', 'table', '355']}, {'WALK': ['knife', '1011']}, {'GRAB': ['knife', '1011']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1011', 'table', '355']}, {'WALK': ['spoon', '1013']}, {'GRAB': ['spoon', '1013']}, {'WALK': ['table', '355']}, {'PUTBACK': ['spoon', '1013', 'table', '355']}]
+actions=['[WALK] <nightstand> (102)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <fork> (1001)', '[GRAB] <fork> (1001)', '[WALK] <table> (355)', '[WALK] <fork> (1001)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1001) <table> (355)', '[WALK] <fork> (1002)', '[GRAB] <fork> (1002)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1002) <table> (355)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1011) <table> (355)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <table> (355)', '[PUTBACK] <spoon> (1013) <table> (355)']
+Current action='[WALK] <nightstand> (102)'
+Current action [WALK] <nightstand> (102) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <nightstand> (102)'
+Current action [WALK] <nightstand> (102) executable.
+Current action='[OPEN] <nightstand> (102)'
+Current action [OPEN] <nightstand> (102) executable.
+Current action='[WALK] <fork> (1001)'
+Current action [WALK] <fork> (1001) executable.
+Current action='[GRAB] <fork> (1001)'
+Current action [GRAB] <fork> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[WALK] <fork> (1001)'
+Current action [WALK] <fork> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1001) <table> (355)'
+Current action [PUTBACK] <fork> (1001) <table> (355) executable.
+Current action='[WALK] <fork> (1002)'
+Current action [WALK] <fork> (1002) executable.
+Current action='[GRAB] <fork> (1002)'
+Current action [GRAB] <fork> (1002) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1002) <table> (355)'
+Current action [PUTBACK] <fork> (1002) <table> (355) executable.
+Current action='[WALK] <knife> (1011)'
+Current action [WALK] <knife> (1011) executable.
+Current action='[GRAB] <knife> (1011)'
+Current action [GRAB] <knife> (1011) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1011) <table> (355)'
+Current action [PUTBACK] <knife> (1011) <table> (355) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[GRAB] <spoon> (1013)'
+Current action [GRAB] <spoon> (1013) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <spoon> (1013) <table> (355)'
+Current action [PUTBACK] <spoon> (1013) <table> (355) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 102, 'class_name': 'nightstand', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=4, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9023_1
+actions=[{'WALK': ['oven', '295']}, {'OPEN': ['oven', '295']}, {'WALK': ['cup', '1007']}, {'GRAB': ['cup', '1007']}, {'WALK': ['cup', '1008']}, {'GRAB': ['cup', '1008']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['cup', '1009']}, {'GRAB': ['cup', '1009']}, {'WALK': ['oven', '295']}, {'CLOSE': ['oven', '295']}, {'WALK': ['cup', '1007']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['cup', '1008']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1008', 'table', '355']}, {'WALK': ['cup', '1009']}, {'GRAB': ['cup', '1009']}, {'PUTBACK': ['cup', '1009', 'table', '355']}, {'WALK': ['cup', '1010']}, {'GRAB': ['cup', '1010']}, {'PUTBACK': ['cup', '1010', 'table', '355']}]
+actions=['[WALK] <oven> (295)', '[OPEN] <oven> (295)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[WALK] <cup> (1008)', '[GRAB] <cup> (1008)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[WALK] <oven> (295)', '[CLOSE] <oven> (295)', '[WALK] <cup> (1007)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1008)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1008) <table> (355)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[PUTBACK] <cup> (1009) <table> (355)', '[WALK] <cup> (1010)', '[GRAB] <cup> (1010)', '[PUTBACK] <cup> (1010) <table> (355)']
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[OPEN] <oven> (295)'
+Current action [OPEN] <oven> (295) executable.
+Current action='[WALK] <cup> (1007)'
+Current action [WALK] <cup> (1007) executable.
+Current action='[GRAB] <cup> (1007)'
+Current action [GRAB] <cup> (1007) executable.
+Current action='[WALK] <cup> (1008)'
+Current action [WALK] <cup> (1008) executable.
+Current action='[GRAB] <cup> (1008)'
+Current action [GRAB] <cup> (1008) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1007) <table> (355)'
+Current action [PUTBACK] <cup> (1007) <table> (355) executable.
+Current action='[WALK] <cup> (1009)'
+Current action [WALK] <cup> (1009) executable.
+Current action='[GRAB] <cup> (1009)'
+Current action [GRAB] <cup> (1009) executable.
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[CLOSE] <oven> (295)'
+Current action [CLOSE] <oven> (295) executable.
+Current action='[WALK] <cup> (1007)'
+Current action [WALK] <cup> (1007) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1007) <table> (355)'
+Current action [PUTBACK] <cup> (1007) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe29e59a0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <cup> (1007) <table> (355) has wrong order error on task 9023_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <oven> (295)', '[OPEN] <oven> (295)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[WALK] <cup> (1008)', '[GRAB] <cup> (1008)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[WALK] <oven> (295)', '[CLOSE] <oven> (295)', '[WALK] <cup> (1007)', '[WALK] <table> (355)']
+GOAL FAIL! Not found: {'from_id': 1008, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1009, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1010, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=1, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=1, len(gold_edge_goals)=4, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9024_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['plate', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1003', 'table', '355']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['plate', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1004', 'table', '355']}, {'WALK': ['plate', '1005']}, {'GRAB': ['plate', '1005']}, {'WALK': ['plate', '1005']}, {'PUTBACK': ['plate', '1005', 'table', '355']}, {'WALK': ['cup', '1007']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['cup', '1008']}, {'PUTBACK': ['cup', '1008', 'table', '355']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)', '[PUTBACK] <plate> (1005) <table> (355)', '[WALK] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1008)', '[PUTBACK] <cup> (1008) <table> (355)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1004) <table> (355)'
+Current action [PUTBACK] <plate> (1004) <table> (355) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[GRAB] <plate> (1005)'
+Current action [GRAB] <plate> (1005) executable.
+Current action='[WALK] <plate> (1005)'
+Current action [WALK] <plate> (1005) executable.
+Current action='[PUTBACK] <plate> (1005) <table> (355)'
+Current action [PUTBACK] <plate> (1005) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffbb956d0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <plate> (1005) <table> (355) has wrong order error on task 9024_1.
+failed_error_code=0
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <plate> (1005)', '[GRAB] <plate> (1005)', '[WALK] <plate> (1005)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1005, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1007, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1008, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=2, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=5, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9025_1
+actions=[{'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['spoon', '1013']}, {'GRAB': ['spoon', '1013']}, {'WALK': ['spoon', '1014']}, {'GRAB': ['spoon', '1014']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'WALK': ['table', '355']}, {'WALK': ['spoon', '1013']}, {'WALK': ['table', '355']}, {'PUTBACK': ['spoon', '1013', 'table', '355']}, {'WALK': ['spoon', '1014']}, {'WALK': ['table', '355']}, {'PUTBACK': ['spoon', '1014', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'PUTBACK': ['plate', '1003', 'table', '355']}]
+actions=['[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <spoon> (1014)', '[GRAB] <spoon> (1014)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <table> (355)', '[WALK] <spoon> (1013)', '[WALK] <table> (355)', '[PUTBACK] <spoon> (1013) <table> (355)', '[WALK] <spoon> (1014)', '[WALK] <table> (355)', '[PUTBACK] <spoon> (1014) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[PUTBACK] <plate> (1003) <table> (355)']
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[GRAB] <spoon> (1013)'
+Current action [GRAB] <spoon> (1013) executable.
+Current action='[WALK] <spoon> (1014)'
+Current action [WALK] <spoon> (1014) executable.
+Current action='[GRAB] <spoon> (1014)'
+Current action [GRAB] <spoon> (1014) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[CLOSE] <freezer> (289)'
+Current action [CLOSE] <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <spoon> (1013) <table> (355)'
+Current action [PUTBACK] <spoon> (1013) <table> (355) executable.
+Current action='[WALK] <spoon> (1014)'
+Current action [WALK] <spoon> (1014) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <spoon> (1014) <table> (355)'
+Current action [PUTBACK] <spoon> (1014) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe3f051f0>
+Encounter error: ADDITIONAL_STEP
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc1039d0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <plate> (1003) <table> (355) has wrong order error on task 9025_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <spoon> (1014)', '[GRAB] <spoon> (1014)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <table> (355)', '[WALK] <spoon> (1013)', '[WALK] <table> (355)', '[PUTBACK] <spoon> (1013) <table> (355)', '[WALK] <spoon> (1014)', '[WALK] <table> (355)', '[PUTBACK] <spoon> (1014) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <plate> (1003)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1003, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=2, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9026_1
+actions=[{'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['cupboard', '229']}, {'WALK': ['table', '355']}, {'WALK': ['cup', '2006']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '2006', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['plate', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1003', 'table', '355']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['plate', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1004', 'table', '355']}]
+actions=['[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <cupboard> (229)', '[WALK] <table> (355)', '[WALK] <cup> (2006)', '[WALK] <table> (355)', '[PUTBACK] <cup> (2006) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)']
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[WALK] <cup> (2006)'
+Current action [WALK] <cup> (2006) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (2006) <table> (355)'
+Current action [PUTBACK] <cup> (2006) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1004) <table> (355)'
+Current action [PUTBACK] <plate> (1004) <table> (355) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9027_1
+actions=[{'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1003', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1004', 'table', '355']}, {'WALK': ['nightstand', '102']}, {'OPEN': ['nightstand', '102']}, {'WALK': ['fork', '1001']}, {'GRAB': ['fork', '1001']}, {'WALK': ['table', '355']}, {'PUTBACK': ['fork', '1001', 'table', '355']}, {'WALK': ['knife', '1011']}, {'GRAB': ['knife', '1011']}, {'WALK': ['table', '355']}, {'PUTBACK': ['knife', '1011', 'table', '355']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['spoon', '1013']}, {'GRAB': ['spoon', '1013']}, {'WALK': ['spoon', '1013']}, {'GRAB': ['spoon', '1013']}, {'PUTBACK': ['spoon', '1013', 'table', '355']}, {'WALK': ['cup', '1007']}, {'GRAB': ['cup', '1007']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}, {'WALK': ['nightstand', '102']}, {'CLOSE': ['nightstand', '102']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <cupboard> (229)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <fork> (1001)', '[GRAB] <fork> (1001)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1001) <table> (355)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1011) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[PUTBACK] <spoon> (1013) <table> (355)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)', '[WALK] <nightstand> (102)', '[CLOSE] <nightstand> (102)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1004) <table> (355)'
+Current action [PUTBACK] <plate> (1004) <table> (355) executable.
+Current action='[WALK] <nightstand> (102)'
+Current action [WALK] <nightstand> (102) executable.
+Current action='[OPEN] <nightstand> (102)'
+Current action [OPEN] <nightstand> (102) executable.
+Current action='[WALK] <fork> (1001)'
+Current action [WALK] <fork> (1001) executable.
+Current action='[GRAB] <fork> (1001)'
+Current action [GRAB] <fork> (1001) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <fork> (1001) <table> (355)'
+Current action [PUTBACK] <fork> (1001) <table> (355) executable.
+Current action='[WALK] <knife> (1011)'
+Current action [WALK] <knife> (1011) executable.
+Current action='[GRAB] <knife> (1011)'
+Current action [GRAB] <knife> (1011) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <knife> (1011) <table> (355)'
+Current action [PUTBACK] <knife> (1011) <table> (355) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[GRAB] <spoon> (1013)'
+Current action [GRAB] <spoon> (1013) executable.
+Current action='[WALK] <spoon> (1013)'
+Current action [WALK] <spoon> (1013) executable.
+Current action='[GRAB] <spoon> (1013)'
+Current action [GRAB] <spoon> (1013) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe70a47f0>
+Encounter error: ADDITIONAL_STEP
+Current action='[PUTBACK] <spoon> (1013) <table> (355)'
+Current action [PUTBACK] <spoon> (1013) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe26a1d30>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <spoon> (1013) <table> (355) has wrong order error on task 9027_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <cupboard> (229)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <nightstand> (102)', '[OPEN] <nightstand> (102)', '[WALK] <fork> (1001)', '[GRAB] <fork> (1001)', '[WALK] <table> (355)', '[PUTBACK] <fork> (1001) <table> (355)', '[WALK] <knife> (1011)', '[GRAB] <knife> (1011)', '[WALK] <table> (355)', '[PUTBACK] <knife> (1011) <table> (355)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <spoon> (1013)', '[GRAB] <spoon> (1013)', '[WALK] <spoon> (1013)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 102, 'class_name': 'nightstand', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 1007, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 1013, 'relation_type': 'ON', 'to_id': 355}
+Predicted: node_match_num=0, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=6, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9028_1
+actions=[{'WALK': ['oven', '295']}, {'SWITCHON': ['oven', '295']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['plate', '1003']}, {'GRAB': ['plate', '1003']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1003', 'table', '355']}, {'WALK': ['bowl', '2007']}, {'GRAB': ['bowl', '2007']}, {'WALK': ['table', '355']}, {'PUTBACK': ['bowl', '2007', 'table', '355']}, {'WALK': ['plate', '1004']}, {'GRAB': ['plate', '1004']}, {'WALK': ['table', '355']}, {'PUTBACK': ['plate', '1004', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[WALK] <oven> (295)', '[SWITCHON] <oven> (295)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <plate> (1003)', '[GRAB] <plate> (1003)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[WALK] <bowl> (2007)', '[GRAB] <bowl> (2007)', '[WALK] <table> (355)', '[PUTBACK] <bowl> (2007) <table> (355)', '[WALK] <plate> (1004)', '[GRAB] <plate> (1004)', '[WALK] <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[SWITCHON] <oven> (295)'
+Current action [SWITCHON] <oven> (295) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <plate> (1003)'
+Current action [WALK] <plate> (1003) executable.
+Current action='[GRAB] <plate> (1003)'
+Current action [GRAB] <plate> (1003) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1003) <table> (355)'
+Current action [PUTBACK] <plate> (1003) <table> (355) executable.
+Current action='[WALK] <bowl> (2007)'
+Current action [WALK] <bowl> (2007) executable.
+Current action='[GRAB] <bowl> (2007)'
+Current action [GRAB] <bowl> (2007) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <bowl> (2007) <table> (355)'
+Current action [PUTBACK] <bowl> (2007) <table> (355) executable.
+Current action='[WALK] <plate> (1004)'
+Current action [WALK] <plate> (1004) executable.
+Current action='[GRAB] <plate> (1004)'
+Current action [GRAB] <plate> (1004) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <plate> (1004) <table> (355)'
+Current action [PUTBACK] <plate> (1004) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Executable!
+Predicted: node_match_num=2, edge_match_num=3, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard scatter restore, file_id is 9029_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['oven', '295']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['oven', '295']}, {'OPEN': ['oven', '295']}, {'WALK': ['cup', '1007']}, {'GRAB': ['cup', '1007']}, {'WALK': ['dining_room', '201']}, {'WALK': ['cup', '1007']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1007', 'table', '355']}, {'WALK': ['cup', '1008']}, {'GRAB': ['cup', '1008']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1008', 'table', '355']}, {'WALK': ['cup', '1009']}, {'GRAB': ['cup', '1009']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1009', 'table', '355']}, {'WALK': ['cup', '1010']}, {'GRAB': ['cup', '1010']}, {'WALK': ['table', '355']}, {'PUTBACK': ['cup', '1010', 'table', '355']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <oven> (295)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <oven> (295)', '[OPEN] <oven> (295)', '[WALK] <cup> (1007)', '[GRAB] <cup> (1007)', '[WALK] <dining_room> (201)', '[WALK] <cup> (1007)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1007) <table> (355)', '[WALK] <cup> (1008)', '[GRAB] <cup> (1008)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1008) <table> (355)', '[WALK] <cup> (1009)', '[GRAB] <cup> (1009)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1009) <table> (355)', '[WALK] <cup> (1010)', '[GRAB] <cup> (1010)', '[WALK] <table> (355)', '[PUTBACK] <cup> (1010) <table> (355)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Current action='[WALK] <oven> (295)'
+Current action [WALK] <oven> (295) executable.
+Current action='[OPEN] <oven> (295)'
+Current action [OPEN] <oven> (295) executable.
+Current action='[WALK] <cup> (1007)'
+Current action [WALK] <cup> (1007) executable.
+Current action='[GRAB] <cup> (1007)'
+Current action [GRAB] <cup> (1007) executable.
+Current action='[WALK] <dining_room> (201)'
+Current action [WALK] <dining_room> (201) executable.
+Current action='[WALK] <cup> (1007)'
+Current action [WALK] <cup> (1007) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1007) <table> (355)'
+Current action [PUTBACK] <cup> (1007) <table> (355) executable.
+Current action='[WALK] <cup> (1008)'
+Current action [WALK] <cup> (1008) executable.
+Current action='[GRAB] <cup> (1008)'
+Current action [GRAB] <cup> (1008) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1008) <table> (355)'
+Current action [PUTBACK] <cup> (1008) <table> (355) executable.
+Current action='[WALK] <cup> (1009)'
+Current action [WALK] <cup> (1009) executable.
+Current action='[GRAB] <cup> (1009)'
+Current action [GRAB] <cup> (1009) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1009) <table> (355)'
+Current action [PUTBACK] <cup> (1009) <table> (355) executable.
+Current action='[WALK] <cup> (1010)'
+Current action [WALK] <cup> (1010) executable.
+Current action='[GRAB] <cup> (1010)'
+Current action [GRAB] <cup> (1010) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <cup> (1010) <table> (355)'
+Current action [PUTBACK] <cup> (1010) <table> (355) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 295, 'class_name': 'oven', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=4, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=4, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard scatter restore, file_id is 9030_1
+Task Hard scatter restore
+, file 9030_1 has hallucination error
+Task is Hard precision toggles, file_id is 9031_1
+Task Hard precision toggles
+, file 9031_1 has hallucination error
+Task is Hard precision toggles, file_id is 9032_1
+actions=[{'WALK': ['light', '1000']}, {'SWITCHON': ['light', '1000']}, {'WALK': ['light', '1001']}, {'SWITCHON': ['light', '1001']}, {'WALK': ['light', '169']}, {'SWITCHOFF': ['light', '169']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}]
+actions=['[WALK] <light> (1000)', '[SWITCHON] <light> (1000)', '[WALK] <light> (1001)', '[SWITCHON] <light> (1001)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)']
+Task is Hard precision toggles, file_id is 9033_1
+actions=[{'WALK': ['electric_shaver', '2002']}, {'PLUGIN': ['electric_shaver', '2002']}, {'SWITCHON': ['electric_shaver', '2002']}, {'SWITCHOFF': ['light', '411']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}]
+actions=['[WALK] <electric_shaver> (2002)', '[PLUGIN] <electric_shaver> (2002)', '[SWITCHON] <electric_shaver> (2002)', '[SWITCHOFF] <light> (411)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)']
+Current action='[WALK] <electric_shaver> (2002)'
+Current action [WALK] <electric_shaver> (2002) executable.
+Current action='[PLUGIN] <electric_shaver> (2002)'
+Current action [PLUGIN] <electric_shaver> (2002) executable.
+Current action='[SWITCHON] <electric_shaver> (2002)'
+Current action [SWITCHON] <electric_shaver> (2002) executable.
+Current action='[SWITCHOFF] <light> (411)'
+Current action [SWITCHOFF] <light> (411) executable.
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Executable!
+Predicted: node_match_num=4, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard precision toggles, file_id is 9034_1
+actions=[{'WALK': ['wall_clock', '2019']}, {'SWITCHOFF': ['wall_clock', '2019']}, {'WALK': ['light', '64']}, {'SWITCHOFF': ['light', '64']}, {'WALK': ['light', '169']}, {'SWITCHOFF': ['light', '169']}, {'WALK': ['light', '411']}, {'SWITCHOFF': ['light', '411']}, {'WALK': ['light', '1000']}, {'SWITCHON': ['light', '1000']}]
+actions=['[WALK] <wall_clock> (2019)', '[SWITCHOFF] <wall_clock> (2019)', '[WALK] <light> (64)', '[SWITCHOFF] <light> (64)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)', '[WALK] <light> (411)', '[SWITCHOFF] <light> (411)', '[WALK] <light> (1000)', '[SWITCHON] <light> (1000)']
+Task is Hard precision toggles, file_id is 9035_1
+actions=[{'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['light', '1001']}, {'SWITCHON': ['light', '1001']}, {'WALK': ['wall_clock', '2019']}, {'SWITCHOFF': ['wall_clock', '2019']}]
+actions=['[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <light> (1001)', '[SWITCHON] <light> (1001)', '[WALK] <wall_clock> (2019)', '[SWITCHOFF] <wall_clock> (2019)']
+Task is Hard precision toggles, file_id is 9036_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['light', '1000']}, {'SWITCHON': ['light', '1000']}, {'WALK': ['light', '411']}, {'SWITCHOFF': ['light', '411']}, {'WALK': ['light', '64']}, {'SWITCHOFF': ['light', '64']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <light> (1000)', '[SWITCHON] <light> (1000)', '[WALK] <light> (411)', '[SWITCHOFF] <light> (411)', '[WALK] <light> (64)', '[SWITCHOFF] <light> (64)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Current action='[WALK] <light> (1000)'
+Current action [WALK] <light> (1000) executable.
+Current action='[SWITCHON] <light> (1000)'
+Current action [SWITCHON] <light> (1000) executable.
+Current action='[WALK] <light> (411)'
+Current action [WALK] <light> (411) executable.
+Current action='[SWITCHOFF] <light> (411)'
+Current action [SWITCHOFF] <light> (411) executable.
+Current action='[WALK] <light> (64)'
+Current action [WALK] <light> (64) executable.
+Current action='[SWITCHOFF] <light> (64)'
+Current action [SWITCHOFF] <light> (64) executable.
+Executable!
+Predicted: node_match_num=4, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard precision toggles, file_id is 9037_1
+actions=[{'WALK': ['electric_shaver', '2002']}, {'PLUGIN': ['electric_shaver', '2002']}, {'SWITCHON': ['electric_shaver', '2002']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['light', '411']}, {'SWITCHOFF': ['light', '411']}, {'WALK': ['light', '169']}, {'SWITCHOFF': ['light', '169']}]
+actions=['[WALK] <electric_shaver> (2002)', '[PLUGIN] <electric_shaver> (2002)', '[SWITCHON] <electric_shaver> (2002)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <light> (411)', '[SWITCHOFF] <light> (411)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)']
+Current action='[WALK] <electric_shaver> (2002)'
+Current action [WALK] <electric_shaver> (2002) executable.
+Current action='[PLUGIN] <electric_shaver> (2002)'
+Current action [PLUGIN] <electric_shaver> (2002) executable.
+Current action='[SWITCHON] <electric_shaver> (2002)'
+Current action [SWITCHON] <electric_shaver> (2002) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <light> (411)'
+Current action [WALK] <light> (411) executable.
+Current action='[SWITCHOFF] <light> (411)'
+Current action [SWITCHOFF] <light> (411) executable.
+Current action='[WALK] <light> (169)'
+Current action [WALK] <light> (169) executable.
+Current action='[SWITCHOFF] <light> (169)'
+Current action [SWITCHOFF] <light> (169) executable.
+Executable!
+Predicted: node_match_num=5, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=5, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard precision toggles, file_id is 9038_1
+actions=[{'WALK': ['light', '64']}, {'SWITCHOFF': ['light', '64']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['light', '1000']}, {'SWITCHON': ['light', '1000']}, {'WALK': ['light', '1001']}, {'SWITCHON': ['light', '1001']}, {'WALK': ['light', '169']}, {'SWITCHOFF': ['light', '169']}, {'SWITCHOFF': ['light', '411']}]
+actions=['[WALK] <light> (64)', '[SWITCHOFF] <light> (64)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <light> (1000)', '[SWITCHON] <light> (1000)', '[WALK] <light> (1001)', '[SWITCHON] <light> (1001)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)', '[SWITCHOFF] <light> (411)']
+Current action='[WALK] <light> (64)'
+Current action [WALK] <light> (64) executable.
+Current action='[SWITCHOFF] <light> (64)'
+Current action [SWITCHOFF] <light> (64) executable.
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Current action='[WALK] <light> (1000)'
+Current action [WALK] <light> (1000) executable.
+Current action='[SWITCHON] <light> (1000)'
+Current action [SWITCHON] <light> (1000) executable.
+Current action='[WALK] <light> (1001)'
+Current action [WALK] <light> (1001) executable.
+Current action='[SWITCHON] <light> (1001)'
+Current action [SWITCHON] <light> (1001) executable.
+Current action='[WALK] <light> (169)'
+Current action [WALK] <light> (169) executable.
+Current action='[SWITCHOFF] <light> (169)'
+Current action [SWITCHOFF] <light> (169) executable.
+Current action='[SWITCHOFF] <light> (411)'
+Current action [SWITCHOFF] <light> (411) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe26a1790>
+Encounter error: MISSING_STEP
+failed_error_code=1
+history_actions_cp=['[WALK] <light> (64)', '[SWITCHOFF] <light> (64)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <light> (1000)', '[SWITCHON] <light> (1000)', '[WALK] <light> (1001)', '[SWITCHON] <light> (1001)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)']
+GOAL FAIL! Not matched: {'id': 411, 'class_name': 'light', 'state': 'OFF'}
+Predicted: node_match_num=5, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=6, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard precision toggles, file_id is 9039_1
+actions=[{'STANDUP': []}, {'WALK': ['light', '1000']}, {'SWITCHON': ['light', '1000']}, {'WALK': ['light', '1001']}, {'SWITCHON': ['light', '1001']}, {'WALK': ['light', '169']}, {'SWITCHOFF': ['light', '169']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['electric_shaver', '2002']}, {'PLUGIN': ['electric_shaver', '2002']}, {'SWITCHON': ['electric_shaver', '2002']}]
+actions=['[STANDUP]', '[WALK] <light> (1000)', '[SWITCHON] <light> (1000)', '[WALK] <light> (1001)', '[SWITCHON] <light> (1001)', '[WALK] <light> (169)', '[SWITCHOFF] <light> (169)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <electric_shaver> (2002)', '[PLUGIN] <electric_shaver> (2002)', '[SWITCHON] <electric_shaver> (2002)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <light> (1000)'
+Current action [WALK] <light> (1000) executable.
+Current action='[SWITCHON] <light> (1000)'
+Current action [SWITCHON] <light> (1000) executable.
+Current action='[WALK] <light> (1001)'
+Current action [WALK] <light> (1001) executable.
+Current action='[SWITCHON] <light> (1001)'
+Current action [SWITCHON] <light> (1001) executable.
+Current action='[WALK] <light> (169)'
+Current action [WALK] <light> (169) executable.
+Current action='[SWITCHOFF] <light> (169)'
+Current action [SWITCHOFF] <light> (169) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <electric_shaver> (2002)'
+Current action [WALK] <electric_shaver> (2002) executable.
+Current action='[PLUGIN] <electric_shaver> (2002)'
+Current action [PLUGIN] <electric_shaver> (2002) executable.
+Current action='[SWITCHON] <electric_shaver> (2002)'
+Current action [SWITCHON] <electric_shaver> (2002) executable.
+Executable!
+Predicted: node_match_num=5, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=5, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard precision toggles, file_id is 9040_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['electric_shaver', '2002']}, {'PLUGIN': ['electric_shaver', '2002']}, {'SWITCHON': ['electric_shaver', '2002']}, {'WALK': ['light', '245']}, {'SWITCHON': ['light', '245']}, {'WALK': ['light', '411']}, {'SWITCHOFF': ['light', '411']}, {'WALK': ['television', '410']}, {'SWITCHON': ['television', '410']}, {'WALK': ['wall_clock', '2019']}, {'SWITCHOFF': ['wall_clock', '2019']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <electric_shaver> (2002)', '[PLUGIN] <electric_shaver> (2002)', '[SWITCHON] <electric_shaver> (2002)', '[WALK] <light> (245)', '[SWITCHON] <light> (245)', '[WALK] <light> (411)', '[SWITCHOFF] <light> (411)', '[WALK] <television> (410)', '[SWITCHON] <television> (410)', '[WALK] <wall_clock> (2019)', '[SWITCHOFF] <wall_clock> (2019)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <electric_shaver> (2002)'
+Current action [WALK] <electric_shaver> (2002) executable.
+Current action='[PLUGIN] <electric_shaver> (2002)'
+Current action [PLUGIN] <electric_shaver> (2002) executable.
+Current action='[SWITCHON] <electric_shaver> (2002)'
+Current action [SWITCHON] <electric_shaver> (2002) executable.
+Current action='[WALK] <light> (245)'
+Current action [WALK] <light> (245) executable.
+Current action='[SWITCHON] <light> (245)'
+Current action [SWITCHON] <light> (245) executable.
+Current action='[WALK] <light> (411)'
+Current action [WALK] <light> (411) executable.
+Current action='[SWITCHOFF] <light> (411)'
+Current action [SWITCHOFF] <light> (411) executable.
+Current action='[WALK] <television> (410)'
+Current action [WALK] <television> (410) executable.
+Current action='[SWITCHON] <television> (410)'
+Current action [SWITCHON] <television> (410) executable.
+Current action='[WALK] <wall_clock> (2019)'
+Current action [WALK] <wall_clock> (2019) executable.
+Current action='[SWITCHOFF] <wall_clock> (2019)'
+Current action [SWITCHOFF] <wall_clock> (2019) executable.
+Executable!
+Predicted: node_match_num=6, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=6, len(gold_edge_goals)=0, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard rough morning, file_id is 9041_1
+actions=[{'STANDUP': []}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['water_glass', '1000']}, {'GRAB': ['water_glass', '1000']}, {'WALK': ['couch', '352']}, {'WALK': ['box', '2014']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'WALK': ['freezer', '289']}, {'WALK': ['dining_room', '201']}, {'WALK': ['water_glass', '1000']}, {'WALK': ['table', '355']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'WALK': ['bedroom', '67']}, {'WALK': ['food_food', '2009']}, {'WALK': ['freezer', '289']}, {'WALK': ['food_food', '2013']}, {'WALK': ['freezer', '289']}, {'PUTIN': ['food_food', '2013', 'freezer', '289']}]
+actions=['[STANDUP]', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <water_glass> (1000)', '[GRAB] <water_glass> (1000)', '[WALK] <couch> (352)', '[WALK] <box> (2014)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <dining_room> (201)', '[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <bedroom> (67)', '[WALK] <food_food> (2009)', '[WALK] <freezer> (289)', '[WALK] <food_food> (2013)', '[WALK] <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[GRAB] <water_glass> (1000)'
+Current action [GRAB] <water_glass> (1000) executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <dining_room> (201)'
+Current action [WALK] <dining_room> (201) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[PUTIN] <food_food> (2013) <freezer> (289)'
+Current action [PUTIN] <food_food> (2013) <freezer> (289) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc105e50>
+Encounter error: MISSING_STEP
+failed_error_code=1
+history_actions_cp=['[STANDUP]', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <water_glass> (1000)', '[GRAB] <water_glass> (1000)', '[WALK] <couch> (352)', '[WALK] <box> (2014)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <dining_room> (201)', '[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <bedroom> (67)', '[WALK] <food_food> (2009)', '[WALK] <freezer> (289)', '[WALK] <food_food> (2013)', '[WALK] <freezer> (289)']
+GOAL FAIL! Not found: {'from_id': 2009, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2013, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=3, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9042_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['water_glass', '1000']}, {'WALK': ['bathroom', '1']}, {'WALK': ['water_glass', '1000']}, {'GRAB': ['water_glass', '1000']}, {'WALK': ['table', '355']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['food_donut', '2007']}, {'GRAB': ['food_donut', '2007']}, {'WALK': ['table', '355']}, {'PUTBACK': ['food_donut', '2007', 'table', '355']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <water_glass> (1000)', '[WALK] <bathroom> (1)', '[WALK] <water_glass> (1000)', '[GRAB] <water_glass> (1000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <food_donut> (2007)', '[GRAB] <food_donut> (2007)', '[WALK] <table> (355)', '[PUTBACK] <food_donut> (2007) <table> (355)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[WALK] <bathroom> (1)'
+Current action [WALK] <bathroom> (1) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[GRAB] <water_glass> (1000)'
+Current action [GRAB] <water_glass> (1000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <food_donut> (2007)'
+Current action [WALK] <food_donut> (2007) executable.
+Current action='[GRAB] <food_donut> (2007)'
+Current action [GRAB] <food_donut> (2007) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <food_donut> (2007) <table> (355)'
+Current action [PUTBACK] <food_donut> (2007) <table> (355) executable.
+Current action='[WALK] <console> (2010)'
+Current action [WALK] <console> (2010) executable.
+Current action='[SWITCHON] <console> (2010)'
+Current action [SWITCHON] <console> (2010) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+Predicted: node_match_num=1, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=2, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9043_1
+actions=[{'WALK': ['cupboard', '229']}, {'WALK': ['freezer', '289']}, {'WALK': ['phone', '2015']}, {'SWITCHOFF': ['phone', '2015']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['food_food', '2009']}, {'GRAB': ['food_food', '2009']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'WALK': ['cupboard', '229']}, {'WALK': ['food_food', '2009']}, {'WALK': ['freezer', '289']}, {'PUTIN': ['food_food', '2009', 'freezer', '289']}, {'WALK': ['food_food', '2013']}, {'GRAB': ['food_food', '2013']}, {'WALK': ['food_food', '2013']}, {'WALK': ['freezer', '289']}, {'PUTIN': ['food_food', '2013', 'freezer', '289']}, {'WALK': ['food_food', '2016']}, {'GRAB': ['food_food', '2016']}, {'WALK': ['food_food', '2016']}, {'PUTIN': ['food_food', '2016', 'freezer', '289']}]
+actions=['[WALK] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <food_food> (2009)', '[GRAB] <food_food> (2009)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <food_food> (2009)', '[WALK] <freezer> (289)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[WALK] <food_food> (2013)', '[GRAB] <food_food> (2013)', '[WALK] <food_food> (2013)', '[WALK] <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[WALK] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)']
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <phone> (2015)'
+Current action [WALK] <phone> (2015) executable.
+Current action='[SWITCHOFF] <phone> (2015)'
+Current action [SWITCHOFF] <phone> (2015) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[GRAB] <food_food> (2009)'
+Current action [GRAB] <food_food> (2009) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[PUTIN] <food_food> (2009) <freezer> (289)'
+Current action [PUTIN] <food_food> (2009) <freezer> (289) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Current action='[GRAB] <food_food> (2013)'
+Current action [GRAB] <food_food> (2013) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[PUTIN] <food_food> (2013) <freezer> (289)'
+Current action [PUTIN] <food_food> (2013) <freezer> (289) executable.
+Current action='[WALK] <food_food> (2016)'
+Current action [WALK] <food_food> (2016) executable.
+Current action='[GRAB] <food_food> (2016)'
+Current action [GRAB] <food_food> (2016) executable.
+Current action='[WALK] <food_food> (2016)'
+Current action [WALK] <food_food> (2016) executable.
+Current action='[PUTIN] <food_food> (2016) <freezer> (289)'
+Current action [PUTIN] <food_food> (2016) <freezer> (289) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe6c5d4c0>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <food_food> (2016) <freezer> (289) has wrong order error on task 9043_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <cupboard> (229)', '[WALK] <freezer> (289)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <food_food> (2009)', '[GRAB] <food_food> (2009)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[WALK] <cupboard> (229)', '[WALK] <food_food> (2009)', '[WALK] <freezer> (289)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[WALK] <food_food> (2013)', '[GRAB] <food_food> (2013)', '[WALK] <food_food> (2013)', '[WALK] <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[WALK] <food_food> (2016)']
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 2016, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=1, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9044_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['box', '2014']}, {'OPEN': ['box', '2014']}, {'WALK': ['food_food', '2016']}, {'GRAB': ['food_food', '2016']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'PUTIN': ['food_food', '2016', 'freezer', '289']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['food_donut', '2007']}, {'GRAB': ['food_donut', '2007']}, {'PUTIN': ['food_donut', '2007', 'freezer', '289']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}, {'WALK': ['box', '2014']}, {'CLOSE': ['box', '2014']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}, {'CLOSE': ['freezer', '289']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <box> (2014)', '[OPEN] <box> (2014)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <food_donut> (2007)', '[GRAB] <food_donut> (2007)', '[PUTIN] <food_donut> (2007) <freezer> (289)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)', '[WALK] <box> (2014)', '[CLOSE] <box> (2014)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[OPEN] <box> (2014)'
+Current action [OPEN] <box> (2014) executable.
+Current action='[WALK] <food_food> (2016)'
+Current action [WALK] <food_food> (2016) executable.
+Current action='[GRAB] <food_food> (2016)'
+Current action [GRAB] <food_food> (2016) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[PUTIN] <food_food> (2016) <freezer> (289)'
+Current action [PUTIN] <food_food> (2016) <freezer> (289) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <food_donut> (2007)'
+Current action [WALK] <food_donut> (2007) executable.
+Current action='[GRAB] <food_donut> (2007)'
+Current action [GRAB] <food_donut> (2007) executable.
+Current action='[PUTIN] <food_donut> (2007) <freezer> (289)'
+Current action [PUTIN] <food_donut> (2007) <freezer> (289) executable.
+Current action='[WALK] <console> (2010)'
+Current action [WALK] <console> (2010) executable.
+Current action='[SWITCHON] <console> (2010)'
+Current action [SWITCHON] <console> (2010) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[CLOSE] <box> (2014)'
+Current action [CLOSE] <box> (2014) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Current action='[CLOSE] <freezer> (289)'
+Current action [CLOSE] <freezer> (289) executable.
+Executable!
+Predicted: node_match_num=4, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=2, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard rough morning, file_id is 9045_1
+actions=[{'WALK': ['box', '2014']}, {'WALK': ['freezer', '289']}, {'WALK': ['phone', '2015']}, {'SWITCHOFF': ['phone', '2015']}, {'WALK': ['water_glass', '1000']}, {'WALK': ['table', '355']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'WALK': ['food_food', '2009']}, {'WALK': ['food_food', '2013']}]
+actions=['[WALK] <box> (2014)', '[WALK] <freezer> (289)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <food_food> (2009)', '[WALK] <food_food> (2013)']
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <phone> (2015)'
+Current action [WALK] <phone> (2015) executable.
+Current action='[SWITCHOFF] <phone> (2015)'
+Current action [SWITCHOFF] <phone> (2015) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Executable!
+GOAL FAIL! Not found: {'from_id': 2009, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2013, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=3, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=3, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9046_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['cupboard', '229']}, {'WALK': ['box', '2014']}, {'WALK': ['freezer', '289']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}, {'WALK': ['phone', '2015']}, {'SWITCHOFF': ['phone', '2015']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['water_glass', '1000']}, {'GRAB': ['water_glass', '1000']}, {'WALK': ['water_glass', '1000']}, {'WALK': ['table', '355']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'WALK': ['food_food', '2009']}, {'WALK': ['bedroom', '67']}, {'WALK': ['box', '2014']}, {'WALK': ['food_food', '2013']}, {'WALK': ['bedroom', '67']}, {'WALK': ['box', '2014']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <cupboard> (229)', '[WALK] <box> (2014)', '[WALK] <freezer> (289)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <water_glass> (1000)', '[GRAB] <water_glass> (1000)', '[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <food_food> (2009)', '[WALK] <bedroom> (67)', '[WALK] <box> (2014)', '[WALK] <food_food> (2013)', '[WALK] <bedroom> (67)', '[WALK] <box> (2014)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[WALK] <console> (2010)'
+Current action [WALK] <console> (2010) executable.
+Current action='[SWITCHON] <console> (2010)'
+Current action [SWITCHON] <console> (2010) executable.
+Current action='[WALK] <phone> (2015)'
+Current action [WALK] <phone> (2015) executable.
+Current action='[SWITCHOFF] <phone> (2015)'
+Current action [SWITCHOFF] <phone> (2015) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[GRAB] <water_glass> (1000)'
+Current action [GRAB] <water_glass> (1000) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Current action='[WALK] <bedroom> (67)'
+Current action [WALK] <bedroom> (67) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Executable!
+GOAL FAIL! Not matched: {'id': 229, 'class_name': 'cupboard', 'state': 'CLOSED'}
+GOAL FAIL! Not found: {'from_id': 2009, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2013, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=4, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=5, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9047_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}, {'WALK': ['cupboard', '229']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['food_donut', '2007']}, {'GRAB': ['food_donut', '2007']}, {'WALK': ['table', '355']}, {'PUTBACK': ['food_donut', '2007', 'table', '355']}, {'WALK': ['food_food', '2016']}, {'GRAB': ['food_food', '2016']}, {'WALK': ['table', '355']}, {'PUTBACK': ['food_food', '2016', 'table', '355']}, {'WALK': ['cupboard', '229']}, {'CLOSE': ['cupboard', '229']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)', '[WALK] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[WALK] <food_donut> (2007)', '[GRAB] <food_donut> (2007)', '[WALK] <table> (355)', '[PUTBACK] <food_donut> (2007) <table> (355)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[WALK] <table> (355)', '[PUTBACK] <food_food> (2016) <table> (355)', '[WALK] <cupboard> (229)', '[CLOSE] <cupboard> (229)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <console> (2010)'
+Current action [WALK] <console> (2010) executable.
+Current action='[SWITCHON] <console> (2010)'
+Current action [SWITCHON] <console> (2010) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[OPEN] <cupboard> (229)'
+Current action [OPEN] <cupboard> (229) executable.
+Current action='[WALK] <food_donut> (2007)'
+Current action [WALK] <food_donut> (2007) executable.
+Current action='[GRAB] <food_donut> (2007)'
+Current action [GRAB] <food_donut> (2007) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <food_donut> (2007) <table> (355)'
+Current action [PUTBACK] <food_donut> (2007) <table> (355) executable.
+Current action='[WALK] <food_food> (2016)'
+Current action [WALK] <food_food> (2016) executable.
+Current action='[GRAB] <food_food> (2016)'
+Current action [GRAB] <food_food> (2016) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <food_food> (2016) <table> (355)'
+Current action [PUTBACK] <food_food> (2016) <table> (355) executable.
+Current action='[WALK] <cupboard> (229)'
+Current action [WALK] <cupboard> (229) executable.
+Current action='[CLOSE] <cupboard> (229)'
+Current action [CLOSE] <cupboard> (229) executable.
+Executable!
+Predicted: node_match_num=2, edge_match_num=2, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=2, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=True
+EVERYTHING SUCCEED!
+Task is Hard rough morning, file_id is 9048_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['box', '2014']}, {'OPEN': ['box', '2014']}, {'WALK': ['food_food', '2009']}, {'GRAB': ['food_food', '2009']}, {'WALK': ['freezer', '289']}, {'OPEN': ['freezer', '289']}, {'PUTIN': ['food_food', '2009', 'freezer', '289']}, {'WALK': ['food_food', '2013']}, {'GRAB': ['food_food', '2013']}, {'PUTIN': ['food_food', '2013', 'freezer', '289']}, {'WALK': ['food_food', '2016']}, {'GRAB': ['food_food', '2016']}, {'PUTIN': ['food_food', '2016', 'freezer', '289']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}, {'WALK': ['phone', '2015']}, {'SWITCHOFF': ['phone', '2015']}, {'WALK': ['box', '2014']}, {'CLOSE': ['box', '2014']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <box> (2014)', '[OPEN] <box> (2014)', '[WALK] <food_food> (2009)', '[GRAB] <food_food> (2009)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[WALK] <food_food> (2013)', '[GRAB] <food_food> (2013)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <box> (2014)', '[CLOSE] <box> (2014)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <box> (2014)'
+Current action [WALK] <box> (2014) executable.
+Current action='[OPEN] <box> (2014)'
+Current action [OPEN] <box> (2014) executable.
+Current action='[WALK] <food_food> (2009)'
+Current action [WALK] <food_food> (2009) executable.
+Current action='[GRAB] <food_food> (2009)'
+Current action [GRAB] <food_food> (2009) executable.
+Current action='[WALK] <freezer> (289)'
+Current action [WALK] <freezer> (289) executable.
+Current action='[OPEN] <freezer> (289)'
+Current action [OPEN] <freezer> (289) executable.
+Current action='[PUTIN] <food_food> (2009) <freezer> (289)'
+Current action [PUTIN] <food_food> (2009) <freezer> (289) executable.
+Current action='[WALK] <food_food> (2013)'
+Current action [WALK] <food_food> (2013) executable.
+Current action='[GRAB] <food_food> (2013)'
+Current action [GRAB] <food_food> (2013) executable.
+Current action='[PUTIN] <food_food> (2013) <freezer> (289)'
+Current action [PUTIN] <food_food> (2013) <freezer> (289) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7ffffc11ad30>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTIN] <food_food> (2013) <freezer> (289) has wrong order error on task 9048_1.
+failed_error_code=0
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <box> (2014)', '[OPEN] <box> (2014)', '[WALK] <food_food> (2009)', '[GRAB] <food_food> (2009)', '[WALK] <freezer> (289)', '[OPEN] <freezer> (289)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[WALK] <food_food> (2013)', '[GRAB] <food_food> (2013)']
+GOAL FAIL! Not matched: {'id': 2014, 'class_name': 'box', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 289, 'class_name': 'freezer', 'state': 'CLOSED'}
+GOAL FAIL! Not matched: {'id': 2010, 'class_name': 'console', 'state': 'ON'}
+GOAL FAIL! Not matched: {'id': 2015, 'class_name': 'phone', 'state': 'OFF'}
+GOAL FAIL! Not found: {'from_id': 2013, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2016, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=0, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9049_1
+actions=[{'WALK': ['water_glass', '1000']}, {'WALK': ['table', '355']}, {'WALK': ['water_glass', '1000']}, {'DROP': ['water_glass', '1000']}, {'WALK': ['bathroom', '1']}, {'WALK': ['water_glass', '1000']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'WALK': ['pencil', '2008']}, {'OPEN': ['bathroom', '1']}, {'WALK': ['pencil', '2008']}, {'PUTBACK': ['pencil', '2008', 'nightstand', '102']}, {'WALK': ['food_food', '2009']}, {'OPEN': ['cupboard', '229']}, {'WALK': ['food_food', '2009']}, {'PUTIN': ['food_food', '2009', 'freezer', '289']}, {'CLOSE': ['cupboard', '229']}, {'CLOSE': ['freezer', '289']}]
+actions=['[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[WALK] <water_glass> (1000)', '[DROP] <water_glass> (1000)', '[WALK] <bathroom> (1)', '[WALK] <water_glass> (1000)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[WALK] <pencil> (2008)', '[OPEN] <bathroom> (1)', '[WALK] <pencil> (2008)', '[PUTBACK] <pencil> (2008) <nightstand> (102)', '[WALK] <food_food> (2009)', '[OPEN] <cupboard> (229)', '[WALK] <food_food> (2009)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)']
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[DROP] <water_glass> (1000)'
+Current action [DROP] <water_glass> (1000) executable.
+Current action='[WALK] <bathroom> (1)'
+Current action [WALK] <bathroom> (1) executable.
+Current action='[WALK] <water_glass> (1000)'
+Current action [WALK] <water_glass> (1000) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe5d0f610>
+Encounter error: WRONG_TEMPORAL_ORDER
+Current action [PUTBACK] <water_glass> (1000) <table> (355) has wrong order error on task 9049_1.
+failed_error_code=0
+history_actions_cp=['[WALK] <water_glass> (1000)', '[WALK] <table> (355)', '[WALK] <water_glass> (1000)', '[DROP] <water_glass> (1000)', '[WALK] <bathroom> (1)', '[WALK] <water_glass> (1000)']
+GOAL FAIL! Not found: {'from_id': 1000, 'relation_type': 'ON', 'to_id': 355}
+GOAL FAIL! Not found: {'from_id': 2008, 'relation_type': 'ON', 'to_id': 102}
+GOAL FAIL! Not found: {'from_id': 2009, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=2, edge_match_num=0, action_match_num=0
+Gold: len(gold_node_goals)=2, len(gold_edge_goals)=3, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Task is Hard rough morning, file_id is 9050_1
+actions=[{'STANDUP': []}, {'WALK': ['couch', '352']}, {'WALK': ['table', '107']}, {'WALK': ['table', '226']}, {'WALK': ['food_carrot', '2000']}, {'WALK': ['table', '355']}, {'PUTBACK': ['water_glass', '1000', 'table', '355']}, {'PUTOBJBACK': ['water_glass', '1000']}, {'WALK': ['box', '2014']}, {'OPEN': ['box', '2014']}, {'WALK': ['food_food', '2009']}, {'GRAB': ['food_food', '2009']}, {'PUTIN': ['food_food', '2009', 'freezer', '289']}, {'WALK': ['food_food', '2013']}, {'GRAB': ['food_food', '2013']}, {'PUTIN': ['food_food', '2013', 'freezer', '289']}, {'WALK': ['food_food', '2016']}, {'GRAB': ['food_food', '2016']}, {'PUTIN': ['food_food', '2016', 'freezer', '289']}, {'WALK': ['console', '2010']}, {'SWITCHON': ['console', '2010']}, {'WALK': ['phone', '2015']}, {'SWITCHOFF': ['phone', '2015']}, {'WALK': ['box', '2014']}, {'CLOSE': ['box', '2014']}, {'WALK': ['freezer', '289']}, {'CLOSE': ['freezer', '289']}]
+actions=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <table> (107)', '[WALK] <table> (226)', '[WALK] <food_carrot> (2000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[PUTOBJBACK] <water_glass> (1000)', '[WALK] <box> (2014)', '[OPEN] <box> (2014)', '[WALK] <food_food> (2009)', '[GRAB] <food_food> (2009)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[WALK] <food_food> (2013)', '[GRAB] <food_food> (2013)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[WALK] <food_food> (2016)', '[GRAB] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[WALK] <console> (2010)', '[SWITCHON] <console> (2010)', '[WALK] <phone> (2015)', '[SWITCHOFF] <phone> (2015)', '[WALK] <box> (2014)', '[CLOSE] <box> (2014)', '[WALK] <freezer> (289)', '[CLOSE] <freezer> (289)']
+Current action='[STANDUP]'
+Current action [STANDUP] executable.
+Current action='[WALK] <couch> (352)'
+Current action [WALK] <couch> (352) executable.
+Current action='[WALK] <table> (107)'
+Current action [WALK] <table> (107) executable.
+Current action='[WALK] <table> (226)'
+Current action [WALK] <table> (226) executable.
+Current action='[WALK] <food_carrot> (2000)'
+Current action [WALK] <food_carrot> (2000) executable.
+Current action='[WALK] <table> (355)'
+Current action [WALK] <table> (355) executable.
+Current action='[PUTBACK] <water_glass> (1000) <table> (355)'
+Current action [PUTBACK] <water_glass> (1000) <table> (355) executable.
+Current action='[PUTOBJBACK] <water_glass> (1000)'
+Current action [PUTOBJBACK] <water_glass> (1000) not executable.
+my_info=<virtualhome_eval.simulation.evolving_graph.execution.ExecutionInfo object at 0x7fffe3afc250>
+Unclassified error code None for [PUTOBJBACK] <water_glass> (1000) — counting as UNKNOWN_ERROR
+Encounter error: UNKNOWN_ERROR
+failed_error_code=5
+history_actions_cp=['[STANDUP]', '[WALK] <couch> (352)', '[WALK] <table> (107)', '[WALK] <table> (226)', '[WALK] <food_carrot> (2000)', '[WALK] <table> (355)', '[PUTBACK] <water_glass> (1000) <table> (355)']
+GOAL FAIL! Not matched: {'id': 2010, 'class_name': 'console', 'state': 'ON'}
+GOAL FAIL! Not matched: {'id': 2015, 'class_name': 'phone', 'state': 'OFF'}
+GOAL FAIL! Not found: {'from_id': 2009, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2013, 'relation_type': 'INSIDE', 'to_id': 289}
+GOAL FAIL! Not found: {'from_id': 2016, 'relation_type': 'INSIDE', 'to_id': 289}
+Predicted: node_match_num=2, edge_match_num=1, action_match_num=0
+Gold: len(gold_node_goals)=4, len(gold_edge_goals)=4, len(gold_action_goals)=0
+Goals all satisfied: all_pred_success=False
+Program number: 50
+Parsing wrong: 0, rate = 0.00%
+Hallucination: 6, rate = 12.00%
+Parameter wrong: 0, rate = 0.00%
+Executable plan: 22, rate = 44.00%
+Correct plan: 9, rate = 18.00%
+For not executable plans:
+Wrong order: 18, rate = 36.00%
+Missing step: 3, rate = 6.00%
+Affordance error: 0, rate = 0.00%
+Additional step: 5, rate = 10.00%
+For scene metrics:
+Matched node: 73, rate = 44.5122
+Matched edge: 95, rate = 53.9773
+Matched action: 0, rate = -1
+Matched all: 168, rate = 49.4118
+Evaluate results of gpt-4o-mini-sda-tree_hard50 saved to /opt/iGibson/results_sda_hard50/gpt-4o-mini-sda-tree_hard50
+Error info of gpt-4o-mini-sda-tree_hard50 saved to /opt/iGibson/results_sda_hard50/gpt-4o-mini-sda-tree_hard50

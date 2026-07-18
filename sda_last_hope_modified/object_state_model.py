@@ -355,6 +355,8 @@ class ObjectStateModel:
             return not self.is_holding(obj)
         if precondition == "not_both_hands_full":
             return not self.hands_full()
+        if precondition == "holding_anything":
+            return self.holding_anything()
         if precondition == "on_char":
             return any(tok in self.worn for tok in self.resolve(obj))
         if precondition == "not_on_char":

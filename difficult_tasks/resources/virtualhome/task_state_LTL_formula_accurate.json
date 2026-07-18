@@ -1,0 +1,2064 @@
+{
+  "scene_1": {
+    "Hard busy hands": {
+      "9001_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9002_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9003_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9004_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9005_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9006_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9007_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9008_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9009_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9010_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      }
+    },
+    "Hard appliance load": {
+      "9011_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "basket_for_clothes",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "PLUGGED_IN"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "ON"
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9012_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "basket_for_clothes",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "ON"
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9013_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "ON"
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9014_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "basket_for_clothes",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "ON"
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9015_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "basket_for_clothes",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1001,
+              "class_name": "washing_machine",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1001
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9016_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1016,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9017_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 295,
+              "class_name": "oven",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "ON"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1014,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1011,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9018_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "ON"
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1009,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1010,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1016,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9019_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1016,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9020_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "CLOSED"
+            },
+            {
+              "id": 1000,
+              "class_name": "dishwasher",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1006,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "INSIDE",
+              "to_id": 1000
+            }
+          ],
+          "actions": []
+        }
+      }
+    },
+    "Hard scatter restore": {
+      "9021_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9022_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1002,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1011,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9023_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 295,
+              "class_name": "oven",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1009,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1010,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9024_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9025_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1014,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9026_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 2006,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9027_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1011,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9028_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 295,
+              "class_name": "oven",
+              "state": "ON"
+            },
+            {
+              "from_id": 2007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9029_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 295,
+              "class_name": "oven",
+              "state": "CLOSED"
+            },
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1009,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1010,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9030_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 102,
+              "class_name": "nightstand",
+              "state": "CLOSED"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "from_id": 1003,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1004,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1005,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1008,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1001,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1013,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 1011,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      }
+    },
+    "Hard precision toggles": {
+      "9031_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 64,
+              "class_name": "light",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9032_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1001,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 169,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9033_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "PLUGGED_IN"
+            },
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "ON"
+            },
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9034_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2019,
+              "class_name": "wall_clock",
+              "state": "OFF"
+            },
+            {
+              "id": 64,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 169,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9035_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1001,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 2019,
+              "class_name": "wall_clock",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9036_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 64,
+              "class_name": "light",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9037_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "PLUGGED_IN"
+            },
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "ON"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 169,
+              "class_name": "light",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9038_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1001,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 64,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 169,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9039_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 1000,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 1001,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 169,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            },
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "PLUGGED_IN"
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9040_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2019,
+              "class_name": "wall_clock",
+              "state": "OFF"
+            },
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "PLUGGED_IN"
+            },
+            {
+              "id": 2002,
+              "class_name": "electric_shaver",
+              "state": "ON"
+            },
+            {
+              "id": 245,
+              "class_name": "light",
+              "state": "ON"
+            },
+            {
+              "id": 411,
+              "class_name": "light",
+              "state": "OFF"
+            },
+            {
+              "id": 410,
+              "class_name": "television",
+              "state": "ON"
+            }
+          ],
+          "actions": []
+        }
+      }
+    },
+    "Hard rough morning": {
+      "9041_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9042_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2007,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9043_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2015,
+              "class_name": "phone",
+              "state": "OFF"
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2016,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9044_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "from_id": 2016,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2007,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9045_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2015,
+              "class_name": "phone",
+              "state": "OFF"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9046_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "id": 2015,
+              "class_name": "phone",
+              "state": "OFF"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9047_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "from_id": 2007,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2016,
+              "relation_type": "ON",
+              "to_id": 355
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9048_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "id": 2015,
+              "class_name": "phone",
+              "state": "OFF"
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2016,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9049_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 229,
+              "class_name": "cupboard",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2008,
+              "relation_type": "ON",
+              "to_id": 102
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      },
+      "9050_1": {
+        "vh_goal": {
+          "goal": [
+            {
+              "id": 2014,
+              "class_name": "box",
+              "state": "CLOSED"
+            },
+            {
+              "id": 289,
+              "class_name": "freezer",
+              "state": "CLOSED"
+            },
+            {
+              "id": 2010,
+              "class_name": "console",
+              "state": "ON"
+            },
+            {
+              "id": 2015,
+              "class_name": "phone",
+              "state": "OFF"
+            },
+            {
+              "from_id": 1000,
+              "relation_type": "ON",
+              "to_id": 355
+            },
+            {
+              "from_id": 2009,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2013,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            },
+            {
+              "from_id": 2016,
+              "relation_type": "INSIDE",
+              "to_id": 289
+            }
+          ],
+          "actions": []
+        }
+      }
+    }
+  }
+}
