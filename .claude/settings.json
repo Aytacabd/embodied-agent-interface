@@ -42,7 +42,9 @@
       "Bash(PYTHONPATH=../src python3 eai_sda_runner_hard_noadapt.py --help)",
       "Bash(python3 -m py_compile eai_sda_runner_tree.py eai_sda_runner_hard.py eai_sda_runner_hard_noadapt.py)",
       "Bash(PYTHONPATH=../src python3)",
-      "Bash(PYTHONPATH=../src HARD_MODEL=deepseek-chat python3 -c ' *)"
+      "Bash(PYTHONPATH=../src HARD_MODEL=deepseek-chat python3 -c ' *)",
+      "Bash(python3 -m py_compile eai_sda_runner_hard.py eai_sda_runner_hard_noadapt.py)",
+      "Bash(PYTHONPATH=../src HARD_MODEL=llama-3.3-70b python3 -c ' *)"
     ]
   }
 }

@@ -58,7 +58,7 @@ HARD_TASKS_DIR = os.environ.get(
 
 core.TASK_DICT_PATH = osp.join(HARD_TASKS_DIR, "task_state_LTL_formula_accurate.json")
 core.ID2TASK_PATH = osp.join(HARD_TASKS_DIR, "id2task.json")
-core.MODEL = os.environ.get("HARD_MODEL", "gpt-4o-mini")
+core.MODEL = os.environ.get("HARD_MODEL", core.MODEL)
 core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50"
 core.MAX_REPLAN = 5
 core.OUTPUT_DIR = os.environ.get(
