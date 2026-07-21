@@ -49,12 +49,43 @@ logger = logging.getLogger(__name__)
 
 
 # =============================================================================
-# CONFIGURATION
+# LLM PROVIDER CONFIGURATION
 # =============================================================================
+# The ONLY block to touch when switching LLM providers — the rest of the
+# pipeline is provider-agnostic and talks to `LLMClient.call()` exclusively.
+#
+#   API_PROVIDER  "openai" | "openai_compatible" | "groq" | "gemini"
+#                 openai_compatible = ANY OpenAI-style /chat/completions
+#                 server (vLLM, Ollama, Together, DeepSeek, Mistral, LM
+#                 Studio, ...) — set API_BASE_URL to its endpoint.
+#   MODEL         model id exactly as the provider names it
+#   API_KEY       resolved from env: LLM_API_KEY first, then the provider's
+#                 conventional variable (OPENAI_API_KEY / GROQ_API_KEY /
+#                 GEMINI_API_KEY)
+#   API_BASE_URL  endpoint override, needed only for openai_compatible
+#                 (e.g. "http://localhost:11434/v1" for Ollama)
+#
+# Everything is env-overridable without editing this file:
+#   LLM_PROVIDER, LLM_MODEL, LLM_API_KEY, LLM_BASE_URL
+# (the hard-task connectors additionally override MODEL via HARD_MODEL)
 
-API_PROVIDER = "openai"
-API_KEY = os.environ.get("OPENAI_API_KEY", os.environ.get("GROQ_API_KEY", ""))
-MODEL = "gpt-4o-mini"
+API_PROVIDER = os.environ.get("LLM_PROVIDER", "openai")
+MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+API_KEY = os.environ.get("LLM_API_KEY") or os.environ.get(
+    {
+        "openai": "OPENAI_API_KEY",
+        "openai_compatible": "OPENAI_API_KEY",
+        "groq": "GROQ_API_KEY",
+        "gemini": "GEMINI_API_KEY",
+    }.get(API_PROVIDER, "OPENAI_API_KEY"),
+    "",
+)
+API_BASE_URL = os.environ.get("LLM_BASE_URL", "")
+
+# Generation parameters, shared by every backend.
+TEMPERATURE = 0     # deterministic — the tabu/repair-memory logic relies on it
+MAX_TOKENS = 2048   # 512 truncated 30-50-step hard-task plans mid-JSON
+
 MODEL_NAME = f"{MODEL}-sda-tree_modifiedsdg_notmini"
 
 MAX_REPLAN = 3
@@ -177,31 +208,117 @@ Example: {{"WALK": ["washing_machine", "1000"], "GRAB": ["clothes_pants", "1001"
 
 
 # =============================================================================
-# LLM Client
+# LLM CLIENT — provider-agnostic
 # =============================================================================
+# Two backend families cover practically every hosted or local LLM today:
+#
+#   _OpenAIChatBackend  any OpenAI-style /chat/completions endpoint
+#                       (OpenAI itself, Groq, vLLM, Ollama, Together,
+#                       DeepSeek, Mistral, LM Studio, ...)
+#   _GeminiBackend      Google Generative Language REST API (plain urllib,
+#                       no SDK dependency)
+#
+# Adding a brand-new provider = one class with
+#     complete(model, system_prompt, user_prompt) -> str
+# registered in _BACKENDS. Nothing else in the pipeline changes — the
+# planner only ever sees LLMClient.call().
+
+
+class _OpenAIChatBackend:
+    """Chat-completions backend for OpenAI and OpenAI-compatible servers.
+
+    Groq, vLLM, Ollama, Together, DeepSeek etc. all expose this exact API —
+    they differ only in base_url and key, so one backend serves them all.
+    """
+
+    def __init__(self, api_key: str, base_url: str = ""):
+        from openai import OpenAI
+        kwargs = {"api_key": api_key}
+        if base_url:
+            kwargs["base_url"] = base_url
+        self.client = OpenAI(**kwargs)
+
+    def complete(self, model: str, system_prompt: str, user_prompt: str) -> str:
+        response = self.client.chat.completions.create(
+            model=model,
+            temperature=TEMPERATURE,
+            max_tokens=MAX_TOKENS,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+        return response.choices[0].message.content.strip()
+
+
+class _GeminiBackend:
+    """Google Generative Language API backend (REST, no SDK dependency)."""
+
+    def __init__(self, api_key: str, base_url: str = ""):
+        self.api_key = api_key
+        self.base = base_url or "https://generativelanguage.googleapis.com/v1beta"
+
+    def complete(self, model: str, system_prompt: str, user_prompt: str) -> str:
+        import urllib.request
+        url = f"{self.base}/models/{model}:generateContent?key={self.api_key}"
+        payload = json.dumps({
+            "contents": [{"parts": [{"text": system_prompt + "\n\n" + user_prompt}]}],
+            "generationConfig": {
+                "temperature": TEMPERATURE,
+                "maxOutputTokens": MAX_TOKENS,
+            },
+        }).encode()
+        req = urllib.request.Request(
+            url, data=payload,
+            headers={"Content-Type": "application/json"}, method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=60) as r:
+            d = json.loads(r.read())
+        return d["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
+# provider name -> (backend class, default base_url).
+# API_BASE_URL (env LLM_BASE_URL) overrides the default when set.
+_BACKENDS = {
+    "openai":            (_OpenAIChatBackend, ""),
+    "openai_compatible": (_OpenAIChatBackend, ""),
+    "groq":              (_OpenAIChatBackend, "https://api.groq.com/openai/v1"),
+    "gemini":            (_GeminiBackend, ""),
+}
+
 
 class LLMClient:
+    """Provider-agnostic chat client used by the entire SDA pipeline.
+
+    The planner code only ever calls
+        call(user_prompt, system_prompt=None, label="...") -> str
+    and receives the model's text reply, or "" on any transport/API error
+    (the replan loop relies on that empty-string contract).
+
+    Which provider serves the request is decided solely by the
+    LLM PROVIDER CONFIGURATION block at the top of this file. MODEL is
+    looked up at call time on purpose, so connectors that monkey-patch it
+    (eai_sda_runner_hard / _noadapt via HARD_MODEL) keep working unchanged.
+    """
+
     def __init__(self):
-        if API_PROVIDER == "groq":
-            from groq import Groq
-            self.client = Groq(api_key=API_KEY)
-            self.provider = "openai_style"
-        elif API_PROVIDER == "openai":
-            from openai import OpenAI
-            self.client = OpenAI(api_key=API_KEY)
-            self.provider = "openai_style"
-        elif API_PROVIDER == "gemini":
-            import urllib.request
-            self.gemini_url = (
-                f"https://generativelanguage.googleapis.com/v1beta/models/"
-                f"{MODEL}:generateContent?key={API_KEY}"
+        try:
+            backend_cls, default_base = _BACKENDS[API_PROVIDER]
+        except KeyError:
+            raise ValueError(
+                f"Unknown provider {API_PROVIDER!r} — pick one of "
+                f"{sorted(_BACKENDS)} or register a backend class in _BACKENDS"
             )
-            self.provider = "gemini"
-        else:
-            raise ValueError(f"Unknown provider: {API_PROVIDER}")
+        self.backend = backend_cls(API_KEY, API_BASE_URL or default_base)
         logger.info(f"LLM: {API_PROVIDER} / {MODEL}")
 
     def call(self, user_prompt: str, system_prompt: str = None, label: str = "LLM") -> str:
+        """Send one chat request and return the reply text ("" on error).
+
+        Preserves the pipeline's observable behavior exactly: VERBOSE
+        response tracing, optional prompt echoing (SHOW_PROMPTS), wall-time
+        logging, and the empty-string error contract.
+        """
         if system_prompt is None:
             system_prompt = SYSTEM_PROMPT
         sep = "─" * 60
@@ -211,10 +328,11 @@ class LLMClient:
             print(user_prompt)
             print(sep)
         t0 = time.time()
-        if self.provider == "openai_style":
-            result = self._call_openai(user_prompt, system_prompt)
-        else:
-            result = self._call_gemini(user_prompt, system_prompt)
+        try:
+            result = self.backend.complete(MODEL, system_prompt, user_prompt)
+        except Exception as e:
+            logger.error(f"API error ({API_PROVIDER}/{MODEL}): {e}")
+            result = ""
         elapsed = time.time() - t0
         if VERBOSE:
             print(f"[{label}] RESPONSE RECEIVED ({elapsed:.2f}s) ▼", flush=True)
@@ -223,48 +341,6 @@ class LLMClient:
         else:
             logger.info(f"  [{label}] {elapsed:.2f}s | {result}")
         return result
-
-    def _call_openai(self, user_prompt: str, system_prompt: str) -> str:
-        try:
-            response = self.client.chat.completions.create(
-                model=MODEL,
-                temperature=0,
-                # 512 truncated 30-50-step plans mid-JSON (hard tasks 9011/
-                # 9014/9016/9020/9030/9031) — the saved fragment then scored
-                # as hallucination. Plans this long are legitimate output.
-                max_tokens=2048,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            logger.error(f"API error: {e}")
-            return ""
-
-    def _call_gemini(self, user_prompt: str, system_prompt: str) -> str:
-        import urllib.request
-
-        full = system_prompt + "\n\n" + user_prompt
-        payload = json.dumps({
-            "contents": [{"parts": [{"text": full}]}],
-            "generationConfig": {"temperature": 0, "maxOutputTokens": 512},
-        }).encode()
-
-        try:
-            req = urllib.request.Request(
-                self.gemini_url,
-                data=payload,
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=30) as r:
-                d = json.loads(r.read())
-                return d["candidates"][0]["content"]["parts"][0]["text"].strip()
-        except Exception as e:
-            logger.error(f"Gemini error: {e}")
-            return ""
 
 
 # =============================================================================
