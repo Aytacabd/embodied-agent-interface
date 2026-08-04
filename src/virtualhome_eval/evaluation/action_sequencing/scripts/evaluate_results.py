@@ -120,7 +120,15 @@ def evaluate_results(args):
 
             gold_node_goals = remove_duplicate_dicts(gold_node_goals)
             gold_edge_goals = remove_duplicate_dicts(gold_edge_goals)
-            gold_action_goals = list(set(gold_action_goals))
+            # dict.fromkeys, NOT set(): action goals are order-sensitive
+            # (check_order_with_or_score requires each to appear in the
+            # action string AFTER the previous match) — set() dedupes but
+            # its iteration order for strings depends on hash
+            # randomization, which is not guaranteed stable across
+            # process runs. A correct plan could score differently on two
+            # evaluation runs purely from this, for any task with 2+
+            # action goals.
+            gold_action_goals = list(dict.fromkeys(gold_action_goals))
 
             motion_planner, relevant_id, gd_actions, task_name, _ = construct_planner(
                 name_equivalence,
@@ -334,6 +342,12 @@ def evaluate_results(args):
                     if all_pred_success:
                         all_correct_plan += 1
                         logger.info("EVERYTHING SUCCEED!")
+                    # Persist per-task goal success so best-of-k attempt
+                    # sweeps can be joined offline (first-success attempt,
+                    # pass@k). Records from the format/hallucination/
+                    # parameter branches never get this key — those are
+                    # failures by definition (treated as False in the join).
+                    error_info[file_id]["goals_satisfied"] = bool(all_pred_success)
 
             else:
                 if format_error:

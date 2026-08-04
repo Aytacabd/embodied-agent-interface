@@ -60,7 +60,15 @@ core.TASK_DICT_PATH = osp.join(HARD_TASKS_DIR, "task_state_LTL_formula_accurate.
 core.ID2TASK_PATH = osp.join(HARD_TASKS_DIR, "id2task.json")
 core.MODEL = os.environ.get("HARD_MODEL", core.MODEL)
 core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50"
-core.MAX_REPLAN = 5
+core.MAX_REPLAN = 3
+
+# ── Repeat-run tagging (T stays 0 — unlike no-adapt's best-of-k, this is
+# NOT resampling; it's checking SDA's own run-to-run stability, since the
+# LLM isn't perfectly deterministic even at T=0. ATTEMPT=n just tags the
+# output (…_hard50_a<n>) so k runs coexist instead of resume-skipping. ─────
+_attempt = os.environ.get("ATTEMPT")
+if _attempt:
+    core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50_a{_attempt}"
 core.OUTPUT_DIR = os.environ.get(
     "HARD_OUTPUT_DIR",
     osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
@@ -116,5 +124,7 @@ if __name__ == "__main__":
         core.logger.info(f"Running only hard task IDs: {task_ids_set}")
     else:
         core.logger.info("Running all hard tasks (9001_1..9050_1)")
+    core.logger.info(f"Attempt    : {_attempt or '- (single run)'} | "
+                     f"Temperature: {core.TEMPERATURE} | Tag: {core.MODEL_NAME}")
 
     core.EAISDATreeRunner().run_all(max_tasks=args.max_tasks, task_ids=task_ids_set)

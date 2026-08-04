@@ -44,7 +44,19 @@
       "Bash(PYTHONPATH=../src python3)",
       "Bash(PYTHONPATH=../src HARD_MODEL=deepseek-chat python3 -c ' *)",
       "Bash(python3 -m py_compile eai_sda_runner_hard.py eai_sda_runner_hard_noadapt.py)",
-      "Bash(PYTHONPATH=../src HARD_MODEL=llama-3.3-70b python3 -c ' *)"
+      "Bash(PYTHONPATH=../src HARD_MODEL=llama-3.3-70b python3 -c ' *)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py eai_sda_runner_hard.py eai_sda_runner_hard_noadapt.py eai_sda_runner_noadapt.py)",
+      "Bash(PYTHONPATH=../src MAIN_MODEL=gpt-4o python3 -c ' *)",
+      "Bash(python3 -m py_compile eai_sda_runner_tree.py eai_sda_runner_noadapt.py)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Skill(dataviz)",
+      "Skill(dataviz:*)",
+      "Bash(node scripts/validate_palette.js \"#8A8D86,#C96A2C\" --mode light)",
+      "Bash(node scripts/validate_palette.js \"#8A8D86,#C96A2C\" --mode dark)",
+      "Bash(node scripts/validate_palette.js \"#E3A464,#B85A1E\" --mode light)",
+      "Bash(python3 scripts/validate_palette.py \"#8A8D86,#C96A2C\" --mode light)",
+      "Bash(python3 scripts/validate_palette.py \"#8A8D86,#C96A2C\" --mode dark)"
     ]
   }
 }

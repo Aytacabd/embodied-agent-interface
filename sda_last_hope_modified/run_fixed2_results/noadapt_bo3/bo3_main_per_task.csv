@@ -1,0 +1,341 @@
+file_id,task_name,a1_goal,a1_exec,a2_goal,a2_exec,a3_goal,a3_exec,first_success
+1003_2,Write an email,F,Y,F,Y,F,Y,
+1004_2,Put groceries in Fridge,F,Y,F,Y,F,Y,
+101_2,Work,S,Y,S,Y,S,Y,1
+1027_2,Go to sleep,S,Y,S,Y,S,Y,1
+102_1,Wash hands,F,Y,F,Y,S,Y,3
+1035_1,Pet cat,S,Y,S,Y,S,Y,1
+1049_1,Listen to music,S,Y,S,Y,S,Y,1
+1057_1,Watch TV,S,Y,S,Y,S,Y,1
+1064_1,Drink,S,Y,S,Y,S,Y,1
+1068_1,Work,S,Y,S,Y,S,Y,1
+1070_1,Wash teeth,S,Y,F,N,S,Y,1
+1073_1,Read book,F,Y,S,Y,F,Y,2
+1083_2,Cook some food,F,Y,F,Y,F,Y,
+1088_1,Read book,S,Y,S,Y,F,N,1
+113_1,Listen to music,S,Y,S,Y,S,Y,1
+113_2,Pet cat,S,Y,S,Y,S,Y,1
+115_2,Write an email,S,Y,S,Y,S,Y,1
+117_1,Watch TV,S,Y,S,Y,S,Y,1
+11_1,Turn on light,S,Y,S,Y,S,Y,1
+120_1,Turn on light,S,Y,F,N,S,Y,1
+124_1,Relax on sofa,S,Y,S,Y,S,Y,1
+125_2,Turn on light,S,Y,S,Y,S,Y,1
+12_2,Pet cat,S,Y,S,Y,S,Y,1
+134_1,Watch TV,S,Y,S,Y,S,Y,1
+137_1,Relax on sofa,S,Y,S,Y,S,Y,1
+137_2,Pet cat,S,Y,S,Y,S,Y,1
+149_1,Pick up phone,F,Y,S,Y,S,Y,2
+150_2,Turn on light,S,Y,S,Y,S,Y,1
+152_2,Put groceries in Fridge,F,Y,F,Y,F,Y,
+153_2,Work,S,Y,S,Y,S,Y,1
+154_1,Pick up phone,F,Y,S,Y,F,Y,2
+154_2,Wash hands,S,Y,S,Y,S,Y,1
+156_1,Drink,S,Y,S,Y,S,Y,1
+158_1,Go to toilet,S,Y,S,Y,S,Y,1
+15_2,Read book,S,Y,S,Y,F,Y,1
+160_1,Turn on light,S,Y,S,Y,S,Y,1
+161_1,Listen to music,S,Y,S,Y,S,Y,1
+163_1,Read book,F,Y,F,Y,S,Y,3
+16_2,Read book,S,Y,S,Y,S,Y,1
+170_1,Watch TV,S,Y,F,Y,S,Y,1
+171_2,Drink,S,Y,S,Y,S,Y,1
+173_1,Listen to music,S,Y,S,Y,S,Y,1
+175_2,Drink,S,Y,S,Y,S,Y,1
+176_1,Wash hands,F,N,F,Y,F,Y,
+180_1,Pick up phone,S,Y,S,Y,S,Y,1
+180_2,Turn on light,S,Y,S,Y,S,Y,1
+181_1,Go to sleep,S,Y,S,Y,S,Y,1
+181_2,Drink,F,Y,F,Y,F,Y,
+183_2,Make coffee,F,Y,F,Y,F,Y,
+188_1,Change TV channel,F,Y,F,Y,S,Y,3
+190_1,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+192_1,Read book,S,Y,S,Y,S,Y,1
+195_1,Pick up phone,S,Y,S,Y,S,Y,1
+196_2,Work,S,Y,S,Y,S,Y,1
+197_2,Watch TV,S,Y,S,Y,F,Y,1
+198_1,Work,S,Y,S,Y,S,Y,1
+201_1,Wash dishes with dishwasher,S,Y,F,Y,S,Y,1
+201_2,Work,S,Y,S,Y,S,Y,1
+203_2,Pet cat,S,Y,S,Y,S,Y,1
+204_2,Relax on sofa,S,Y,F,N,F,N,1
+205_1,Turn on light,S,Y,S,Y,S,Y,1
+208_2,Read book,F,Y,F,Y,F,Y,
+211_1,Pick up phone,F,N,F,N,F,N,
+214_1,Wash hands,F,N,F,N,F,N,
+21_2,Watch TV,S,Y,S,Y,S,Y,1
+220_2,Pet cat,S,Y,S,Y,S,Y,1
+221_2,Read book,S,Y,S,Y,S,Y,1
+222_1,Turn on light,S,Y,S,Y,S,Y,1
+223_2,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+225_2,Watch TV,S,Y,S,Y,S,Y,1
+229_1,Make coffee,F,Y,F,Y,F,Y,
+231_2,Wash dishes by hand,F,N,F,Y,F,N,
+232_1,Work,S,Y,S,Y,S,Y,1
+232_2,Turn on light,S,Y,S,Y,S,Y,1
+234_1,Work,S,Y,S,Y,S,Y,1
+23_1,Listen to music,S,Y,S,Y,S,Y,1
+241_1,Pick up phone,S,Y,F,N,S,Y,1
+241_2,Read book,F,Y,F,Y,F,Y,
+242_1,Pet cat,S,Y,S,Y,S,Y,1
+244_2,Go to sleep,S,Y,S,Y,S,Y,1
+258_2,Wash hands,S,Y,S,Y,S,Y,1
+259_1,Watch TV,F,Y,F,Y,F,Y,
+263_1,Listen to music,S,Y,S,Y,S,Y,1
+264_1,Pick up phone,F,Y,F,Y,S,Y,3
+265_2,Pick up phone,F,Y,S,Y,F,Y,2
+268_1,Relax on sofa,S,Y,S,Y,S,Y,1
+269_2,Go to sleep,S,Y,F,Y,S,Y,1
+26_1,Drink,F,N,F,N,F,N,
+279_2,Pet cat,S,Y,S,Y,S,Y,1
+27_2,Wash clothes,F,Y,F,Y,F,Y,
+286_2,Drink,S,Y,S,Y,S,Y,1
+287_1,Pet cat,S,Y,S,Y,S,Y,1
+287_2,Pick up phone,S,Y,F,N,S,Y,1
+291_1,Drink,S,Y,S,Y,S,Y,1
+292_1,Pet cat,S,Y,S,Y,S,Y,1
+297_1,Pet cat,S,Y,S,Y,S,Y,1
+297_2,Relax on sofa,F,N,F,N,F,N,
+298_2,Put groceries in Fridge,F,Y,F,Y,F,Y,
+299_1,Relax on sofa,S,Y,S,Y,S,Y,1
+300_1,Relax on sofa,S,Y,S,Y,S,Y,1
+305_2,Listen to music,S,Y,S,Y,S,Y,1
+307_2,Watch TV,S,Y,S,Y,S,Y,1
+310_1,Turn on light,S,Y,S,Y,S,Y,1
+310_2,Make coffee,F,Y,F,Y,F,Y,
+311_1,Turn on light,S,Y,S,Y,S,Y,1
+313_2,Wash teeth,F,Y,F,Y,F,Y,
+317_2,Drink,S,Y,S,Y,F,Y,1
+31_1,Wash dishes by hand,F,Y,F,N,F,N,
+321_1,Relax on sofa,S,Y,S,Y,S,Y,1
+323_2,Go to toilet,F,Y,F,Y,F,Y,
+327_2,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+329_1,Watch TV,S,Y,S,Y,S,Y,1
+331_2,Turn on light,S,Y,S,Y,S,Y,1
+332_2,Relax on sofa,S,Y,S,Y,S,Y,1
+339_1,Turn on light,S,Y,S,Y,S,Y,1
+341_1,Read book,F,Y,F,Y,F,Y,
+342_2,Watch TV,S,Y,S,Y,S,Y,1
+343_2,Work,S,Y,S,Y,S,Y,1
+345_1,Turn on light,S,Y,S,Y,S,Y,1
+349_1,Wash dishes by hand,F,N,F,N,F,N,
+352_1,Pick up phone,S,Y,F,N,F,Y,1
+360_1,Pick up phone,S,Y,S,Y,S,Y,1
+363_2,Listen to music,S,Y,S,Y,S,Y,1
+368_1,Get some water,S,Y,S,Y,S,Y,1
+373_1,Work,S,Y,S,Y,S,Y,1
+377_2,Watch TV,S,Y,S,Y,S,Y,1
+379_2,Relax on sofa,F,N,F,N,F,N,
+381_1,Pet cat,S,Y,S,Y,S,Y,1
+383_1,Wash dishes with dishwasher,F,Y,S,Y,F,Y,2
+383_2,Watch TV,S,Y,S,Y,S,Y,1
+384_1,Browse internet,F,Y,F,Y,F,Y,
+385_2,Listen to music,S,Y,S,Y,S,Y,1
+387_1,Relax on sofa,S,Y,S,Y,S,Y,1
+388_1,Pick up phone,S,Y,S,Y,S,Y,1
+388_2,Pet cat,S,Y,S,Y,S,Y,1
+38_1,Pet cat,S,Y,S,Y,S,Y,1
+390_2,Relax on sofa,S,Y,S,Y,S,Y,1
+392_1,Turn on light,S,Y,S,Y,S,Y,1
+392_2,Cook some food,F,Y,S,Y,S,Y,2
+394_2,Turn on light,S,Y,S,Y,S,Y,1
+397_1,Wash dishes by hand,F,N,F,Y,F,N,
+3_1,Relax on sofa,S,Y,S,Y,S,Y,1
+403_1,Listen to music,S,Y,S,Y,S,Y,1
+406_2,Work,S,Y,S,Y,S,Y,1
+407_1,Write an email,S,Y,S,Y,S,Y,1
+409_2,Work,S,Y,S,Y,S,Y,1
+411_1,Watch TV,S,Y,S,Y,S,Y,1
+415_1,Listen to music,F,Y,S,Y,S,Y,2
+416_1,Relax on sofa,F,N,F,N,F,Y,
+417_1,Wash clothes,F,N,S,Y,F,Y,2
+417_2,Wash dishes with dishwasher,S,Y,S,Y,F,Y,1
+419_1,Work,S,Y,S,Y,S,Y,1
+419_2,Set up table,F,Y,S,Y,S,Y,2
+429_1,Pet cat,S,Y,S,Y,S,Y,1
+429_2,Wash dishes by hand,F,N,F,N,F,N,
+430_1,Write an email,S,Y,S,Y,S,Y,1
+430_2,Go to toilet,S,Y,S,Y,S,Y,1
+431_1,Pick up phone,S,Y,S,Y,S,Y,1
+432_1,Turn on light,S,Y,S,Y,S,Y,1
+433_1,Work,S,Y,S,Y,S,Y,1
+436_1,Pick up phone,S,Y,S,Y,S,Y,1
+437_1,Pet cat,S,Y,S,Y,S,Y,1
+437_2,Work,S,Y,S,Y,S,Y,1
+438_1,Relax on sofa,F,N,F,N,F,N,
+440_1,Work,S,Y,S,Y,S,Y,1
+442_1,Relax on sofa,S,Y,S,Y,S,Y,1
+442_2,Pick up phone,F,N,F,N,F,Y,
+443_2,Turn on light,S,Y,S,Y,S,Y,1
+445_1,Turn on light,S,Y,S,Y,S,Y,1
+446_2,Set up table,F,Y,F,Y,F,Y,
+447_2,Relax on sofa,S,Y,S,Y,S,Y,1
+449_1,Relax on sofa,F,N,F,N,F,N,
+451_1,Pet cat,S,Y,S,Y,S,Y,1
+453_2,Work,S,Y,S,Y,S,Y,1
+454_2,Watch TV,S,Y,S,Y,S,Y,1
+455_1,Relax on sofa,S,Y,S,Y,S,Y,1
+456_2,Relax on sofa,F,N,F,N,F,N,
+459_1,Watch TV,S,Y,S,Y,S,Y,1
+462_2,Listen to music,F,N,S,Y,S,Y,2
+463_2,Listen to music,S,Y,S,Y,S,Y,1
+469_2,Pet cat,S,Y,S,Y,S,Y,1
+46_1,Work,S,Y,F,N,S,Y,1
+473_1,Relax on sofa,S,Y,S,Y,S,Y,1
+474_2,Pick up phone,S,Y,F,N,S,Y,1
+475_2,Work,S,Y,S,Y,S,Y,1
+478_1,Go to toilet,S,Y,F,Y,S,Y,1
+479_2,Pet cat,S,Y,S,Y,S,Y,1
+481_2,Write an email,F,Y,F,Y,F,Y,
+482_2,Pick up phone,F,Y,F,Y,F,Y,
+484_1,Read book,S,Y,F,Y,F,Y,1
+487_1,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+488_2,Drink,S,Y,F,Y,S,Y,1
+490_1,Relax on sofa,S,Y,S,Y,S,Y,1
+491_2,Brush teeth,F,Y,F,Y,F,Y,
+496_1,Go to toilet,F,Y,F,Y,F,Y,
+497_1,Pick up phone,S,Y,S,Y,S,Y,1
+499_1,Wash hands,S,Y,S,Y,S,Y,1
+502_1,Pet cat,S,Y,S,Y,S,Y,1
+503_1,Work,S,Y,F,N,S,Y,1
+503_2,Listen to music,S,Y,S,Y,S,Y,1
+504_2,Read book,S,Y,S,Y,S,Y,1
+508_2,Read book,F,Y,F,Y,S,Y,3
+509_2,Go to sleep,F,Y,S,Y,F,Y,2
+510_1,Drink,S,Y,S,Y,S,Y,1
+517_1,Wash hands,S,Y,F,N,S,Y,1
+528_1,Drink,S,Y,S,Y,S,Y,1
+532_1,Drink,S,Y,S,Y,S,Y,1
+540_1,Browse internet,F,Y,F,Y,F,Y,
+544_1,Read book,F,Y,S,Y,S,Y,2
+548_2,Watch TV,S,Y,S,Y,S,Y,1
+549_2,Wash hands,F,N,F,N,F,N,
+553_1,Pick up phone,S,Y,S,Y,S,Y,1
+553_2,Wash dishes by hand,F,N,F,N,F,N,
+562_1,Wash hands,S,Y,S,Y,S,Y,1
+563_1,Relax on sofa,F,N,F,Y,F,N,
+567_2,Relax on sofa,F,N,F,N,F,N,
+570_1,Relax on sofa,S,Y,S,Y,S,Y,1
+57_1,Read book,F,Y,F,Y,F,Y,
+580_1,Wash hands,S,Y,S,Y,S,Y,1
+585_1,Turn on light,S,Y,S,Y,S,Y,1
+589_1,Drink,S,Y,S,Y,S,Y,1
+594_2,Wash dishes by hand,F,N,F,N,F,N,
+595_1,Watch TV,S,Y,S,Y,S,Y,1
+59_1,Listen to music,S,Y,F,Y,S,Y,1
+600_1,Drink,S,Y,S,Y,S,Y,1
+601_2,Pick up phone,S,Y,F,N,S,Y,1
+604_2,Turn on light,F,N,F,N,S,Y,3
+609_2,Put groceries in Fridge,S,Y,S,Y,S,Y,1
+60_1,Browse internet,S,Y,S,Y,S,Y,1
+612_1,Pet cat,S,Y,S,Y,S,Y,1
+617_2,Read book,S,Y,S,Y,S,Y,1
+622_1,Write an email,S,Y,S,Y,S,Y,1
+624_2,Go to toilet,S,Y,S,Y,S,Y,1
+627_1,Turn on light,S,Y,S,Y,S,Y,1
+628_1,Read book,F,Y,F,Y,S,Y,3
+650_2,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+657_1,Wash hands,S,Y,S,Y,S,Y,1
+660_1,Wash hands,S,Y,S,Y,F,N,1
+662_1,Drink,S,Y,S,Y,S,Y,1
+670_2,Work,S,Y,S,Y,S,Y,1
+672_1,Wash hands,S,Y,S,Y,S,Y,1
+674_2,Relax on sofa,F,N,F,N,F,N,
+684_2,Watch TV,S,Y,S,Y,S,Y,1
+688_1,Drink,F,Y,F,Y,F,Y,
+688_2,Read book,S,Y,S,Y,S,Y,1
+689_1,Wash teeth,F,Y,F,Y,F,Y,
+693_2,Read book,F,Y,S,Y,F,Y,2
+696_1,Brush teeth,F,N,F,N,F,N,
+699_1,Write an email,S,Y,S,Y,S,Y,1
+6_1,Relax on sofa,S,Y,S,Y,S,Y,1
+703_2,Put groceries in Fridge,F,Y,F,Y,F,Y,
+705_1,Turn on light,S,Y,S,Y,S,Y,1
+708_1,Turn on light,S,Y,S,Y,S,Y,1
+70_1,Pick up phone,S,Y,S,Y,S,Y,1
+710_1,Wash hands,S,Y,S,Y,S,Y,1
+710_2,Set up table,S,Y,S,Y,S,Y,1
+715_2,Turn on light,S,Y,S,Y,S,Y,1
+718_1,Wash teeth,F,N,F,Y,F,Y,
+719_2,Work,S,Y,S,Y,S,Y,1
+71_2,Browse internet,S,Y,F,Y,F,Y,1
+721_2,Make coffee,F,Y,F,Y,F,Y,
+729_2,Take shower,S,Y,S,Y,S,Y,1
+737_1,Listen to music,S,Y,S,Y,S,Y,1
+737_2,Turn on light,S,Y,S,Y,S,Y,1
+741_1,Wash hands,S,Y,S,Y,F,N,1
+742_1,Relax on sofa,S,Y,S,Y,S,Y,1
+746_1,Wash dishes by hand,F,N,F,Y,F,N,
+74_1,Watch TV,S,Y,S,Y,S,Y,1
+750_2,Wash hands,S,Y,S,Y,S,Y,1
+755_2,Cook some food,F,Y,F,Y,F,Y,
+757_2,Work,S,Y,S,Y,S,Y,1
+762_2,Relax on sofa,F,N,F,N,F,N,
+764_2,Make coffee,F,Y,F,Y,F,Y,
+772_1,Put groceries in Fridge,S,Y,S,Y,S,Y,1
+773_1,Listen to music,S,Y,S,Y,S,Y,1
+780_1,Turn on light,S,Y,S,Y,S,Y,1
+783_1,Wash dishes with dishwasher,S,Y,S,Y,S,Y,1
+787_1,Drink,S,Y,S,Y,S,Y,1
+787_2,Work,S,Y,S,Y,S,Y,1
+788_1,Drink,S,Y,S,Y,S,Y,1
+793_2,Relax on sofa,F,N,F,N,F,N,
+795_1,Work,S,Y,S,Y,S,Y,1
+798_2,Relax on sofa,S,Y,S,Y,S,Y,1
+7_1,Browse internet,S,Y,S,Y,S,Y,1
+803_2,Change TV channel,F,Y,F,Y,F,Y,
+805_1,Wash hands,S,Y,S,Y,S,Y,1
+806_1,Watch TV,S,Y,S,Y,S,Y,1
+80_1,Wash hands,S,Y,S,Y,S,Y,1
+812_1,Turn on light,S,Y,S,Y,S,Y,1
+813_2,Wash hands,F,Y,F,Y,F,Y,
+814_1,Drink,S,Y,S,Y,S,Y,1
+815_2,Wash dishes with dishwasher,F,Y,F,Y,F,Y,
+819_1,Work,S,Y,S,Y,S,Y,1
+821_1,Read book,F,Y,S,Y,F,Y,2
+824_1,Write an email,S,Y,S,Y,S,Y,1
+826_1,Wash dishes with dishwasher,F,Y,S,Y,F,Y,2
+835_2,Turn on light,S,Y,S,Y,S,Y,1
+837_2,Put groceries in Fridge,F,Y,F,Y,F,Y,
+84_1,Set up table,S,Y,S,Y,S,Y,1
+850_1,Wash clothes,F,Y,F,Y,F,Y,
+850_2,Drink,S,Y,S,Y,S,Y,1
+856_1,Wash dishes with dishwasher,S,Y,F,Y,S,Y,1
+856_2,Pet cat,S,Y,S,Y,S,Y,1
+85_2,Turn on light,S,Y,S,Y,S,Y,1
+861_2,Drink,S,Y,S,Y,S,Y,1
+864_2,Pick up phone,S,Y,S,Y,S,Y,1
+86_1,Read book,F,Y,S,Y,S,Y,2
+874_1,Work,S,Y,S,Y,S,Y,1
+874_2,Turn on light,S,Y,S,Y,S,Y,1
+875_1,Go to sleep,S,Y,S,Y,F,Y,1
+878_2,Drink,S,Y,S,Y,S,Y,1
+87_2,Write an email,S,Y,S,Y,S,Y,1
+896_2,Read book,F,Y,F,Y,F,Y,
+897_2,Read book,F,Y,S,Y,F,Y,2
+910_1,Work,S,Y,S,Y,S,Y,1
+910_2,Listen to music,S,Y,S,Y,S,Y,1
+911_1,Wash dishes with dishwasher,S,Y,S,Y,F,Y,1
+91_2,Work,S,Y,F,N,S,Y,1
+928_2,Wash hands,F,Y,F,Y,F,Y,
+932_2,Relax on sofa,S,Y,S,Y,S,Y,1
+93_1,Set up table,S,Y,S,Y,S,Y,1
+93_2,Work,S,Y,S,Y,S,Y,1
+941_2,Relax on sofa,S,Y,S,Y,S,Y,1
+953_1,Listen to music,S,Y,S,Y,S,Y,1
+954_2,Wash clothes,F,Y,S,Y,F,Y,2
+960_2,Change TV channel,F,Y,F,Y,S,Y,3
+961_1,Wash dishes by hand,F,N,F,N,F,Y,
+962_1,Work,S,Y,S,Y,S,Y,1
+963_2,Pick up phone,S,Y,S,Y,S,Y,1
+96_1,Relax on sofa,S,Y,S,Y,S,Y,1
+974_1,Pick up phone,S,Y,S,Y,S,Y,1
+975_2,Take shower,S,Y,S,Y,S,Y,1
+976_1,Relax on sofa,F,N,F,N,F,N,
+976_2,Pick up phone,F,N,F,Y,F,Y,
+986_2,Write an email,F,Y,F,Y,F,Y,
+988_1,Wash dishes by hand,F,Y,F,N,F,Y,
+98_1,Watch TV,S,Y,S,Y,S,Y,1
+995_2,Wash hands,F,Y,F,Y,S,Y,3
+996_2,Write an email,F,Y,F,Y,F,Y,
+99_2,Pick up phone,S,Y,F,Y,S,Y,1

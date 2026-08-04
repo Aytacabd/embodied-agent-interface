@@ -1,0 +1,2333 @@
+2026-07-26 17:28:29,729 - INFO - GOALFIX TEST — tag: gpt-4o-mini-sda-tree-goalfix-test | tasks: {'721_2', '27_2', '509_2', '954_2', '1004_2', '190_1', '287_2', '850_1', '99_2', '383_1', '803_2', '180_1', '442_2', '650_2', '323_2', '474_2', '352_1', '416_1', '152_2', '1083_2', '183_2', '696_1', '327_2', '102_1', '181_2', '211_1', '764_2', '173_1', '113_1', '624_2', '563_1'}
+2026-07-26 17:28:30,342 - INFO - LLM: openai / gpt-4o-mini
+2026-07-26 17:28:30,342 - INFO - Loading EAI resources...
+2026-07-26 17:28:30,355 - INFO - EAI resources loaded.
+2026-07-26 17:28:30,355 - INFO - === EAI + SDA-Planner (Full Search Tree) ===
+2026-07-26 17:28:30,355 - INFO - Model      : gpt-4o-mini-sda-tree-goalfix-test
+2026-07-26 17:28:30,355 - INFO - Provider   : openai
+2026-07-26 17:28:30,355 - INFO - Max replan : 3
+2026-07-26 17:28:30,355 - INFO - Tree depth : 6 | Tree nodes: 500
+2026-07-26 17:28:30,355 - INFO - Max tasks  : ALL
+2026-07-26 17:28:30,355 - INFO - Task IDs   : {'721_2', '27_2', '509_2', '954_2', '1004_2', '190_1', '287_2', '850_1', '99_2', '383_1', '803_2', '180_1', '442_2', '650_2', '323_2', '474_2', '352_1', '416_1', '152_2', '1083_2', '183_2', '696_1', '327_2', '102_1', '181_2', '211_1', '764_2', '173_1', '113_1', '624_2', '563_1'}
+2026-07-26 17:28:30,355 - INFO - LLM fallback on tree fail: DISABLED
+2026-07-26 17:28:30,356 - INFO - 
+[1] Wash clothes | 27_2
+
+============================================================
+TASK: 27_2  |  Wash clothes
+============================================================
+2026-07-26 17:28:33,747 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.36s) ▼
+{
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "GRAB": ["soap", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTBACK": ["soap", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_jacket_1003", "1003"],
+  "GRAB": ["clothes_jacket", "1003"],
+  "PUTBACK": ["clothes_jacket", "1003", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:33,789 - INFO -   Initial plan: {
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "GRAB": ["soap", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTBACK": ["soap", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_jacket_1003", "1003"],
+  "GRAB": ["clothes_jacket", "1003"],
+  "PUTBACK": ["clothes_jacket", "1003", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <basket_for_clothes> (1000)  →  OK
+  [02] [GRAB] <soap> (1002)  →  OK
+  [03] [WALK] <washing_machine> (1001)  →  OK
+  [04] [PUTBACK] <soap> (1002) <washing_machine> (1001)  →  OK
+  [05] [WALK] <clothes_jacket> (1003)  →  OK
+  [06] [GRAB] <clothes_jacket> (1003)  →  2026-07-26 17:28:34,132 - INFO -   ❌ [GRAB] <clothes_jacket> (1003) | MISSING_STEP
+2026-07-26 17:28:34,157 - INFO -   🔍 Strategy: reconstruct | Window: [5,7] | Unsat: ['obj_not_inside_closed_container']
+2026-07-26 17:28:35,143 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <clothes_jacket> (1003)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [5, 7]
+    Unsatisfied needs: ['obj_not_inside_closed_container']
+    Error objects    : {'clothes_jacket_1003', 'washing_machine_1001'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.99s) ▼
+{"WALK": ["clothes_cabinet"], "OPEN": ["clothes_cabinet"], "WALK": ["clothes_jacket"], "GRAB": ["clothes_jacket"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:35,146 - INFO -   💡 LLM suggestions: {"WALK": ["clothes_cabinet"], "OPEN": ["clothes_cabinet"], "WALK": ["clothes_jacket"], "GRAB": ["clothes_jacket"]}
+2026-07-26 17:28:35,239 - INFO -   🌳 Tree found: [{'OPEN': ['washing_machine_1001']}, {'GRAB': ['clothes_jacket_1003']}]
+2026-07-26 17:28:35,239 - INFO -   Spliced: 4 + 2 + 3 (retry) + 1 = 10
+
+  TREE SEARCH RESULT: [{'OPEN': ['washing_machine_1001']}, {'GRAB': ['clothes_jacket_1003']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 10 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <basket_for_clothes> (1000)  →  OK
+  [02] [GRAB] <soap> (1002)  →  OK
+  [03] [WALK] <washing_machine> (1001)  →  OK
+  [04] [PUTBACK] <soap> (1002) <washing_machine> (1001)  →  OK
+  [05] [OPEN] <washing_machine> (1001)  →  OK
+  [06] [GRAB] <clothes_jacket> (1003)  →  OK
+  [07] [WALK] <clothes_jacket> (1003)  →  OK
+  [08] [GRAB] <clothes_jacket> (1003)  →  SKIPPED (ADDITIONAL_STEP)
+  [09] [PUTBACK] <clothes_jacket> (1003) <washing_machine> (1001)  →  2026-07-26 17:28:35,790 - INFO -   ❌ [PUTBACK] <clothes_jacket> (1003) <washing_machine> (1001) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:28:35,797 - INFO -   🔍 Strategy: insert_prep | Window: [8,9] | Unsat: ['next_to_target']
+2026-07-26 17:28:36,735 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <clothes_jacket> (1003) <washing_machine> (1001)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [8, 9]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'clothes_jacket_1003', 'washing_machine_1001'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (0.94s) ▼
+{"WALK": ["washing_machine", "1001"], "PUTBACK": ["clothes_jacket", "1003", "washing_machine", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:36,739 - INFO -   💡 LLM suggestions: {"WALK": ["washing_machine", "1001"], "PUTBACK": ["clothes_jacket", "1003", "washing_machine", "1001"]}
+2026-07-26 17:28:36,798 - INFO -   🌳 Tree found: [{'WALK': ['washing_machine_1001']}]
+2026-07-26 17:28:36,799 - INFO -   Spliced: 7 + 1 + 1 (retry) + 1 = 10
+
+  TREE SEARCH RESULT: [{'WALK': ['washing_machine_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 10 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <basket_for_clothes> (1000)  →  OK
+  [02] [GRAB] <soap> (1002)  →  OK
+  [03] [WALK] <washing_machine> (1001)  →  OK
+  [04] [PUTBACK] <soap> (1002) <washing_machine> (1001)  →  OK
+  [05] [OPEN] <washing_machine> (1001)  →  OK
+  [06] [GRAB] <clothes_jacket> (1003)  →  OK
+  [07] [WALK] <clothes_jacket> (1003)  →  OK
+  [08] [WALK] <washing_machine> (1001)  →  OK
+  [09] [PUTBACK] <clothes_jacket> (1003) <washing_machine> (1001)  →  OK
+  [10] [SWITCHON] <washing_machine> (1001)  →  2026-07-26 17:28:37,181 - INFO - GOAL FAIL! Not matched: {'id': 1001, 'class_name': 'washing_machine', 'state': 'CLOSED'}
+2026-07-26 17:28:37,185 - INFO -   🎯 Goal completion appended: ['[WALK] <washing_machine> (1001)', '[CLOSE] <washing_machine> (1001)']
+2026-07-26 17:28:37,185 - INFO -   ✅ SUCCESS on attempt 3
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <washing_machine> (1001)', '[CLOSE] <washing_machine> (1001)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["basket_for_clothes", "1000"], "GRAB": ["soap", "1002"], "WALK": ["washing_machine", "1001"], "PUTBACK": ["soap", "1002", "washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "GRAB": ["clothes_jacket", "1003"], "WALK": ["clothes_jacket", "1003"], "WALK": ["washing_machine", "1001"], "PUTBACK": ["clothes_jacket", "1003", "washing_machine", "1001"], "SWITCHON": ["washing_machine", "1001"], "WALK": ["washing_machine", "1001"], "CLOSE": ["washing_machine", "1001"]}
+2026-07-26 17:28:38,195 - INFO - 
+[2] Wash clothes | 850_1
+
+============================================================
+TASK: 850_1  |  Wash clothes
+============================================================
+2026-07-26 17:28:39,601 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.33s) ▼
+{
+  "WALK": ["washing_machine", "1000"],
+  "SWITCHON": ["washing_machine", "1000"],
+  "PUTBACK": ["clothes_pants", "1001", "washing_machine", "1000"],
+  "PUTBACK": ["laundry_detergent", "1002", "washing_machine", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:39,604 - INFO -   Initial plan: {
+  "WALK": ["washing_machine", "1000"],
+  "SWITCHON": ["washing_machine", "1000"],
+  "PUTBACK": ["clothes_pants", "1001", "washing_machine", "1000"],
+  "PUTBACK": ["laundry_detergent", "1002", "washing_machine", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1000)  →  OK
+  [02] [SWITCHON] <washing_machine> (1000)  →  OK
+  [03] [PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)  →  2026-07-26 17:28:39,772 - INFO -   ❌ [PUTBACK] <clothes_pants> (1001) <washing_machine> (1000) | MISSING_STEP
+2026-07-26 17:28:39,787 - INFO -   🔍 Strategy: reconstruct | Window: [3,4] | Unsat: ['holds_obj', 'obj_not_inside_closed_container']
+2026-07-26 17:28:40,886 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [3, 4]
+    Unsatisfied needs: ['holds_obj', 'obj_not_inside_closed_container']
+    Error objects    : {'washing_machine_1000', 'clothes_pants_1001'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (1.10s) ▼
+{"WALK": ["washing_machine", "1000"], "OPEN": ["washing_machine", "1000"], "WALK": ["clothes_pants", "1001"], "GRAB": ["clothes_pants", "1001"], "PUTBACK": ["clothes_pants", "1001", "washing_machine", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:40,889 - INFO -   💡 LLM suggestions: {"WALK": ["washing_machine", "1000"], "OPEN": ["washing_machine", "1000"], "WALK": ["clothes_pants", "1001"], "GRAB": ["clothes_pants", "1001"], "PUTBACK": ["clothes_pants", "1001", "washing_machine", "1000"]}
+2026-07-26 17:28:40,968 - INFO -   🌳 Tree found: [{'SWITCHOFF': ['washing_machine_1000']}, {'OPEN': ['washing_machine_1000']}, {'GRAB': ['clothes_pants_1001']}]
+2026-07-26 17:28:40,968 - INFO -   Spliced: 2 + 3 + 2 (retry) + 0 = 7
+
+  TREE SEARCH RESULT: [{'SWITCHOFF': ['washing_machine_1000']}, {'OPEN': ['washing_machine_1000']}, {'GRAB': ['clothes_pants_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 7 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1000)  →  OK
+  [02] [SWITCHON] <washing_machine> (1000)  →  OK
+  [03] [SWITCHOFF] <washing_machine> (1000)  →  OK
+  [04] [OPEN] <washing_machine> (1000)  →  OK
+  [05] [GRAB] <clothes_pants> (1001)  →  OK
+  [06] [PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)  →  OK
+  [07] [PUTBACK] <laundry_detergent> (1002) <washing_machine> (1000)  →  2026-07-26 17:28:41,308 - INFO -   ❌ [PUTBACK] <laundry_detergent> (1002) <washing_machine> (1000) | MISSING_STEP
+2026-07-26 17:28:41,322 - INFO -   🔍 Strategy: reconstruct | Window: [7,7] | Unsat: ['holds_obj']
+2026-07-26 17:28:42,455 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <laundry_detergent> (1002) <washing_machine> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [7, 7]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'laundry_detergent_1002', 'washing_machine_1000'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (1.14s) ▼
+{"WALK": ["laundry_detergent", "1002"], "OPEN": ["washing_machine", "1000"], "GRAB": ["laundry_detergent", "1002"], "PUTIN": ["laundry_detergent", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:42,459 - INFO -   💡 LLM suggestions: {"WALK": ["laundry_detergent", "1002"], "OPEN": ["washing_machine", "1000"], "GRAB": ["laundry_detergent", "1002"], "PUTIN": ["laundry_detergent", "1000"]}
+2026-07-26 17:28:42,522 - INFO -   🌳 Tree found: [{'WALK': ['laundry_detergent_1002']}, {'GRAB': ['laundry_detergent_1002']}]
+2026-07-26 17:28:42,522 - INFO -   Spliced: 6 + 2 + 1 (retry) + 0 = 9
+
+  TREE SEARCH RESULT: [{'WALK': ['laundry_detergent_1002']}, {'GRAB': ['laundry_detergent_1002']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 9 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1000)  →  OK
+  [02] [SWITCHON] <washing_machine> (1000)  →  OK
+  [03] [SWITCHOFF] <washing_machine> (1000)  →  OK
+  [04] [OPEN] <washing_machine> (1000)  →  OK
+  [05] [GRAB] <clothes_pants> (1001)  →  OK
+  [06] [PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)  →  OK
+  [07] [WALK] <laundry_detergent> (1002)  →  OK
+  [08] [GRAB] <laundry_detergent> (1002)  →  OK
+  [09] [PUTBACK] <laundry_detergent> (1002) <washing_machine> (1000)  →  2026-07-26 17:28:42,813 - INFO - GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'washing_machine', 'state': 'CLOSED'}
+2026-07-26 17:28:42,813 - INFO - GOAL FAIL! Not matched: {'id': 1000, 'class_name': 'washing_machine', 'state': 'ON'}
+2026-07-26 17:28:42,820 - INFO -   🎯 Goal completion appended: ['[WALK] <washing_machine> (1000)', '[CLOSE] <washing_machine> (1000)', '[WALK] <washing_machine> (1000)', '[SWITCHON] <washing_machine> (1000)']
+2026-07-26 17:28:42,820 - INFO -   ✅ SUCCESS on attempt 3
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <washing_machine> (1000)', '[CLOSE] <washing_machine> (1000)', '[WALK] <washing_machine> (1000)', '[SWITCHON] <washing_machine> (1000)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["washing_machine", "1000"], "SWITCHON": ["washing_machine", "1000"], "SWITCHOFF": ["washing_machine", "1000"], "OPEN": ["washing_machine", "1000"], "GRAB": ["clothes_pants", "1001"], "PUTBACK": ["clothes_pants", "1001", "washing_machine", "1000"], "WALK": ["laundry_detergent", "1002"], "GRAB": ["laundry_detergent", "1002"], "PUTBACK": ["laundry_detergent", "1002", "washing_machine", "1000"], "WALK": ["washing_machine", "1000"], "CLOSE": ["washing_machine", "1000"], "WALK": ["washing_machine", "1000"], "SWITCHON": ["washing_machine", "1000"]}
+2026-07-26 17:28:43,831 - INFO - 
+[3] Wash clothes | 954_2
+
+============================================================
+TASK: 954_2  |  Wash clothes
+============================================================
+2026-07-26 17:28:45,604 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.68s) ▼
+{
+  "WALK": ["washing_machine", "1001"],
+  "SWITCHON": ["washing_machine", "1001"],
+  "PUTBACK": ["clothes_shirt", "1004", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_pants", "1003", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_underwear", "1005", "washing_machine", "1001"],
+  "PUTBACK": ["soap", "1006", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_dress", "1002", "washing_machine", "1001"],
+  "CLOSE": ["washing_machine", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:45,608 - INFO -   Initial plan: {
+  "WALK": ["washing_machine", "1001"],
+  "SWITCHON": ["washing_machine", "1001"],
+  "PUTBACK": ["clothes_shirt", "1004", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_pants", "1003", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_underwear", "1005", "washing_machine", "1001"],
+  "PUTBACK": ["soap", "1006", "washing_machine", "1001"],
+  "PUTBACK": ["clothes_dress", "1002", "washing_machine", "1001"],
+  "CLOSE": ["washing_machine", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1001)  →  OK
+  [02] [SWITCHON] <washing_machine> (1001)  →  OK
+  [03] [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)  →  2026-07-26 17:28:45,769 - INFO -   ❌ [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001) | MISSING_STEP
+2026-07-26 17:28:45,804 - INFO -   🔍 Strategy: reconstruct | Window: [3,8] | Unsat: ['holds_obj', 'obj_not_inside_closed_container']
+2026-07-26 17:28:46,956 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [3, 8]
+    Unsatisfied needs: ['holds_obj', 'obj_not_inside_closed_container']
+    Error objects    : {'washing_machine_1001', 'clothes_shirt_1004'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (1.16s) ▼
+{"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_shirt", "1004"], "GRAB": ["clothes_shirt", "1004"], "PUTBACK": ["clothes_shirt", "1004", "washing_machine", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:46,961 - INFO -   💡 LLM suggestions: {"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_shirt", "1004"], "GRAB": ["clothes_shirt", "1004"], "PUTBACK": ["clothes_shirt", "1004", "washing_machine", "1001"]}
+2026-07-26 17:28:47,046 - INFO -   🌳 Tree found: [{'SWITCHOFF': ['washing_machine_1001']}, {'OPEN': ['washing_machine_1001']}, {'GRAB': ['clothes_shirt_1004']}]
+2026-07-26 17:28:47,046 - INFO -   Spliced: 2 + 3 + 6 (retry) + 0 = 11
+
+  TREE SEARCH RESULT: [{'SWITCHOFF': ['washing_machine_1001']}, {'OPEN': ['washing_machine_1001']}, {'GRAB': ['clothes_shirt_1004']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 11 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1001)  →  OK
+  [02] [SWITCHON] <washing_machine> (1001)  →  OK
+  [03] [SWITCHOFF] <washing_machine> (1001)  →  OK
+  [04] [OPEN] <washing_machine> (1001)  →  OK
+  [05] [GRAB] <clothes_shirt> (1004)  →  OK
+  [06] [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)  →  OK
+  [07] [PUTBACK] <clothes_pants> (1003) <washing_machine> (1001)  →  2026-07-26 17:28:47,361 - INFO -   ❌ [PUTBACK] <clothes_pants> (1003) <washing_machine> (1001) | MISSING_STEP
+2026-07-26 17:28:47,375 - INFO -   🔍 Strategy: reconstruct | Window: [7,11] | Unsat: ['holds_obj']
+2026-07-26 17:28:48,510 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <clothes_pants> (1003) <washing_machine> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [7, 11]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'clothes_pants_1003', 'washing_machine_1001'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (1.14s) ▼
+{"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_pants", "1003"], "GRAB": ["clothes_pants", "1003"], "PUTBACK": ["clothes_pants", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:48,513 - INFO -   💡 LLM suggestions: {"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_pants", "1003"], "GRAB": ["clothes_pants", "1003"], "PUTBACK": ["clothes_pants", "1001"]}
+2026-07-26 17:28:48,591 - INFO -   🌳 Tree found: [{'GRAB': ['clothes_pants_1003']}]
+2026-07-26 17:28:48,592 - INFO -   Spliced: 6 + 1 + 5 (retry) + 0 = 12
+
+  TREE SEARCH RESULT: [{'GRAB': ['clothes_pants_1003']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1001)  →  OK
+  [02] [SWITCHON] <washing_machine> (1001)  →  OK
+  [03] [SWITCHOFF] <washing_machine> (1001)  →  OK
+  [04] [OPEN] <washing_machine> (1001)  →  OK
+  [05] [GRAB] <clothes_shirt> (1004)  →  OK
+  [06] [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)  →  OK
+  [07] [GRAB] <clothes_pants> (1003)  →  OK
+  [08] [PUTBACK] <clothes_pants> (1003) <washing_machine> (1001)  →  OK
+  [09] [PUTBACK] <clothes_underwear> (1005) <washing_machine> (1001)  →  2026-07-26 17:28:49,013 - INFO -   ❌ [PUTBACK] <clothes_underwear> (1005) <washing_machine> (1001) | MISSING_STEP
+2026-07-26 17:28:49,028 - INFO -   🔍 Strategy: reconstruct | Window: [9,12] | Unsat: ['holds_obj']
+2026-07-26 17:28:50,220 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <clothes_underwear> (1005) <washing_machine> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [9, 12]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'washing_machine_1001', 'clothes_underwear_1005'}
+[SUGGESTION (replan 3)] RESPONSE RECEIVED (1.29s) ▼
+{"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_underwear", "1005"], "GRAB": ["clothes_underwear", "1005"], "PUTBACK": ["clothes_underwear", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:50,319 - INFO -   💡 LLM suggestions: {"WALK": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "WALK": ["clothes_underwear", "1005"], "GRAB": ["clothes_underwear", "1005"], "PUTBACK": ["clothes_underwear", "1001"]}
+2026-07-26 17:28:50,390 - INFO -   🌳 Tree found: [{'GRAB': ['clothes_underwear_1005']}]
+2026-07-26 17:28:50,391 - INFO -   Spliced: 8 + 1 + 4 (retry) + 0 = 13
+
+  TREE SEARCH RESULT: [{'GRAB': ['clothes_underwear_1005']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 13 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1001)  →  OK
+  [02] [SWITCHON] <washing_machine> (1001)  →  OK
+  [03] [SWITCHOFF] <washing_machine> (1001)  →  OK
+  [04] [OPEN] <washing_machine> (1001)  →  OK
+  [05] [GRAB] <clothes_shirt> (1004)  →  OK
+  [06] [PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)  →  OK
+  [07] [GRAB] <clothes_pants> (1003)  →  OK
+  [08] [PUTBACK] <clothes_pants> (1003) <washing_machine> (1001)  →  OK
+  [09] [GRAB] <clothes_underwear> (1005)  →  OK
+  [10] [PUTBACK] <clothes_underwear> (1005) <washing_machine> (1001)  →  OK
+  [11] [PUTBACK] <soap> (1006) <washing_machine> (1001)  →  2026-07-26 17:28:50,940 - INFO -   ❌ [PUTBACK] <soap> (1006) <washing_machine> (1001) | MISSING_STEP
+2026-07-26 17:28:50,941 - INFO -   ⚠️  Max replanning reached for 954_2
+FAILED [MISSING_STEP]
+
+  FINAL OUTPUT SAVED (max replans reached):
+  {"WALK": ["washing_machine", "1001"], "SWITCHON": ["washing_machine", "1001"], "SWITCHOFF": ["washing_machine", "1001"], "OPEN": ["washing_machine", "1001"], "GRAB": ["clothes_shirt", "1004"], "PUTBACK": ["clothes_shirt", "1004", "washing_machine", "1001"], "GRAB": ["clothes_pants", "1003"], "PUTBACK": ["clothes_pants", "1003", "washing_machine", "1001"], "GRAB": ["clothes_underwear", "1005"], "PUTBACK": ["clothes_underwear", "1005", "washing_machine", "1001"], "PUTBACK": ["soap", "1006", "washing_machine", "1001"], "PUTBACK": ["clothes_dress", "1002", "washing_machine", "1001"], "CLOSE": ["washing_machine", "1001"]}
+2026-07-26 17:28:51,954 - INFO - 
+[4] Brush teeth | 696_1
+
+============================================================
+TASK: 696_1  |  Brush teeth
+============================================================
+2026-07-26 17:28:52,781 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.76s) ▼
+{
+  "GRAB": ["toothbrush", "1001"],
+  "GRAB": ["tooth_paste", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:52,793 - INFO -   Initial plan: {
+  "GRAB": ["toothbrush", "1001"],
+  "GRAB": ["tooth_paste", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [GRAB] <toothbrush> (1001)  →  2026-07-26 17:28:52,881 - INFO -   ❌ [GRAB] <toothbrush> (1001) | MISSING_STEP
+2026-07-26 17:28:52,888 - INFO -   🔍 Strategy: insert_prep | Window: [1,1] | Unsat: ['next_to_obj']
+2026-07-26 17:28:53,531 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <toothbrush> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : insert_prep
+    Repair window    : [1, 1]
+    Unsatisfied needs: ['next_to_obj']
+    Error objects    : {'toothbrush_1001'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.65s) ▼
+{"WALK": ["toothbrush", "1001"], "GRAB": ["toothbrush", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:53,535 - INFO -   💡 LLM suggestions: {"WALK": ["toothbrush", "1001"], "GRAB": ["toothbrush", "1001"]}
+2026-07-26 17:28:53,566 - INFO -   🌳 Tree found: [{'WALK': ['toothbrush_1001']}]
+2026-07-26 17:28:53,566 - INFO -   Spliced: 0 + 1 + 1 (retry) + 1 = 3
+
+  TREE SEARCH RESULT: [{'WALK': ['toothbrush_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 3 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <toothbrush> (1001)  →  OK
+  [02] [GRAB] <toothbrush> (1001)  →  OK
+  [03] [GRAB] <tooth_paste> (1000)  →  2026-07-26 17:28:53,758 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'HOLDS_LH', 'to_id': 1001}
+2026-07-26 17:28:53,759 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'HOLDS_RH', 'to_id': 1000}
+2026-07-26 17:28:53,777 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["toothbrush", "1001"], "GRAB": ["toothbrush", "1001"], "GRAB": ["tooth_paste", "1000"]}
+2026-07-26 17:28:54,785 - INFO - 
+[5] Put groceries in Fridge | 1004_2
+
+============================================================
+TASK: 1004_2  |  Put groceries in Fridge
+============================================================
+2026-07-26 17:28:56,094 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.24s) ▼
+{
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["food_food_1000", "1000"],
+  "GRAB": ["food_food_1000", "1000"],
+  "PUTIN": ["food_food_1000", "1000", "freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:56,097 - INFO -   Initial plan: {
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["food_food_1000", "1000"],
+  "GRAB": ["food_food_1000", "1000"],
+  "PUTIN": ["food_food_1000", "1000", "freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <food_food> (1000)  →  OK
+  [04] [GRAB] <food_food> (1000)  →  OK
+  [05] [PUTIN] <food_food> (1000) <freezer> (289)  →  2026-07-26 17:28:56,360 - INFO -   ❌ [PUTIN] <food_food> (1000) <freezer> (289) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:28:56,369 - INFO -   🔍 Strategy: insert_prep | Window: [5,5] | Unsat: ['next_to_target']
+2026-07-26 17:28:57,010 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTIN] <food_food> (1000) <freezer> (289)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [5, 5]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'food_food_1000', 'freezer_289'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.64s) ▼
+{"WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:57,013 - INFO -   💡 LLM suggestions: {"WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+2026-07-26 17:28:57,075 - INFO -   🌳 Tree found: [{'WALK': ['freezer_289']}]
+2026-07-26 17:28:57,076 - INFO -   Spliced: 4 + 1 + 1 (retry) + 0 = 6
+
+  TREE SEARCH RESULT: [{'WALK': ['freezer_289']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 6 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <food_food> (1000)  →  OK
+  [04] [GRAB] <food_food> (1000)  →  OK
+  [05] [WALK] <freezer> (289)  →  OK
+  [06] [PUTIN] <food_food> (1000) <freezer> (289)  →  2026-07-26 17:28:57,277 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["freezer", "289"], "OPEN": ["freezer", "289"], "WALK": ["food_food", "1000"], "GRAB": ["food_food", "1000"], "WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+2026-07-26 17:28:58,285 - INFO - 
+[6] Put groceries in Fridge | 152_2
+
+============================================================
+TASK: 152_2  |  Put groceries in Fridge
+============================================================
+2026-07-26 17:28:59,453 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.08s) ▼
+{
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["food_food_1000", "1000"],
+  "GRAB": ["food_food_1000", "1000"],
+  "PUTIN": ["food_food_1000", "1000", "freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:28:59,459 - INFO -   Initial plan: {
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["food_food_1000", "1000"],
+  "GRAB": ["food_food_1000", "1000"],
+  "PUTIN": ["food_food_1000", "1000", "freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <food_food> (1000)  →  OK
+  [04] [GRAB] <food_food> (1000)  →  OK
+  [05] [PUTIN] <food_food> (1000) <freezer> (289)  →  2026-07-26 17:28:59,716 - INFO -   ❌ [PUTIN] <food_food> (1000) <freezer> (289) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:28:59,723 - INFO -   🔍 Strategy: insert_prep | Window: [5,5] | Unsat: ['next_to_target']
+2026-07-26 17:29:00,391 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTIN] <food_food> (1000) <freezer> (289)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [5, 5]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'food_food_1000', 'freezer_289'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.67s) ▼
+{"WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:00,395 - INFO -   💡 LLM suggestions: {"WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+2026-07-26 17:29:00,459 - INFO -   🌳 Tree found: [{'WALK': ['freezer_289']}]
+2026-07-26 17:29:00,460 - INFO -   Spliced: 4 + 1 + 1 (retry) + 0 = 6
+
+  TREE SEARCH RESULT: [{'WALK': ['freezer_289']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 6 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <food_food> (1000)  →  OK
+  [04] [GRAB] <food_food> (1000)  →  OK
+  [05] [WALK] <freezer> (289)  →  OK
+  [06] [PUTIN] <food_food> (1000) <freezer> (289)  →  2026-07-26 17:29:00,708 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["freezer", "289"], "OPEN": ["freezer", "289"], "WALK": ["food_food", "1000"], "GRAB": ["food_food", "1000"], "WALK": ["freezer", "289"], "PUTIN": ["food_food", "1000", "freezer", "289"]}
+2026-07-26 17:29:01,716 - INFO - 
+[7] Go to toilet | 323_2
+
+============================================================
+TASK: 323_2  |  Go to toilet
+============================================================
+2026-07-26 17:29:02,441 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.65s) ▼
+{
+  "WALK": ["toilet", "37"],
+  "SIT": ["character", "65"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:02,446 - INFO -   Initial plan: {
+  "WALK": ["toilet", "37"],
+  "SIT": ["character", "65"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <toilet> (37)  →  OK
+  [02] [SIT] <character> (65)  →  2026-07-26 17:29:02,578 - INFO -   ❌ [SIT] <character> (65) | AFFORDANCE_ERROR
+2026-07-26 17:29:02,585 - INFO -   🔍 Strategy: local | Window: [2,2] | Unsat: ['next_to_obj', 'sittable']
+2026-07-26 17:29:03,258 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [AFFORDANCE_ERROR]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [SIT] <character> (65)
+    Error type       : AFFORDANCE_ERROR
+    Replan strategy  : local
+    Repair window    : [2, 2]
+    Unsatisfied needs: ['next_to_obj', 'sittable']
+    Error objects    : {'character_65'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.68s) ▼
+{"STANDUP": [], "WALK": ["chair", "70"], "SIT": ["chair", "70"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:03,262 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["chair", "70"], "SIT": ["chair", "70"]}
+2026-07-26 17:29:03,295 - INFO -   🌳 Tree exhausted — dropped failed action: [SIT] <character> (65)
+
+  TREE EXHAUSTED — dropping action: [SIT] <character> (65)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 1 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <toilet> (37)  →  2026-07-26 17:29:03,398 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'ON', 'to_id': 37}
+2026-07-26 17:29:03,406 - INFO -   🎯 Goal completion appended: ['[WALK] <toilet> (37)', '[SIT] <toilet> (37)']
+2026-07-26 17:29:03,406 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <toilet> (37)', '[SIT] <toilet> (37)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["toilet", "37"], "WALK": ["toilet", "37"], "SIT": ["toilet", "37"]}
+2026-07-26 17:29:04,414 - INFO - 
+[8] Go to toilet | 624_2
+
+============================================================
+TASK: 624_2  |  Go to toilet
+============================================================
+2026-07-26 17:29:05,306 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.82s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["toilet_1000", "1000"],
+  "SIT": ["toilet_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:05,310 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["toilet_1000", "1000"],
+  "SIT": ["toilet_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 3 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  SKIPPED (ADDITIONAL_STEP)
+  [02] [WALK] <toilet> (1000)  →  OK
+  [03] [SIT] <toilet> (1000)  →  2026-07-26 17:29:05,475 - INFO -   ✅ SUCCESS on attempt 1 (removed 1 skipped actions)
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["toilet", "1000"], "SIT": ["toilet", "1000"]}
+2026-07-26 17:29:06,481 - INFO - 
+[9] Change TV channel | 803_2
+
+============================================================
+TASK: 803_2  |  Change TV channel
+============================================================
+2026-07-26 17:29:07,453 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.90s) ▼
+{
+  "WALK": ["remote_control_1000", "1000"],
+  "GRAB": ["remote_control_1000", "1000"],
+  "SWITCHON": ["television_410", "410"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:07,457 - INFO -   Initial plan: {
+  "WALK": ["remote_control_1000", "1000"],
+  "GRAB": ["remote_control_1000", "1000"],
+  "SWITCHON": ["television_410", "410"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 3 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <remote_control> (1000)  →  OK
+  [02] [GRAB] <remote_control> (1000)  →  OK
+  [03] [SWITCHON] <television> (410)  →  2026-07-26 17:29:07,640 - INFO -   ❌ [SWITCHON] <television> (410) | MISSING_STEP
+2026-07-26 17:29:07,648 - INFO -   🔍 Strategy: insert_prep | Window: [3,3] | Unsat: ['next_to_obj']
+2026-07-26 17:29:08,174 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [SWITCHON] <television> (410)
+    Error type       : MISSING_STEP
+    Replan strategy  : insert_prep
+    Repair window    : [3, 3]
+    Unsatisfied needs: ['next_to_obj']
+    Error objects    : {'television_410'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.54s) ▼
+{"WALK": ["television", "410"], "SWITCHON": ["television", "410"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:08,186 - INFO -   💡 LLM suggestions: {"WALK": ["television", "410"], "SWITCHON": ["television", "410"]}
+2026-07-26 17:29:08,205 - INFO -   🌳 Tree found: [{'WALK': ['television_410']}]
+2026-07-26 17:29:08,205 - INFO -   Spliced: 2 + 1 + 1 (retry) + 0 = 4
+
+  TREE SEARCH RESULT: [{'WALK': ['television_410']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <remote_control> (1000)  →  OK
+  [02] [GRAB] <remote_control> (1000)  →  OK
+  [03] [WALK] <television> (410)  →  OK
+  [04] [SWITCHON] <television> (410)  →  2026-07-26 17:29:08,375 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'FACING', 'to_id': 1000}
+2026-07-26 17:29:08,375 - INFO - action_match_num=0
+2026-07-26 17:29:08,376 - INFO - action_goals=['TOUCH|PUSH']
+2026-07-26 17:29:08,376 - INFO - action_str='[WALK] <remote_control> (1000) [GRAB] <remote_control> (1000) [WALK] <television> (410) [SWITCHON] <television> (410)'
+2026-07-26 17:29:09,194 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+OK
+[ACTION GOAL OBJECT] RESPONSE RECEIVED (0.81s) ▼
+{"TOUCH": ["remote_control", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:09,213 - INFO -   🎯 Goal completion appended: ['[WALK] <remote_control> (1000)', '[TURNTO] <remote_control> (1000)', '[WALK] <remote_control> (1000)', '[TOUCH] <remote_control> (1000)']
+2026-07-26 17:29:09,213 - INFO -   ✅ SUCCESS on attempt 2
+
+  GOAL COMPLETION appended: ['[WALK] <remote_control> (1000)', '[TURNTO] <remote_control> (1000)', '[WALK] <remote_control> (1000)', '[TOUCH] <remote_control> (1000)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["remote_control", "1000"], "GRAB": ["remote_control", "1000"], "WALK": ["television", "410"], "SWITCHON": ["television", "410"], "WALK": ["remote_control", "1000"], "TURNTO": ["remote_control", "1000"], "WALK": ["remote_control", "1000"], "TOUCH": ["remote_control", "1000"]}
+2026-07-26 17:29:10,225 - INFO - 
+[10] Wash dishes with dishwasher | 190_1
+
+============================================================
+TASK: 190_1  |  Wash dishes with dishwasher
+============================================================
+2026-07-26 17:29:12,161 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.86s) ▼
+{
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "dishwasher", "1001"],
+  "CLOSE": ["dishwasher", "1001"],
+  "SWITCHON": ["dishwasher", "1001"],
+  "WALK": ["bowl", "1000"],
+  "PUTBACK": ["bowl", "1000", "dishwasher", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:12,164 - INFO -   Initial plan: {
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "dishwasher", "1001"],
+  "CLOSE": ["dishwasher", "1001"],
+  "SWITCHON": ["dishwasher", "1001"],
+  "WALK": ["bowl", "1000"],
+  "PUTBACK": ["bowl", "1000", "dishwasher", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <dish_soap> (1003)  →  OK
+  [04] [GRAB] <dish_soap> (1003)  →  OK
+  [05] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [06] [WALK] <plate> (1002)  →  OK
+  [07] [GRAB] <plate> (1002)  →  OK
+  [08] [PUTBACK] <plate> (1002) <dishwasher> (1001)  →  OK
+  [09] [CLOSE] <dishwasher> (1001)  →  OK
+  [10] [SWITCHON] <dishwasher> (1001)  →  OK
+  [11] [WALK] <bowl> (1000)  →  OK
+  [12] [PUTBACK] <bowl> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:12,782 - INFO -   ❌ [PUTBACK] <bowl> (1000) <dishwasher> (1001) | MISSING_STEP
+2026-07-26 17:29:12,821 - INFO -   🔍 Strategy: reconstruct | Window: [11,12] | Unsat: ['holds_obj', 'next_to_target']
+2026-07-26 17:29:13,805 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <bowl> (1000) <dishwasher> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [11, 12]
+    Unsatisfied needs: ['holds_obj', 'next_to_target']
+    Error objects    : {'dishwasher_1001', 'bowl_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.99s) ▼
+{"WALK": ["dishwasher", "1001"], "GRAB": ["bowl", "1000"], "PUTBACK": ["bowl", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:13,809 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1001"], "GRAB": ["bowl", "1000"], "PUTBACK": ["bowl", "1001"]}
+2026-07-26 17:29:13,902 - INFO -   🌳 Tree found: [{'WALK': ['bowl_1000']}, {'GRAB': ['bowl_1000']}, {'WALK': ['dishwasher_1001']}]
+2026-07-26 17:29:13,903 - INFO -   Spliced: 10 + 3 + 2 (retry) + 0 = 15
+
+  TREE SEARCH RESULT: [{'WALK': ['bowl_1000']}, {'GRAB': ['bowl_1000']}, {'WALK': ['dishwasher_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 15 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <dish_soap> (1003)  →  OK
+  [04] [GRAB] <dish_soap> (1003)  →  OK
+  [05] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [06] [WALK] <plate> (1002)  →  OK
+  [07] [GRAB] <plate> (1002)  →  OK
+  [08] [PUTBACK] <plate> (1002) <dishwasher> (1001)  →  OK
+  [09] [CLOSE] <dishwasher> (1001)  →  OK
+  [10] [SWITCHON] <dishwasher> (1001)  →  OK
+  [11] [WALK] <bowl> (1000)  →  OK
+  [12] [GRAB] <bowl> (1000)  →  OK
+  [13] [WALK] <dishwasher> (1001)  →  OK
+  [14] [WALK] <bowl> (1000)  →  OK
+  [15] [PUTBACK] <bowl> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:14,599 - INFO -   ❌ [PUTBACK] <bowl> (1000) <dishwasher> (1001) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:14,632 - INFO -   🔍 Strategy: insert_prep | Window: [15,15] | Unsat: ['next_to_target']
+2026-07-26 17:29:15,545 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <bowl> (1000) <dishwasher> (1001)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [15, 15]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'dishwasher_1001', 'bowl_1000'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (0.92s) ▼
+{"WALK": ["dishwasher", "1001"], "PUTBACK": ["bowl", "1000", "dishwasher", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:15,549 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1001"], "PUTBACK": ["bowl", "1000", "dishwasher", "1001"]}
+2026-07-26 17:29:15,582 - INFO -   🌳 Tree found: [{'WALK': ['dishwasher_1001']}]
+2026-07-26 17:29:15,582 - INFO -   Spliced: 14 + 1 + 1 (retry) + 0 = 16
+
+  TREE SEARCH RESULT: [{'WALK': ['dishwasher_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 16 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <dish_soap> (1003)  →  OK
+  [04] [GRAB] <dish_soap> (1003)  →  OK
+  [05] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [06] [WALK] <plate> (1002)  →  OK
+  [07] [GRAB] <plate> (1002)  →  OK
+  [08] [PUTBACK] <plate> (1002) <dishwasher> (1001)  →  OK
+  [09] [CLOSE] <dishwasher> (1001)  →  OK
+  [10] [SWITCHON] <dishwasher> (1001)  →  OK
+  [11] [WALK] <bowl> (1000)  →  OK
+  [12] [GRAB] <bowl> (1000)  →  OK
+  [13] [WALK] <dishwasher> (1001)  →  OK
+  [14] [WALK] <bowl> (1000)  →  OK
+  [15] [WALK] <dishwasher> (1001)  →  OK
+  [16] [PUTBACK] <bowl> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:16,067 - INFO -   ✅ SUCCESS on attempt 3
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["dishwasher", "1001"], "OPEN": ["dishwasher", "1001"], "WALK": ["dish_soap", "1003"], "GRAB": ["dish_soap", "1003"], "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"], "WALK": ["plate", "1002"], "GRAB": ["plate", "1002"], "PUTBACK": ["plate", "1002", "dishwasher", "1001"], "CLOSE": ["dishwasher", "1001"], "SWITCHON": ["dishwasher", "1001"], "WALK": ["bowl", "1000"], "GRAB": ["bowl", "1000"], "WALK": ["dishwasher", "1001"], "WALK": ["bowl", "1000"], "WALK": ["dishwasher", "1001"], "PUTBACK": ["bowl", "1000", "dishwasher", "1001"]}
+2026-07-26 17:29:17,083 - INFO - Saved 10 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-mini-sda-tree-goalfix-test_outputs.json
+2026-07-26 17:29:17,083 - INFO - Progress: 10 | Tree: 13 | Fallback: 0
+2026-07-26 17:29:17,083 - INFO - 
+[11] Wash dishes with dishwasher | 327_2
+
+============================================================
+TASK: 327_2  |  Wash dishes with dishwasher
+============================================================
+2026-07-26 17:29:18,416 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.26s) ▼
+{
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["plate", "1001"],
+  "PUTBACK": ["plate", "1001", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1002"],
+  "PUTBACK": ["dish_soap", "1002", "dishwasher", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:18,422 - INFO -   Initial plan: {
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["plate", "1001"],
+  "PUTBACK": ["plate", "1001", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1002"],
+  "PUTBACK": ["dish_soap", "1002", "dishwasher", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 6 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1000)  →  OK
+  [02] [SWITCHON] <dishwasher> (1000)  →  OK
+  [03] [WALK] <plate> (1001)  →  OK
+  [04] [PUTBACK] <plate> (1001) <dishwasher> (1000)  →  2026-07-26 17:29:18,654 - INFO -   ❌ [PUTBACK] <plate> (1001) <dishwasher> (1000) | MISSING_STEP
+2026-07-26 17:29:18,669 - INFO -   🔍 Strategy: reconstruct | Window: [3,6] | Unsat: ['holds_obj', 'obj_not_inside_closed_container']
+2026-07-26 17:29:19,744 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <plate> (1001) <dishwasher> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [3, 6]
+    Unsatisfied needs: ['holds_obj', 'obj_not_inside_closed_container']
+    Error objects    : {'plate_1001', 'dishwasher_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (1.08s) ▼
+{"WALK": ["dishwasher", "1000"], "OPEN": ["dishwasher", "1000"], "WALK": ["plate", "1001"], "GRAB": ["plate", "1001"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:19,749 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1000"], "OPEN": ["dishwasher", "1000"], "WALK": ["plate", "1001"], "GRAB": ["plate", "1001"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"]}
+2026-07-26 17:29:19,836 - INFO -   🌳 Tree found: [{'SWITCHOFF': ['dishwasher_1000']}, {'OPEN': ['dishwasher_1000']}, {'GRAB': ['plate_1001']}]
+2026-07-26 17:29:19,836 - INFO -   Spliced: 2 + 3 + 4 (retry) + 0 = 9
+
+  TREE SEARCH RESULT: [{'SWITCHOFF': ['dishwasher_1000']}, {'OPEN': ['dishwasher_1000']}, {'GRAB': ['plate_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 9 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1000)  →  OK
+  [02] [SWITCHON] <dishwasher> (1000)  →  OK
+  [03] [SWITCHOFF] <dishwasher> (1000)  →  OK
+  [04] [OPEN] <dishwasher> (1000)  →  OK
+  [05] [GRAB] <plate> (1001)  →  OK
+  [06] [WALK] <plate> (1001)  →  OK
+  [07] [PUTBACK] <plate> (1001) <dishwasher> (1000)  →  2026-07-26 17:29:20,166 - INFO -   ❌ [PUTBACK] <plate> (1001) <dishwasher> (1000) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:20,174 - INFO -   🔍 Strategy: insert_prep | Window: [7,7] | Unsat: ['next_to_target']
+2026-07-26 17:29:20,972 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <plate> (1001) <dishwasher> (1000)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [7, 7]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'plate_1001', 'dishwasher_1000'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (0.80s) ▼
+{"WALK": ["dishwasher", "1000"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:20,976 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1000"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"]}
+2026-07-26 17:29:21,039 - INFO -   🌳 Tree found: [{'WALK': ['dishwasher_1000']}]
+2026-07-26 17:29:21,039 - INFO -   Spliced: 6 + 1 + 1 (retry) + 2 = 10
+
+  TREE SEARCH RESULT: [{'WALK': ['dishwasher_1000']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 10 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1000)  →  OK
+  [02] [SWITCHON] <dishwasher> (1000)  →  OK
+  [03] [SWITCHOFF] <dishwasher> (1000)  →  OK
+  [04] [OPEN] <dishwasher> (1000)  →  OK
+  [05] [GRAB] <plate> (1001)  →  OK
+  [06] [WALK] <plate> (1001)  →  OK
+  [07] [WALK] <dishwasher> (1000)  →  OK
+  [08] [PUTBACK] <plate> (1001) <dishwasher> (1000)  →  OK
+  [09] [WALK] <dish_soap> (1002)  →  OK
+  [10] [PUTBACK] <dish_soap> (1002) <dishwasher> (1000)  →  2026-07-26 17:29:21,525 - INFO -   ❌ [PUTBACK] <dish_soap> (1002) <dishwasher> (1000) | MISSING_STEP
+2026-07-26 17:29:21,540 - INFO -   🔍 Strategy: reconstruct | Window: [9,10] | Unsat: ['holds_obj']
+2026-07-26 17:29:22,826 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <dish_soap> (1002) <dishwasher> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [9, 10]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'dish_soap_1002', 'dishwasher_1000'}
+[SUGGESTION (replan 3)] RESPONSE RECEIVED (1.29s) ▼
+{"WALK": ["dish_soap", "1002"], "OPEN": ["dishwasher", "1000"], "GRAB": ["dish_soap", "1002"], "PUTBACK": ["dish_soap", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:22,829 - INFO -   💡 LLM suggestions: {"WALK": ["dish_soap", "1002"], "OPEN": ["dishwasher", "1000"], "GRAB": ["dish_soap", "1002"], "PUTBACK": ["dish_soap", "1000"]}
+2026-07-26 17:29:22,867 - INFO -   🌳 Tree found: [{'GRAB': ['dish_soap_1002']}]
+2026-07-26 17:29:22,868 - INFO -   Spliced: 8 + 1 + 2 (retry) + 0 = 11
+
+  TREE SEARCH RESULT: [{'GRAB': ['dish_soap_1002']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 11 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1000)  →  OK
+  [02] [SWITCHON] <dishwasher> (1000)  →  OK
+  [03] [SWITCHOFF] <dishwasher> (1000)  →  OK
+  [04] [OPEN] <dishwasher> (1000)  →  OK
+  [05] [GRAB] <plate> (1001)  →  OK
+  [06] [WALK] <plate> (1001)  →  OK
+  [07] [WALK] <dishwasher> (1000)  →  OK
+  [08] [PUTBACK] <plate> (1001) <dishwasher> (1000)  →  OK
+  [09] [GRAB] <dish_soap> (1002)  →  OK
+  [10] [WALK] <dish_soap> (1002)  →  OK
+  [11] [PUTBACK] <dish_soap> (1002) <dishwasher> (1000)  →  2026-07-26 17:29:23,425 - INFO -   ❌ [PUTBACK] <dish_soap> (1002) <dishwasher> (1000) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:23,425 - INFO -   ⚠️  Max replanning reached for 327_2
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  FINAL OUTPUT SAVED (max replans reached):
+  {"WALK": ["dishwasher", "1000"], "SWITCHON": ["dishwasher", "1000"], "SWITCHOFF": ["dishwasher", "1000"], "OPEN": ["dishwasher", "1000"], "GRAB": ["plate", "1001"], "WALK": ["plate", "1001"], "WALK": ["dishwasher", "1000"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"], "GRAB": ["dish_soap", "1002"], "WALK": ["dish_soap", "1002"], "PUTBACK": ["dish_soap", "1002", "dishwasher", "1000"]}
+2026-07-26 17:29:24,439 - INFO - 
+[12] Wash dishes with dishwasher | 383_1
+
+============================================================
+TASK: 383_1  |  Wash dishes with dishwasher
+============================================================
+2026-07-26 17:29:26,502 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.97s) ▼
+{
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1001"],
+  "GRAB": ["plate", "1001"],
+  "PUTBACK": ["plate", "1001", "dishwasher", "1000"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:26,505 - INFO -   Initial plan: {
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1001"],
+  "GRAB": ["plate", "1001"],
+  "PUTBACK": ["plate", "1001", "dishwasher", "1000"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 13 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1000)  →  OK
+  [02] [OPEN] <dishwasher> (1000)  →  OK
+  [03] [WALK] <dish_soap> (1003)  →  OK
+  [04] [GRAB] <dish_soap> (1003)  →  OK
+  [05] [PUTBACK] <dish_soap> (1003) <dishwasher> (1000)  →  OK
+  [06] [WALK] <plate> (1001)  →  OK
+  [07] [GRAB] <plate> (1001)  →  OK
+  [08] [PUTBACK] <plate> (1001) <dishwasher> (1000)  →  OK
+  [09] [WALK] <plate> (1002)  →  OK
+  [10] [GRAB] <plate> (1002)  →  OK
+  [11] [PUTBACK] <plate> (1002) <dishwasher> (1000)  →  OK
+  [12] [CLOSE] <dishwasher> (1000)  →  OK
+  [13] [SWITCHON] <dishwasher> (1000)  →  2026-07-26 17:29:26,936 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["dishwasher", "1000"], "OPEN": ["dishwasher", "1000"], "WALK": ["dish_soap", "1003"], "GRAB": ["dish_soap", "1003"], "PUTBACK": ["dish_soap", "1003", "dishwasher", "1000"], "WALK": ["plate", "1001"], "GRAB": ["plate", "1001"], "PUTBACK": ["plate", "1001", "dishwasher", "1000"], "WALK": ["plate", "1002"], "GRAB": ["plate", "1002"], "PUTBACK": ["plate", "1002", "dishwasher", "1000"], "CLOSE": ["dishwasher", "1000"], "SWITCHON": ["dishwasher", "1000"]}
+2026-07-26 17:29:27,945 - INFO - 
+[13] Wash dishes with dishwasher | 650_2
+
+============================================================
+TASK: 650_2  |  Wash dishes with dishwasher
+============================================================
+2026-07-26 17:29:29,882 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.86s) ▼
+{
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["pot", "1002"],
+  "GRAB": ["pot", "1002"],
+  "PUTBACK": ["pot", "1002", "dishwasher", "1001"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"],
+  "CLOSE": ["dishwasher", "1001"],
+  "SWITCHON": ["dishwasher", "1001"],
+  "WALK": ["plate", "1000"],
+  "PUTBACK": ["plate", "1000", "dishwasher", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:29,886 - INFO -   Initial plan: {
+  "WALK": ["dishwasher", "1001"],
+  "OPEN": ["dishwasher", "1001"],
+  "WALK": ["pot", "1002"],
+  "GRAB": ["pot", "1002"],
+  "PUTBACK": ["pot", "1002", "dishwasher", "1001"],
+  "WALK": ["dish_soap", "1003"],
+  "GRAB": ["dish_soap", "1003"],
+  "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"],
+  "CLOSE": ["dishwasher", "1001"],
+  "SWITCHON": ["dishwasher", "1001"],
+  "WALK": ["plate", "1000"],
+  "PUTBACK": ["plate", "1000", "dishwasher", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <pot> (1002)  →  OK
+  [04] [GRAB] <pot> (1002)  →  OK
+  [05] [PUTBACK] <pot> (1002) <dishwasher> (1001)  →  OK
+  [06] [WALK] <dish_soap> (1003)  →  OK
+  [07] [GRAB] <dish_soap> (1003)  →  OK
+  [08] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  2026-07-26 17:29:30,288 - INFO -   ❌ [PUTBACK] <dish_soap> (1003) <dishwasher> (1001) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:30,295 - INFO -   🔍 Strategy: insert_prep | Window: [8,8] | Unsat: ['next_to_target']
+2026-07-26 17:29:31,005 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [8, 8]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'dish_soap_1003', 'dishwasher_1001'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.71s) ▼
+{"WALK": ["dishwasher", "1001"], "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:31,010 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1001"], "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"]}
+2026-07-26 17:29:31,072 - INFO -   🌳 Tree found: [{'WALK': ['dishwasher_1001']}]
+2026-07-26 17:29:31,072 - INFO -   Spliced: 7 + 1 + 1 (retry) + 4 = 13
+
+  TREE SEARCH RESULT: [{'WALK': ['dishwasher_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 13 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <pot> (1002)  →  OK
+  [04] [GRAB] <pot> (1002)  →  OK
+  [05] [PUTBACK] <pot> (1002) <dishwasher> (1001)  →  OK
+  [06] [WALK] <dish_soap> (1003)  →  OK
+  [07] [GRAB] <dish_soap> (1003)  →  OK
+  [08] [WALK] <dishwasher> (1001)  →  OK
+  [09] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [10] [CLOSE] <dishwasher> (1001)  →  OK
+  [11] [SWITCHON] <dishwasher> (1001)  →  OK
+  [12] [WALK] <plate> (1000)  →  OK
+  [13] [PUTBACK] <plate> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:31,709 - INFO -   ❌ [PUTBACK] <plate> (1000) <dishwasher> (1001) | MISSING_STEP
+2026-07-26 17:29:31,726 - INFO -   🔍 Strategy: reconstruct | Window: [12,13] | Unsat: ['holds_obj', 'next_to_target']
+2026-07-26 17:29:33,054 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <plate> (1000) <dishwasher> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [12, 13]
+    Unsatisfied needs: ['holds_obj', 'next_to_target']
+    Error objects    : {'dishwasher_1001', 'plate_1000'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (1.33s) ▼
+{"WALK": ["dishwasher", "1001"], "OPEN": ["dishwasher", "1001"], "WALK": ["plate", "1000"], "GRAB": ["plate", "1000"], "PUTBACK": ["plate", "1000", "dishwasher", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:33,059 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1001"], "OPEN": ["dishwasher", "1001"], "WALK": ["plate", "1000"], "GRAB": ["plate", "1000"], "PUTBACK": ["plate", "1000", "dishwasher", "1001"]}
+2026-07-26 17:29:33,141 - INFO -   🌳 Tree found: [{'WALK': ['plate_1000']}, {'GRAB': ['plate_1000']}, {'WALK': ['dishwasher_1001']}]
+2026-07-26 17:29:33,141 - INFO -   Spliced: 11 + 3 + 2 (retry) + 0 = 16
+
+  TREE SEARCH RESULT: [{'WALK': ['plate_1000']}, {'GRAB': ['plate_1000']}, {'WALK': ['dishwasher_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 16 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <pot> (1002)  →  OK
+  [04] [GRAB] <pot> (1002)  →  OK
+  [05] [PUTBACK] <pot> (1002) <dishwasher> (1001)  →  OK
+  [06] [WALK] <dish_soap> (1003)  →  OK
+  [07] [GRAB] <dish_soap> (1003)  →  OK
+  [08] [WALK] <dishwasher> (1001)  →  OK
+  [09] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [10] [CLOSE] <dishwasher> (1001)  →  OK
+  [11] [SWITCHON] <dishwasher> (1001)  →  OK
+  [12] [WALK] <plate> (1000)  →  OK
+  [13] [GRAB] <plate> (1000)  →  OK
+  [14] [WALK] <dishwasher> (1001)  →  OK
+  [15] [WALK] <plate> (1000)  →  OK
+  [16] [PUTBACK] <plate> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:33,913 - INFO -   ❌ [PUTBACK] <plate> (1000) <dishwasher> (1001) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:33,921 - INFO -   🔍 Strategy: insert_prep | Window: [16,16] | Unsat: ['next_to_target']
+2026-07-26 17:29:34,691 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <plate> (1000) <dishwasher> (1001)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [16, 16]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'dishwasher_1001', 'plate_1000'}
+[SUGGESTION (replan 3)] RESPONSE RECEIVED (0.77s) ▼
+{"WALK": ["dishwasher", "1001"], "PUTBACK": ["plate", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:34,696 - INFO -   💡 LLM suggestions: {"WALK": ["dishwasher", "1001"], "PUTBACK": ["plate", "1001"]}
+2026-07-26 17:29:34,729 - INFO -   🌳 Tree found: [{'WALK': ['dishwasher_1001']}]
+2026-07-26 17:29:34,730 - INFO -   Spliced: 15 + 1 + 1 (retry) + 0 = 17
+
+  TREE SEARCH RESULT: [{'WALK': ['dishwasher_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 17 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <dishwasher> (1001)  →  OK
+  [02] [OPEN] <dishwasher> (1001)  →  OK
+  [03] [WALK] <pot> (1002)  →  OK
+  [04] [GRAB] <pot> (1002)  →  OK
+  [05] [PUTBACK] <pot> (1002) <dishwasher> (1001)  →  OK
+  [06] [WALK] <dish_soap> (1003)  →  OK
+  [07] [GRAB] <dish_soap> (1003)  →  OK
+  [08] [WALK] <dishwasher> (1001)  →  OK
+  [09] [PUTBACK] <dish_soap> (1003) <dishwasher> (1001)  →  OK
+  [10] [CLOSE] <dishwasher> (1001)  →  OK
+  [11] [SWITCHON] <dishwasher> (1001)  →  OK
+  [12] [WALK] <plate> (1000)  →  OK
+  [13] [GRAB] <plate> (1000)  →  OK
+  [14] [WALK] <dishwasher> (1001)  →  OK
+  [15] [WALK] <plate> (1000)  →  OK
+  [16] [WALK] <dishwasher> (1001)  →  OK
+  [17] [PUTBACK] <plate> (1000) <dishwasher> (1001)  →  2026-07-26 17:29:35,280 - INFO -   ✅ SUCCESS on attempt 4
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["dishwasher", "1001"], "OPEN": ["dishwasher", "1001"], "WALK": ["pot", "1002"], "GRAB": ["pot", "1002"], "PUTBACK": ["pot", "1002", "dishwasher", "1001"], "WALK": ["dish_soap", "1003"], "GRAB": ["dish_soap", "1003"], "WALK": ["dishwasher", "1001"], "PUTBACK": ["dish_soap", "1003", "dishwasher", "1001"], "CLOSE": ["dishwasher", "1001"], "SWITCHON": ["dishwasher", "1001"], "WALK": ["plate", "1000"], "GRAB": ["plate", "1000"], "WALK": ["dishwasher", "1001"], "WALK": ["plate", "1000"], "WALK": ["dishwasher", "1001"], "PUTBACK": ["plate", "1000", "dishwasher", "1001"]}
+2026-07-26 17:29:36,292 - INFO - 
+[14] Go to sleep | 509_2
+
+============================================================
+TASK: 509_2  |  Go to sleep
+============================================================
+2026-07-26 17:29:37,047 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.68s) ▼
+{
+  "WALK": ["bed", "105"],
+  "LIE": ["character", "65"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:37,050 - INFO -   Initial plan: {
+  "WALK": ["bed", "105"],
+  "LIE": ["character", "65"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <bed> (105)  →  OK
+  [02] [LIE] <character> (65)  →  2026-07-26 17:29:37,166 - INFO -   ❌ [LIE] <character> (65) | AFFORDANCE_ERROR
+2026-07-26 17:29:37,173 - INFO -   🔍 Strategy: local | Window: [2,2] | Unsat: ['next_to_obj', 'lieable']
+2026-07-26 17:29:37,782 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [AFFORDANCE_ERROR]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [LIE] <character> (65)
+    Error type       : AFFORDANCE_ERROR
+    Replan strategy  : local
+    Repair window    : [2, 2]
+    Unsatisfied needs: ['next_to_obj', 'lieable']
+    Error objects    : {'character_65'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.62s) ▼
+{"STANDUP": [], "WALK": ["bed", "1"], "LIE": ["bed", "1"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:37,793 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["bed", "1"], "LIE": ["bed", "1"]}
+2026-07-26 17:29:37,850 - INFO -   🌳 Tree exhausted — dropped failed action: [LIE] <character> (65)
+
+  TREE EXHAUSTED — dropping action: [LIE] <character> (65)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 1 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <bed> (105)  →  2026-07-26 17:29:37,927 - INFO - GOAL FAIL! Not matched: {'id': 65, 'class_name': 'character', 'state': 'LYING'}
+2026-07-26 17:29:37,928 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'ON', 'to_id': 105}
+2026-07-26 17:29:37,928 - INFO - action_match_num=0
+2026-07-26 17:29:37,928 - INFO - action_goals=['SLEEP']
+2026-07-26 17:29:37,928 - INFO - action_str='[WALK] <bed> (105)'
+2026-07-26 17:29:38,552 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+OK
+[ACTION GOAL OBJECT] RESPONSE RECEIVED (0.60s) ▼
+{"SLEEP": ["bed", "105"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:38,556 - INFO - Check walk failed: <bed> (105)
+2026-07-26 17:29:38,556 - INFO - <character> (65) is sitting when executing "[WALK] <bed> (105) [1]"
+2026-07-26 17:29:38,556 - INFO -   🎯 Goal completion appended: ['[WALK] <bed> (105)', '[SIT] <bed> (105)']
+2026-07-26 17:29:38,557 - INFO -   ✅ SUCCESS on attempt 2
+
+  GOAL COMPLETION appended: ['[WALK] <bed> (105)', '[SIT] <bed> (105)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["bed", "105"], "WALK": ["bed", "105"], "SIT": ["bed", "105"]}
+2026-07-26 17:29:39,568 - INFO - 
+[15] Wash hands | 102_1
+
+============================================================
+TASK: 102_1  |  Wash hands
+============================================================
+2026-07-26 17:29:40,324 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.68s) ▼
+{
+  "WALK": ["bathroom_1", "1"],
+  "WASH": ["sink_42", "42"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:40,328 - INFO -   Initial plan: {
+  "WALK": ["bathroom_1", "1"],
+  "WASH": ["sink_42", "42"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <bathroom> (1)  →  OK
+  [02] [WASH] <sink> (42)  →  2026-07-26 17:29:40,449 - INFO -   ❌ [WASH] <sink> (42) | MISSING_STEP
+2026-07-26 17:29:40,456 - INFO -   🔍 Strategy: insert_prep | Window: [2,2] | Unsat: ['next_to_obj']
+2026-07-26 17:29:41,246 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [WASH] <sink> (42)
+    Error type       : MISSING_STEP
+    Replan strategy  : insert_prep
+    Repair window    : [2, 2]
+    Unsatisfied needs: ['next_to_obj']
+    Error objects    : {'sink_42'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.79s) ▼
+{"WALK": ["sink", "42"], "WASH": ["sink", "42"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:41,249 - INFO -   💡 LLM suggestions: {"WALK": ["sink", "42"], "WASH": ["sink", "42"]}
+2026-07-26 17:29:41,307 - INFO -   🌳 Tree found: [{'WALK': ['sink_42']}]
+2026-07-26 17:29:41,308 - INFO -   Spliced: 1 + 1 + 1 (retry) + 0 = 3
+
+  TREE SEARCH RESULT: [{'WALK': ['sink_42']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 3 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <bathroom> (1)  →  OK
+  [02] [WALK] <sink> (42)  →  OK
+  [03] [WASH] <sink> (42)  →  2026-07-26 17:29:41,435 - INFO - action_match_num=1
+2026-07-26 17:29:41,435 - INFO - action_goals=['RINSE|WASH']
+2026-07-26 17:29:41,435 - INFO - action_str='[WALK] <bathroom> (1) [WALK] <sink> (42) [WASH] <sink> (42)'
+2026-07-26 17:29:41,436 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["bathroom", "1"], "WALK": ["sink", "42"], "WASH": ["sink", "42"]}
+2026-07-26 17:29:42,445 - INFO - 
+[16] Listen to music | 113_1
+
+============================================================
+TASK: 113_1  |  Listen to music
+============================================================
+2026-07-26 17:29:43,505 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.98s) ▼
+{
+  "WALK": ["cd_player_1000", "1000"],
+  "SWITCHON": ["cd_player_1000", "1000"],
+  "PUTBACK": ["cd_player_1000", "1000", "cd_player_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:43,510 - INFO -   Initial plan: {
+  "WALK": ["cd_player_1000", "1000"],
+  "SWITCHON": ["cd_player_1000", "1000"],
+  "PUTBACK": ["cd_player_1000", "1000", "cd_player_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 3 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cd_player> (1000)  →  OK
+  [02] [SWITCHON] <cd_player> (1000)  →  OK
+  [03] [PUTBACK] <cd_player> (1000) <cd_player> (1000)  →  2026-07-26 17:29:43,688 - INFO -   ❌ [PUTBACK] <cd_player> (1000) <cd_player> (1000) | MISSING_STEP
+2026-07-26 17:29:43,703 - INFO -   🔍 Strategy: reconstruct | Window: [3,3] | Unsat: ['holds_obj']
+2026-07-26 17:29:44,623 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <cd_player> (1000) <cd_player> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [3, 3]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'cd_player_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.92s) ▼
+{"WALK": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "PUTBACK": ["cd_player", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:44,627 - INFO -   💡 LLM suggestions: {"WALK": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "PUTBACK": ["cd_player", "1000"]}
+2026-07-26 17:29:44,662 - INFO -   🌳 Tree found: [{'GRAB': ['cd_player_1000']}]
+2026-07-26 17:29:44,663 - INFO -   Spliced: 2 + 1 + 1 (retry) + 0 = 4
+
+  TREE SEARCH RESULT: [{'GRAB': ['cd_player_1000']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cd_player> (1000)  →  OK
+  [02] [SWITCHON] <cd_player> (1000)  →  OK
+  [03] [GRAB] <cd_player> (1000)  →  OK
+  [04] [PUTBACK] <cd_player> (1000) <cd_player> (1000)  →  2026-07-26 17:29:44,835 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["cd_player", "1000"], "SWITCHON": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "PUTBACK": ["cd_player", "1000", "cd_player", "1000"]}
+2026-07-26 17:29:45,841 - INFO - 
+[17] Listen to music | 173_1
+
+============================================================
+TASK: 173_1  |  Listen to music
+============================================================
+2026-07-26 17:29:46,979 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.05s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["cd_player", "1000"],
+  "PLUGIN": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"],
+  "PUTBACK": ["cd_player", "1000", "headset", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:46,982 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["cd_player", "1000"],
+  "PLUGIN": ["cd_player", "1000"],
+  "SWITCHON": ["cd_player", "1000"],
+  "PUTBACK": ["cd_player", "1000", "headset", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <cd_player> (1000)  →  OK
+  [03] [PLUGIN] <cd_player> (1000)  →  OK
+  [04] [SWITCHON] <cd_player> (1000)  →  OK
+  [05] [PUTBACK] <cd_player> (1000) <headset> (1001)  →  2026-07-26 17:29:47,236 - INFO -   ❌ [PUTBACK] <cd_player> (1000) <headset> (1001) | MISSING_STEP
+2026-07-26 17:29:47,251 - INFO -   🔍 Strategy: reconstruct | Window: [5,5] | Unsat: ['holds_obj', 'next_to_target']
+2026-07-26 17:29:48,014 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <cd_player> (1000) <headset> (1001)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [5, 5]
+    Unsatisfied needs: ['holds_obj', 'next_to_target']
+    Error objects    : {'headset_1001', 'cd_player_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.78s) ▼
+{"WALK": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "WALK": ["headset", "1001"], "PUTBACK": ["cd_player", "headset", "1001"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:48,029 - INFO -   💡 LLM suggestions: {"WALK": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "WALK": ["headset", "1001"], "PUTBACK": ["cd_player", "headset", "1001"]}
+2026-07-26 17:29:48,109 - INFO -   🌳 Tree found: [{'GRAB': ['cd_player_1000']}, {'WALK': ['headset_1001']}]
+2026-07-26 17:29:48,109 - INFO -   Spliced: 4 + 2 + 1 (retry) + 0 = 7
+
+  TREE SEARCH RESULT: [{'GRAB': ['cd_player_1000']}, {'WALK': ['headset_1001']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 7 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <cd_player> (1000)  →  OK
+  [03] [PLUGIN] <cd_player> (1000)  →  OK
+  [04] [SWITCHON] <cd_player> (1000)  →  OK
+  [05] [GRAB] <cd_player> (1000)  →  OK
+  [06] [WALK] <headset> (1001)  →  OK
+  [07] [PUTBACK] <cd_player> (1000) <headset> (1001)  →  2026-07-26 17:29:48,346 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"STANDUP": [], "WALK": ["cd_player", "1000"], "PLUGIN": ["cd_player", "1000"], "SWITCHON": ["cd_player", "1000"], "GRAB": ["cd_player", "1000"], "WALK": ["headset", "1001"], "PUTBACK": ["cd_player", "1000", "headset", "1001"]}
+2026-07-26 17:29:49,353 - INFO - 
+[18] Drink | 181_2
+
+============================================================
+TASK: 181_2  |  Drink
+============================================================
+2026-07-26 17:29:50,772 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.34s) ▼
+{
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["water_1001", "1001"],
+  "GRAB": ["water_1001", "1001"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTIN": ["water_1001", "1001", "water_glass_1000", "1000"],
+  "DRINK": ["water_glass_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:50,787 - INFO -   Initial plan: {
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["water_1001", "1001"],
+  "GRAB": ["water_1001", "1001"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTIN": ["water_1001", "1001", "water_glass_1000", "1000"],
+  "DRINK": ["water_glass_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 7 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <water> (1001)  →  OK
+  [04] [GRAB] <water> (1001)  →  OK
+  [05] [WALK] <water_glass> (1000)  →  OK
+  [06] [PUTIN] <water> (1001) <water_glass> (1000)  →  OK
+  [07] [DRINK] <water_glass> (1000)  →  2026-07-26 17:29:51,130 - INFO -   ❌ [DRINK] <water_glass> (1000) | MISSING_STEP
+2026-07-26 17:29:51,145 - INFO -   🔍 Strategy: reconstruct | Window: [7,7] | Unsat: ['holds_obj']
+2026-07-26 17:29:51,882 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [DRINK] <water_glass> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [7, 7]
+    Unsatisfied needs: ['holds_obj']
+    Error objects    : {'water_glass_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.75s) ▼
+{"WALK": ["water_glass", "1000"], "GRAB": ["water_glass", "1000"], "DRINK": ["water_glass", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:51,895 - INFO -   💡 LLM suggestions: {"WALK": ["water_glass", "1000"], "GRAB": ["water_glass", "1000"], "DRINK": ["water_glass", "1000"]}
+2026-07-26 17:29:51,953 - INFO -   🌳 Tree found: [{'GRAB': ['water_glass_1000']}]
+2026-07-26 17:29:51,953 - INFO -   Spliced: 6 + 1 + 1 (retry) + 0 = 8
+
+  TREE SEARCH RESULT: [{'GRAB': ['water_glass_1000']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <water> (1001)  →  OK
+  [04] [GRAB] <water> (1001)  →  OK
+  [05] [WALK] <water_glass> (1000)  →  OK
+  [06] [PUTIN] <water> (1001) <water_glass> (1000)  →  OK
+  [07] [GRAB] <water_glass> (1000)  →  OK
+  [08] [DRINK] <water_glass> (1000)  →  2026-07-26 17:29:52,225 - INFO - action_match_num=1
+2026-07-26 17:29:52,225 - INFO - action_goals=['DRINK']
+2026-07-26 17:29:52,225 - INFO - action_str='[WALK] <freezer> (289) [OPEN] <freezer> (289) [WALK] <water> (1001) [GRAB] <water> (1001) [WALK] <water_glass> (1000) [PUTIN] <water> (1001) <water_glass> (1000) [GRAB] <water_glass> (1000) [DRINK] <water_glass> (1000)'
+2026-07-26 17:29:52,225 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["freezer", "289"], "OPEN": ["freezer", "289"], "WALK": ["water", "1001"], "GRAB": ["water", "1001"], "WALK": ["water_glass", "1000"], "PUTIN": ["water", "1001", "water_glass", "1000"], "GRAB": ["water_glass", "1000"], "DRINK": ["water_glass", "1000"]}
+2026-07-26 17:29:53,233 - INFO - 
+[19] Cook some food | 1083_2
+
+============================================================
+TASK: 1083_2  |  Cook some food
+============================================================
+2026-07-26 17:29:54,355 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.04s) ▼
+{
+  "WALK": ["oven_295", "295"],
+  "SWITCHON": ["oven_295", "295"],
+  "WALK": ["pot_1003", "1003"],
+  "PUTBACK": ["pot_1003", "1003", "oven_295", "295"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:54,366 - INFO -   Initial plan: {
+  "WALK": ["oven_295", "295"],
+  "SWITCHON": ["oven_295", "295"],
+  "WALK": ["pot_1003", "1003"],
+  "PUTBACK": ["pot_1003", "1003", "oven_295", "295"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <oven> (295)  →  OK
+  [02] [SWITCHON] <oven> (295)  →  OK
+  [03] [WALK] <pot> (1003)  →  OK
+  [04] [PUTBACK] <pot> (1003) <oven> (295)  →  2026-07-26 17:29:54,575 - INFO -   ❌ [PUTBACK] <pot> (1003) <oven> (295) | MISSING_STEP
+2026-07-26 17:29:54,589 - INFO -   🔍 Strategy: reconstruct | Window: [3,4] | Unsat: ['holds_obj', 'next_to_target']
+2026-07-26 17:29:55,380 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <pot> (1003) <oven> (295)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [3, 4]
+    Unsatisfied needs: ['holds_obj', 'next_to_target']
+    Error objects    : {'pot_1003', 'oven_295'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.80s) ▼
+{"WALK": ["oven", 295], "GRAB": ["pot", 1003], "PUTBACK": ["pot", 295]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:55,387 - INFO -   💡 LLM suggestions: {"WALK": ["oven", 295], "GRAB": ["pot", 1003], "PUTBACK": ["pot", 295]}
+2026-07-26 17:29:55,458 - INFO -   🌳 Tree found: [{'WALK': ['pot_1003']}, {'GRAB': ['pot_1003']}, {'WALK': ['oven_295']}]
+2026-07-26 17:29:55,458 - INFO -   Spliced: 2 + 3 + 2 (retry) + 0 = 7
+
+  TREE SEARCH RESULT: [{'WALK': ['pot_1003']}, {'GRAB': ['pot_1003']}, {'WALK': ['oven_295']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 7 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <oven> (295)  →  OK
+  [02] [SWITCHON] <oven> (295)  →  OK
+  [03] [WALK] <pot> (1003)  →  OK
+  [04] [GRAB] <pot> (1003)  →  OK
+  [05] [WALK] <oven> (295)  →  OK
+  [06] [WALK] <pot> (1003)  →  OK
+  [07] [PUTBACK] <pot> (1003) <oven> (295)  →  2026-07-26 17:29:55,780 - INFO -   ❌ [PUTBACK] <pot> (1003) <oven> (295) | WRONG_TEMPORAL_ORDER
+2026-07-26 17:29:55,787 - INFO -   🔍 Strategy: insert_prep | Window: [7,7] | Unsat: ['next_to_target']
+2026-07-26 17:29:56,489 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [WRONG_TEMPORAL_ORDER]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [PUTBACK] <pot> (1003) <oven> (295)
+    Error type       : WRONG_TEMPORAL_ORDER
+    Replan strategy  : insert_prep
+    Repair window    : [7, 7]
+    Unsatisfied needs: ['next_to_target']
+    Error objects    : {'pot_1003', 'oven_295'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (0.71s) ▼
+{"WALK": ["oven", 295], "PUTBACK": ["pot", 1003, "oven", 295]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:56,500 - INFO -   💡 LLM suggestions: {"WALK": ["oven", 295], "PUTBACK": ["pot", 1003, "oven", 295]}
+2026-07-26 17:29:56,563 - INFO -   🌳 Tree found: [{'WALK': ['oven_295']}]
+2026-07-26 17:29:56,563 - INFO -   Spliced: 6 + 1 + 1 (retry) + 0 = 8
+
+  TREE SEARCH RESULT: [{'WALK': ['oven_295']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <oven> (295)  →  OK
+  [02] [SWITCHON] <oven> (295)  →  OK
+  [03] [WALK] <pot> (1003)  →  OK
+  [04] [GRAB] <pot> (1003)  →  OK
+  [05] [WALK] <oven> (295)  →  OK
+  [06] [WALK] <pot> (1003)  →  OK
+  [07] [WALK] <oven> (295)  →  OK
+  [08] [PUTBACK] <pot> (1003) <oven> (295)  →  2026-07-26 17:29:56,850 - INFO -   ✅ SUCCESS on attempt 3
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["oven", "295"], "SWITCHON": ["oven", "295"], "WALK": ["pot", "1003"], "GRAB": ["pot", "1003"], "WALK": ["oven", "295"], "WALK": ["pot", "1003"], "WALK": ["oven", "295"], "PUTBACK": ["pot", "1003", "oven", "295"]}
+2026-07-26 17:29:57,862 - INFO - 
+[20] Relax on sofa | 416_1
+
+============================================================
+TASK: 416_1  |  Relax on sofa
+============================================================
+2026-07-26 17:29:59,369 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.43s) ▼
+{
+  "WALK": ["couch_352", "352"],
+  "LIE": ["character_65", "65"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:29:59,373 - INFO -   Initial plan: {
+  "WALK": ["couch_352", "352"],
+  "LIE": ["character_65", "65"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <couch> (352)  →  OK
+  [02] [LIE] <character> (65)  →  2026-07-26 17:29:59,489 - INFO -   ❌ [LIE] <character> (65) | AFFORDANCE_ERROR
+2026-07-26 17:29:59,496 - INFO -   🔍 Strategy: local | Window: [2,2] | Unsat: ['next_to_obj', 'lieable']
+2026-07-26 17:30:00,192 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [AFFORDANCE_ERROR]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [LIE] <character> (65)
+    Error type       : AFFORDANCE_ERROR
+    Replan strategy  : local
+    Repair window    : [2, 2]
+    Unsatisfied needs: ['next_to_obj', 'lieable']
+    Error objects    : {'character_65'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.70s) ▼
+{"STANDUP": [], "WALK": ["bed", "1"], "LIE": ["bed", "1"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:00,195 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["bed", "1"], "LIE": ["bed", "1"]}
+2026-07-26 17:30:00,253 - INFO -   🌳 Tree exhausted — dropped failed action: [LIE] <character> (65)
+
+  TREE EXHAUSTED — dropping action: [LIE] <character> (65)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 1 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <couch> (352)  →  2026-07-26 17:30:00,330 - INFO - GOAL FAIL! Not matched: {'id': 65, 'class_name': 'character', 'state': 'LYING'}
+2026-07-26 17:30:00,331 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'ON', 'to_id': 352}
+2026-07-26 17:30:00,355 - INFO -   🎯 Goal completion appended: ['[WALK] <couch> (352)', '[SIT] <couch> (352)']
+2026-07-26 17:30:00,355 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <couch> (352)', '[SIT] <couch> (352)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["couch", "352"], "WALK": ["couch", "352"], "SIT": ["couch", "352"]}
+2026-07-26 17:30:01,367 - INFO - Saved 20 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-mini-sda-tree-goalfix-test_outputs.json
+2026-07-26 17:30:01,368 - INFO - Progress: 20 | Tree: 25 | Fallback: 0
+2026-07-26 17:30:01,368 - INFO - 
+[21] Relax on sofa | 563_1
+
+============================================================
+TASK: 563_1  |  Relax on sofa
+============================================================
+2026-07-26 17:30:02,051 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.71s) ▼
+{
+  "WALK": ["couch_352", "352"],
+  "LIE": []
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:02,156 - INFO -   Initial plan: {
+  "WALK": ["couch_352", "352"],
+  "LIE": []
+}
+2026-07-26 17:30:02,156 - WARNING - Grammar check failed: LIE expects 1 arg(s), got 0
+2026-07-26 17:30:02,157 - WARNING -   Could not parse initial plan for 563_1 — retrying once
+2026-07-26 17:30:02,854 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN (retry)] RESPONSE RECEIVED (0.70s) ▼
+{
+  "WALK": ["couch_352", "352"],
+  "LIE": ["character_65", "65"]
+}
+────────────────────────────────────────────────────────────
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <couch> (352)  →  OK
+  [02] [LIE] <character> (65)  →  2026-07-26 17:30:02,976 - INFO -   ❌ [LIE] <character> (65) | AFFORDANCE_ERROR
+2026-07-26 17:30:02,983 - INFO -   🔍 Strategy: local | Window: [2,2] | Unsat: ['next_to_obj', 'lieable']
+2026-07-26 17:30:03,877 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [AFFORDANCE_ERROR]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [LIE] <character> (65)
+    Error type       : AFFORDANCE_ERROR
+    Replan strategy  : local
+    Repair window    : [2, 2]
+    Unsatisfied needs: ['next_to_obj', 'lieable']
+    Error objects    : {'character_65'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.90s) ▼
+{"STANDUP": [], "WALK": ["bed", "1"], "LIE": []}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:03,880 - INFO -   💡 LLM suggestions: {"STANDUP": [], "WALK": ["bed", "1"], "LIE": []}
+2026-07-26 17:30:03,944 - INFO -   🌳 Tree exhausted — dropped failed action: [LIE] <character> (65)
+
+  TREE EXHAUSTED — dropping action: [LIE] <character> (65)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 1 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <couch> (352)  →  2026-07-26 17:30:04,020 - INFO - GOAL FAIL! Not matched: {'id': 65, 'class_name': 'character', 'state': 'LYING'}
+2026-07-26 17:30:04,020 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'ON', 'to_id': 352}
+2026-07-26 17:30:04,027 - INFO -   🎯 Goal completion appended: ['[WALK] <couch> (352)', '[SIT] <couch> (352)']
+2026-07-26 17:30:04,027 - INFO -   ✅ SUCCESS on attempt 2
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <couch> (352)', '[SIT] <couch> (352)']
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["couch", "352"], "WALK": ["couch", "352"], "SIT": ["couch", "352"]}
+2026-07-26 17:30:05,032 - INFO - 
+[22] Pick up phone | 180_1
+
+============================================================
+TASK: 180_1  |  Pick up phone
+============================================================
+2026-07-26 17:30:06,436 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.31s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"],
+  "PUTBACK": ["phone", "247", "floor_76", "203"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:06,439 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["phone", "247"],
+  "GRAB": ["phone", "247"],
+  "PUTBACK": ["phone", "247", "floor_76", "203"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <phone> (247)  →  OK
+  [03] [GRAB] <phone> (247)  →  OK
+  [04] [PUTBACK] <phone> (247) <floor> (76)  →  2026-07-26 17:30:06,631 - INFO - GOAL FAIL! Not found: {'from_id': 65, 'relation_type': 'HOLDS_RH', 'to_id': 247}
+2026-07-26 17:30:06,640 - INFO -   🎯 Goal completion appended: ['[WALK] <phone> (247)', '[GRAB] <phone> (247)']
+2026-07-26 17:30:06,640 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  GOAL COMPLETION appended: ['[WALK] <phone> (247)', '[GRAB] <phone> (247)']
+
+  FINAL OUTPUT SAVED:
+  {"STANDUP": [], "WALK": ["phone", "247"], "GRAB": ["phone", "247"], "PUTBACK": ["phone", "247", "floor", "76"], "WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:07,648 - INFO - 
+[23] Pick up phone | 211_1
+
+============================================================
+TASK: 211_1  |  Pick up phone
+============================================================
+2026-07-26 17:30:08,487 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.76s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:08,491 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:08,648 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:09,659 - INFO - 
+[24] Pick up phone | 287_2
+
+============================================================
+TASK: 287_2  |  Pick up phone
+============================================================
+2026-07-26 17:30:10,534 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.81s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:10,538 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:10,688 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:11,696 - INFO - 
+[25] Pick up phone | 352_1
+
+============================================================
+TASK: 352_1  |  Pick up phone
+============================================================
+2026-07-26 17:30:12,469 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.70s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:12,473 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:12,624 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:13,632 - INFO - 
+[26] Pick up phone | 442_2
+
+============================================================
+TASK: 442_2  |  Pick up phone
+============================================================
+2026-07-26 17:30:14,493 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.79s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:14,497 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:14,642 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:15,646 - INFO - 
+[27] Pick up phone | 474_2
+
+============================================================
+TASK: 474_2  |  Pick up phone
+============================================================
+2026-07-26 17:30:16,676 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.96s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:16,680 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:16,826 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:17,834 - INFO - 
+[28] Pick up phone | 99_2
+
+============================================================
+TASK: 99_2  |  Pick up phone
+============================================================
+2026-07-26 17:30:18,621 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (0.71s) ▼
+{
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:18,622 - INFO -   Initial plan: {
+  "WALK": ["phone_247", "247"],
+  "GRAB": ["phone_247", "247"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 2 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <phone> (247)  →  OK
+  [02] [GRAB] <phone> (247)  →  2026-07-26 17:30:18,756 - INFO -   ✅ SUCCESS on attempt 1
+OK
+
+  FINAL OUTPUT SAVED:
+  {"WALK": ["phone", "247"], "GRAB": ["phone", "247"]}
+2026-07-26 17:30:19,762 - INFO - 
+[29] Make coffee | 183_2
+
+============================================================
+TASK: 183_2  |  Make coffee
+============================================================
+2026-07-26 17:30:21,082 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.24s) ▼
+{
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "POUR": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:21,085 - INFO -   Initial plan: {
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "POUR": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [GRAB] <water> (1002)  →  2026-07-26 17:30:21,206 - INFO -   ❌ [GRAB] <water> (1002) | MISSING_STEP
+2026-07-26 17:30:21,221 - INFO -   🔍 Strategy: reconstruct | Window: [1,4] | Unsat: ['grabbable', 'obj_not_inside_closed_container']
+2026-07-26 17:30:22,423 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <water> (1002)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [1, 4]
+    Unsatisfied needs: ['grabbable', 'obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (1.22s) ▼
+{"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:22,437 - INFO -   💡 LLM suggestions: {"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+2026-07-26 17:30:22,755 - INFO -   🌳 Tree exhausted — dropped failed action: [GRAB] <water> (1002)
+
+  TREE EXHAUSTED — dropping action: [GRAB] <water> (1002)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [WALK] <coffe_maker> (290)  →  OK
+  [03] [POUR] <water> (1002) <coffe_maker> (290)  →  2026-07-26 17:30:22,888 - INFO -   ❌ [POUR] <water> (1002) <coffe_maker> (290) | MISSING_STEP
+2026-07-26 17:30:22,896 - INFO -   🔍 Strategy: wrong_action | Window: [3,3] | Unsat: []
+2026-07-26 17:30:23,642 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [POUR] <water> (1002) <coffe_maker> (290)
+    Error type       : MISSING_STEP
+    Replan strategy  : wrong_action
+    Repair window    : [3, 3]
+    Unsatisfied needs: []
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[WRONG ACTION FIX] RESPONSE RECEIVED (0.75s) ▼
+{"GRAB": ["water", "1002"], "POUR": ["water", "1002", "coffee_maker", "290"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:23,645 - WARNING - json_to_action failed: 'coffee_maker_290'
+2026-07-26 17:30:24,792 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[LLM] RESPONSE RECEIVED (1.15s) ▼
+{
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "POUR": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [GRAB] <water> (1002)  →  2026-07-26 17:30:24,917 - INFO -   ❌ [GRAB] <water> (1002) | MISSING_STEP
+2026-07-26 17:30:24,931 - INFO -   🔍 Strategy: reconstruct | Window: [1,4] | Unsat: ['grabbable', 'obj_not_inside_closed_container']
+2026-07-26 17:30:25,741 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <water> (1002)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [1, 4]
+    Unsatisfied needs: ['grabbable', 'obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[SUGGESTION (replan 3)] RESPONSE RECEIVED (0.81s) ▼
+{"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:25,744 - INFO -   💡 LLM suggestions: {"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+2026-07-26 17:30:26,057 - INFO -   🌳 Tree exhausted — dropped failed action: [GRAB] <water> (1002)
+
+  TREE EXHAUSTED — dropping action: [GRAB] <water> (1002)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [WALK] <coffe_maker> (290)  →  OK
+  [03] [POUR] <water> (1002) <coffe_maker> (290)  →  2026-07-26 17:30:26,190 - INFO -   ❌ [POUR] <water> (1002) <coffe_maker> (290) | MISSING_STEP
+2026-07-26 17:30:26,190 - INFO -   ⚠️  Max replanning reached for 183_2
+FAILED [MISSING_STEP]
+
+  FINAL OUTPUT SAVED (max replans reached):
+  {"WALK": ["water", "1002"], "WALK": ["coffe_maker", "290"], "POUR": ["water", "1002", "coffe_maker", "290"], "SWITCHON": ["coffe_maker", "290"]}
+2026-07-26 17:30:27,199 - INFO - 
+[30] Make coffee | 721_2
+
+============================================================
+TASK: 721_2  |  Make coffee
+============================================================
+2026-07-26 17:30:30,807 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.54s) ▼
+{
+  "WALK": ["coffe_maker_290", "290"],
+  "PLUGIN": ["coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"],
+  "WALK": ["water_1000", "1000"],
+  "GRAB": ["water_1000", "1000"],
+  "WALK": ["ground_coffee_1002", "1002"],
+  "GRAB": ["ground_coffee_1002", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "PUTBACK": ["ground_coffee_1002", "1002", "coffe_maker_290", "290"],
+  "WALK": ["coffee_filter_1001", "1001"],
+  "GRAB": ["coffee_filter_1001", "1001"],
+  "WALK": ["coffe_maker_290", "290"],
+  "PUTBACK": ["coffee_filter_1001", "1001", "coffe_maker_290", "290"],
+  "WALK": ["water_1000", "1000"],
+  "POUR": ["water_1000", "1000", "coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:30,813 - INFO -   Initial plan: {
+  "WALK": ["coffe_maker_290", "290"],
+  "PLUGIN": ["coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"],
+  "WALK": ["water_1000", "1000"],
+  "GRAB": ["water_1000", "1000"],
+  "WALK": ["ground_coffee_1002", "1002"],
+  "GRAB": ["ground_coffee_1002", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "PUTBACK": ["ground_coffee_1002", "1002", "coffe_maker_290", "290"],
+  "WALK": ["coffee_filter_1001", "1001"],
+  "GRAB": ["coffee_filter_1001", "1001"],
+  "WALK": ["coffe_maker_290", "290"],
+  "PUTBACK": ["coffee_filter_1001", "1001", "coffe_maker_290", "290"],
+  "WALK": ["water_1000", "1000"],
+  "POUR": ["water_1000", "1000", "coffe_maker_290", "290"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 15 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <coffe_maker> (290)  →  OK
+  [02] [PLUGIN] <coffe_maker> (290)  →  OK
+  [03] [SWITCHON] <coffe_maker> (290)  →  OK
+  [04] [WALK] <water> (1000)  →  OK
+  [05] [GRAB] <water> (1000)  →  2026-07-26 17:30:31,073 - INFO -   ❌ [GRAB] <water> (1000) | MISSING_STEP
+2026-07-26 17:30:31,088 - INFO -   🔍 Strategy: reconstruct | Window: [4,15] | Unsat: ['grabbable', 'obj_not_inside_closed_container']
+2026-07-26 17:30:31,832 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <water> (1000)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [4, 15]
+    Unsatisfied needs: ['grabbable', 'obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'water_1000'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (0.75s) ▼
+{"WALK": ["fridge", "200"], "OPEN": ["fridge", "200"], "WALK": ["water", "1000"], "GRAB": ["water", "1000"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:31,835 - INFO -   💡 LLM suggestions: {"WALK": ["fridge", "200"], "OPEN": ["fridge", "200"], "WALK": ["water", "1000"], "GRAB": ["water", "1000"]}
+2026-07-26 17:30:31,988 - INFO -   🌳 Tree exhausted — dropped failed action: [GRAB] <water> (1000)
+
+  TREE EXHAUSTED — dropping action: [GRAB] <water> (1000)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 14 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <coffe_maker> (290)  →  OK
+  [02] [PLUGIN] <coffe_maker> (290)  →  OK
+  [03] [SWITCHON] <coffe_maker> (290)  →  OK
+  [04] [WALK] <water> (1000)  →  OK
+  [05] [WALK] <ground_coffee> (1002)  →  OK
+  [06] [GRAB] <ground_coffee> (1002)  →  2026-07-26 17:30:32,260 - INFO -   ❌ [GRAB] <ground_coffee> (1002) | MISSING_STEP
+2026-07-26 17:30:32,275 - INFO -   🔍 Strategy: reconstruct | Window: [4,8] | Unsat: ['obj_not_inside_closed_container']
+2026-07-26 17:30:33,265 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <ground_coffee> (1002)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [4, 8]
+    Unsatisfied needs: ['obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'ground_coffee_1002'}
+[SUGGESTION (replan 2)] RESPONSE RECEIVED (0.99s) ▼
+{"WALK": ["coffee_cabinet", "1001"], "OPEN": ["coffee_cabinet", "1001"], "WALK": ["ground_coffee", "1002"], "GRAB": ["ground_coffee", "1002"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:33,270 - INFO -   💡 LLM suggestions: {"WALK": ["coffee_cabinet", "1001"], "OPEN": ["coffee_cabinet", "1001"], "WALK": ["ground_coffee", "1002"], "GRAB": ["ground_coffee", "1002"]}
+2026-07-26 17:30:33,385 - INFO -   🌳 Tree found: [{'SWITCHOFF': ['coffe_maker_290']}, {'OPEN': ['coffe_maker_290']}, {'GRAB': ['ground_coffee_1002']}]
+2026-07-26 17:30:33,386 - INFO -   Spliced: 3 + 3 + 5 (retry) + 6 = 17
+
+  TREE SEARCH RESULT: [{'SWITCHOFF': ['coffe_maker_290']}, {'OPEN': ['coffe_maker_290']}, {'GRAB': ['ground_coffee_1002']}]
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 17 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <coffe_maker> (290)  →  OK
+  [02] [PLUGIN] <coffe_maker> (290)  →  OK
+  [03] [SWITCHON] <coffe_maker> (290)  →  OK
+  [04] [SWITCHOFF] <coffe_maker> (290)  →  OK
+  [05] [OPEN] <coffe_maker> (290)  →  OK
+  [06] [GRAB] <ground_coffee> (1002)  →  OK
+  [07] [WALK] <water> (1000)  →  OK
+  [08] [WALK] <ground_coffee> (1002)  →  OK
+  [09] [GRAB] <ground_coffee> (1002)  →  SKIPPED (ADDITIONAL_STEP)
+  [10] [WALK] <coffe_maker> (290)  →  OK
+  [11] [PUTBACK] <ground_coffee> (1002) <coffe_maker> (290)  →  OK
+  [12] [WALK] <coffee_filter> (1001)  →  OK
+  [13] [GRAB] <coffee_filter> (1001)  →  OK
+  [14] [WALK] <coffe_maker> (290)  →  OK
+  [15] [PUTBACK] <coffee_filter> (1001) <coffe_maker> (290)  →  OK
+  [16] [WALK] <water> (1000)  →  OK
+  [17] [POUR] <water> (1000) <coffe_maker> (290)  →  2026-07-26 17:30:34,314 - INFO -   ❌ [POUR] <water> (1000) <coffe_maker> (290) | MISSING_STEP
+2026-07-26 17:30:34,322 - INFO -   🔍 Strategy: wrong_action | Window: [16,17] | Unsat: []
+2026-07-26 17:30:35,276 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [POUR] <water> (1000) <coffe_maker> (290)
+    Error type       : MISSING_STEP
+    Replan strategy  : wrong_action
+    Repair window    : [16, 17]
+    Unsatisfied needs: []
+    Error objects    : {'coffe_maker_290', 'water_1000'}
+[WRONG ACTION FIX] RESPONSE RECEIVED (0.96s) ▼
+{"GRAB": ["water", "1000"], "POUR": ["water", "1000", "coffee_maker", "290"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:35,284 - WARNING - json_to_action failed: 'coffee_maker_290'
+2026-07-26 17:30:37,573 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[LLM] RESPONSE RECEIVED (2.29s) ▼
+{
+  "WALK": ["coffe_maker_290", "290"],
+  "PLUGIN": ["coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"],
+  "WALK": ["water_1000", "1000"],
+  "GRAB": ["water_1000", "1000"],
+  "WALK": ["ground_coffee_1002", "1002"],
+  "GRAB": ["ground_coffee_1002", "1002"],
+  "PUTBACK": ["ground_coffee_1002", "1002", "coffe_maker_290", "290"],
+  "WALK": ["coffee_filter_1001", "1001"],
+  "GRAB": ["coffee_filter_1001", "1001"],
+  "PUTBACK": ["coffee_filter_1001", "1001", "coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 11 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <coffe_maker> (290)  →  OK
+  [02] [PLUGIN] <coffe_maker> (290)  →  OK
+  [03] [SWITCHON] <coffe_maker> (290)  →  OK
+  [04] [WALK] <water> (1000)  →  OK
+  [05] [GRAB] <water> (1000)  →  2026-07-26 17:30:37,827 - INFO -   ❌ [GRAB] <water> (1000) | MISSING_STEP
+2026-07-26 17:30:37,828 - INFO -   ⚠️  Max replanning reached for 721_2
+FAILED [MISSING_STEP]
+
+  FINAL OUTPUT SAVED (max replans reached):
+  {"WALK": ["coffe_maker", "290"], "PLUGIN": ["coffe_maker", "290"], "SWITCHON": ["coffe_maker", "290"], "WALK": ["water", "1000"], "GRAB": ["water", "1000"], "WALK": ["ground_coffee", "1002"], "GRAB": ["ground_coffee", "1002"], "PUTBACK": ["ground_coffee", "1002", "coffe_maker", "290"], "WALK": ["coffee_filter", "1001"], "GRAB": ["coffee_filter", "1001"], "PUTBACK": ["coffee_filter", "1001", "coffe_maker", "290"]}
+2026-07-26 17:30:38,839 - INFO - Saved 30 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-mini-sda-tree-goalfix-test_outputs.json
+2026-07-26 17:30:38,839 - INFO - Progress: 30 | Tree: 26 | Fallback: 2
+2026-07-26 17:30:38,839 - INFO - 
+[31] Make coffee | 764_2
+
+============================================================
+TASK: 764_2  |  Make coffee
+============================================================
+2026-07-26 17:30:40,127 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.22s) ▼
+{
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "POUR": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:40,130 - INFO -   Initial plan: {
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "POUR": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 1) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [GRAB] <water> (1002)  →  2026-07-26 17:30:40,262 - INFO -   ❌ [GRAB] <water> (1002) | MISSING_STEP
+2026-07-26 17:30:40,277 - INFO -   🔍 Strategy: reconstruct | Window: [1,4] | Unsat: ['grabbable', 'obj_not_inside_closed_container']
+2026-07-26 17:30:41,355 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <water> (1002)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [1, 4]
+    Unsatisfied needs: ['grabbable', 'obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[SUGGESTION (replan 1)] RESPONSE RECEIVED (1.08s) ▼
+{"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:41,359 - INFO -   💡 LLM suggestions: {"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+2026-07-26 17:30:41,624 - INFO -   🌳 Tree exhausted — dropped failed action: [GRAB] <water> (1002)
+
+  TREE EXHAUSTED — dropping action: [GRAB] <water> (1002)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 2) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [WALK] <coffe_maker> (290)  →  OK
+  [03] [POUR] <water> (1002) <coffe_maker> (290)  →  2026-07-26 17:30:41,775 - INFO -   ❌ [POUR] <water> (1002) <coffe_maker> (290) | MISSING_STEP
+2026-07-26 17:30:41,782 - INFO -   🔍 Strategy: wrong_action | Window: [3,3] | Unsat: []
+2026-07-26 17:30:42,585 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [POUR] <water> (1002) <coffe_maker> (290)
+    Error type       : MISSING_STEP
+    Replan strategy  : wrong_action
+    Repair window    : [3, 3]
+    Unsatisfied needs: []
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[WRONG ACTION FIX] RESPONSE RECEIVED (0.81s) ▼
+{"GRAB": ["water", "1002"], "POUR": ["water", "1002", "coffee_maker", "290"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:42,589 - WARNING - json_to_action failed: 'coffee_maker_290'
+2026-07-26 17:30:43,771 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[LLM] RESPONSE RECEIVED (1.18s) ▼
+{
+  "WALK": ["water", "1002"],
+  "GRAB": ["water", "1002"],
+  "WALK": ["coffe_maker_290", "290"],
+  "PUTIN": ["water", "1002", "coffe_maker_290", "290"],
+  "SWITCHON": ["coffe_maker_290", "290"]
+}
+────────────────────────────────────────────────────────────
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 3) — 5 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [GRAB] <water> (1002)  →  2026-07-26 17:30:43,891 - INFO -   ❌ [GRAB] <water> (1002) | MISSING_STEP
+2026-07-26 17:30:43,906 - INFO -   🔍 Strategy: reconstruct | Window: [1,4] | Unsat: ['grabbable', 'obj_not_inside_closed_container']
+2026-07-26 17:30:44,682 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+FAILED [MISSING_STEP]
+
+  ERROR DIAGNOSIS:
+    Failed action    : [GRAB] <water> (1002)
+    Error type       : MISSING_STEP
+    Replan strategy  : reconstruct
+    Repair window    : [1, 4]
+    Unsatisfied needs: ['grabbable', 'obj_not_inside_closed_container']
+    Error objects    : {'coffe_maker_290', 'water_1002'}
+[SUGGESTION (replan 3)] RESPONSE RECEIVED (0.79s) ▼
+{"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+────────────────────────────────────────────────────────────
+2026-07-26 17:30:44,692 - INFO -   💡 LLM suggestions: {"WALK": ["fridge", "1001"], "OPEN": ["fridge", "1001"], "WALK": ["water", "1002"], "GRAB": ["water", "1002"]}
+2026-07-26 17:30:44,980 - INFO -   🌳 Tree exhausted — dropped failed action: [GRAB] <water> (1002)
+
+  TREE EXHAUSTED — dropping action: [GRAB] <water> (1002)
+
+  ──────────────────────────────────────────────────
+  EXECUTING PLAN (attempt 4) — 4 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <water> (1002)  →  OK
+  [02] [WALK] <coffe_maker> (290)  →  OK
+  [03] [PUTIN] <water> (1002) <coffe_maker> (290)  →  2026-07-26 17:30:45,130 - INFO -   ❌ [PUTIN] <water> (1002) <coffe_maker> (290) | MISSING_STEP
+2026-07-26 17:30:45,130 - INFO -   ⚠️  Max replanning reached for 764_2
+FAILED [MISSING_STEP]
+
+  FINAL OUTPUT SAVED (max replans reached):
+  {"WALK": ["water", "1002"], "WALK": ["coffe_maker", "290"], "PUTIN": ["water", "1002", "coffe_maker", "290"], "SWITCHON": ["coffe_maker", "290"]}
+2026-07-26 17:30:46,141 - INFO - Saved 31 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing/gpt-4o-mini-sda-tree-goalfix-test_outputs.json
+2026-07-26 17:30:46,141 - INFO - 
+=== DONE ===
+2026-07-26 17:30:46,141 - INFO - Total tasks    : 31
+2026-07-26 17:30:46,141 - INFO - Total replans  : 38
+2026-07-26 17:30:46,141 - INFO - Tree successes : 26
+2026-07-26 17:30:46,141 - INFO - LLM fallbacks  : 3
+2026-07-26 17:30:46,142 - INFO - Avg replans    : 1.23

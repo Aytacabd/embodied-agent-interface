@@ -35,6 +35,7 @@ from virtualhome_eval.simulation.evolving_graph.eval_utils import (
     construct_planner,
     json_to_action,
     valid_actions as _eai_valid_actions,
+    scene_evaluate_wID,
 )
 from virtualhome_eval.simulation.evolving_graph.checker import TemporalOrderChecker
 
@@ -86,7 +87,7 @@ API_BASE_URL = os.environ.get("LLM_BASE_URL", "")
 TEMPERATURE = 0     # deterministic — the tabu/repair-memory logic relies on it
 MAX_TOKENS = 2048   # 512 truncated 30-50-step hard-task plans mid-JSON
 
-MODEL_NAME = f"{MODEL}-sda-tree_modifiedsdg_notmini"
+MODEL_NAME = f"{MODEL}-sda-tree-final{os.environ.get('SDA_TAG_SUFFIX', '')}"
 
 MAX_REPLAN = 3
 SCENEGRAPH_ID = 1
@@ -205,6 +206,21 @@ Every argument must be the object name followed by its numeric ID from the scene
 Generate a corrected sequence of 2-6 actions that achieves the same goal correctly.
 Output ONLY a JSON object.
 Example: {{"WALK": ["washing_machine", "1000"], "GRAB": ["clothes_pants", "1001"], "PUTIN": ["clothes_pants", "1001", "washing_machine", "1000"]}}"""
+
+ACTION_GOAL_PROMPT = """A VirtualHome robot plan executed with no errors, but the task also requires
+performing this action on some object, and the plan never did it:
+{verbs}
+
+Full task context:
+{node_goals}
+{edge_goals}
+{action_goals}
+
+Identify the ONE object this action should target and output a single WALK-less
+action for it (the runner will prepend WALK itself).
+Every argument must be the object name followed by its numeric ID from the scene.
+Output ONLY a JSON object with exactly one action.
+Example: {{"TOUCH": ["cat", "1000"]}}"""
 
 
 # =============================================================================
@@ -707,6 +723,48 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict,
         return None
 
 
+def _build_retry_prompt(base_prompt: str, raw_output: str) -> str:
+    """
+    Corrective retry message for a failed initial-plan parse.
+
+    Names the SPECIFIC problem when it's the empty-args pattern (model
+    emits e.g. {"LIE": []} for an action that requires an object) instead
+    of a generic "fix your JSON" nudge. Confirmed across 25 real failures
+    (main-set run) that the generic message reproduces the IDENTICAL
+    mistake on retry — checked directly: LIE/WASH/RINSE come back empty
+    again both times, because the message never says what was wrong, only
+    that something was. The action's own grammar (prompt AND executor
+    agree: these take exactly 1 argument, same as SIT) was never the gap;
+    telling the model exactly which verb and what's missing is.
+    """
+    ZERO_ARG = {"STANDUP", "SLEEP", "WAKEUP"}
+    parsed = parse_llm_output(raw_output) or []
+    empty_arg_verbs = []
+    for item in parsed:
+        for verb, args in item.items():
+            v = verb.upper()
+            if args == [] and v not in ZERO_ARG and v in EAI_VALID_ACTIONS and v not in empty_arg_verbs:
+                empty_arg_verbs.append(v)
+
+    if empty_arg_verbs:
+        verbs_str = " and ".join(empty_arg_verbs)
+        example = empty_arg_verbs[0]
+        return base_prompt + (
+            f"\n\nIMPORTANT: your previous response used {verbs_str} with an"
+            f" EMPTY argument list (e.g. \"{example}\": []). {verbs_str} require"
+            f" exactly ONE object argument — specify what it applies to, e.g."
+            f" \"{example}\": [\"object_name\", \"object_id\"]."
+            " Respond with ONE complete, syntactically valid JSON object and"
+            " nothing else."
+        )
+
+    return base_prompt + (
+        "\n\nIMPORTANT: your previous response was invalid or truncated."
+        " Respond with ONE complete, syntactically valid JSON object and"
+        " nothing else. If the plan is long, keep it complete anyway."
+    )
+
+
 def hist_pos_to_plan_pos(h: int, hist_to_plan: list, failed_plan_idx) -> int:
     """
     1-based successful-history index -> 1-based plan position.
@@ -746,6 +804,342 @@ def goal_state_action_pair(action, goal_state_pairs: set):
         return None
     pair = (int(om.group(1)), state)
     return pair if pair in goal_state_pairs else None
+
+
+_STATE_TO_ACTION = {v: k for k, v in _GOAL_STATE_EFFECTS.items()}
+
+
+def _attempt_goal_completion(
+    motion_planner, unsat_node, unsat_edge, unsat_action,
+    name_map, goal_edge_relations, llm,
+    node_goal_str, edge_goal_str, action_goal_str,
+):
+    """
+    Direct, no-search completion of goals a CLEAN-EXECUTING plan left unmet.
+
+    Covers two failure shapes the precondition-failure-triggered repair loop
+    structurally cannot see, because nothing ever raised an error for it to
+    diagnose: (a) a goal the LLM's plan never attempted at all, and (b) a
+    goal a repair elsewhere in the plan accidentally undid (e.g. PUTBACK-ing
+    an object the goal needs held). scene_evaluate_wID — the same function
+    the offline evaluator scores with — is what finds these; this function
+    only decides what to do once one is found.
+
+    Not a search: each goal shape here has exactly one obvious satisfying
+    sequence (walk over, do the thing), so this mirrors the existing
+    node-state goal guard's pattern — build the sequence, execute it for
+    real against motion_planner, commit only if the WHOLE sequence
+    succeeds — rather than invoking the BFS tree, which exists to choose
+    among several candidate repairs for a diagnosed precondition failure,
+    not to re-derive an undiagnosed goal from scratch.
+    """
+    committed = []
+    # Tokens the character has already been walked to THIS call, even by a
+    # sequence that didn't fully commit (WALK is a real, un-rollback-able
+    # action against motion_planner the moment it succeeds — the earlier
+    # steps of a later-failing sequence still happened for real). Reusing
+    # this across node/edge/action sub-passes below stops one sub-pass's
+    # WALK from resetting a spatial fact (e.g. FACING) that an earlier
+    # sub-pass in this SAME call just established for the same object —
+    # confirmed happening on task 803_2: an edge-goal FACING fix (WALK,
+    # TURNTO) was undone by the action-goal fix re-walking to the same
+    # remote_control right before TOUCH.
+    walked_to = set()
+
+    def _nodes():
+        return {n["id"]: n for n in motion_planner.env_state.to_dict()["nodes"]}
+
+    def _held_ids():
+        char = motion_planner.acting_char_id
+        return {
+            e["to_id"] for e in motion_planner.env_state.to_dict()["edges"]
+            if e["from_id"] == char and e["relation_type"] in ("HOLDS_RH", "HOLDS_LH")
+        }
+
+    def _mk(action_dict):
+        return parse_and_validate(
+            json.dumps(action_dict), name_map, goal_edge_relations
+        ) or []
+
+    def _walk(tok):
+        """WALK to tok unless this call already walked there."""
+        return [] if tok in walked_to else _mk({"WALK": [tok]})
+
+    def _run(seq):
+        done = []
+        for a in seq:
+            okf, _ = motion_planner.my_execute_primitive_action_eval(a)
+            if not okf:
+                return None
+            m = re.match(r"^\[(\w+)\]\s*<([^>]+)>\s*\((\d+)\)", str(a))
+            if m and m.group(1).upper() == "WALK":
+                # Tracks CURRENT location, not everywhere ever visited this
+                # call — walking to a new object leaves the old one behind,
+                # so any earlier entries no longer describe where the
+                # character actually is and must be dropped, not kept.
+                walked_to.clear()
+                walked_to.add(f"{m.group(2)}_{m.group(3)}")
+            done.append(a)
+        return done
+
+    char_id = motion_planner.acting_char_id
+    ZERO_ARG = {"STANDUP", "SLEEP", "WAKEUP"}
+
+    # ── Node/state goals: never planned, or planned then lost ───────────────
+    for g in unsat_node:
+        oid, cname, state = g["id"], g["class_name"], str(g["state"]).upper()
+        action = _STATE_TO_ACTION.get(state)
+        if not action:
+            continue  # state has no single achieving action (e.g. DIRTY)
+        obj_tok = f"{cname}_{oid}"
+        done = _run(_walk(obj_tok) + _mk({action: [obj_tok]}))
+        if done:
+            committed.extend(done)
+
+    # ── Edge/relation goals: placement, proximity, posture, facing, holding ──
+    for g in unsat_edge:
+        frm, to, rel = g["from_id"], g["to_id"], g["relation_type"]
+        nodes = _nodes()
+
+        if rel in ("ON", "INSIDE"):
+            if frm == char_id:
+                # character-posture goal (sits/lies ON/INSIDE furniture),
+                # not an object-placement goal — frm is the character, not
+                # an object to carry.
+                #
+                # relation_type here does NOT encode posture: VirtualHome
+                # records "character ON couch" identically whether sitting
+                # or lying, so ON/INSIDE can't tell SIT from LIE. The
+                # authoritative signal is the character's OWN node-state
+                # goal (id == frm, state LYING/SITTING) — look for it
+                # before falling back to a default. Confirmed against real
+                # evaluator output: "Relax on sofa" (edge: character ON
+                # couch, node: character LYING) was previously guessed as
+                # SIT purely from rel=="ON", satisfying the edge goal while
+                # leaving the LYING node goal permanently unmet.
+                tgt = nodes.get(to)
+                if not tgt:
+                    continue
+                tgt_tok = f"{tgt['class_name']}_{to}"
+                posture_state = next(
+                    (str(ng["state"]).upper() for ng in unsat_node
+                     if ng["id"] == frm and str(ng["state"]).upper() in ("LYING", "SITTING")),
+                    None,
+                )
+                if posture_state:
+                    posture = "LIE" if posture_state == "LYING" else "SIT"
+                else:
+                    # no explicit posture goal found — fall back to the
+                    # rel-based default (right far more often than wrong,
+                    # per the pre-fix data: only "relax"/"sleep"-style
+                    # tasks pair ON with a LYING requirement)
+                    posture = "SIT" if rel == "ON" else "LIE"
+                done = _run(_walk(tgt_tok) + _mk({posture: [tgt_tok]}))
+                if done:
+                    committed.extend(done)
+                continue
+
+            obj_node, tgt_node = nodes.get(frm), nodes.get(to)
+            if not obj_node or not tgt_node:
+                continue
+            obj_tok = f"{obj_node['class_name']}_{frm}"
+            tgt_tok = f"{tgt_node['class_name']}_{to}"
+            # Unconditional WALK throughout this branch, NOT _walk(): this
+            # sequence itself moves between two different locations (fetch
+            # the object, then walk to the target), so an earlier _walk()
+            # decision within the SAME seq can't know a later one in the
+            # SAME seq is about to invalidate it — walked_to is only
+            # updated once a WALK actually executes, but this whole
+            # sequence is built before any of it runs. Confirmed causing a
+            # dropped WALK (task 190_1 shape) when two separate placement
+            # goals shared a target: goal 2's fetch-walk to a different
+            # object made goal 1's already-confirmed "at the target"
+            # stale, but the pre-built seq had no way to see that. The
+            # cross-goal memoization this file uses elsewhere (FACING then
+            # a same-object action goal, confirmed fixing task 803_2) is
+            # safe because each of THOSE branches issues exactly one WALK
+            # per goal; this branch issues up to three in one seq, so it's
+            # scoped out rather than risking the same failure mode again.
+            seq = []
+            # containers opened/switched-off by THIS fix, in the order
+            # they need restoring — tracked as lists (not booleans) since
+            # the object's own source container and the destination can
+            # be two different containers, or the SAME one (common case:
+            # an object stored inside the very appliance it gets placed
+            # back into) — the "not in" guards below avoid operating on
+            # the same container twice in that case.
+            opened_toks, switched_off_toks = [], []
+            if frm not in _held_ids():
+                # The object may itself be trapped inside a closed
+                # container — e.g. the node-goal loop just above already
+                # closed the very container this object lives in. Open it
+                # before fetching. Confirmed needed on 310_2/764_2/229_1/
+                # 183_2: ground_coffee sits INSIDE the coffee_maker, which
+                # the CLOSED node-goal fix (running earlier in this same
+                # call) had already shut — GRAB then failed silently with
+                # no fallback, permanently dropping the whole placement.
+                src_container_id = None
+                for e in motion_planner.env_state.to_dict()["edges"]:
+                    if e["from_id"] == frm and e["relation_type"] == "INSIDE":
+                        cand = nodes.get(e["to_id"])
+                        if cand and "CAN_OPEN" in (cand.get("properties") or []):
+                            src_container_id = e["to_id"]
+                            break
+                if src_container_id is not None:
+                    cnode = nodes[src_container_id]
+                    ctok = f"{cnode['class_name']}_{src_container_id}"
+                    cstates = {str(s).upper() for s in cnode.get("states", [])}
+                    if "CLOSED" in cstates:
+                        if "ON" in cstates:
+                            seq += _mk({"WALK": [ctok]}) + _mk({"SWITCHOFF": [ctok]})
+                            switched_off_toks.append(ctok)
+                        seq += _mk({"WALK": [ctok]}) + _mk({"OPEN": [ctok]})
+                        opened_toks.append(ctok)
+                seq += _mk({"WALK": [obj_tok]}) + _mk({"GRAB": [obj_tok]})
+            tgt_states = {str(s).upper() for s in tgt_node.get("states", [])}
+            if "CLOSED" in tgt_states and tgt_tok not in opened_toks:
+                if "ON" in tgt_states and tgt_tok not in switched_off_toks:
+                    # SWITCHOFF needs the character next to the target, but
+                    # the fetch step above (if it ran) just walked to the
+                    # OBJECT instead — confirmed failing for real (task
+                    # 190_1: bowl fetch leaves the character away from the
+                    # dishwasher, SWITCHOFF then fails outright) since the
+                    # mock test executor accepts every action regardless of
+                    # position and could never have caught a missing WALK.
+                    seq += _mk({"WALK": [tgt_tok]}) + _mk({"SWITCHOFF": [tgt_tok]})
+                    switched_off_toks.append(tgt_tok)
+                seq += _mk({"WALK": [tgt_tok]}) + _mk({"OPEN": [tgt_tok]})
+                opened_toks.append(tgt_tok)
+            # PUTBACK/PUTIN choice is authoritative from the goal's own
+            # relation_type, and double-checked downstream: parse_and_validate
+            # re-derives it from goal_edge_relations (built from these SAME
+            # edge goals) and corrects if it disagrees — unlike the posture
+            # guess above, this one has a real safety net.
+            place = "PUTBACK" if rel == "ON" else "PUTIN"
+            seq += _mk({"WALK": [tgt_tok]}) + _mk({place: [obj_tok, tgt_tok]})
+            done = _run(seq)
+            if done:
+                committed.extend(done)
+                if opened_toks or switched_off_toks:
+                    # Opening/switching off was a MEANS to fetch/place the
+                    # object, not something asked for — leaving it that
+                    # way silently undoes whatever CLOSED/ON goal was true
+                    # before this ran (confirmed failing for real: task
+                    # 190_1's dishwasher ended up open+off after the bowl
+                    # placement, destroying its own already-satisfied
+                    # CLOSED and ON node goals). Put it back. A separate
+                    # _run so a restore failure doesn't discard the
+                    # placement that already succeeded. CLOSE before
+                    # SWITCHON per container, matching real-world handling.
+                    restore = []
+                    for ctok in opened_toks:
+                        restore += _mk({"WALK": [ctok]}) + _mk({"CLOSE": [ctok]})
+                    for ctok in switched_off_toks:
+                        restore += _mk({"WALK": [ctok]}) + _mk({"SWITCHON": [ctok]})
+                    redone = _run(restore)
+                    if redone:
+                        committed.extend(redone)
+
+        elif rel == "CLOSE":
+            target_id = to if frm == char_id else (frm if to == char_id else None)
+            node = nodes.get(target_id) if target_id is not None else None
+            if not node:
+                continue
+            done = _run(_walk(f"{node['class_name']}_{target_id}"))
+            if done:
+                committed.extend(done)
+
+        elif rel == "FACING":
+            target_id = to if frm == char_id else (frm if to == char_id else None)
+            node = nodes.get(target_id) if target_id is not None else None
+            if not node:
+                continue
+            tok = f"{node['class_name']}_{target_id}"
+            done = _run(_walk(tok) + _mk({"TURNTO": [tok]}))
+            if done:
+                committed.extend(done)
+
+        elif rel in ("HOLDS_RH", "HOLDS_LH"):
+            # NOTE: GRAB has no way to request a specific hand, so this can
+            # satisfy "holds SOMETHING" without satisfying an exact-hand
+            # goal if the executor's free-hand assignment picks the other
+            # one — a limitation of the action vocabulary, not fixable here
+            # (confirmed on task 696_1: both hands ended up filled, but not
+            # in the specific left/right arrangement the goal required).
+            obj_id = to if frm == char_id else frm
+            node = nodes.get(obj_id)
+            if not node:
+                continue
+            tok = f"{node['class_name']}_{obj_id}"
+            done = _run(_walk(tok) + _mk({"GRAB": [tok]}))
+            if done:
+                committed.extend(done)
+        # other relation types (BETWEEN, ...) are rare and unmodeled here —
+        # left unsatisfied rather than guessed at
+
+    # ── Action goals: bare verb, no object in the goal spec itself ───────────
+    # Parsed from the LLM's raw JSON directly (not via parse_and_validate,
+    # whose output is already-formatted "[ACTION] <name> (id)" strings with
+    # no object accessor) so the object name/id pair can be rebuilt into a
+    # WALK target and re-run through the same _mk() path as every other
+    # branch here.
+    for raw_goal in unsat_action:
+        # Goal entries can be OR-expressions ("TOUCH|PUSH" — either verb
+        # satisfies it per check_order_with_or_score) — split rather than
+        # handing the LLM a literal "TOUCH|PUSH" as if it were one verb.
+        verbs = [v.strip().upper() for v in str(raw_goal).split("|") if v.strip()]
+        if not verbs:
+            continue
+
+        zero_arg_verbs = [v for v in verbs if v in ZERO_ARG]
+        if zero_arg_verbs:
+            # No object to find or WALK to — STANDUP/SLEEP/WAKEUP apply to
+            # the character itself.
+            done = _run(_mk({zero_arg_verbs[0]: []}))
+            if done:
+                committed.extend(done)
+            continue
+
+        prompt = ACTION_GOAL_PROMPT.format(
+            verbs=" or ".join(verbs),
+            node_goals=node_goal_str, edge_goals=edge_goal_str,
+            action_goals=action_goal_str,
+        )
+        raw = llm.call(prompt, system_prompt=SYSTEM_PROMPT, label="ACTION GOAL OBJECT")
+        parsed = filter_valid_actions(parse_llm_output(raw) or [])
+        items = parsed if isinstance(parsed, list) else [{k: v} for k, v in parsed.items()]
+        for item in items:
+            for action, args in item.items():
+                # This path only ever builds a 1-argument invocation
+                # (_mk({action: [obj_tok]})). A verb needing 2 args (POUR,
+                # PUTBACK, PUTIN) would fail grammar validation inside
+                # _mk() and silently return [] — leaving just the WALK
+                # committed with no action behind it. Confirmed causing
+                # exactly that for real: task 229_1's unmet action goal
+                # was POUR; this path asked the LLM for "the object", got
+                # one object back, tried POUR with 1 arg, and committed a
+                # dangling WALK with no POUR at all. Skip cleanly instead
+                # of doing that — completing a 2-object action goal needs
+                # identifying BOTH a source and a target, which this
+                # single-object prompt was never designed to do.
+                expected_args = _eai_valid_actions.get(action.upper(), (None, None))[1]
+                if expected_args != 1:
+                    continue
+                args = [str(a).strip() for a in args]
+                if len(args) >= 2 and args[1].isdigit():
+                    obj_tok = f"{args[0]}_{args[1]}"
+                elif len(args) == 1:
+                    obj_tok = args[0]
+                else:
+                    continue
+                done = _run(_walk(obj_tok) + _mk({action: [obj_tok]}))
+                if done:
+                    committed.extend(done)
+                    break  # one object satisfies a single-verb goal
+            if committed:
+                break
+
+    return committed
 
 
 def _repair_key(tree_result: list) -> tuple:
@@ -1120,11 +1514,7 @@ class EAISDATreeRunner:
             # One corrective retry — temp-0 re-asks must change the prompt or
             # they reproduce the same broken output verbatim.
             logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
-            retry_prompt = base_prompt + (
-                "\n\nIMPORTANT: your previous response was invalid or truncated."
-                " Respond with ONE complete, syntactically valid JSON object and"
-                " nothing else. If the plan is long, keep it complete anyway."
-            )
+            retry_prompt = _build_retry_prompt(base_prompt, raw_output)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
             actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
         if not actions:
@@ -1274,6 +1664,43 @@ class EAISDATreeRunner:
                     if VERBOSE:
                         print(f"\n  GOAL GUARD re-appended: {[str(a) for a in guard_added]}")
 
+                # ── Generalized goal check ─────────────────────────────────
+                # The guard above only ever catches a NODE-state goal whose
+                # own action was generated and then skipped/dropped. It
+                # can't see: a goal never planned at all, an edge/relation
+                # goal, an action goal, or a goal a repair elsewhere in the
+                # plan silently undid (e.g. PUTBACK-ing an object the goal
+                # needs held) — none of those raise an execution error for
+                # anything upstream to diagnose, so "executable" was being
+                # treated as "done" regardless of whether the goal held.
+                # scene_evaluate_wID is the SAME function the offline
+                # evaluator scores with, so "satisfied" here can't silently
+                # drift from what actually gets scored.
+                try:
+                    (_, _, _, all_goals_ok, unsat_node, unsat_edge, unsat_action) = (
+                        scene_evaluate_wID(
+                            motion_planner.env_state.to_dict(),
+                            node_goals, edge_goals, motion_planner.acting_char_id,
+                            action_seq=[str(a) for a in clean_plan],
+                            action_goals=goals["actions"],
+                        )
+                    )
+                    if not all_goals_ok:
+                        gmap = dict(full_name_to_id)
+                        gmap.update(relevant_name_to_id)
+                        extra = _attempt_goal_completion(
+                            motion_planner, unsat_node, unsat_edge, unsat_action,
+                            gmap, goal_edge_relations, self.llm,
+                            node_goal_str, edge_goal_str, action_goal_str,
+                        )
+                        if extra:
+                            clean_plan = clean_plan + extra
+                            logger.info(f"  🎯 Goal completion appended: {[str(a) for a in extra]}")
+                            if VERBOSE:
+                                print(f"\n  GOAL COMPLETION appended: {[str(a) for a in extra]}")
+                except Exception as e:
+                    logger.warning(f"  Goal completion check failed, keeping plan as-is: {e}")
+
                 raw_output = plan_to_json_str(clean_plan)
                 logger.info(
                     f"  ✅ SUCCESS on attempt {attempt + 1}"
@@ -1392,9 +1819,61 @@ class EAISDATreeRunner:
             before = history_actions[:max(0, t_start - 1)]
             after = current_plan_eai[t_end:]
 
+            # For "reconstruct", t_source (root_cause_at) is the diagnosed
+            # CAUSE of the failure — e.g. a premature PUTBACK that releases
+            # an object right before it's needed again. The window always
+            # includes it (t_start is derived from it), but blindly
+            # retrying it reproduces the exact same failure regardless of
+            # what the search finds beforehand: confirmed via direct,
+            # deterministic replay (task 163_1) that the search's own
+            # target check trivially "succeeds" from the state just BEFORE
+            # t_source runs (since the precondition it corrupts hasn't
+            # been corrupted YET at that point) — so the search returns an
+            # insufficient fix (e.g. a bare WALK), t_source's action then
+            # re-executes anyway as part of the "retry", and undoes
+            # whatever holding/state the earlier steps established. Once
+            # t_source itself never runs again, the state it used to
+            # corrupt is simply never corrupted — this doesn't depend on
+            # the search finding a better fix at all.
+            # Only when root_cause is a DIFFERENT, earlier action than the
+            # one that actually failed — a straightforward missing
+            # prerequisite (e.g. PUTBACK failing for its own lack of
+            # holds_obj) diagnoses root_cause_at AS the failed action
+            # itself, and excluding "the root cause" there would exclude
+            # the very action being repaired. Confirmed regressing task
+            # 327_2 exactly this way in testing: both PUTBACKs got
+            # excluded as their own "root cause", leaving both objects
+            # grabbed but never placed — caught before this ever shipped.
+            #
+            # Also never exclude it when the need is not_both_hands_full:
+            # there the "root cause" is whichever earlier GRAB tipped hands
+            # over capacity — a NECESSARY pickup, not a corrupting action
+            # like the cases above. Excluding it doesn't fix anything, it
+            # just defers the pickup to whatever LATER replan happens to
+            # rediscover it (the object's own PUTBACK failing on
+            # holds_obj) — costing a full extra replan cycle per excluded
+            # item. Confirmed on 954_2 (5-item carry): excluding GRAB
+            # clothes_dress then GRAB clothes_shirt this way burned all 3
+            # replans just re-discovering pickups the goal-aware
+            # placement fix (prefer_goal_placement) already handles
+            # directly, exhausting the budget before clothes_shirt could
+            # be re-fetched.
+            root_cause_plan_pos = None
+            if (diagnosis.replan_strategy == "reconstruct"
+                    and diagnosis.root_cause_at is not None
+                    and diagnosis.root_cause_at != failed_step.index
+                    and "not_both_hands_full" not in diagnosis.unsatisfied_needs):
+                root_cause_plan_pos = hist_pos_to_plan_pos(
+                    diagnosis.root_cause_at, hist_to_plan, failed_plan_idx
+                )
+                if root_cause_plan_pos == failed_plan_idx + 1:
+                    root_cause_plan_pos = None
+
             # Skip-aware window in plan coordinates; overrides the wrapper's
             # slice, which assumes history == plan positions.
             orig_subseq = full_plan_steps[win_start_plan - 1 : t_end]
+            if root_cause_plan_pos is not None:
+                orig_subseq = [s for s in orig_subseq if s.index != root_cause_plan_pos]
 
             # ── Action already satisfied: goal is already true, just remove it ─
             if diagnosis.replan_strategy == "already_satisfied":
@@ -1494,21 +1973,32 @@ class EAISDATreeRunner:
                 elif hasattr(s, "obj"):
                     orig_subseq_dicts.append({s.action: [s.obj]})
 
+            _repair_kwargs = {
+                "llm_suggestions": llm_suggestions,
+                "original_subsequence": orig_subseq_dicts,
+                "initial_state_dict": state_at_tstart,
+                "unsatisfied_needs": diagnosis.unsatisfied_needs,
+                "error_objects": error_objects,
+                "char_sitting": char_sitting,
+                "char_lying": char_lying,
+                "max_depth": TREE_MAX_DEPTH,
+                "max_nodes": TREE_MAX_NODES,
+                "failed_obj": failed_step.obj,
+                "failed_target": failed_step.target,
+                "banned_paths": tried_repairs.get(failure_sig, set()),
+                "banned_candidates": banned_cands.get(failure_sig, set()),
+                "goal_edge_relations": goal_edge_relations,
+            }
             tree_result = generate_replacement_subsequence(
-                llm_suggestions=llm_suggestions,
-                original_subsequence=orig_subseq_dicts,
-                initial_state_dict=state_at_tstart,
-                unsatisfied_needs=diagnosis.unsatisfied_needs,
-                error_objects=error_objects,
-                char_sitting=char_sitting,
-                char_lying=char_lying,
-                max_depth=TREE_MAX_DEPTH,
-                max_nodes=TREE_MAX_NODES,
-                failed_obj=failed_step.obj,
-                failed_target=failed_step.target,
-                banned_paths=tried_repairs.get(failure_sig, set()),
-                banned_candidates=banned_cands.get(failure_sig, set()),
+                prefer_goal_placement=True, **_repair_kwargs
             )
+            if not tree_result:
+                # Goal-aware placement wasn't reachable (e.g. destination
+                # container not open right now) — fall back to the plain
+                # DROP behavior so this can only ever help, never regress.
+                tree_result = generate_replacement_subsequence(
+                    prefer_goal_placement=False, **_repair_kwargs
+                )
 
             if tree_result:
                 logger.info(f"  🌳 Tree found: {tree_result}")
@@ -1547,6 +2037,66 @@ class EAISDATreeRunner:
             # the original action rather than silently dropping it.
             # win_start_plan is t_start converted to plan coordinates.
             failed_eai = current_plan_eai[win_start_plan - 1 : t_end]
+            if root_cause_plan_pos is not None:
+                exclude_offset = root_cause_plan_pos - win_start_plan
+                if 0 <= exclude_offset < len(failed_eai):
+                    logger.info(
+                        f"  🚫 Excluding diagnosed root cause from retry: "
+                        f"{failed_eai[exclude_offset]}"
+                    )
+                    failed_eai = failed_eai[:exclude_offset] + failed_eai[exclude_offset + 1:]
+
+            # If the fix ends by GRABbing object X, and the retained retry
+            # tail starts by WALKing to that SAME X, that WALK is provably
+            # redundant (already holding X) and actively harmful — it
+            # relocates the character away from wherever the fix just left
+            # them, usually exactly where the NEXT action (a PUTBACK/PUTIN
+            # into a container) needs them to be. Confirmed costing a
+            # whole wasted replan cycle on task 327_2 (GRAB plate -> the
+            # retained WALK plate -> PUTBACK then fails next_to_target,
+            # needing a SEPARATE insert_prep fix) — and the identical
+            # pattern recurring on dish_soap right after exhausted the
+            # entire replan budget with no cycles left to recover.
+            def _edge_action_obj(seq, take_last):
+                if not seq:
+                    return None, None
+                s = str(seq[-1] if take_last else seq[0])
+                m = re.match(r"^\[(\w+)\]\s*<([^>]+)>\s*\((\d+)\)", s)
+                return (m.group(1).upper(), f"{m.group(2)}_{m.group(3)}") if m else (None, None)
+
+            last_act, last_obj = _edge_action_obj(new_subseq, take_last=True)
+            first_act, first_obj = _edge_action_obj(failed_eai, take_last=False)
+            if last_act == "GRAB" and first_act == "WALK" and last_obj == first_obj:
+                logger.info(f"  🚫 Dropping redundant WALK to already-held object: {failed_eai[0]}")
+                failed_eai = failed_eai[1:]
+
+            # If the goal-aware hand-freeing repair (action_subtree.py,
+            # prefer_goal_placement) just PUTBACK/PUTIN'd a held object at
+            # its own destination, the ORIGINAL plan's later PUTBACK/PUTIN
+            # of that SAME object is now redundant — the object was
+            # released there, so retrying it would fail on holds_obj and
+            # burn a whole replan cycle re-fetching something already
+            # correctly placed. Strip it from both retained segments.
+            def _placement_obj_id(action_str):
+                m = re.match(r"^\[(PUTBACK|PUTIN)\]\s*<[^>]+>\s*\((\d+)\)\s*<[^>]+>\s*\((\d+)\)", action_str)
+                return m.group(2) if m else None
+
+            newly_placed = {oid for oid in (_placement_obj_id(str(s)) for s in new_subseq) if oid}
+
+            def _strip_placed(seq, placed_ids):
+                kept = []
+                for s in seq:
+                    oid = _placement_obj_id(str(s))
+                    if oid and oid in placed_ids:
+                        logger.info(f"  🚫 Dropping redundant later placement of already-placed object: {s}")
+                        continue
+                    kept.append(s)
+                return kept
+
+            if newly_placed:
+                failed_eai = _strip_placed(failed_eai, newly_placed)
+                after = _strip_placed(after, newly_placed)
+
             current_plan_eai = before + new_subseq + failed_eai + after
             raw_output = plan_to_json_str(current_plan_eai)
             # Remember what this repair was for, so if one of ITS actions
@@ -1565,6 +2115,103 @@ class EAISDATreeRunner:
         with open(path, "w") as f:
             json.dump(outputs, f, indent=4)
         logger.info(f"Saved {len(outputs)} outputs → {path}")
+
+
+class NoAdaptRunner(EAISDATreeRunner):
+    """The paper's "w/o adaptation" ablation arm (Fig. 4): SAME initial-plan
+    generation as EAISDATreeRunner (identical prompt, parsing, goal-relation
+    correction, one parse retry) — the two arms differ ONLY in what happens
+    after a failure. Here, a failed action is SKIPPED and execution
+    continues; there is no error diagnosis, no search tree, and no repair
+    call, so the LLM is never informed that anything failed. This isolates
+    the SDA feedback machinery as the sole variable between the two arms,
+    making the task-success-rate delta between them a direct measurement of
+    what that machinery contributes.
+
+    Task-agnostic: works against whatever TASK_DICT_PATH/ID2TASK_PATH/
+    DATA_DIR are set to when instantiated — the full EAI set by default, or
+    a connector's overrides (e.g. the Hard-50 resources) if applied first.
+
+    Saves the subsequence of actions that actually executed (the paper's
+    definition), so post-failure goals can still be credited — the choice
+    most favorable to this baseline, which makes the measured SDA delta
+    conservative rather than inflated.
+    """
+
+    def run_single_task(self, file_id, task_name, task_goal_dict):
+        goals = task_goal_dict["vh_goal"]
+        node_goals = [g for g in goals["goal"] if "id" in g and "state" in g]
+        edge_goals = [g for g in goals["goal"] if "from_id" in g and "relation_type" in g]
+        goal_edge_relations = {
+            (g["from_id"], g["to_id"]): g["relation_type"] for g in edge_goals
+        }
+
+        try:
+            motion_planner, _, _, _, _ = construct_planner(
+                self.name_equivalence,
+                self.properties_data,
+                self.object_placing,
+                scenegraph_id=SCENEGRAPH_ID,
+                script_id=file_id,
+                dataset_root=DATA_DIR,
+            )
+        except Exception as e:
+            logger.error(f"Planner build failed: {e}")
+            return "", 0, 0, 0
+
+        object_in_scene, cur_change, node_goal_str, edge_goal_str, action_goal_str, relevant_name_to_id = (
+            build_id_aware_goal_strings(
+                motion_planner, node_goals, edge_goals, action_goals=goals["actions"],
+            )
+        )
+
+        import virtualhome_eval.evaluation.action_sequencing.prompts.one_shot as one_shot
+        base_prompt = one_shot.prompt
+        base_prompt = base_prompt.replace("<object_in_scene>", object_in_scene)
+        base_prompt = base_prompt.replace("<cur_change>", cur_change)
+        base_prompt = base_prompt.replace("<node_goals>", node_goal_str)
+        base_prompt = base_prompt.replace("<edge_goals>", edge_goal_str)
+        base_prompt = base_prompt.replace("<action_goals>", action_goal_str)
+
+        if VERBOSE:
+            print(f"\n{'='*60}", flush=True)
+            print(f"TASK: {file_id}  |  {task_name}  [NO-ADAPTATION]", flush=True)
+            print(f"{'='*60}", flush=True)
+
+        raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
+        logger.info(f"  Initial plan: {raw_output}")
+
+        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        if not actions:
+            logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
+            retry_prompt = _build_retry_prompt(base_prompt, raw_output)
+            raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
+            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        if not actions:
+            logger.warning(f"  Could not parse initial plan for {file_id}")
+            return raw_output, 0, 0, 0
+
+        # ── Single pass: skip-and-continue, zero feedback ─────────────────────
+        motion_planner.reset()
+        executed, skipped = [], []
+        if VERBOSE:
+            print(f"\n  {'─'*50}")
+            print(f"  EXECUTING (no adaptation) — {len(actions)} actions")
+            print(f"  {'─'*50}")
+        for i, action in enumerate(actions):
+            exe_flag, _ = motion_planner.my_execute_primitive_action_eval(action)
+            if VERBOSE:
+                print(f"  [{i+1:02d}] {action}  →  {'OK' if exe_flag else 'SKIPPED (failed)'}", flush=True)
+            (executed if exe_flag else skipped).append(action)
+
+        raw_output = plan_to_json_str(executed)
+        logger.info(
+            f"  no-adapt result: {len(executed)} executed, {len(skipped)} skipped"
+            + (f" | skipped: {[str(a) for a in skipped]}" if skipped else "")
+        )
+        if VERBOSE:
+            print(f"\n  FINAL OUTPUT SAVED ({len(executed)} executed / {len(skipped)} skipped)", flush=True)
+        return raw_output, 0, 0, 0
 
 
 # =============================================================================

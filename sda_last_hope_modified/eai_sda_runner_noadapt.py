@@ -1,14 +1,20 @@
 """
-eai_sda_runner_hard_noadapt.py
-==============================
-ABLATION connector: the 50 hard tasks WITHOUT the SDA feedback machinery —
-the "w/o adaptation" variant of the SDA-Planner paper's ablation (Fig. 4):
-when an action fails, it is SKIPPED and execution continues; no error
-diagnosis, no search tree, no repair prompts — the LLM never hears about
-failures. Its only call per task is the initial plan.
+eai_sda_runner_noadapt.py
+==========================
+ABLATION connector: the FULL EAI/VirtualHome action-sequencing set (the
+same ~342 tasks eai_sda_runner_tree.py runs) WITHOUT the SDA feedback
+machinery — the paper's "w/o adaptation" arm (Fig. 4): when an action
+fails, it is SKIPPED and execution continues; no error diagnosis, no
+search tree, no repair prompts — the LLM never hears about failures. Its
+only call per task is the initial plan.
+
+Main-set counterpart of eai_sda_runner_hard_noadapt.py. No task-set
+override here (unlike the *_hard* connectors): TASK_DICT_PATH / ID2TASK_PATH
+/ DATA_DIR stay at core's defaults, i.e. the installed package's full
+resource and dataset directories — only the output tag differs from the
+full-SDA arm.
 
 Shared with the full-SDA arm (so the two arms differ ONLY in feedback):
-  - task set, resources, dataset paths (same overrides as eai_sda_runner_hard)
   - SYSTEM_PROMPT + one_shot prompt + goal-string builder
   - parse_and_validate incl. goal-relation PUTBACK/PUTIN correction
   - the one corrective retry when the initial plan fails to parse
@@ -20,60 +26,59 @@ post-failure goal achievements still count — the paper's definition, and
 the choice most favorable to the baseline (makes the measured SDA delta
 conservative).
 
-Usage (inside the container, after the usual docker cp of this directory):
-    python3 sda_eai/eai_sda_runner_hard_noadapt.py
-    python3 sda_eai/eai_sda_runner_hard_noadapt.py --max_tasks 5
-    HARD_MODEL=gpt-4o python3 sda_eai/eai_sda_runner_hard_noadapt.py
+Usage (inside the container, after docker cp of this directory):
+    python3 sda_eai/eai_sda_runner_noadapt.py
+    python3 sda_eai/eai_sda_runner_noadapt.py --max_tasks 20
+    MAIN_MODEL=gpt-4o python3 sda_eai/eai_sda_runner_noadapt.py
 
-Output: <MODEL>-noadapt_hard50_outputs.json in the same
-action_sequencing_hard50 dir as the full-SDA outputs. Stage BOTH files into
-the eval staging dir and one evaluate_results call scores both models.
+Best-of-k resampling baseline (k independent full sweeps, T=1.0):
+    ATTEMPT=1 python3 sda_eai/eai_sda_runner_noadapt.py
+    ATTEMPT=2 python3 sda_eai/eai_sda_runner_noadapt.py
+    ATTEMPT=3 python3 sda_eai/eai_sda_runner_noadapt.py
+then evaluate (one pass scores all attempt tags) and join with
+combine_bo_attempts.py for first-success-attempt / pass@k.
+
+Output: <MODEL>-noadapt_main_outputs.json in the same
+output_sda/virtualhome/action_sequencing dir the full-SDA arm writes to —
+both land in the evaluator's default scan location for this dataset/
+eval_type, so no staging copy is needed before evaluate_results.
 """
 
 import os
 import sys
-import copy
 import os.path as osp
 import argparse
 
 import eai_sda_runner_tree as core
 
 # =============================================================================
-# CONFIG OVERRIDES — identical to eai_sda_runner_hard.py except the tag.
-# (Do not import eai_sda_runner_hard here: its import would re-patch
-# MODEL_NAME/MAX_REPLAN for the full-SDA arm.)
+# CONFIG OVERRIDE — only the tag. Task set / resources / dataset are core's
+# defaults (the full EAI set), left untouched on purpose.
 # =============================================================================
 
-HARD_TASKS_DIR = os.environ.get(
-    "HARD_TASKS_DIR",
-    osp.join(osp.dirname(osp.dirname(osp.abspath(__file__))),
-             "difficult_tasks", "resources", "virtualhome"),
-)
-
-core.TASK_DICT_PATH = osp.join(HARD_TASKS_DIR, "task_state_LTL_formula_accurate.json")
-core.ID2TASK_PATH = osp.join(HARD_TASKS_DIR, "id2task.json")
-core.MODEL = os.environ.get("HARD_MODEL", core.MODEL)
-core.MODEL_NAME = f"{core.MODEL}-noadapt_hard50"
-core.OUTPUT_DIR = os.environ.get(
-    "HARD_OUTPUT_DIR",
-    osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
-)
+core.MODEL = os.environ.get("MAIN_MODEL", core.MODEL)
+core.MODEL_NAME = f"{core.MODEL}-noadapt_main"
 
 # ── Best-of-k resampling arm ─────────────────────────────────────────────
-# Same protocol as eai_sda_runner_noadapt.py's main-set version: ATTEMPT=n
-# tags this sweep's output (…-noadapt_hard50_a<n>) so k independent sweeps
-# coexist and get joined offline (combine_bo_attempts.py). Resampling needs
-# temperature > 0 or every attempt replays the same plan; HARD_TEMPERATURE
-# overrides core's T (core stays 0 for the SDA arm's determinism) — if
-# ATTEMPT is set and HARD_TEMPERATURE is not, default to 1.0.
-_temp = os.environ.get("HARD_TEMPERATURE")
+# ATTEMPT=n tags this sweep's output file (…-noadapt_main_a<n>) so k full
+# independent sweeps coexist, get scored separately by evaluate_results,
+# and are joined per task offline (combine_bo_attempts.py → first-success
+# attempt, pass@k). Success is decided by the evaluator AFTER the run —
+# deliberately no in-run success check — so every attempt sweeps the whole
+# task set; "stop on first success" is applied analytically in the join,
+# which for independent draws yields identical statistics.
+# Resampling needs temperature > 0 or every attempt replays the same plan:
+# MAIN_TEMPERATURE overrides core's T (core stays 0 — the SDA arm's
+# tabu/repair memory relies on determinism); if ATTEMPT is set and
+# MAIN_TEMPERATURE is not, default to 1.0.
+_temp = os.environ.get("MAIN_TEMPERATURE")
 _attempt = os.environ.get("ATTEMPT")
 if _temp is not None:
     core.TEMPERATURE = float(_temp)
 elif _attempt:
     core.TEMPERATURE = 1.0
 if _attempt:
-    core.MODEL_NAME = f"{core.MODEL}-noadapt_hard50_a{_attempt}"
+    core.MODEL_NAME = f"{core.MODEL}-noadapt_main_a{_attempt}"
 
 
 class NoAdaptRunner(core.EAISDATreeRunner):
@@ -163,34 +168,12 @@ class NoAdaptRunner(core.EAISDATreeRunner):
         return raw_output, 0, 0, 0
 
 
-def _preflight():
-    missing = [p for p in (core.TASK_DICT_PATH, core.ID2TASK_PATH) if not osp.exists(p)]
-    if missing:
-        raise SystemExit(
-            "Hard-task resource file(s) not found:\n  " + "\n  ".join(missing) +
-            "\nSet HARD_TASKS_DIR to the directory holding "
-            "task_state_LTL_formula_accurate.json + id2task.json."
-        )
-    import json
-    task_dicts = json.load(open(core.TASK_DICT_PATH))[f"scene_{core.SCENEGRAPH_ID}"]
-    sample_id = next(iter(next(iter(task_dicts.values())).keys()))
-    graph_path = osp.join(
-        core.DATA_DIR, "init_and_final_graphs",
-        f"TrimmedTestScene{core.SCENEGRAPH_ID}_graph",
-        "results_intentions_march-13-18", f"file{sample_id}.json",
-    )
-    if not osp.exists(graph_path):
-        raise SystemExit(
-            f"Hard-task dataset files not found under DATA_DIR (checked {graph_path})."
-        )
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--max_tasks", type=int, default=None,
-                        help="Max number of hard tasks to run")
+                        help="Max number of tasks to run")
     parser.add_argument("--task_ids", type=str, default=None,
-                        help="Comma-separated subset, e.g. 9001_1,9011_1")
+                        help="Comma-separated subset of task IDs")
     args = parser.parse_args()
 
     if not core.API_KEY:
@@ -198,10 +181,8 @@ if __name__ == "__main__":
         print("Run: export OPENAI_API_KEY='your_key'")
         sys.exit(1)
 
-    _preflight()
-
-    core.logger.info("MODE: NO-ADAPTATION ABLATION — one LLM call per task, "
-                     "failures skipped, no diagnosis/tree/repair")
+    core.logger.info("MODE: NO-ADAPTATION ABLATION (main set) — one LLM call "
+                     "per task, failures skipped, no diagnosis/tree/repair")
     core.logger.info(f"Attempt    : {_attempt or '- (single run)'} | "
                      f"Temperature: {core.TEMPERATURE} | Tag: {core.MODEL_NAME}")
     task_ids_set = set(args.task_ids.split(",")) if args.task_ids else None

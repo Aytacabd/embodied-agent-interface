@@ -1,0 +1,4065 @@
+2026-07-27 09:37:49,883 - INFO - MODE: NO-ADAPTATION ABLATION — one LLM call per task, failures skipped, no diagnosis/tree/repair
+2026-07-27 09:37:49,885 - INFO - Attempt    : 1 | Temperature: 1.0 | Tag: gpt-4o-mini-noadapt_hard50_a1
+2026-07-27 09:37:50,352 - INFO - LLM: openai / gpt-4o-mini
+2026-07-27 09:37:50,352 - INFO - Loading EAI resources...
+2026-07-27 09:37:50,358 - INFO - EAI resources loaded.
+2026-07-27 09:37:50,358 - INFO - === EAI + SDA-Planner (Full Search Tree) ===
+2026-07-27 09:37:50,358 - INFO - Model      : gpt-4o-mini-noadapt_hard50_a1
+2026-07-27 09:37:50,358 - INFO - Provider   : openai
+2026-07-27 09:37:50,358 - INFO - Max replan : 3
+2026-07-27 09:37:50,358 - INFO - Tree depth : 6 | Tree nodes: 500
+2026-07-27 09:37:50,358 - INFO - Max tasks  : ALL
+2026-07-27 09:37:50,358 - INFO - Task IDs   : ALL
+2026-07-27 09:37:50,358 - INFO - LLM fallback on tree fail: DISABLED
+2026-07-27 09:37:50,358 - INFO - 
+[1] Hard busy hands | 9001_1
+
+============================================================
+TASK: 9001_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:37:59,230 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (8.85s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["bedroom", "67"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:37:59,267 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["bedroom", "67"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 24 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:37:59,275 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [02] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <bedroom> (67)  →  OK
+2026-07-27 09:37:59,281 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [04] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [05] [WALK] <cloth_napkin> (1001)  →  OK
+  [06] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [07] [WALK] <table> (355)  →  OK
+  [08] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  OK
+  [09] [WALK] <cup> (1005)  →  OK
+  [10] [GRAB] <cup> (1005)  →  OK
+  [11] [WALK] <table> (355)  →  OK
+  [12] [PUTBACK] <cup> (1005) <table> (355)  →  OK
+  [13] [WALK] <plate> (1002)  →  OK
+  [14] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [15] [WALK] <table> (355)  →  OK
+  [16] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [17] [WALK] <knife> (1003)  →  OK
+  [18] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [19] [WALK] <table> (355)  →  OK
+  [20] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [21] [WALK] <fork> (1004)  →  OK
+  [22] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [23] [WALK] <table> (355)  →  OK
+  [24] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:37:59,317 - INFO -   no-adapt result: 15 executed, 9 skipped | skipped: ['[CLOSE] <cupboard> (229)', '[OPEN] <cupboard> (229)', '[GRAB] <cloth_napkin> (1001)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)']
+
+  FINAL OUTPUT SAVED (15 executed / 9 skipped)
+2026-07-27 09:38:00,320 - INFO - 
+[2] Hard busy hands | 9002_1
+
+============================================================
+TASK: 9002_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:05,088 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.70s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "OPEN": ["freezer", "289"],
+  "GRAB": ["cup", "1005"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "CLOSE": ["freezer", "289"],
+  "CLOSE": ["cupboard", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:05,104 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "OPEN": ["freezer", "289"],
+  "GRAB": ["cup", "1005"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "CLOSE": ["freezer", "289"],
+  "CLOSE": ["cupboard", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 20 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:05,121 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [02] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <plate> (1002)  →  OK
+  [04] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [05] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [06] [WALK] <knife> (1003)  →  OK
+  [07] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [08] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <cloth_napkin> (1001)  →  OK
+  [10] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [11] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [12] [WALK] <fork> (1004)  →  OK
+  [13] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [14] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1005)  →  OK
+2026-07-27 09:38:05,157 - INFO - Openable check failed: [OPEN] <freezer> (289) [1]
+  [16] [OPEN] <freezer> (289)  →  SKIPPED (failed)
+  [17] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [18] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:38:05,157 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [19] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:38:05,157 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [20] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:38:05,157 - INFO -   no-adapt result: 6 executed, 14 skipped | skipped: ['[OPEN] <cupboard> (229)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[OPEN] <freezer> (289)', '[GRAB] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)', '[CLOSE] <freezer> (289)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (6 executed / 14 skipped)
+2026-07-27 09:38:06,161 - INFO - 
+[3] Hard busy hands | 9003_1
+
+============================================================
+TASK: 9003_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:11,095 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.87s) ▼
+{
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["bedroom", "67"],
+  "OPEN": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["bedroom", "67"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["dining_room", "201"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:11,124 - INFO -   Initial plan: {
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["bedroom", "67"],
+  "OPEN": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["bedroom", "67"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["dining_room", "201"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 25 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:38:11,141 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [02] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [03] [WALK] <bedroom> (67)  →  OK
+2026-07-27 09:38:11,149 - INFO - Openable check failed: [OPEN] <cup> (1005) [1]
+  [04] [OPEN] <cup> (1005)  →  SKIPPED (failed)
+  [05] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [06] [WALK] <table> (355)  →  OK
+  [07] [PUTBACK] <cup> (1005) <table> (355)  →  OK
+  [08] [WALK] <bedroom> (67)  →  OK
+  [09] [GRAB] <knife> (1003)  →  OK
+  [10] [WALK] <table> (355)  →  OK
+  [11] [PUTBACK] <knife> (1003) <table> (355)  →  OK
+  [12] [WALK] <dining_room> (201)  →  OK
+  [13] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [14] [WALK] <table> (355)  →  OK
+  [15] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [16] [WALK] <freezer> (289)  →  OK
+  [17] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [18] [WALK] <table> (355)  →  OK
+  [19] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [20] [WALK] <freezer> (289)  →  OK
+  [21] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [22] [WALK] <table> (355)  →  OK
+  [23] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [24] [WALK] <television> (410)  →  OK
+  [25] [SWITCHON] <television> (410)  →  OK
+2026-07-27 09:38:11,189 - INFO -   no-adapt result: 16 executed, 9 skipped | skipped: ['[CLOSE] <freezer> (289)', '[OPEN] <cup> (1005)', '[GRAB] <cup> (1005)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)']
+
+  FINAL OUTPUT SAVED (16 executed / 9 skipped)
+2026-07-27 09:38:12,204 - INFO - 
+[4] Hard busy hands | 9004_1
+
+============================================================
+TASK: 9004_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:16,153 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.87s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"],
+  "WALK": ["bedroom", "67"],
+  "CLOSE": ["cupboard", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:16,156 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"],
+  "WALK": ["bedroom", "67"],
+  "CLOSE": ["cupboard", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 22 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:16,173 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [02] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <fork> (1004)  →  OK
+  [04] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [05] [WALK] <table> (355)  →  OK
+  [06] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [07] [WALK] <knife> (1003)  →  OK
+  [08] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [09] [WALK] <table> (355)  →  OK
+  [10] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [11] [WALK] <cloth_napkin> (1001)  →  OK
+  [12] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [13] [WALK] <table> (355)  →  OK
+  [14] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1005)  →  OK
+  [16] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [17] [WALK] <table> (355)  →  OK
+  [18] [PUTBACK] <cup> (1005) <table> (355)  →  OK
+  [19] [WALK] <television> (410)  →  OK
+  [20] [SWITCHON] <television> (410)  →  OK
+  [21] [WALK] <bedroom> (67)  →  OK
+2026-07-27 09:38:16,232 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [22] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:38:16,232 - INFO -   no-adapt result: 13 executed, 9 skipped | skipped: ['[OPEN] <cupboard> (229)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[GRAB] <cup> (1005)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (13 executed / 9 skipped)
+2026-07-27 09:38:17,239 - INFO - 
+[5] Hard busy hands | 9005_1
+
+============================================================
+TASK: 9005_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:21,613 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.28s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "PUTBACK": ["fork", "1004", "cupboard", "229"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "PUTBACK": ["knife", "1003", "freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "PUTBACK": ["cup", "1005", "table", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:21,619 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "PUTBACK": ["fork", "1004", "cupboard", "229"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "PUTBACK": ["plate", "1002", "cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "PUTBACK": ["knife", "1003", "freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "PUTBACK": ["cup", "1005", "table", "355"]
+}
+2026-07-27 09:38:21,621 - INFO -   🔄 Corrected PUTBACK→PUTIN for knife_1003→freezer_289 (container heuristic)
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 21 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:21,635 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [02] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <fork> (1004)  →  OK
+  [04] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [05] [PUTBACK] <fork> (1004) <cupboard> (229)  →  SKIPPED (failed)
+  [06] [WALK] <plate> (1002)  →  OK
+  [07] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [08] [PUTBACK] <plate> (1002) <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:38:21,651 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [09] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [10] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:38:21,659 - INFO - Openable check failed: [OPEN] <freezer> (289) [1]
+  [11] [OPEN] <freezer> (289)  →  SKIPPED (failed)
+  [12] [WALK] <knife> (1003)  →  OK
+  [13] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [14] [PUTIN] <knife> (1003) <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:38:21,665 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [15] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [16] [WALK] <cloth_napkin> (1001)  →  OK
+  [17] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [18] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [19] [WALK] <cup> (1005)  →  OK
+  [20] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [21] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:38:21,676 - INFO -   no-adapt result: 7 executed, 14 skipped | skipped: ['[OPEN] <cupboard> (229)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <cupboard> (229)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <cupboard> (229)', '[CLOSE] <cupboard> (229)', '[OPEN] <freezer> (289)', '[GRAB] <knife> (1003)', '[PUTIN] <knife> (1003) <freezer> (289)', '[CLOSE] <freezer> (289)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[GRAB] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)']
+
+  FINAL OUTPUT SAVED (7 executed / 14 skipped)
+2026-07-27 09:38:22,681 - INFO - 
+[6] Hard busy hands | 9006_1
+
+============================================================
+TASK: 9006_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:26,692 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.96s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:26,722 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["plate", "1002"],
+  "GRAB": ["plate", "1002"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1002", "table", "355"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 26 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [STANDUP]  →  SKIPPED (failed)
+  [04] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:26,750 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [05] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [06] [WALK] <fork> (1004)  →  OK
+  [07] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [08] [WALK] <table> (355)  →  OK
+  [09] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [10] [WALK] <knife> (1003)  →  OK
+  [11] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [12] [WALK] <table> (355)  →  OK
+  [13] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [14] [WALK] <plate> (1002)  →  OK
+  [15] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [16] [WALK] <table> (355)  →  OK
+  [17] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [18] [WALK] <cup> (1005)  →  OK
+  [19] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [20] [WALK] <table> (355)  →  OK
+  [21] [PUTBACK] <cup> (1005) <table> (355)  →  OK
+2026-07-27 09:38:26,799 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [22] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [23] [WALK] <cloth_napkin> (1001)  →  OK
+  [24] [GRAB] <cloth_napkin> (1001)  →  OK
+  [25] [WALK] <table> (355)  →  OK
+  [26] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  OK
+2026-07-27 09:38:26,809 - INFO -   no-adapt result: 16 executed, 10 skipped | skipped: ['[STANDUP]', '[OPEN] <cupboard> (229)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <cup> (1005)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (16 executed / 10 skipped)
+2026-07-27 09:38:27,814 - INFO - 
+[7] Hard busy hands | 9007_1
+
+============================================================
+TASK: 9007_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:35,193 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.30s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["knife_1003", "1003"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:35,196 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["knife_1003", "1003"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 29 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [STANDUP]  →  SKIPPED (failed)
+  [04] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:35,222 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [05] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [06] [WALK] <knife> (1003)  →  OK
+  [07] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [08] [WALK] <table> (355)  →  OK
+  [09] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [10] [WALK] <plate> (1002)  →  OK
+  [11] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [12] [WALK] <table> (355)  →  OK
+  [13] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [14] [WALK] <fork> (1004)  →  OK
+  [15] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [16] [WALK] <table> (355)  →  OK
+  [17] [PUTBACK] <fork> (1004) <table> (355)  →  OK
+  [18] [WALK] <cloth_napkin> (1001)  →  OK
+  [19] [GRAB] <cloth_napkin> (1001)  →  OK
+  [20] [WALK] <table> (355)  →  OK
+  [21] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  OK
+  [22] [WALK] <cup> (1005)  →  OK
+  [23] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [24] [WALK] <table> (355)  →  OK
+  [25] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+  [26] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:38:35,276 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [27] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [28] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:35,279 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [29] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:38:35,279 - INFO -   no-adapt result: 18 executed, 11 skipped | skipped: ['[STANDUP]', '[OPEN] <cupboard> (229)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <fork> (1004)', '[GRAB] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)', '[CLOSE] <freezer> (289)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (18 executed / 11 skipped)
+2026-07-27 09:38:36,285 - INFO - 
+[8] Hard busy hands | 9008_1
+
+============================================================
+TASK: 9008_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:41,435 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.06s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:41,441 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 25 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [04] [WALK] <table> (355)  →  OK
+  [05] [PUTBACK] <knife> (1003) <table> (355)  →  OK
+  [06] [WALK] <fork> (1004)  →  OK
+  [07] [GRAB] <fork> (1004)  →  OK
+  [08] [WALK] <table> (355)  →  OK
+  [09] [PUTBACK] <fork> (1004) <table> (355)  →  OK
+  [10] [WALK] <cloth_napkin> (1001)  →  OK
+  [11] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [12] [WALK] <table> (355)  →  OK
+  [13] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [14] [WALK] <plate> (1002)  →  OK
+  [15] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [16] [WALK] <table> (355)  →  OK
+  [17] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [18] [WALK] <cup> (1005)  →  OK
+  [19] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [20] [WALK] <table> (355)  →  OK
+  [21] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+  [22] [WALK] <television> (410)  →  OK
+  [23] [SWITCHON] <television> (410)  →  OK
+  [24] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:41,497 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [25] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:38:41,497 - INFO -   no-adapt result: 17 executed, 8 skipped | skipped: ['[GRAB] <knife> (1003)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (17 executed / 8 skipped)
+2026-07-27 09:38:42,503 - INFO - 
+[9] Hard busy hands | 9009_1
+
+============================================================
+TASK: 9009_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:47,167 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.60s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:47,175 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cup", "1005"],
+  "GRAB": ["cup", "1005"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cup", "1005", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["knife", "1003"],
+  "GRAB": ["knife", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["knife", "1003", "table", "355"],
+  "WALK": ["fork", "1004"],
+  "GRAB": ["fork", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["fork", "1004", "table", "355"],
+  "WALK": ["cloth_napkin", "1001"],
+  "GRAB": ["cloth_napkin", "1001"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["cloth_napkin", "1001", "table", "355"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 23 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:38:47,193 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [02] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <cup> (1005)  →  OK
+  [04] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+2026-07-27 09:38:47,202 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [05] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [06] [WALK] <table> (355)  →  OK
+  [07] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+  [08] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:38:47,218 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [09] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [10] [WALK] <knife> (1003)  →  OK
+  [11] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [12] [WALK] <table> (355)  →  OK
+  [13] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [14] [WALK] <fork> (1004)  →  OK
+  [15] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [16] [WALK] <table> (355)  →  OK
+  [17] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [18] [WALK] <cloth_napkin> (1001)  →  OK
+  [19] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [20] [WALK] <table> (355)  →  OK
+  [21] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  OK
+  [22] [WALK] <television> (410)  →  OK
+  [23] [SWITCHON] <television> (410)  →  OK
+2026-07-27 09:38:47,254 - INFO -   no-adapt result: 13 executed, 10 skipped | skipped: ['[OPEN] <cupboard> (229)', '[GRAB] <cup> (1005)', '[CLOSE] <cupboard> (229)', '[PUTBACK] <cup> (1005) <table> (355)', '[CLOSE] <freezer> (289)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[GRAB] <cloth_napkin> (1001)']
+
+  FINAL OUTPUT SAVED (13 executed / 10 skipped)
+2026-07-27 09:38:48,260 - INFO - 
+[10] Hard busy hands | 9010_1
+
+============================================================
+TASK: 9010_1  |  Hard busy hands  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:38:53,754 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.41s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["dining_room_201", "201"],
+  "OPEN": ["dining_room_201", "201"],
+  "WALK": ["knife_1003", "1003"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["bedroom_67", "67"],
+  "OPEN": ["bedroom_67", "67"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:38:53,758 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["dining_room_201", "201"],
+  "OPEN": ["dining_room_201", "201"],
+  "WALK": ["knife_1003", "1003"],
+  "GRAB": ["knife_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1003", "1003", "table_355", "355"],
+  "WALK": ["fork_1004", "1004"],
+  "GRAB": ["fork_1004", "1004"],
+  "PUTBACK": ["fork_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1002", "1002"],
+  "GRAB": ["plate_1002", "1002"],
+  "PUTBACK": ["plate_1002", "1002", "table_355", "355"],
+  "WALK": ["cup_1005", "1005"],
+  "GRAB": ["cup_1005", "1005"],
+  "PUTBACK": ["cup_1005", "1005", "table_355", "355"],
+  "WALK": ["bedroom_67", "67"],
+  "OPEN": ["bedroom_67", "67"],
+  "WALK": ["cloth_napkin_1001", "1001"],
+  "GRAB": ["cloth_napkin_1001", "1001"],
+  "PUTBACK": ["cloth_napkin_1001", "1001", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 26 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:38:53,784 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [04] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [05] [WALK] <dining_room> (201)  →  OK
+2026-07-27 09:38:53,792 - INFO - Openable check failed: [OPEN] <dining_room> (201) [1]
+  [06] [OPEN] <dining_room> (201)  →  SKIPPED (failed)
+  [07] [WALK] <knife> (1003)  →  OK
+  [08] [GRAB] <knife> (1003)  →  SKIPPED (failed)
+  [09] [WALK] <table> (355)  →  OK
+  [10] [PUTBACK] <knife> (1003) <table> (355)  →  SKIPPED (failed)
+  [11] [WALK] <fork> (1004)  →  OK
+  [12] [GRAB] <fork> (1004)  →  SKIPPED (failed)
+  [13] [PUTBACK] <fork> (1004) <table> (355)  →  SKIPPED (failed)
+  [14] [WALK] <plate> (1002)  →  OK
+  [15] [GRAB] <plate> (1002)  →  SKIPPED (failed)
+  [16] [PUTBACK] <plate> (1002) <table> (355)  →  SKIPPED (failed)
+  [17] [WALK] <cup> (1005)  →  OK
+  [18] [GRAB] <cup> (1005)  →  SKIPPED (failed)
+  [19] [PUTBACK] <cup> (1005) <table> (355)  →  SKIPPED (failed)
+  [20] [WALK] <bedroom> (67)  →  OK
+2026-07-27 09:38:53,827 - INFO - Openable check failed: [OPEN] <bedroom> (67) [1]
+  [21] [OPEN] <bedroom> (67)  →  SKIPPED (failed)
+  [22] [WALK] <cloth_napkin> (1001)  →  OK
+  [23] [GRAB] <cloth_napkin> (1001)  →  SKIPPED (failed)
+  [24] [PUTBACK] <cloth_napkin> (1001) <table> (355)  →  SKIPPED (failed)
+  [25] [WALK] <television> (410)  →  OK
+  [26] [SWITCHON] <television> (410)  →  OK
+2026-07-27 09:38:53,837 - INFO -   no-adapt result: 13 executed, 13 skipped | skipped: ['[CLOSE] <freezer> (289)', '[OPEN] <dining_room> (201)', '[GRAB] <knife> (1003)', '[PUTBACK] <knife> (1003) <table> (355)', '[GRAB] <fork> (1004)', '[PUTBACK] <fork> (1004) <table> (355)', '[GRAB] <plate> (1002)', '[PUTBACK] <plate> (1002) <table> (355)', '[GRAB] <cup> (1005)', '[PUTBACK] <cup> (1005) <table> (355)', '[OPEN] <bedroom> (67)', '[GRAB] <cloth_napkin> (1001)', '[PUTBACK] <cloth_napkin> (1001) <table> (355)']
+
+  FINAL OUTPUT SAVED (13 executed / 13 skipped)
+2026-07-27 09:38:54,846 - INFO - Saved 10 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:38:54,846 - INFO - Progress: 10 | Tree: 0 | Fallback: 0
+2026-07-27 09:38:54,846 - INFO - 
+[11] Hard appliance load | 9011_1
+
+============================================================
+TASK: 9011_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:39:00,120 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.21s) ▼
+{
+  "WALK": ["washing_machine", "1001"],
+  "PLUGIN": ["washing_machine", "1001"],
+  "SWITCHON": ["washing_machine", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "OPEN": ["basket_for_clothes", "1000"],
+  "WALK": ["clothes_dress", "1002"],
+  "GRAB": ["clothes_dress", "1002"],
+  "PUTIN": ["clothes_dress", "1002", "washing_machine", "1001"],
+  "WALK": ["clothes_pants", "1003"],
+  "GRAB": ["clothes_pants", "1003"],
+  "PUTIN": ["clothes_pants", "1003", "washing_machine", "1001"],
+  "WALK": ["clothes_shirt", "1004"],
+  "GRAB": ["clothes_shirt", "1004"],
+  "PUTIN": ["clothes_shirt", "1004", "washing_machine", "1001"],
+  "WALK": ["clothes_underwear", "1005"],
+  "GRAB": ["clothes_underwear", "1005"],
+  "PUTIN": ["clothes_underwear", "1005", "washing_machine", "1001"],
+  "WALK": ["soap", "1006"],
+  "GRAB": ["soap", "1006"],
+  "PUTIN": ["soap", "1006", "washing_machine", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine", "1001"],
+  "CLOSE": ["washing_machine", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:39:00,125 - INFO -   Initial plan: {
+  "WALK": ["washing_machine", "1001"],
+  "PLUGIN": ["washing_machine", "1001"],
+  "SWITCHON": ["washing_machine", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "OPEN": ["basket_for_clothes", "1000"],
+  "WALK": ["clothes_dress", "1002"],
+  "GRAB": ["clothes_dress", "1002"],
+  "PUTIN": ["clothes_dress", "1002", "washing_machine", "1001"],
+  "WALK": ["clothes_pants", "1003"],
+  "GRAB": ["clothes_pants", "1003"],
+  "PUTIN": ["clothes_pants", "1003", "washing_machine", "1001"],
+  "WALK": ["clothes_shirt", "1004"],
+  "GRAB": ["clothes_shirt", "1004"],
+  "PUTIN": ["clothes_shirt", "1004", "washing_machine", "1001"],
+  "WALK": ["clothes_underwear", "1005"],
+  "GRAB": ["clothes_underwear", "1005"],
+  "PUTIN": ["clothes_underwear", "1005", "washing_machine", "1001"],
+  "WALK": ["soap", "1006"],
+  "GRAB": ["soap", "1006"],
+  "PUTIN": ["soap", "1006", "washing_machine", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine", "1001"],
+  "CLOSE": ["washing_machine", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 26 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <washing_machine> (1001)  →  OK
+  [02] [PLUGIN] <washing_machine> (1001)  →  OK
+  [03] [SWITCHON] <washing_machine> (1001)  →  OK
+  [04] [WALK] <basket_for_clothes> (1000)  →  OK
+  [05] [OPEN] <basket_for_clothes> (1000)  →  OK
+  [06] [WALK] <clothes_dress> (1002)  →  OK
+  [07] [GRAB] <clothes_dress> (1002)  →  OK
+  [08] [PUTIN] <clothes_dress> (1002) <washing_machine> (1001)  →  SKIPPED (failed)
+  [09] [WALK] <clothes_pants> (1003)  →  OK
+  [10] [GRAB] <clothes_pants> (1003)  →  OK
+  [11] [PUTIN] <clothes_pants> (1003) <washing_machine> (1001)  →  SKIPPED (failed)
+  [12] [WALK] <clothes_shirt> (1004)  →  OK
+  [13] [GRAB] <clothes_shirt> (1004)  →  SKIPPED (failed)
+  [14] [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)  →  SKIPPED (failed)
+  [15] [WALK] <clothes_underwear> (1005)  →  OK
+  [16] [GRAB] <clothes_underwear> (1005)  →  SKIPPED (failed)
+  [17] [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)  →  SKIPPED (failed)
+  [18] [WALK] <soap> (1006)  →  OK
+  [19] [GRAB] <soap> (1006)  →  SKIPPED (failed)
+  [20] [PUTIN] <soap> (1006) <washing_machine> (1001)  →  SKIPPED (failed)
+  [21] [WALK] <basket_for_clothes> (1000)  →  OK
+  [22] [CLOSE] <basket_for_clothes> (1000)  →  OK
+  [23] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:39:00,196 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [24] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [25] [WALK] <washing_machine> (1001)  →  OK
+2026-07-27 09:39:00,202 - INFO - Openable check failed: [CLOSE] <washing_machine> (1001) [1]
+  [26] [CLOSE] <washing_machine> (1001)  →  SKIPPED (failed)
+2026-07-27 09:39:00,202 - INFO -   no-adapt result: 16 executed, 10 skipped | skipped: ['[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[CLOSE] <cupboard> (229)', '[CLOSE] <washing_machine> (1001)']
+
+  FINAL OUTPUT SAVED (16 executed / 10 skipped)
+2026-07-27 09:39:01,205 - INFO - 
+[12] Hard appliance load | 9012_1
+
+============================================================
+TASK: 9012_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:39:06,967 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.69s) ▼
+{
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "CLOSE": ["washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:39:06,970 - INFO -   Initial plan: {
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "CLOSE": ["washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 27 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <basket_for_clothes> (1000)  →  OK
+2026-07-27 09:39:06,981 - INFO - Openable check failed: [CLOSE] <basket_for_clothes> (1000) [1]
+  [02] [CLOSE] <basket_for_clothes> (1000)  →  SKIPPED (failed)
+  [03] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:39:06,988 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [04] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [05] [WALK] <washing_machine> (1001)  →  OK
+2026-07-27 09:39:06,993 - INFO - Openable check failed: [CLOSE] <washing_machine> (1001) [1]
+  [06] [CLOSE] <washing_machine> (1001)  →  SKIPPED (failed)
+  [07] [WALK] <clothes_dress> (1002)  →  OK
+  [08] [GRAB] <clothes_dress> (1002)  →  SKIPPED (failed)
+  [09] [WALK] <washing_machine> (1001)  →  OK
+  [10] [PUTIN] <clothes_dress> (1002) <washing_machine> (1001)  →  SKIPPED (failed)
+  [11] [WALK] <clothes_pants> (1003)  →  OK
+  [12] [GRAB] <clothes_pants> (1003)  →  SKIPPED (failed)
+  [13] [WALK] <washing_machine> (1001)  →  OK
+  [14] [PUTIN] <clothes_pants> (1003) <washing_machine> (1001)  →  SKIPPED (failed)
+  [15] [WALK] <clothes_shirt> (1004)  →  OK
+  [16] [GRAB] <clothes_shirt> (1004)  →  SKIPPED (failed)
+  [17] [WALK] <washing_machine> (1001)  →  OK
+  [18] [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)  →  SKIPPED (failed)
+  [19] [WALK] <clothes_underwear> (1005)  →  OK
+  [20] [GRAB] <clothes_underwear> (1005)  →  SKIPPED (failed)
+  [21] [WALK] <washing_machine> (1001)  →  OK
+  [22] [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)  →  SKIPPED (failed)
+  [23] [WALK] <soap> (1006)  →  OK
+  [24] [GRAB] <soap> (1006)  →  SKIPPED (failed)
+  [25] [WALK] <washing_machine> (1001)  →  OK
+  [26] [PUTIN] <soap> (1006) <washing_machine> (1001)  →  SKIPPED (failed)
+  [27] [SWITCHON] <washing_machine> (1001)  →  OK
+2026-07-27 09:39:07,026 - INFO -   no-adapt result: 14 executed, 13 skipped | skipped: ['[CLOSE] <basket_for_clothes> (1000)', '[CLOSE] <cupboard> (229)', '[CLOSE] <washing_machine> (1001)', '[GRAB] <clothes_dress> (1002)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[GRAB] <clothes_pants> (1003)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)']
+
+  FINAL OUTPUT SAVED (14 executed / 13 skipped)
+2026-07-27 09:39:08,033 - INFO - 
+[13] Hard appliance load | 9013_1
+
+============================================================
+TASK: 9013_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:39:12,356 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.23s) ▼
+{
+  "WALK": ["cupboard_229", "1"],
+  "CLOSE": ["cupboard_229", "1"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:39:12,363 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "1"],
+  "CLOSE": ["cupboard_229", "1"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 17 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:39:12,373 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [02] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <washing_machine> (1001)  →  OK
+  [04] [PUTIN] <clothes_dress> (1002) <washing_machine> (1001)  →  SKIPPED (failed)
+  [05] [WALK] <clothes_pants> (1003)  →  OK
+  [06] [GRAB] <clothes_pants> (1003)  →  SKIPPED (failed)
+  [07] [PUTIN] <clothes_pants> (1003) <washing_machine> (1001)  →  SKIPPED (failed)
+  [08] [WALK] <clothes_shirt> (1004)  →  OK
+  [09] [GRAB] <clothes_shirt> (1004)  →  SKIPPED (failed)
+  [10] [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)  →  SKIPPED (failed)
+  [11] [WALK] <clothes_underwear> (1005)  →  OK
+  [12] [GRAB] <clothes_underwear> (1005)  →  SKIPPED (failed)
+  [13] [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)  →  SKIPPED (failed)
+  [14] [WALK] <soap> (1006)  →  OK
+  [15] [GRAB] <soap> (1006)  →  SKIPPED (failed)
+  [16] [PUTIN] <soap> (1006) <washing_machine> (1001)  →  SKIPPED (failed)
+  [17] [SWITCHON] <washing_machine> (1001)  →  SKIPPED (failed)
+2026-07-27 09:39:12,392 - INFO -   no-adapt result: 6 executed, 11 skipped | skipped: ['[CLOSE] <cupboard> (229)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[GRAB] <clothes_pants> (1003)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[SWITCHON] <washing_machine> (1001)']
+
+  FINAL OUTPUT SAVED (6 executed / 11 skipped)
+2026-07-27 09:39:13,397 - INFO - 
+[14] Hard appliance load | 9014_1
+
+============================================================
+TASK: 9014_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:40:54,922 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (101.47s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "GRAB": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "OPEN": ["washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "CLOSE": ["washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:40:54,934 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "GRAB": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "OPEN": ["washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "CLOSE": ["washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 26 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [GRAB] <basket_for_clothes> (1000)  →  SKIPPED (failed)
+  [04] [WALK] <washing_machine> (1001)  →  OK
+  [05] [OPEN] <washing_machine> (1001)  →  OK
+  [06] [WALK] <clothes_dress> (1002)  →  OK
+  [07] [GRAB] <clothes_dress> (1002)  →  SKIPPED (failed)
+  [08] [PUTIN] <clothes_dress> (1002) <washing_machine> (1001)  →  SKIPPED (failed)
+  [09] [WALK] <clothes_pants> (1003)  →  OK
+  [10] [GRAB] <clothes_pants> (1003)  →  SKIPPED (failed)
+  [11] [PUTIN] <clothes_pants> (1003) <washing_machine> (1001)  →  SKIPPED (failed)
+  [12] [WALK] <clothes_shirt> (1004)  →  OK
+  [13] [GRAB] <clothes_shirt> (1004)  →  SKIPPED (failed)
+  [14] [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)  →  SKIPPED (failed)
+  [15] [WALK] <clothes_underwear> (1005)  →  OK
+  [16] [GRAB] <clothes_underwear> (1005)  →  SKIPPED (failed)
+  [17] [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)  →  SKIPPED (failed)
+  [18] [WALK] <soap> (1006)  →  OK
+  [19] [GRAB] <soap> (1006)  →  SKIPPED (failed)
+  [20] [PUTIN] <soap> (1006) <washing_machine> (1001)  →  SKIPPED (failed)
+2026-07-27 09:40:54,961 - INFO - Openable check failed: [CLOSE] <washing_machine> (1001) [1]
+  [21] [CLOSE] <washing_machine> (1001)  →  SKIPPED (failed)
+  [22] [SWITCHON] <washing_machine> (1001)  →  SKIPPED (failed)
+  [23] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:40:54,964 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [24] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [25] [WALK] <basket_for_clothes> (1000)  →  OK
+2026-07-27 09:40:54,968 - INFO - Openable check failed: [CLOSE] <basket_for_clothes> (1000) [1]
+  [26] [CLOSE] <basket_for_clothes> (1000)  →  SKIPPED (failed)
+2026-07-27 09:40:54,968 - INFO -   no-adapt result: 11 executed, 15 skipped | skipped: ['[GRAB] <basket_for_clothes> (1000)', '[GRAB] <clothes_dress> (1002)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[GRAB] <clothes_pants> (1003)', '[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[CLOSE] <washing_machine> (1001)', '[SWITCHON] <washing_machine> (1001)', '[CLOSE] <cupboard> (229)', '[CLOSE] <basket_for_clothes> (1000)']
+
+  FINAL OUTPUT SAVED (11 executed / 15 skipped)
+2026-07-27 09:40:55,972 - INFO - 
+[15] Hard appliance load | 9015_1
+
+============================================================
+TASK: 9015_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:02,536 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (6.45s) ▼
+{
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:02,540 - INFO -   Initial plan: {
+  "WALK": ["clothes_pants_1003", "1003"],
+  "GRAB": ["clothes_pants_1003", "1003"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_pants_1003", "1003", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_dress_1002", "1002"],
+  "GRAB": ["clothes_dress_1002", "1002"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_dress_1002", "1002", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_shirt_1004", "1004"],
+  "GRAB": ["clothes_shirt_1004", "1004"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_shirt_1004", "1004", "washing_machine_1001", "1001"],
+  "WALK": ["clothes_underwear_1005", "1005"],
+  "GRAB": ["clothes_underwear_1005", "1005"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["clothes_underwear_1005", "1005", "washing_machine_1001", "1001"],
+  "WALK": ["soap_1006", "1006"],
+  "GRAB": ["soap_1006", "1006"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "PUTIN": ["soap_1006", "1006", "washing_machine_1001", "1001"],
+  "WALK": ["basket_for_clothes_1000", "1000"],
+  "CLOSE": ["basket_for_clothes_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["washing_machine_1001", "1001"],
+  "SWITCHON": ["washing_machine_1001", "1001"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 26 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <clothes_pants> (1003)  →  OK
+  [02] [GRAB] <clothes_pants> (1003)  →  OK
+  [03] [WALK] <washing_machine> (1001)  →  OK
+  [04] [PUTIN] <clothes_pants> (1003) <washing_machine> (1001)  →  SKIPPED (failed)
+  [05] [WALK] <clothes_dress> (1002)  →  OK
+  [06] [GRAB] <clothes_dress> (1002)  →  SKIPPED (failed)
+  [07] [WALK] <washing_machine> (1001)  →  OK
+  [08] [PUTIN] <clothes_dress> (1002) <washing_machine> (1001)  →  SKIPPED (failed)
+  [09] [WALK] <clothes_shirt> (1004)  →  OK
+  [10] [GRAB] <clothes_shirt> (1004)  →  SKIPPED (failed)
+  [11] [WALK] <washing_machine> (1001)  →  OK
+  [12] [PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)  →  SKIPPED (failed)
+  [13] [WALK] <clothes_underwear> (1005)  →  OK
+  [14] [GRAB] <clothes_underwear> (1005)  →  SKIPPED (failed)
+  [15] [WALK] <washing_machine> (1001)  →  OK
+  [16] [PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)  →  SKIPPED (failed)
+  [17] [WALK] <soap> (1006)  →  OK
+  [18] [GRAB] <soap> (1006)  →  SKIPPED (failed)
+  [19] [WALK] <washing_machine> (1001)  →  OK
+  [20] [PUTIN] <soap> (1006) <washing_machine> (1001)  →  SKIPPED (failed)
+  [21] [WALK] <basket_for_clothes> (1000)  →  OK
+2026-07-27 09:41:02,609 - INFO - Openable check failed: [CLOSE] <basket_for_clothes> (1000) [1]
+  [22] [CLOSE] <basket_for_clothes> (1000)  →  SKIPPED (failed)
+  [23] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:41:02,613 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [24] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [25] [WALK] <washing_machine> (1001)  →  OK
+  [26] [SWITCHON] <washing_machine> (1001)  →  OK
+2026-07-27 09:41:02,618 - INFO -   no-adapt result: 15 executed, 11 skipped | skipped: ['[PUTIN] <clothes_pants> (1003) <washing_machine> (1001)', '[GRAB] <clothes_dress> (1002)', '[PUTIN] <clothes_dress> (1002) <washing_machine> (1001)', '[GRAB] <clothes_shirt> (1004)', '[PUTIN] <clothes_shirt> (1004) <washing_machine> (1001)', '[GRAB] <clothes_underwear> (1005)', '[PUTIN] <clothes_underwear> (1005) <washing_machine> (1001)', '[GRAB] <soap> (1006)', '[PUTIN] <soap> (1006) <washing_machine> (1001)', '[CLOSE] <basket_for_clothes> (1000)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (15 executed / 11 skipped)
+2026-07-27 09:41:03,623 - INFO - 
+[16] Hard appliance load | 9016_1
+
+============================================================
+TASK: 9016_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:09,116 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.42s) ▼
+{
+  "WALK": ["cupboard_229", "67"],
+  "OPEN": ["cupboard_229", "67"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["plate_1003", "1003", "dishwasher_1000", "1000"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["plate_1004", "1004", "dishwasher_1000", "1000"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["cup_1007", "1007", "dishwasher_1000", "1000"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["cup_1008", "1008", "dishwasher_1000", "1000"],
+  "WALK": ["dish_soap_1016", "1016"],
+  "GRAB": ["dish_soap_1016", "1016"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["dish_soap_1016", "1016", "dishwasher_1000", "1000"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "SWITCHON": ["dishwasher_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:09,120 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "67"],
+  "OPEN": ["cupboard_229", "67"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["plate_1003", "1003", "dishwasher_1000", "1000"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["plate_1004", "1004", "dishwasher_1000", "1000"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["cup_1007", "1007", "dishwasher_1000", "1000"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["cup_1008", "1008", "dishwasher_1000", "1000"],
+  "WALK": ["dish_soap_1016", "1016"],
+  "GRAB": ["dish_soap_1016", "1016"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["dish_soap_1016", "1016", "dishwasher_1000", "1000"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "SWITCHON": ["dishwasher_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 24 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+  [02] [OPEN] <cupboard> (229)  →  OK
+  [03] [WALK] <plate> (1003)  →  OK
+  [04] [GRAB] <plate> (1003)  →  OK
+  [05] [WALK] <dishwasher> (1000)  →  OK
+  [06] [PUTIN] <plate> (1003) <dishwasher> (1000)  →  SKIPPED (failed)
+  [07] [WALK] <plate> (1004)  →  OK
+  [08] [GRAB] <plate> (1004)  →  OK
+  [09] [WALK] <dishwasher> (1000)  →  OK
+  [10] [PUTIN] <plate> (1004) <dishwasher> (1000)  →  SKIPPED (failed)
+  [11] [WALK] <cup> (1007)  →  OK
+  [12] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [13] [WALK] <dishwasher> (1000)  →  OK
+  [14] [PUTIN] <cup> (1007) <dishwasher> (1000)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1008)  →  OK
+  [16] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [17] [WALK] <dishwasher> (1000)  →  OK
+  [18] [PUTIN] <cup> (1008) <dishwasher> (1000)  →  SKIPPED (failed)
+  [19] [WALK] <dish_soap> (1016)  →  OK
+  [20] [GRAB] <dish_soap> (1016)  →  SKIPPED (failed)
+  [21] [WALK] <dishwasher> (1000)  →  OK
+  [22] [PUTIN] <dish_soap> (1016) <dishwasher> (1000)  →  SKIPPED (failed)
+  [23] [WALK] <dishwasher> (1000)  →  OK
+  [24] [SWITCHON] <dishwasher> (1000)  →  OK
+2026-07-27 09:41:09,208 - INFO -   no-adapt result: 16 executed, 8 skipped | skipped: ['[PUTIN] <plate> (1003) <dishwasher> (1000)', '[PUTIN] <plate> (1004) <dishwasher> (1000)', '[GRAB] <cup> (1007)', '[PUTIN] <cup> (1007) <dishwasher> (1000)', '[GRAB] <cup> (1008)', '[PUTIN] <cup> (1008) <dishwasher> (1000)', '[GRAB] <dish_soap> (1016)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)']
+
+  FINAL OUTPUT SAVED (16 executed / 8 skipped)
+2026-07-27 09:41:10,214 - INFO - 
+[17] Hard appliance load | 9017_1
+
+============================================================
+TASK: 9017_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:17,780 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.49s) ▼
+{
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["spoon_1014", "1014"],
+  "GRAB": ["spoon_1014", "1014"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["spoon_1014", "1014", "dishwasher_1000", "1000"],
+  "WALK": ["fork_1001", "1001"],
+  "GRAB": ["fork_1001", "1001"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["fork_1001", "1001", "dishwasher_1000", "1000"],
+  "WALK": ["fork_1002", "1002"],
+  "GRAB": ["fork_1002", "1002"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["fork_1002", "1002", "dishwasher_1000", "1000"],
+  "WALK": ["spoon_1013", "1013"],
+  "GRAB": ["spoon_1013", "1013"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["spoon_1013", "1013", "dishwasher_1000", "1000"],
+  "WALK": ["knife_1011", "1011"],
+  "GRAB": ["knife_1011", "1011"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["knife_1011", "1011", "dishwasher_1000", "1000"],
+  "WALK": ["oven_295", "295"],
+  "CLOSE": ["oven_295", "295"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "CLOSE": ["dishwasher_1000", "1000"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "SWITCHON": ["dishwasher_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:17,784 - INFO -   Initial plan: {
+  "WALK": ["freezer_289", "289"],
+  "OPEN": ["freezer_289", "289"],
+  "WALK": ["spoon_1014", "1014"],
+  "GRAB": ["spoon_1014", "1014"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["spoon_1014", "1014", "dishwasher_1000", "1000"],
+  "WALK": ["fork_1001", "1001"],
+  "GRAB": ["fork_1001", "1001"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["fork_1001", "1001", "dishwasher_1000", "1000"],
+  "WALK": ["fork_1002", "1002"],
+  "GRAB": ["fork_1002", "1002"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["fork_1002", "1002", "dishwasher_1000", "1000"],
+  "WALK": ["spoon_1013", "1013"],
+  "GRAB": ["spoon_1013", "1013"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["spoon_1013", "1013", "dishwasher_1000", "1000"],
+  "WALK": ["knife_1011", "1011"],
+  "GRAB": ["knife_1011", "1011"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "PUTIN": ["knife_1011", "1011", "dishwasher_1000", "1000"],
+  "WALK": ["oven_295", "295"],
+  "CLOSE": ["oven_295", "295"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "CLOSE": ["dishwasher_1000", "1000"],
+  "WALK": ["dishwasher_1000", "1000"],
+  "SWITCHON": ["dishwasher_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 30 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <freezer> (289)  →  OK
+  [02] [OPEN] <freezer> (289)  →  OK
+  [03] [WALK] <spoon> (1014)  →  OK
+  [04] [GRAB] <spoon> (1014)  →  OK
+  [05] [WALK] <dishwasher> (1000)  →  OK
+  [06] [PUTIN] <spoon> (1014) <dishwasher> (1000)  →  SKIPPED (failed)
+  [07] [WALK] <fork> (1001)  →  OK
+  [08] [GRAB] <fork> (1001)  →  OK
+  [09] [WALK] <dishwasher> (1000)  →  OK
+  [10] [PUTIN] <fork> (1001) <dishwasher> (1000)  →  SKIPPED (failed)
+  [11] [WALK] <fork> (1002)  →  OK
+  [12] [GRAB] <fork> (1002)  →  SKIPPED (failed)
+  [13] [WALK] <dishwasher> (1000)  →  OK
+  [14] [PUTIN] <fork> (1002) <dishwasher> (1000)  →  SKIPPED (failed)
+  [15] [WALK] <spoon> (1013)  →  OK
+  [16] [GRAB] <spoon> (1013)  →  SKIPPED (failed)
+  [17] [WALK] <dishwasher> (1000)  →  OK
+  [18] [PUTIN] <spoon> (1013) <dishwasher> (1000)  →  SKIPPED (failed)
+  [19] [WALK] <knife> (1011)  →  OK
+  [20] [GRAB] <knife> (1011)  →  SKIPPED (failed)
+  [21] [WALK] <dishwasher> (1000)  →  OK
+  [22] [PUTIN] <knife> (1011) <dishwasher> (1000)  →  SKIPPED (failed)
+  [23] [WALK] <oven> (295)  →  OK
+2026-07-27 09:41:17,872 - INFO - Openable check failed: [CLOSE] <oven> (295) [1]
+  [24] [CLOSE] <oven> (295)  →  SKIPPED (failed)
+  [25] [WALK] <freezer> (289)  →  OK
+  [26] [CLOSE] <freezer> (289)  →  OK
+  [27] [WALK] <dishwasher> (1000)  →  OK
+2026-07-27 09:41:17,883 - INFO - Openable check failed: [CLOSE] <dishwasher> (1000) [1]
+  [28] [CLOSE] <dishwasher> (1000)  →  SKIPPED (failed)
+  [29] [WALK] <dishwasher> (1000)  →  OK
+  [30] [SWITCHON] <dishwasher> (1000)  →  OK
+2026-07-27 09:41:17,889 - INFO -   no-adapt result: 20 executed, 10 skipped | skipped: ['[PUTIN] <spoon> (1014) <dishwasher> (1000)', '[PUTIN] <fork> (1001) <dishwasher> (1000)', '[GRAB] <fork> (1002)', '[PUTIN] <fork> (1002) <dishwasher> (1000)', '[GRAB] <spoon> (1013)', '[PUTIN] <spoon> (1013) <dishwasher> (1000)', '[GRAB] <knife> (1011)', '[PUTIN] <knife> (1011) <dishwasher> (1000)', '[CLOSE] <oven> (295)', '[CLOSE] <dishwasher> (1000)']
+
+  FINAL OUTPUT SAVED (20 executed / 10 skipped)
+2026-07-27 09:41:18,897 - INFO - 
+[18] Hard appliance load | 9018_1
+
+============================================================
+TASK: 9018_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:26,453 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.47s) ▼
+{
+  "WALK": ["nightstand", "102"],
+  "OPEN": ["nightstand", "102"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1005", "dishwasher", "1000"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1006", "dishwasher", "1000"],
+  "WALK": ["cup", "1009"],
+  "GRAB": ["cup", "1009"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1009", "dishwasher", "1000"],
+  "WALK": ["cup", "1010"],
+  "GRAB": ["cup", "1010"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1010", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1016"],
+  "GRAB": ["dish_soap", "1016"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["dish_soap", "1016", "dishwasher", "1000"],
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "WALK": ["cup", "1009"],
+  "GRAB": ["cup", "1009"],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cup", "1010"],
+  "GRAB": ["cup", "1010"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["cup", "1010", "cupboard", "229"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["plate", "1005", "cupboard", "229"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["plate", "1006", "cupboard", "229"],
+  "WALK": ["dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:26,457 - INFO -   Initial plan: {
+  "WALK": ["nightstand", "102"],
+  "OPEN": ["nightstand", "102"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1005", "dishwasher", "1000"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1006", "dishwasher", "1000"],
+  "WALK": ["cup", "1009"],
+  "GRAB": ["cup", "1009"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1009", "dishwasher", "1000"],
+  "WALK": ["cup", "1010"],
+  "GRAB": ["cup", "1010"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1010", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1016"],
+  "GRAB": ["dish_soap", "1016"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["dish_soap", "1016", "dishwasher", "1000"],
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["freezer", "289"],
+  "OPEN": ["freezer", "289"],
+  "WALK": ["cup", "1009"],
+  "GRAB": ["cup", "1009"],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["cup", "1010"],
+  "GRAB": ["cup", "1010"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["cup", "1010", "cupboard", "229"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["plate", "1005", "cupboard", "229"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["cupboard", "229"],
+  "PUTIN": ["plate", "1006", "cupboard", "229"],
+  "WALK": ["dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 44 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <nightstand> (102)  →  OK
+  [02] [OPEN] <nightstand> (102)  →  OK
+  [03] [WALK] <plate> (1005)  →  OK
+  [04] [GRAB] <plate> (1005)  →  OK
+  [05] [WALK] <dishwasher> (1000)  →  OK
+  [06] [PUTIN] <plate> (1005) <dishwasher> (1000)  →  SKIPPED (failed)
+  [07] [WALK] <plate> (1006)  →  OK
+  [08] [GRAB] <plate> (1006)  →  OK
+  [09] [WALK] <dishwasher> (1000)  →  OK
+  [10] [PUTIN] <plate> (1006) <dishwasher> (1000)  →  SKIPPED (failed)
+  [11] [WALK] <cup> (1009)  →  OK
+  [12] [GRAB] <cup> (1009)  →  SKIPPED (failed)
+  [13] [WALK] <dishwasher> (1000)  →  OK
+  [14] [PUTIN] <cup> (1009) <dishwasher> (1000)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1010)  →  OK
+  [16] [GRAB] <cup> (1010)  →  SKIPPED (failed)
+  [17] [WALK] <dishwasher> (1000)  →  OK
+  [18] [PUTIN] <cup> (1010) <dishwasher> (1000)  →  SKIPPED (failed)
+  [19] [WALK] <dish_soap> (1016)  →  OK
+  [20] [GRAB] <dish_soap> (1016)  →  SKIPPED (failed)
+  [21] [WALK] <dishwasher> (1000)  →  OK
+  [22] [PUTIN] <dish_soap> (1016) <dishwasher> (1000)  →  SKIPPED (failed)
+  [23] [WALK] <dishwasher> (1000)  →  OK
+  [24] [SWITCHON] <dishwasher> (1000)  →  OK
+  [25] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:41:26,551 - INFO - Openable check failed: [OPEN] <freezer> (289) [1]
+  [26] [OPEN] <freezer> (289)  →  SKIPPED (failed)
+  [27] [WALK] <cup> (1009)  →  OK
+  [28] [GRAB] <cup> (1009)  →  SKIPPED (failed)
+  [29] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:41:26,561 - INFO - Openable check failed: [OPEN] <cupboard> (229) [1]
+  [30] [OPEN] <cupboard> (229)  →  SKIPPED (failed)
+  [31] [WALK] <cup> (1010)  →  OK
+  [32] [GRAB] <cup> (1010)  →  SKIPPED (failed)
+  [33] [WALK] <cupboard> (229)  →  OK
+  [34] [PUTIN] <cup> (1010) <cupboard> (229)  →  SKIPPED (failed)
+  [35] [WALK] <plate> (1005)  →  OK
+  [36] [GRAB] <plate> (1005)  →  SKIPPED (failed)
+  [37] [WALK] <cupboard> (229)  →  OK
+  [38] [PUTIN] <plate> (1005) <cupboard> (229)  →  SKIPPED (failed)
+  [39] [WALK] <plate> (1006)  →  OK
+  [40] [GRAB] <plate> (1006)  →  SKIPPED (failed)
+  [41] [WALK] <cupboard> (229)  →  OK
+  [42] [PUTIN] <plate> (1006) <cupboard> (229)  →  SKIPPED (failed)
+  [43] [WALK] <dishwasher> (1000)  →  OK
+2026-07-27 09:41:26,597 - INFO - Openable check failed: [CLOSE] <dishwasher> (1000) [1]
+  [44] [CLOSE] <dishwasher> (1000)  →  SKIPPED (failed)
+2026-07-27 09:41:26,597 - INFO -   no-adapt result: 26 executed, 18 skipped | skipped: ['[PUTIN] <plate> (1005) <dishwasher> (1000)', '[PUTIN] <plate> (1006) <dishwasher> (1000)', '[GRAB] <cup> (1009)', '[PUTIN] <cup> (1009) <dishwasher> (1000)', '[GRAB] <cup> (1010)', '[PUTIN] <cup> (1010) <dishwasher> (1000)', '[GRAB] <dish_soap> (1016)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)', '[OPEN] <freezer> (289)', '[GRAB] <cup> (1009)', '[OPEN] <cupboard> (229)', '[GRAB] <cup> (1010)', '[PUTIN] <cup> (1010) <cupboard> (229)', '[GRAB] <plate> (1005)', '[PUTIN] <plate> (1005) <cupboard> (229)', '[GRAB] <plate> (1006)', '[PUTIN] <plate> (1006) <cupboard> (229)', '[CLOSE] <dishwasher> (1000)']
+
+  FINAL OUTPUT SAVED (26 executed / 18 skipped)
+2026-07-27 09:41:27,604 - INFO - 
+[19] Hard appliance load | 9019_1
+
+============================================================
+TASK: 9019_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:31,984 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.31s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["cup", "1007"],
+  "GRAB": ["cup", "1007"],
+  "PUTIN": ["cup", "1007", "dishwasher", "1000"],
+  "WALK": ["cup", "1008"],
+  "GRAB": ["cup", "1008"],
+  "PUTIN": ["cup", "1008", "dishwasher", "1000"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "PUTIN": ["plate", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "PUTIN": ["plate", "1004", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1016"],
+  "GRAB": ["dish_soap", "1016"],
+  "PUTIN": ["dish_soap", "1016", "dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "SWITCHON": ["dishwasher", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:31,987 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["dishwasher", "1000"],
+  "OPEN": ["dishwasher", "1000"],
+  "WALK": ["cup", "1007"],
+  "GRAB": ["cup", "1007"],
+  "PUTIN": ["cup", "1007", "dishwasher", "1000"],
+  "WALK": ["cup", "1008"],
+  "GRAB": ["cup", "1008"],
+  "PUTIN": ["cup", "1008", "dishwasher", "1000"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "PUTIN": ["plate", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "PUTIN": ["plate", "1004", "dishwasher", "1000"],
+  "WALK": ["dish_soap", "1016"],
+  "GRAB": ["dish_soap", "1016"],
+  "PUTIN": ["dish_soap", "1016", "dishwasher", "1000"],
+  "CLOSE": ["dishwasher", "1000"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "SWITCHON": ["dishwasher", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 24 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <dishwasher> (1000)  →  OK
+  [03] [OPEN] <dishwasher> (1000)  →  OK
+  [04] [WALK] <cup> (1007)  →  OK
+  [05] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [06] [PUTIN] <cup> (1007) <dishwasher> (1000)  →  SKIPPED (failed)
+  [07] [WALK] <cup> (1008)  →  OK
+  [08] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [09] [PUTIN] <cup> (1008) <dishwasher> (1000)  →  SKIPPED (failed)
+  [10] [WALK] <plate> (1003)  →  OK
+  [11] [GRAB] <plate> (1003)  →  SKIPPED (failed)
+  [12] [PUTIN] <plate> (1003) <dishwasher> (1000)  →  SKIPPED (failed)
+  [13] [WALK] <plate> (1004)  →  OK
+  [14] [GRAB] <plate> (1004)  →  SKIPPED (failed)
+  [15] [PUTIN] <plate> (1004) <dishwasher> (1000)  →  SKIPPED (failed)
+  [16] [WALK] <dish_soap> (1016)  →  OK
+  [17] [GRAB] <dish_soap> (1016)  →  SKIPPED (failed)
+  [18] [PUTIN] <dish_soap> (1016) <dishwasher> (1000)  →  SKIPPED (failed)
+2026-07-27 09:41:32,020 - INFO - Openable check failed: [CLOSE] <dishwasher> (1000) [1]
+  [19] [CLOSE] <dishwasher> (1000)  →  SKIPPED (failed)
+  [20] [WALK] <nightstand> (102)  →  OK
+2026-07-27 09:41:32,024 - INFO - Openable check failed: [CLOSE] <nightstand> (102) [1]
+  [21] [CLOSE] <nightstand> (102)  →  SKIPPED (failed)
+  [22] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:41:32,029 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [23] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [24] [SWITCHON] <dishwasher> (1000)  →  SKIPPED (failed)
+2026-07-27 09:41:32,029 - INFO -   no-adapt result: 10 executed, 14 skipped | skipped: ['[GRAB] <cup> (1007)', '[PUTIN] <cup> (1007) <dishwasher> (1000)', '[GRAB] <cup> (1008)', '[PUTIN] <cup> (1008) <dishwasher> (1000)', '[GRAB] <plate> (1003)', '[PUTIN] <plate> (1003) <dishwasher> (1000)', '[GRAB] <plate> (1004)', '[PUTIN] <plate> (1004) <dishwasher> (1000)', '[GRAB] <dish_soap> (1016)', '[PUTIN] <dish_soap> (1016) <dishwasher> (1000)', '[CLOSE] <dishwasher> (1000)', '[CLOSE] <nightstand> (102)', '[CLOSE] <cupboard> (229)', '[SWITCHON] <dishwasher> (1000)']
+
+  FINAL OUTPUT SAVED (10 executed / 14 skipped)
+2026-07-27 09:41:33,034 - INFO - 
+[20] Hard appliance load | 9020_1
+
+============================================================
+TASK: 9020_1  |  Hard appliance load  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:40,248 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.13s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1004", "dishwasher", "1000"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1005", "dishwasher", "1000"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1006", "dishwasher", "1000"],
+  "WALK": ["cup", "1007"],
+  "GRAB": ["cup", "1007"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1007", "dishwasher", "1000"],
+  "WALK": ["cup", "1008"],
+  "GRAB": ["cup", "1008"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1008", "dishwasher", "1000"],
+  "WALK": ["fork", "1001"],
+  "GRAB": ["fork", "1001"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["fork", "1001", "dishwasher", "1000"],
+  "WALK": ["spoon", "1013"],
+  "GRAB": ["spoon", "1013"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["spoon", "1013", "dishwasher", "1000"],
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:40,253 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1003", "dishwasher", "1000"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1004", "dishwasher", "1000"],
+  "WALK": ["plate", "1005"],
+  "GRAB": ["plate", "1005"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1005", "dishwasher", "1000"],
+  "WALK": ["plate", "1006"],
+  "GRAB": ["plate", "1006"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["plate", "1006", "dishwasher", "1000"],
+  "WALK": ["cup", "1007"],
+  "GRAB": ["cup", "1007"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1007", "dishwasher", "1000"],
+  "WALK": ["cup", "1008"],
+  "GRAB": ["cup", "1008"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["cup", "1008", "dishwasher", "1000"],
+  "WALK": ["fork", "1001"],
+  "GRAB": ["fork", "1001"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["fork", "1001", "dishwasher", "1000"],
+  "WALK": ["spoon", "1013"],
+  "GRAB": ["spoon", "1013"],
+  "WALK": ["dishwasher", "1000"],
+  "PUTIN": ["spoon", "1013", "dishwasher", "1000"],
+  "WALK": ["dishwasher", "1000"],
+  "SWITCHON": ["dishwasher", "1000"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 42 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+  [02] [OPEN] <cupboard> (229)  →  OK
+  [03] [WALK] <plate> (1003)  →  OK
+  [04] [GRAB] <plate> (1003)  →  OK
+  [05] [WALK] <dishwasher> (1000)  →  OK
+  [06] [PUTIN] <plate> (1003) <dishwasher> (1000)  →  SKIPPED (failed)
+  [07] [WALK] <plate> (1004)  →  OK
+  [08] [GRAB] <plate> (1004)  →  OK
+  [09] [WALK] <dishwasher> (1000)  →  OK
+  [10] [PUTIN] <plate> (1004) <dishwasher> (1000)  →  SKIPPED (failed)
+  [11] [WALK] <plate> (1005)  →  OK
+  [12] [GRAB] <plate> (1005)  →  SKIPPED (failed)
+  [13] [WALK] <dishwasher> (1000)  →  OK
+  [14] [PUTIN] <plate> (1005) <dishwasher> (1000)  →  SKIPPED (failed)
+  [15] [WALK] <plate> (1006)  →  OK
+  [16] [GRAB] <plate> (1006)  →  SKIPPED (failed)
+  [17] [WALK] <dishwasher> (1000)  →  OK
+  [18] [PUTIN] <plate> (1006) <dishwasher> (1000)  →  SKIPPED (failed)
+  [19] [WALK] <cup> (1007)  →  OK
+  [20] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [21] [WALK] <dishwasher> (1000)  →  OK
+  [22] [PUTIN] <cup> (1007) <dishwasher> (1000)  →  SKIPPED (failed)
+  [23] [WALK] <cup> (1008)  →  OK
+  [24] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [25] [WALK] <dishwasher> (1000)  →  OK
+  [26] [PUTIN] <cup> (1008) <dishwasher> (1000)  →  SKIPPED (failed)
+  [27] [WALK] <fork> (1001)  →  OK
+  [28] [GRAB] <fork> (1001)  →  SKIPPED (failed)
+  [29] [WALK] <dishwasher> (1000)  →  OK
+  [30] [PUTIN] <fork> (1001) <dishwasher> (1000)  →  SKIPPED (failed)
+  [31] [WALK] <spoon> (1013)  →  OK
+  [32] [GRAB] <spoon> (1013)  →  SKIPPED (failed)
+  [33] [WALK] <dishwasher> (1000)  →  OK
+  [34] [PUTIN] <spoon> (1013) <dishwasher> (1000)  →  SKIPPED (failed)
+  [35] [WALK] <dishwasher> (1000)  →  OK
+  [36] [SWITCHON] <dishwasher> (1000)  →  OK
+  [37] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:41:40,373 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [38] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [39] [WALK] <nightstand> (102)  →  OK
+2026-07-27 09:41:40,379 - INFO - Openable check failed: [CLOSE] <nightstand> (102) [1]
+  [40] [CLOSE] <nightstand> (102)  →  SKIPPED (failed)
+  [41] [WALK] <cupboard> (229)  →  OK
+  [42] [CLOSE] <cupboard> (229)  →  OK
+2026-07-27 09:41:40,385 - INFO -   no-adapt result: 26 executed, 16 skipped | skipped: ['[PUTIN] <plate> (1003) <dishwasher> (1000)', '[PUTIN] <plate> (1004) <dishwasher> (1000)', '[GRAB] <plate> (1005)', '[PUTIN] <plate> (1005) <dishwasher> (1000)', '[GRAB] <plate> (1006)', '[PUTIN] <plate> (1006) <dishwasher> (1000)', '[GRAB] <cup> (1007)', '[PUTIN] <cup> (1007) <dishwasher> (1000)', '[GRAB] <cup> (1008)', '[PUTIN] <cup> (1008) <dishwasher> (1000)', '[GRAB] <fork> (1001)', '[PUTIN] <fork> (1001) <dishwasher> (1000)', '[GRAB] <spoon> (1013)', '[PUTIN] <spoon> (1013) <dishwasher> (1000)', '[CLOSE] <freezer> (289)', '[CLOSE] <nightstand> (102)']
+
+  FINAL OUTPUT SAVED (26 executed / 16 skipped)
+2026-07-27 09:41:41,397 - INFO - Saved 20 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:41:41,397 - INFO - Progress: 20 | Tree: 0 | Fallback: 0
+2026-07-27 09:41:41,397 - INFO - 
+[21] Hard scatter restore | 9021_1
+
+============================================================
+TASK: 9021_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:47,033 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.57s) ▼
+{
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1005", "1005"],
+  "GRAB": ["plate_1005", "1005"],
+  "PUTBACK": ["plate_1005", "1005", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "CLOSE": ["freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:47,036 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1005", "1005"],
+  "GRAB": ["plate_1005", "1005"],
+  "PUTBACK": ["plate_1005", "1005", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "CLOSE": ["freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 19 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+  [02] [OPEN] <cupboard> (229)  →  OK
+  [03] [WALK] <plate> (1003)  →  OK
+  [04] [GRAB] <plate> (1003)  →  OK
+  [05] [PUTBACK] <plate> (1003) <table> (355)  →  SKIPPED (failed)
+  [06] [WALK] <plate> (1004)  →  OK
+  [07] [GRAB] <plate> (1004)  →  OK
+  [08] [PUTBACK] <plate> (1004) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <plate> (1005)  →  OK
+  [10] [GRAB] <plate> (1005)  →  SKIPPED (failed)
+  [11] [PUTBACK] <plate> (1005) <table> (355)  →  SKIPPED (failed)
+  [12] [WALK] <cup> (1007)  →  OK
+  [13] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [14] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1008)  →  OK
+  [16] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [17] [PUTBACK] <cup> (1008) <table> (355)  →  SKIPPED (failed)
+  [18] [CLOSE] <cupboard> (229)  →  OK
+2026-07-27 09:41:47,089 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [19] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:41:47,089 - INFO -   no-adapt result: 10 executed, 9 skipped | skipped: ['[PUTBACK] <plate> (1003) <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[GRAB] <plate> (1005)', '[PUTBACK] <plate> (1005) <table> (355)', '[GRAB] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[GRAB] <cup> (1008)', '[PUTBACK] <cup> (1008) <table> (355)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (10 executed / 9 skipped)
+2026-07-27 09:41:48,096 - INFO - 
+[22] Hard scatter restore | 9022_1
+
+============================================================
+TASK: 9022_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:51,263 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.06s) ▼
+{
+  "WALK": ["nightstand_102", "102"],
+  "CLOSE": ["nightstand_102", "102"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["fork_1001", "1001"],
+  "PUTBACK": ["fork_1001", "1001", "table_355", "355"],
+  "WALK": ["fork_1002", "1002"],
+  "PUTBACK": ["fork_1002", "1002", "table_355", "355"],
+  "WALK": ["knife_1011", "1011"],
+  "PUTBACK": ["knife_1011", "1011", "table_355", "355"],
+  "WALK": ["spoon_1013", "1013"],
+  "PUTBACK": ["spoon_1013", "1013", "table_355", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:51,266 - INFO -   Initial plan: {
+  "WALK": ["nightstand_102", "102"],
+  "CLOSE": ["nightstand_102", "102"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["fork_1001", "1001"],
+  "PUTBACK": ["fork_1001", "1001", "table_355", "355"],
+  "WALK": ["fork_1002", "1002"],
+  "PUTBACK": ["fork_1002", "1002", "table_355", "355"],
+  "WALK": ["knife_1011", "1011"],
+  "PUTBACK": ["knife_1011", "1011", "table_355", "355"],
+  "WALK": ["spoon_1013", "1013"],
+  "PUTBACK": ["spoon_1013", "1013", "table_355", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <nightstand> (102)  →  OK
+2026-07-27 09:41:51,277 - INFO - Openable check failed: [CLOSE] <nightstand> (102) [1]
+  [02] [CLOSE] <nightstand> (102)  →  SKIPPED (failed)
+  [03] [WALK] <television> (410)  →  OK
+  [04] [SWITCHON] <television> (410)  →  OK
+  [05] [WALK] <fork> (1001)  →  OK
+  [06] [PUTBACK] <fork> (1001) <table> (355)  →  SKIPPED (failed)
+  [07] [WALK] <fork> (1002)  →  OK
+  [08] [PUTBACK] <fork> (1002) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <knife> (1011)  →  OK
+  [10] [PUTBACK] <knife> (1011) <table> (355)  →  SKIPPED (failed)
+  [11] [WALK] <spoon> (1013)  →  OK
+  [12] [PUTBACK] <spoon> (1013) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:41:51,296 - INFO -   no-adapt result: 7 executed, 5 skipped | skipped: ['[CLOSE] <nightstand> (102)', '[PUTBACK] <fork> (1001) <table> (355)', '[PUTBACK] <fork> (1002) <table> (355)', '[PUTBACK] <knife> (1011) <table> (355)', '[PUTBACK] <spoon> (1013) <table> (355)']
+
+  FINAL OUTPUT SAVED (7 executed / 5 skipped)
+2026-07-27 09:41:52,301 - INFO - 
+[23] Hard scatter restore | 9023_1
+
+============================================================
+TASK: 9023_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:41:55,905 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.53s) ▼
+{
+  "WALK": ["oven_295", "295"],
+  "OPEN": ["oven_295", "295"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "WALK": ["cup_1009", "1009"],
+  "GRAB": ["cup_1009", "1009"],
+  "PUTBACK": ["cup_1009", "1009", "table_355", "355"],
+  "WALK": ["cup_1010", "1010"],
+  "GRAB": ["cup_1010", "1010"],
+  "PUTBACK": ["cup_1010", "1010", "table_355", "355"],
+  "CLOSE": ["oven_295", "295"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:41:55,908 - INFO -   Initial plan: {
+  "WALK": ["oven_295", "295"],
+  "OPEN": ["oven_295", "295"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "WALK": ["cup_1009", "1009"],
+  "GRAB": ["cup_1009", "1009"],
+  "PUTBACK": ["cup_1009", "1009", "table_355", "355"],
+  "WALK": ["cup_1010", "1010"],
+  "GRAB": ["cup_1010", "1010"],
+  "PUTBACK": ["cup_1010", "1010", "table_355", "355"],
+  "CLOSE": ["oven_295", "295"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 15 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <oven> (295)  →  OK
+  [02] [OPEN] <oven> (295)  →  OK
+  [03] [WALK] <cup> (1007)  →  OK
+  [04] [GRAB] <cup> (1007)  →  OK
+  [05] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [06] [WALK] <cup> (1008)  →  OK
+  [07] [GRAB] <cup> (1008)  →  OK
+  [08] [PUTBACK] <cup> (1008) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <cup> (1009)  →  OK
+  [10] [GRAB] <cup> (1009)  →  SKIPPED (failed)
+  [11] [PUTBACK] <cup> (1009) <table> (355)  →  SKIPPED (failed)
+  [12] [WALK] <cup> (1010)  →  OK
+  [13] [GRAB] <cup> (1010)  →  SKIPPED (failed)
+  [14] [PUTBACK] <cup> (1010) <table> (355)  →  SKIPPED (failed)
+  [15] [CLOSE] <oven> (295)  →  OK
+2026-07-27 09:41:55,956 - INFO -   no-adapt result: 9 executed, 6 skipped | skipped: ['[PUTBACK] <cup> (1007) <table> (355)', '[PUTBACK] <cup> (1008) <table> (355)', '[GRAB] <cup> (1009)', '[PUTBACK] <cup> (1009) <table> (355)', '[GRAB] <cup> (1010)', '[PUTBACK] <cup> (1010) <table> (355)']
+
+  FINAL OUTPUT SAVED (9 executed / 6 skipped)
+2026-07-27 09:41:56,958 - INFO - 
+[24] Hard scatter restore | 9024_1
+
+============================================================
+TASK: 9024_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:02,901 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.85s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1005", "1005"],
+  "GRAB": ["plate_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1005", "1005", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:02,904 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1005", "1005"],
+  "GRAB": ["plate_1005", "1005"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1005", "1005", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 28 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:42:02,920 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [04] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [05] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:42:02,927 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [06] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [07] [WALK] <television> (410)  →  OK
+  [08] [SWITCHON] <television> (410)  →  OK
+  [09] [WALK] <plate> (1003)  →  OK
+  [10] [GRAB] <plate> (1003)  →  SKIPPED (failed)
+  [11] [WALK] <table> (355)  →  OK
+  [12] [PUTBACK] <plate> (1003) <table> (355)  →  SKIPPED (failed)
+  [13] [WALK] <plate> (1004)  →  OK
+  [14] [GRAB] <plate> (1004)  →  SKIPPED (failed)
+  [15] [WALK] <table> (355)  →  OK
+  [16] [PUTBACK] <plate> (1004) <table> (355)  →  SKIPPED (failed)
+  [17] [WALK] <plate> (1005)  →  OK
+  [18] [GRAB] <plate> (1005)  →  SKIPPED (failed)
+  [19] [WALK] <table> (355)  →  OK
+  [20] [PUTBACK] <plate> (1005) <table> (355)  →  SKIPPED (failed)
+  [21] [WALK] <cup> (1007)  →  OK
+  [22] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [23] [WALK] <table> (355)  →  OK
+  [24] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [25] [WALK] <cup> (1008)  →  OK
+  [26] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [27] [WALK] <table> (355)  →  OK
+  [28] [PUTBACK] <cup> (1008) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:42:02,958 - INFO -   no-adapt result: 16 executed, 12 skipped | skipped: ['[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)', '[GRAB] <plate> (1003)', '[PUTBACK] <plate> (1003) <table> (355)', '[GRAB] <plate> (1004)', '[PUTBACK] <plate> (1004) <table> (355)', '[GRAB] <plate> (1005)', '[PUTBACK] <plate> (1005) <table> (355)', '[GRAB] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[GRAB] <cup> (1008)', '[PUTBACK] <cup> (1008) <table> (355)']
+
+  FINAL OUTPUT SAVED (16 executed / 12 skipped)
+2026-07-27 09:42:03,964 - INFO - 
+[25] Hard scatter restore | 9025_1
+
+============================================================
+TASK: 9025_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:07,125 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.09s) ▼
+{
+  "WALK": ["light", "245"],
+  "SWITCHON": ["light", "245"],
+  "WALK": ["spoon", "1013"],
+  "PUTBACK": ["spoon", "1013", "table", "355"],
+  "WALK": ["spoon", "1014"],
+  "PUTBACK": ["spoon", "1014", "table", "355"],
+  "WALK": ["plate", "1003"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:07,135 - INFO -   Initial plan: {
+  "WALK": ["light", "245"],
+  "SWITCHON": ["light", "245"],
+  "WALK": ["spoon", "1013"],
+  "PUTBACK": ["spoon", "1013", "table", "355"],
+  "WALK": ["spoon", "1014"],
+  "PUTBACK": ["spoon", "1014", "table", "355"],
+  "WALK": ["plate", "1003"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <light> (245)  →  OK
+  [02] [SWITCHON] <light> (245)  →  OK
+  [03] [WALK] <spoon> (1013)  →  OK
+  [04] [PUTBACK] <spoon> (1013) <table> (355)  →  SKIPPED (failed)
+  [05] [WALK] <spoon> (1014)  →  OK
+  [06] [PUTBACK] <spoon> (1014) <table> (355)  →  SKIPPED (failed)
+  [07] [WALK] <plate> (1003)  →  OK
+  [08] [PUTBACK] <plate> (1003) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:42:07,163 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [10] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [11] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:42:07,168 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [12] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:42:07,168 - INFO -   no-adapt result: 7 executed, 5 skipped | skipped: ['[PUTBACK] <spoon> (1013) <table> (355)', '[PUTBACK] <spoon> (1014) <table> (355)', '[PUTBACK] <plate> (1003) <table> (355)', '[CLOSE] <freezer> (289)', '[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (7 executed / 5 skipped)
+2026-07-27 09:42:08,173 - INFO - 
+[26] Hard scatter restore | 9026_1
+
+============================================================
+TASK: 9026_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:13,768 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.52s) ▼
+{
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["cup_2006", "2006"],
+  "GRAB": ["cup_2006", "2006"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_2006", "2006", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:13,770 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["plate_1004", "1004"],
+  "GRAB": ["plate_1004", "1004"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1004", "1004", "table_355", "355"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["cup_2006", "2006"],
+  "GRAB": ["cup_2006", "2006"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_2006", "2006", "table_355", "355"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 18 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+  [02] [OPEN] <cupboard> (229)  →  OK
+  [03] [WALK] <plate> (1004)  →  OK
+  [04] [GRAB] <plate> (1004)  →  OK
+  [05] [WALK] <table> (355)  →  OK
+  [06] [PUTBACK] <plate> (1004) <table> (355)  →  OK
+  [07] [WALK] <plate> (1003)  →  OK
+  [08] [GRAB] <plate> (1003)  →  OK
+  [09] [WALK] <table> (355)  →  OK
+  [10] [PUTBACK] <plate> (1003) <table> (355)  →  OK
+  [11] [WALK] <cup> (2006)  →  OK
+  [12] [GRAB] <cup> (2006)  →  OK
+  [13] [WALK] <table> (355)  →  OK
+  [14] [PUTBACK] <cup> (2006) <table> (355)  →  OK
+  [15] [WALK] <television> (410)  →  OK
+  [16] [SWITCHON] <television> (410)  →  OK
+  [17] [WALK] <cupboard> (229)  →  OK
+  [18] [CLOSE] <cupboard> (229)  →  OK
+2026-07-27 09:42:13,839 - INFO -   no-adapt result: 18 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (18 executed / 0 skipped)
+2026-07-27 09:42:14,846 - INFO - 
+[27] Hard scatter restore | 9027_1
+
+============================================================
+TASK: 9027_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:22,021 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.09s) ▼
+{
+  "WALK": ["cupboard_229", "24"],
+  "OPEN": ["cupboard_229", "24"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["fork_1001", "1001"],
+  "GRAB": ["fork_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1001", "1001", "table_355", "355"],
+  "WALK": ["knife_1011", "1011"],
+  "GRAB": ["knife_1011", "1011"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1011", "1011", "table_355", "355"],
+  "WALK": ["spoon_1013", "1013"],
+  "GRAB": ["spoon_1013", "1013"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["spoon_1013", "1013", "table_355", "355"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["nightstand_102", "102"],
+  "CLOSE": ["nightstand_102", "102"],
+  "WALK": ["cupboard_229", "24"],
+  "CLOSE": ["cupboard_229", "24"],
+  "WALK": ["dining_room_201", "201"],
+  "CLOSE": ["dining_room_201", "201"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:22,029 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "24"],
+  "OPEN": ["cupboard_229", "24"],
+  "WALK": ["plate_1003", "1003"],
+  "GRAB": ["plate_1003", "1003"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["plate_1003", "1003", "table_355", "355"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["fork_1001", "1001"],
+  "GRAB": ["fork_1001", "1001"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["fork_1001", "1001", "table_355", "355"],
+  "WALK": ["knife_1011", "1011"],
+  "GRAB": ["knife_1011", "1011"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["knife_1011", "1011", "table_355", "355"],
+  "WALK": ["spoon_1013", "1013"],
+  "GRAB": ["spoon_1013", "1013"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["spoon_1013", "1013", "table_355", "355"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["nightstand_102", "102"],
+  "CLOSE": ["nightstand_102", "102"],
+  "WALK": ["cupboard_229", "24"],
+  "CLOSE": ["cupboard_229", "24"],
+  "WALK": ["dining_room_201", "201"],
+  "CLOSE": ["dining_room_201", "201"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 30 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+  [02] [OPEN] <cupboard> (229)  →  OK
+  [03] [WALK] <plate> (1003)  →  OK
+  [04] [GRAB] <plate> (1003)  →  OK
+  [05] [WALK] <table> (355)  →  OK
+  [06] [PUTBACK] <plate> (1003) <table> (355)  →  OK
+  [07] [WALK] <cup> (1007)  →  OK
+  [08] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [09] [WALK] <table> (355)  →  OK
+  [10] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [11] [WALK] <fork> (1001)  →  OK
+  [12] [GRAB] <fork> (1001)  →  SKIPPED (failed)
+  [13] [WALK] <table> (355)  →  OK
+  [14] [PUTBACK] <fork> (1001) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <knife> (1011)  →  OK
+  [16] [GRAB] <knife> (1011)  →  SKIPPED (failed)
+  [17] [WALK] <table> (355)  →  OK
+  [18] [PUTBACK] <knife> (1011) <table> (355)  →  SKIPPED (failed)
+  [19] [WALK] <spoon> (1013)  →  OK
+  [20] [GRAB] <spoon> (1013)  →  SKIPPED (failed)
+  [21] [WALK] <table> (355)  →  OK
+  [22] [PUTBACK] <spoon> (1013) <table> (355)  →  SKIPPED (failed)
+  [23] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:42:22,078 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [24] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [25] [WALK] <nightstand> (102)  →  OK
+2026-07-27 09:42:22,081 - INFO - Openable check failed: [CLOSE] <nightstand> (102) [1]
+  [26] [CLOSE] <nightstand> (102)  →  SKIPPED (failed)
+  [27] [WALK] <cupboard> (229)  →  OK
+  [28] [CLOSE] <cupboard> (229)  →  OK
+  [29] [WALK] <dining_room> (201)  →  OK
+2026-07-27 09:42:22,087 - INFO - Openable check failed: [CLOSE] <dining_room> (201) [1]
+  [30] [CLOSE] <dining_room> (201)  →  SKIPPED (failed)
+2026-07-27 09:42:22,087 - INFO -   no-adapt result: 19 executed, 11 skipped | skipped: ['[GRAB] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[GRAB] <fork> (1001)', '[PUTBACK] <fork> (1001) <table> (355)', '[GRAB] <knife> (1011)', '[PUTBACK] <knife> (1011) <table> (355)', '[GRAB] <spoon> (1013)', '[PUTBACK] <spoon> (1013) <table> (355)', '[CLOSE] <freezer> (289)', '[CLOSE] <nightstand> (102)', '[CLOSE] <dining_room> (201)']
+
+  FINAL OUTPUT SAVED (19 executed / 11 skipped)
+2026-07-27 09:42:23,094 - INFO - 
+[28] Hard scatter restore | 9028_1
+
+============================================================
+TASK: 9028_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:26,719 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.55s) ▼
+{
+  "WALK": ["oven", "295"],
+  "SWITCHON": ["oven", "295"],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["bowl", "2007"],
+  "GRAB": ["bowl", "2007"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["bowl", "2007", "table", "355"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1004", "table", "355"],
+  "CLOSE": ["cupboard", "229"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:26,721 - INFO -   Initial plan: {
+  "WALK": ["oven", "295"],
+  "SWITCHON": ["oven", "295"],
+  "WALK": ["cupboard", "229"],
+  "OPEN": ["cupboard", "229"],
+  "WALK": ["bowl", "2007"],
+  "GRAB": ["bowl", "2007"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["bowl", "2007", "table", "355"],
+  "WALK": ["plate", "1003"],
+  "GRAB": ["plate", "1003"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["plate", "1004"],
+  "GRAB": ["plate", "1004"],
+  "WALK": ["table", "355"],
+  "PUTBACK": ["plate", "1004", "table", "355"],
+  "CLOSE": ["cupboard", "229"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 17 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <oven> (295)  →  OK
+  [02] [SWITCHON] <oven> (295)  →  OK
+  [03] [WALK] <cupboard> (229)  →  OK
+  [04] [OPEN] <cupboard> (229)  →  OK
+  [05] [WALK] <bowl> (2007)  →  OK
+  [06] [GRAB] <bowl> (2007)  →  OK
+  [07] [WALK] <table> (355)  →  OK
+  [08] [PUTBACK] <bowl> (2007) <table> (355)  →  OK
+  [09] [WALK] <plate> (1003)  →  OK
+  [10] [GRAB] <plate> (1003)  →  OK
+  [11] [WALK] <table> (355)  →  OK
+  [12] [PUTBACK] <plate> (1003) <table> (355)  →  OK
+  [13] [WALK] <plate> (1004)  →  OK
+  [14] [GRAB] <plate> (1004)  →  OK
+  [15] [WALK] <table> (355)  →  OK
+  [16] [PUTBACK] <plate> (1004) <table> (355)  →  OK
+2026-07-27 09:42:26,778 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [17] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:42:26,778 - INFO -   no-adapt result: 16 executed, 1 skipped | skipped: ['[CLOSE] <cupboard> (229)']
+
+  FINAL OUTPUT SAVED (16 executed / 1 skipped)
+2026-07-27 09:42:27,786 - INFO - 
+[29] Hard scatter restore | 9029_1
+
+============================================================
+TASK: 9029_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:32,045 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.17s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["oven_295", "295"],
+  "CLOSE": ["oven_295", "295"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["dining_room_201", "201"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "WALK": ["cup_1009", "1009"],
+  "GRAB": ["cup_1009", "1009"],
+  "PUTBACK": ["cup_1009", "1009", "table_355", "355"],
+  "WALK": ["cup_1010", "1010"],
+  "GRAB": ["cup_1010", "1010"],
+  "PUTBACK": ["cup_1010", "1010", "table_355", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:32,048 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["oven_295", "295"],
+  "CLOSE": ["oven_295", "295"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["dining_room_201", "201"],
+  "WALK": ["cup_1007", "1007"],
+  "GRAB": ["cup_1007", "1007"],
+  "PUTBACK": ["cup_1007", "1007", "table_355", "355"],
+  "WALK": ["cup_1008", "1008"],
+  "GRAB": ["cup_1008", "1008"],
+  "PUTBACK": ["cup_1008", "1008", "table_355", "355"],
+  "WALK": ["cup_1009", "1009"],
+  "GRAB": ["cup_1009", "1009"],
+  "PUTBACK": ["cup_1009", "1009", "table_355", "355"],
+  "WALK": ["cup_1010", "1010"],
+  "GRAB": ["cup_1010", "1010"],
+  "PUTBACK": ["cup_1010", "1010", "table_355", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 20 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [STANDUP]  →  SKIPPED (failed)
+  [04] [WALK] <oven> (295)  →  OK
+2026-07-27 09:42:32,065 - INFO - Openable check failed: [CLOSE] <oven> (295) [1]
+  [05] [CLOSE] <oven> (295)  →  SKIPPED (failed)
+  [06] [WALK] <light> (245)  →  OK
+  [07] [SWITCHON] <light> (245)  →  OK
+  [08] [WALK] <dining_room> (201)  →  OK
+  [09] [WALK] <cup> (1007)  →  OK
+  [10] [GRAB] <cup> (1007)  →  SKIPPED (failed)
+  [11] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [12] [WALK] <cup> (1008)  →  OK
+  [13] [GRAB] <cup> (1008)  →  SKIPPED (failed)
+  [14] [PUTBACK] <cup> (1008) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1009)  →  OK
+  [16] [GRAB] <cup> (1009)  →  SKIPPED (failed)
+  [17] [PUTBACK] <cup> (1009) <table> (355)  →  SKIPPED (failed)
+  [18] [WALK] <cup> (1010)  →  OK
+  [19] [GRAB] <cup> (1010)  →  SKIPPED (failed)
+  [20] [PUTBACK] <cup> (1010) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:42:32,085 - INFO -   no-adapt result: 10 executed, 10 skipped | skipped: ['[STANDUP]', '[CLOSE] <oven> (295)', '[GRAB] <cup> (1007)', '[PUTBACK] <cup> (1007) <table> (355)', '[GRAB] <cup> (1008)', '[PUTBACK] <cup> (1008) <table> (355)', '[GRAB] <cup> (1009)', '[PUTBACK] <cup> (1009) <table> (355)', '[GRAB] <cup> (1010)', '[PUTBACK] <cup> (1010) <table> (355)']
+
+  FINAL OUTPUT SAVED (10 executed / 10 skipped)
+2026-07-27 09:42:33,088 - INFO - 
+[30] Hard scatter restore | 9030_1
+
+============================================================
+TASK: 9030_1  |  Hard scatter restore  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:38,416 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.26s) ▼
+{
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"],
+  "WALK": ["plate", "1003"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["plate", "1004"],
+  "PUTBACK": ["plate", "1004", "table", "355"],
+  "WALK": ["plate", "1005"],
+  "PUTBACK": ["plate", "1005", "table", "355"],
+  "WALK": ["cup", "1007"],
+  "PUTBACK": ["cup", "1007", "table", "355"],
+  "WALK": ["cup", "1008"],
+  "PUTBACK": ["cup", "1008", "table", "355"],
+  "WALK": ["fork", "1001"],
+  "PUTBACK": ["fork", "1001", "table", "355"],
+  "WALK": ["spoon", "1013"],
+  "PUTBACK": ["spoon", "1013", "table", "355"],
+  "WALK": ["knife", "1011"],
+  "PUTBACK": ["knife", "1011", "table", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:38,424 - INFO -   Initial plan: {
+  "WALK": ["cupboard", "229"],
+  "CLOSE": ["cupboard", "229"],
+  "WALK": ["freezer", "289"],
+  "CLOSE": ["freezer", "289"],
+  "WALK": ["nightstand", "102"],
+  "CLOSE": ["nightstand", "102"],
+  "WALK": ["television", "410"],
+  "SWITCHON": ["television", "410"],
+  "WALK": ["plate", "1003"],
+  "PUTBACK": ["plate", "1003", "table", "355"],
+  "WALK": ["plate", "1004"],
+  "PUTBACK": ["plate", "1004", "table", "355"],
+  "WALK": ["plate", "1005"],
+  "PUTBACK": ["plate", "1005", "table", "355"],
+  "WALK": ["cup", "1007"],
+  "PUTBACK": ["cup", "1007", "table", "355"],
+  "WALK": ["cup", "1008"],
+  "PUTBACK": ["cup", "1008", "table", "355"],
+  "WALK": ["fork", "1001"],
+  "PUTBACK": ["fork", "1001", "table", "355"],
+  "WALK": ["spoon", "1013"],
+  "PUTBACK": ["spoon", "1013", "table", "355"],
+  "WALK": ["knife", "1011"],
+  "PUTBACK": ["knife", "1011", "table", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 24 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:42:38,435 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [02] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:42:38,443 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [04] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [05] [WALK] <nightstand> (102)  →  OK
+2026-07-27 09:42:38,449 - INFO - Openable check failed: [CLOSE] <nightstand> (102) [1]
+  [06] [CLOSE] <nightstand> (102)  →  SKIPPED (failed)
+  [07] [WALK] <television> (410)  →  OK
+  [08] [SWITCHON] <television> (410)  →  OK
+  [09] [WALK] <plate> (1003)  →  OK
+  [10] [PUTBACK] <plate> (1003) <table> (355)  →  SKIPPED (failed)
+  [11] [WALK] <plate> (1004)  →  OK
+  [12] [PUTBACK] <plate> (1004) <table> (355)  →  SKIPPED (failed)
+  [13] [WALK] <plate> (1005)  →  OK
+  [14] [PUTBACK] <plate> (1005) <table> (355)  →  SKIPPED (failed)
+  [15] [WALK] <cup> (1007)  →  OK
+  [16] [PUTBACK] <cup> (1007) <table> (355)  →  SKIPPED (failed)
+  [17] [WALK] <cup> (1008)  →  OK
+  [18] [PUTBACK] <cup> (1008) <table> (355)  →  SKIPPED (failed)
+  [19] [WALK] <fork> (1001)  →  OK
+  [20] [PUTBACK] <fork> (1001) <table> (355)  →  SKIPPED (failed)
+  [21] [WALK] <spoon> (1013)  →  OK
+  [22] [PUTBACK] <spoon> (1013) <table> (355)  →  SKIPPED (failed)
+  [23] [WALK] <knife> (1011)  →  OK
+  [24] [PUTBACK] <knife> (1011) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:42:38,475 - INFO -   no-adapt result: 13 executed, 11 skipped | skipped: ['[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)', '[CLOSE] <nightstand> (102)', '[PUTBACK] <plate> (1003) <table> (355)', '[PUTBACK] <plate> (1004) <table> (355)', '[PUTBACK] <plate> (1005) <table> (355)', '[PUTBACK] <cup> (1007) <table> (355)', '[PUTBACK] <cup> (1008) <table> (355)', '[PUTBACK] <fork> (1001) <table> (355)', '[PUTBACK] <spoon> (1013) <table> (355)', '[PUTBACK] <knife> (1011) <table> (355)']
+
+  FINAL OUTPUT SAVED (13 executed / 11 skipped)
+2026-07-27 09:42:39,485 - INFO - Saved 30 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:42:39,486 - INFO - Progress: 30 | Tree: 0 | Fallback: 0
+2026-07-27 09:42:39,486 - INFO - 
+[31] Hard precision toggles | 9031_1
+
+============================================================
+TASK: 9031_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:41,969 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.41s) ▼
+{
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_64", "64"],
+  "SWITCHOFF": ["light_64", "64"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:41,974 - INFO -   Initial plan: {
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_64", "64"],
+  "SWITCHOFF": ["light_64", "64"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <light> (1000)  →  OK
+  [02] [SWITCHON] <light> (1000)  →  OK
+  [03] [WALK] <light> (245)  →  OK
+  [04] [SWITCHON] <light> (245)  →  OK
+  [05] [WALK] <light> (411)  →  OK
+  [06] [SWITCHOFF] <light> (411)  →  OK
+  [07] [WALK] <light> (64)  →  OK
+  [08] [SWITCHOFF] <light> (64)  →  OK
+2026-07-27 09:42:41,998 - INFO -   no-adapt result: 8 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (8 executed / 0 skipped)
+2026-07-27 09:42:43,006 - INFO - 
+[32] Hard precision toggles | 9032_1
+
+============================================================
+TASK: 9032_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:45,312 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.23s) ▼
+{
+  "WALK": ["light_1000", "1"],
+  "SWITCHON": ["light_1000", "1"],
+  "WALK": ["light_1001", "3"],
+  "SWITCHON": ["light_1001", "3"],
+  "WALK": ["light_169", "2"],
+  "SWITCHOFF": ["light_169", "2"],
+  "WALK": ["television_410", "4"],
+  "SWITCHON": ["television_410", "4"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:45,315 - INFO -   Initial plan: {
+  "WALK": ["light_1000", "1"],
+  "SWITCHON": ["light_1000", "1"],
+  "WALK": ["light_1001", "3"],
+  "SWITCHON": ["light_1001", "3"],
+  "WALK": ["light_169", "2"],
+  "SWITCHOFF": ["light_169", "2"],
+  "WALK": ["television_410", "4"],
+  "SWITCHON": ["television_410", "4"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <light> (1000)  →  OK
+  [02] [SWITCHON] <light> (1000)  →  OK
+  [03] [WALK] <light> (1001)  →  OK
+  [04] [SWITCHON] <light> (1001)  →  OK
+  [05] [WALK] <light> (169)  →  OK
+  [06] [SWITCHOFF] <light> (169)  →  OK
+  [07] [WALK] <television> (410)  →  OK
+  [08] [SWITCHON] <television> (410)  →  OK
+2026-07-27 09:42:45,337 - INFO -   no-adapt result: 8 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (8 executed / 0 skipped)
+2026-07-27 09:42:46,345 - INFO - 
+[33] Hard precision toggles | 9033_1
+
+============================================================
+TASK: 9033_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:48,489 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.07s) ▼
+{
+  "WALK": ["electric_shaver_2002", "1"],
+  "PLUGIN": ["electric_shaver_2002", "1"],
+  "SWITCHON": ["electric_shaver_2002", "1"],
+  "WALK": ["light_245", "2"],
+  "SWITCHON": ["light_245", "2"],
+  "WALK": ["light_411", "3"],
+  "SWITCHOFF": ["light_411", "3"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:48,493 - INFO -   Initial plan: {
+  "WALK": ["electric_shaver_2002", "1"],
+  "PLUGIN": ["electric_shaver_2002", "1"],
+  "SWITCHON": ["electric_shaver_2002", "1"],
+  "WALK": ["light_245", "2"],
+  "SWITCHON": ["light_245", "2"],
+  "WALK": ["light_411", "3"],
+  "SWITCHOFF": ["light_411", "3"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 7 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <electric_shaver> (2002)  →  OK
+  [02] [PLUGIN] <electric_shaver> (2002)  →  OK
+  [03] [SWITCHON] <electric_shaver> (2002)  →  OK
+  [04] [WALK] <light> (245)  →  OK
+  [05] [SWITCHON] <light> (245)  →  OK
+  [06] [WALK] <light> (411)  →  OK
+  [07] [SWITCHOFF] <light> (411)  →  OK
+2026-07-27 09:42:48,510 - INFO -   no-adapt result: 7 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (7 executed / 0 skipped)
+2026-07-27 09:42:49,515 - INFO - 
+[34] Hard precision toggles | 9034_1
+
+============================================================
+TASK: 9034_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:52,519 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.91s) ▼
+{
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"],
+  "WALK": ["light_64", "64"],
+  "SWITCHOFF": ["light_64", "64"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:52,523 - INFO -   Initial plan: {
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"],
+  "WALK": ["light_64", "64"],
+  "SWITCHOFF": ["light_64", "64"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 10 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <wall_clock> (2019)  →  OK
+  [02] [SWITCHOFF] <wall_clock> (2019)  →  OK
+  [03] [WALK] <light> (64)  →  OK
+  [04] [SWITCHOFF] <light> (64)  →  OK
+  [05] [WALK] <light> (169)  →  OK
+  [06] [SWITCHOFF] <light> (169)  →  OK
+  [07] [WALK] <light> (411)  →  OK
+  [08] [SWITCHOFF] <light> (411)  →  OK
+  [09] [WALK] <light> (1000)  →  OK
+  [10] [SWITCHON] <light> (1000)  →  OK
+2026-07-27 09:42:52,548 - INFO -   no-adapt result: 10 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (10 executed / 0 skipped)
+2026-07-27 09:42:53,557 - INFO - 
+[35] Hard precision toggles | 9035_1
+
+============================================================
+TASK: 9035_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:55,962 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.33s) ▼
+{
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_1001", "1001"],
+  "SWITCHON": ["light_1001", "1001"],
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:55,965 - INFO -   Initial plan: {
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_1001", "1001"],
+  "SWITCHON": ["light_1001", "1001"],
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 8 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <television> (410)  →  OK
+  [02] [SWITCHON] <television> (410)  →  OK
+  [03] [WALK] <light> (245)  →  OK
+  [04] [SWITCHON] <light> (245)  →  OK
+  [05] [WALK] <light> (1001)  →  OK
+  [06] [SWITCHON] <light> (1001)  →  OK
+  [07] [WALK] <wall_clock> (2019)  →  OK
+  [08] [SWITCHOFF] <wall_clock> (2019)  →  OK
+2026-07-27 09:42:55,988 - INFO -   no-adapt result: 8 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (8 executed / 0 skipped)
+2026-07-27 09:42:56,991 - INFO - 
+[36] Hard precision toggles | 9036_1
+
+============================================================
+TASK: 9036_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:42:59,042 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.97s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["light_245", "2"],
+  "SWITCHON": ["light_245", "2"],
+  "WALK": ["light_1000", "3"],
+  "SWITCHON": ["light_1000", "3"],
+  "WALK": ["light_411", "4"],
+  "SWITCHOFF": ["light_411", "4"],
+  "WALK": ["light_64", "1"],
+  "SWITCHOFF": ["light_64", "1"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:42:59,047 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["light_245", "2"],
+  "SWITCHON": ["light_245", "2"],
+  "WALK": ["light_1000", "3"],
+  "SWITCHON": ["light_1000", "3"],
+  "WALK": ["light_411", "4"],
+  "SWITCHOFF": ["light_411", "4"],
+  "WALK": ["light_64", "1"],
+  "SWITCHOFF": ["light_64", "1"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 9 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <light> (245)  →  OK
+  [03] [SWITCHON] <light> (245)  →  OK
+  [04] [WALK] <light> (1000)  →  OK
+  [05] [SWITCHON] <light> (1000)  →  OK
+  [06] [WALK] <light> (411)  →  OK
+  [07] [SWITCHOFF] <light> (411)  →  OK
+  [08] [WALK] <light> (64)  →  OK
+  [09] [SWITCHOFF] <light> (64)  →  OK
+2026-07-27 09:42:59,069 - INFO -   no-adapt result: 9 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (9 executed / 0 skipped)
+2026-07-27 09:43:00,078 - INFO - 
+[37] Hard precision toggles | 9037_1
+
+============================================================
+TASK: 9037_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:02,336 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.18s) ▼
+{
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:02,339 - INFO -   Initial plan: {
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 9 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <electric_shaver> (2002)  →  OK
+  [02] [PLUGIN] <electric_shaver> (2002)  →  OK
+  [03] [SWITCHON] <electric_shaver> (2002)  →  OK
+  [04] [WALK] <television> (410)  →  OK
+  [05] [SWITCHON] <television> (410)  →  OK
+  [06] [WALK] <light> (411)  →  OK
+  [07] [SWITCHOFF] <light> (411)  →  OK
+  [08] [WALK] <light> (169)  →  OK
+  [09] [SWITCHOFF] <light> (169)  →  OK
+2026-07-27 09:43:02,362 - INFO -   no-adapt result: 9 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (9 executed / 0 skipped)
+2026-07-27 09:43:03,371 - INFO - 
+[38] Hard precision toggles | 9038_1
+
+============================================================
+TASK: 9038_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:05,252 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (1.80s) ▼
+{
+  "SWITCHOFF": ["light_64", "64"],
+  "SWITCHON": ["light_245", "245"],
+  "SWITCHON": ["light_1000", "1000"],
+  "SWITCHON": ["light_1001", "1001"],
+  "SWITCHOFF": ["light_169", "169"],
+  "SWITCHOFF": ["light_411", "411"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:05,254 - INFO -   Initial plan: {
+  "SWITCHOFF": ["light_64", "64"],
+  "SWITCHON": ["light_245", "245"],
+  "SWITCHON": ["light_1000", "1000"],
+  "SWITCHON": ["light_1001", "1001"],
+  "SWITCHOFF": ["light_169", "169"],
+  "SWITCHOFF": ["light_411", "411"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 6 actions
+  ──────────────────────────────────────────────────
+  [01] [SWITCHOFF] <light> (64)  →  SKIPPED (failed)
+  [02] [SWITCHON] <light> (245)  →  SKIPPED (failed)
+  [03] [SWITCHON] <light> (1000)  →  SKIPPED (failed)
+  [04] [SWITCHON] <light> (1001)  →  SKIPPED (failed)
+  [05] [SWITCHOFF] <light> (169)  →  SKIPPED (failed)
+  [06] [SWITCHOFF] <light> (411)  →  SKIPPED (failed)
+2026-07-27 09:43:05,256 - INFO -   no-adapt result: 0 executed, 6 skipped | skipped: ['[SWITCHOFF] <light> (64)', '[SWITCHON] <light> (245)', '[SWITCHON] <light> (1000)', '[SWITCHON] <light> (1001)', '[SWITCHOFF] <light> (169)', '[SWITCHOFF] <light> (411)']
+
+  FINAL OUTPUT SAVED (0 executed / 6 skipped)
+2026-07-27 09:43:06,264 - INFO - 
+[39] Hard precision toggles | 9039_1
+
+============================================================
+TASK: 9039_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:14,877 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (8.54s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"],
+  "WALK": ["light_1001", "1001"],
+  "SWITCHON": ["light_1001", "1001"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:14,883 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["light_1000", "1000"],
+  "SWITCHON": ["light_1000", "1000"],
+  "WALK": ["light_1001", "1001"],
+  "SWITCHON": ["light_1001", "1001"],
+  "WALK": ["light_169", "169"],
+  "SWITCHOFF": ["light_169", "169"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"],
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <light> (1000)  →  OK
+  [03] [SWITCHON] <light> (1000)  →  OK
+  [04] [WALK] <light> (1001)  →  OK
+  [05] [SWITCHON] <light> (1001)  →  OK
+  [06] [WALK] <light> (169)  →  OK
+  [07] [SWITCHOFF] <light> (169)  →  OK
+  [08] [WALK] <television> (410)  →  OK
+  [09] [SWITCHON] <television> (410)  →  OK
+  [10] [WALK] <electric_shaver> (2002)  →  OK
+  [11] [PLUGIN] <electric_shaver> (2002)  →  OK
+  [12] [SWITCHON] <electric_shaver> (2002)  →  OK
+2026-07-27 09:43:14,906 - INFO -   no-adapt result: 12 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (12 executed / 0 skipped)
+2026-07-27 09:43:15,913 - INFO - 
+[40] Hard precision toggles | 9040_1
+
+============================================================
+TASK: 9040_1  |  Hard precision toggles  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:18,636 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.65s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:18,639 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["electric_shaver_2002", "2002"],
+  "PLUGIN": ["electric_shaver_2002", "2002"],
+  "SWITCHON": ["electric_shaver_2002", "2002"],
+  "WALK": ["light_245", "245"],
+  "SWITCHON": ["light_245", "245"],
+  "WALK": ["light_411", "411"],
+  "SWITCHOFF": ["light_411", "411"],
+  "WALK": ["wall_clock_2019", "2019"],
+  "SWITCHOFF": ["wall_clock_2019", "2019"],
+  "WALK": ["television_410", "410"],
+  "SWITCHON": ["television_410", "410"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <electric_shaver> (2002)  →  OK
+  [03] [PLUGIN] <electric_shaver> (2002)  →  OK
+  [04] [SWITCHON] <electric_shaver> (2002)  →  OK
+  [05] [WALK] <light> (245)  →  OK
+  [06] [SWITCHON] <light> (245)  →  OK
+  [07] [WALK] <light> (411)  →  OK
+  [08] [SWITCHOFF] <light> (411)  →  OK
+  [09] [WALK] <wall_clock> (2019)  →  OK
+  [10] [SWITCHOFF] <wall_clock> (2019)  →  OK
+  [11] [WALK] <television> (410)  →  OK
+  [12] [SWITCHON] <television> (410)  →  OK
+2026-07-27 09:43:18,655 - INFO -   no-adapt result: 12 executed, 0 skipped
+
+  FINAL OUTPUT SAVED (12 executed / 0 skipped)
+2026-07-27 09:43:19,665 - INFO - Saved 40 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:43:19,665 - INFO - Progress: 40 | Tree: 0 | Fallback: 0
+2026-07-27 09:43:19,665 - INFO - 
+[41] Hard rough morning | 9041_1
+
+============================================================
+TASK: 9041_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:24,354 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.59s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["water_glass_1000", "1000"],
+  "GRAB": ["water_glass_1000", "1000"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:24,358 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["water_glass_1000", "1000"],
+  "GRAB": ["water_glass_1000", "1000"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 21 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <cupboard> (229)  →  OK
+  [04] [OPEN] <cupboard> (229)  →  OK
+  [05] [WALK] <water_glass> (1000)  →  OK
+  [06] [GRAB] <water_glass> (1000)  →  OK
+  [07] [WALK] <table> (355)  →  OK
+  [08] [PUTBACK] <water_glass> (1000) <table> (355)  →  OK
+  [09] [WALK] <box> (2014)  →  OK
+  [10] [OPEN] <box> (2014)  →  OK
+  [11] [WALK] <food_food> (2009)  →  OK
+  [12] [GRAB] <food_food> (2009)  →  OK
+  [13] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [14] [WALK] <food_food> (2013)  →  OK
+  [15] [GRAB] <food_food> (2013)  →  OK
+  [16] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+  [17] [CLOSE] <box> (2014)  →  OK
+  [18] [WALK] <cupboard> (229)  →  OK
+  [19] [CLOSE] <cupboard> (229)  →  OK
+  [20] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:43:24,420 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [21] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:43:24,421 - INFO -   no-adapt result: 18 executed, 3 skipped | skipped: ['[PUTIN] <food_food> (2009) <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (18 executed / 3 skipped)
+2026-07-27 09:43:25,429 - INFO - 
+[42] Hard rough morning | 9042_1
+
+============================================================
+TASK: 9042_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:28,553 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.05s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["food_donut_2007", "2007", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:28,557 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "STANDUP": [],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["food_donut_2007", "2007", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 14 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [STANDUP]  →  SKIPPED (failed)
+  [04] [WALK] <cupboard> (229)  →  OK
+  [05] [OPEN] <cupboard> (229)  →  OK
+  [06] [WALK] <food_donut> (2007)  →  OK
+  [07] [GRAB] <food_donut> (2007)  →  OK
+  [08] [WALK] <table> (355)  →  OK
+  [09] [PUTBACK] <food_donut> (2007) <table> (355)  →  OK
+2026-07-27 09:43:28,594 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [10] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [11] [WALK] <console> (2010)  →  OK
+  [12] [SWITCHON] <console> (2010)  →  OK
+  [13] [WALK] <water_glass> (1000)  →  OK
+  [14] [PUTBACK] <water_glass> (1000) <table> (355)  →  SKIPPED (failed)
+2026-07-27 09:43:28,604 - INFO -   no-adapt result: 11 executed, 3 skipped | skipped: ['[STANDUP]', '[CLOSE] <cupboard> (229)', '[PUTBACK] <water_glass> (1000) <table> (355)']
+
+  FINAL OUTPUT SAVED (11 executed / 3 skipped)
+2026-07-27 09:43:29,615 - INFO - 
+[43] Hard rough morning | 9043_1
+
+============================================================
+TASK: 9043_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:33,670 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.97s) ▼
+{
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:33,673 - INFO -   Initial plan: {
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 18 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:43:33,683 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [02] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [03] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:43:33,691 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [04] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [05] [WALK] <phone> (2015)  →  OK
+  [06] [SWITCHOFF] <phone> (2015)  →  OK
+  [07] [WALK] <food_food> (2009)  →  OK
+  [08] [GRAB] <food_food> (2009)  →  SKIPPED (failed)
+  [09] [WALK] <freezer> (289)  →  OK
+  [10] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [11] [WALK] <food_food> (2013)  →  OK
+  [12] [GRAB] <food_food> (2013)  →  SKIPPED (failed)
+  [13] [WALK] <freezer> (289)  →  OK
+  [14] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+  [15] [WALK] <food_food> (2016)  →  OK
+  [16] [GRAB] <food_food> (2016)  →  SKIPPED (failed)
+  [17] [WALK] <freezer> (289)  →  OK
+  [18] [PUTIN] <food_food> (2016) <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:43:33,717 - INFO -   no-adapt result: 10 executed, 8 skipped | skipped: ['[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)', '[GRAB] <food_food> (2009)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[GRAB] <food_food> (2013)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[GRAB] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)']
+
+  FINAL OUTPUT SAVED (10 executed / 8 skipped)
+2026-07-27 09:43:34,724 - INFO - 
+[44] Hard rough morning | 9044_1
+
+============================================================
+TASK: 9044_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:42,763 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (7.97s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_donut_2007", "2007", "freezer_289", "289"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "OPEN": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "CLOSE": ["box_2014", "2014"],
+  "CLOSE": ["cupboard_229", "229"],
+  "CLOSE": ["freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:42,768 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_donut_2007", "2007", "freezer_289", "289"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "OPEN": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "CLOSE": ["box_2014", "2014"],
+  "CLOSE": ["cupboard_229", "229"],
+  "CLOSE": ["freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 20 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <cupboard> (229)  →  OK
+  [04] [OPEN] <cupboard> (229)  →  OK
+  [05] [WALK] <food_donut> (2007)  →  OK
+  [06] [GRAB] <food_donut> (2007)  →  OK
+  [07] [WALK] <freezer> (289)  →  OK
+  [08] [PUTIN] <food_donut> (2007) <freezer> (289)  →  SKIPPED (failed)
+  [09] [WALK] <box> (2014)  →  OK
+  [10] [OPEN] <box> (2014)  →  OK
+  [11] [WALK] <food_food> (2016)  →  OK
+  [12] [GRAB] <food_food> (2016)  →  OK
+  [13] [WALK] <freezer> (289)  →  OK
+  [14] [PUTIN] <food_food> (2016) <freezer> (289)  →  SKIPPED (failed)
+  [15] [WALK] <console> (2010)  →  OK
+2026-07-27 09:43:42,826 - INFO - Openable check failed: [OPEN] <console> (2010) [1]
+  [16] [OPEN] <console> (2010)  →  SKIPPED (failed)
+  [17] [SWITCHON] <console> (2010)  →  OK
+2026-07-27 09:43:42,827 - INFO - Openable check failed: [CLOSE] <box> (2014) [1]
+  [18] [CLOSE] <box> (2014)  →  SKIPPED (failed)
+2026-07-27 09:43:42,827 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [19] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+2026-07-27 09:43:42,827 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [20] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:43:42,827 - INFO -   no-adapt result: 14 executed, 6 skipped | skipped: ['[PUTIN] <food_donut> (2007) <freezer> (289)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[OPEN] <console> (2010)', '[CLOSE] <box> (2014)', '[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (14 executed / 6 skipped)
+2026-07-27 09:43:43,840 - INFO - 
+[45] Hard rough morning | 9045_1
+
+============================================================
+TASK: 9045_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:47,991 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (4.08s) ▼
+{
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:48,002 - INFO -   Initial plan: {
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["water_glass_1000", "1000"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 12 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <box> (2014)  →  OK
+2026-07-27 09:43:48,018 - INFO - Openable check failed: [CLOSE] <box> (2014) [1]
+  [02] [CLOSE] <box> (2014)  →  SKIPPED (failed)
+  [03] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:43:48,026 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [04] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [05] [WALK] <phone> (2015)  →  OK
+  [06] [SWITCHOFF] <phone> (2015)  →  OK
+  [07] [WALK] <water_glass> (1000)  →  OK
+  [08] [PUTBACK] <water_glass> (1000) <table> (355)  →  SKIPPED (failed)
+  [09] [WALK] <food_food> (2009)  →  OK
+  [10] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [11] [WALK] <food_food> (2013)  →  OK
+  [12] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:43:48,046 - INFO -   no-adapt result: 7 executed, 5 skipped | skipped: ['[CLOSE] <box> (2014)', '[CLOSE] <freezer> (289)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)']
+
+  FINAL OUTPUT SAVED (7 executed / 5 skipped)
+2026-07-27 09:43:49,061 - INFO - 
+[46] Hard rough morning | 9046_1
+
+============================================================
+TASK: 9046_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:43:52,815 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (3.65s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["water_glass_1000", "1000"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:43:52,827 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["water_glass_1000", "1000"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 21 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <box> (2014)  →  OK
+2026-07-27 09:43:52,843 - INFO - Openable check failed: [CLOSE] <box> (2014) [1]
+  [04] [CLOSE] <box> (2014)  →  SKIPPED (failed)
+  [05] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:43:52,847 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [06] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [07] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:43:52,851 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [08] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [09] [WALK] <console> (2010)  →  OK
+  [10] [SWITCHON] <console> (2010)  →  OK
+  [11] [WALK] <phone> (2015)  →  OK
+  [12] [SWITCHOFF] <phone> (2015)  →  OK
+  [13] [WALK] <water_glass> (1000)  →  OK
+  [14] [WALK] <table> (355)  →  OK
+  [15] [PUTBACK] <water_glass> (1000) <table> (355)  →  SKIPPED (failed)
+  [16] [WALK] <food_food> (2009)  →  OK
+  [17] [WALK] <freezer> (289)  →  OK
+  [18] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [19] [WALK] <food_food> (2013)  →  OK
+  [20] [WALK] <freezer> (289)  →  OK
+  [21] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:43:52,875 - INFO -   no-adapt result: 15 executed, 6 skipped | skipped: ['[CLOSE] <box> (2014)', '[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)', '[PUTBACK] <water_glass> (1000) <table> (355)', '[PUTIN] <food_food> (2009) <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)']
+
+  FINAL OUTPUT SAVED (15 executed / 6 skipped)
+2026-07-27 09:43:53,883 - INFO - 
+[47] Hard rough morning | 9047_1
+
+============================================================
+TASK: 9047_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:44:00,735 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (6.78s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["console_2010", "2010"],
+  "OPEN": ["console_2010", "2010"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["food_donut_2007", "2007", "table_355", "355"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTBACK": ["food_food_2016", "2016", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:44:00,745 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["console_2010", "2010"],
+  "OPEN": ["console_2010", "2010"],
+  "WALK": ["cupboard_229", "229"],
+  "OPEN": ["cupboard_229", "229"],
+  "WALK": ["food_donut_2007", "2007"],
+  "GRAB": ["food_donut_2007", "2007"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["food_donut_2007", "2007", "table_355", "355"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTBACK": ["food_food_2016", "2016", "table_355", "355"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 15 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <console> (2010)  →  OK
+  [03] [OPEN] <console> (2010)  →  OK
+  [04] [WALK] <cupboard> (229)  →  OK
+  [05] [OPEN] <cupboard> (229)  →  OK
+  [06] [WALK] <food_donut> (2007)  →  OK
+  [07] [GRAB] <food_donut> (2007)  →  OK
+  [08] [WALK] <table> (355)  →  OK
+  [09] [PUTBACK] <food_donut> (2007) <table> (355)  →  OK
+  [10] [WALK] <food_food> (2016)  →  OK
+  [11] [GRAB] <food_food> (2016)  →  OK
+  [12] [PUTBACK] <food_food> (2016) <table> (355)  →  SKIPPED (failed)
+  [13] [CLOSE] <cupboard> (229)  →  OK
+  [14] [WALK] <console> (2010)  →  OK
+  [15] [SWITCHON] <console> (2010)  →  OK
+2026-07-27 09:44:00,776 - INFO -   no-adapt result: 14 executed, 1 skipped | skipped: ['[PUTBACK] <food_food> (2016) <table> (355)']
+
+  FINAL OUTPUT SAVED (14 executed / 1 skipped)
+2026-07-27 09:44:01,783 - INFO - 
+[48] Hard rough morning | 9048_1
+
+============================================================
+TASK: 9048_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:44:07,119 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.21s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:44:07,124 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"],
+  "WALK": ["box_2014", "2014"],
+  "CLOSE": ["box_2014", "2014"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 21 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <box> (2014)  →  OK
+  [04] [OPEN] <box> (2014)  →  OK
+  [05] [WALK] <food_food> (2009)  →  OK
+  [06] [GRAB] <food_food> (2009)  →  OK
+  [07] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [08] [WALK] <food_food> (2013)  →  OK
+  [09] [GRAB] <food_food> (2013)  →  OK
+  [10] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+  [11] [WALK] <food_food> (2016)  →  OK
+  [12] [GRAB] <food_food> (2016)  →  SKIPPED (failed)
+  [13] [PUTIN] <food_food> (2016) <freezer> (289)  →  SKIPPED (failed)
+  [14] [WALK] <console> (2010)  →  OK
+  [15] [SWITCHON] <console> (2010)  →  OK
+  [16] [WALK] <phone> (2015)  →  OK
+  [17] [SWITCHOFF] <phone> (2015)  →  OK
+  [18] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:44:07,179 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [19] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+  [20] [WALK] <box> (2014)  →  OK
+  [21] [CLOSE] <box> (2014)  →  OK
+2026-07-27 09:44:07,186 - INFO -   no-adapt result: 16 executed, 5 skipped | skipped: ['[PUTIN] <food_food> (2009) <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[GRAB] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (16 executed / 5 skipped)
+2026-07-27 09:44:08,194 - INFO - 
+[49] Hard rough morning | 9049_1
+
+============================================================
+TASK: 9049_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:44:10,753 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (2.50s) ▼
+{
+  "WALK": ["pencil_2008", "2008"],
+  "GRAB": ["pencil_2008", "2008"],
+  "WALK": ["nightstand_102", "102"],
+  "PUTBACK": ["pencil_2008", "2008", "nightstand_102", "102"],
+  "WALK": ["water_glass_1000", "1000"],
+  "DROP": ["water_glass_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:44:10,762 - INFO -   Initial plan: {
+  "WALK": ["pencil_2008", "2008"],
+  "GRAB": ["pencil_2008", "2008"],
+  "WALK": ["nightstand_102", "102"],
+  "PUTBACK": ["pencil_2008", "2008", "nightstand_102", "102"],
+  "WALK": ["water_glass_1000", "1000"],
+  "DROP": ["water_glass_1000", "1000"],
+  "WALK": ["cupboard_229", "229"],
+  "CLOSE": ["cupboard_229", "229"],
+  "WALK": ["freezer_289", "289"],
+  "CLOSE": ["freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 10 actions
+  ──────────────────────────────────────────────────
+  [01] [WALK] <pencil> (2008)  →  OK
+  [02] [GRAB] <pencil> (2008)  →  SKIPPED (failed)
+  [03] [WALK] <nightstand> (102)  →  OK
+  [04] [PUTBACK] <pencil> (2008) <nightstand> (102)  →  OK
+  [05] [WALK] <water_glass> (1000)  →  OK
+  [06] [DROP] <water_glass> (1000)  →  OK
+  [07] [WALK] <cupboard> (229)  →  OK
+2026-07-27 09:44:10,799 - INFO - Openable check failed: [CLOSE] <cupboard> (229) [1]
+  [08] [CLOSE] <cupboard> (229)  →  SKIPPED (failed)
+  [09] [WALK] <freezer> (289)  →  OK
+2026-07-27 09:44:10,803 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [10] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:44:10,803 - INFO -   no-adapt result: 7 executed, 3 skipped | skipped: ['[GRAB] <pencil> (2008)', '[CLOSE] <cupboard> (229)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (7 executed / 3 skipped)
+2026-07-27 09:44:11,808 - INFO - 
+[50] Hard rough morning | 9050_1
+
+============================================================
+TASK: 9050_1  |  Hard rough morning  [NO-ADAPTATION]
+============================================================
+2026-07-27 09:44:17,226 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INITIAL PLAN] RESPONSE RECEIVED (5.34s) ▼
+{
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "CLOSE": ["freezer_289", "289"]
+}
+────────────────────────────────────────────────────────────
+2026-07-27 09:44:17,231 - INFO -   Initial plan: {
+  "STANDUP": [],
+  "WALK": ["couch_352", "352"],
+  "WALK": ["table_355", "355"],
+  "PUTBACK": ["water_glass_1000", "1000", "table_355", "355"],
+  "WALK": ["box_2014", "2014"],
+  "OPEN": ["box_2014", "2014"],
+  "WALK": ["food_food_2009", "2009"],
+  "GRAB": ["food_food_2009", "2009"],
+  "WALK": ["freezer_289", "289"],
+  "PUTIN": ["food_food_2009", "2009", "freezer_289", "289"],
+  "WALK": ["food_food_2013", "2013"],
+  "GRAB": ["food_food_2013", "2013"],
+  "PUTIN": ["food_food_2013", "2013", "freezer_289", "289"],
+  "WALK": ["food_food_2016", "2016"],
+  "GRAB": ["food_food_2016", "2016"],
+  "PUTIN": ["food_food_2016", "2016", "freezer_289", "289"],
+  "CLOSE": ["box_2014", "2014"],
+  "WALK": ["console_2010", "2010"],
+  "SWITCHON": ["console_2010", "2010"],
+  "WALK": ["phone_2015", "2015"],
+  "SWITCHOFF": ["phone_2015", "2015"],
+  "CLOSE": ["freezer_289", "289"]
+}
+
+  ──────────────────────────────────────────────────
+  EXECUTING (no adaptation) — 22 actions
+  ──────────────────────────────────────────────────
+  [01] [STANDUP]  →  OK
+  [02] [WALK] <couch> (352)  →  OK
+  [03] [WALK] <table> (355)  →  OK
+  [04] [PUTBACK] <water_glass> (1000) <table> (355)  →  OK
+  [05] [WALK] <box> (2014)  →  OK
+  [06] [OPEN] <box> (2014)  →  OK
+  [07] [WALK] <food_food> (2009)  →  OK
+  [08] [GRAB] <food_food> (2009)  →  OK
+  [09] [WALK] <freezer> (289)  →  OK
+  [10] [PUTIN] <food_food> (2009) <freezer> (289)  →  SKIPPED (failed)
+  [11] [WALK] <food_food> (2013)  →  OK
+  [12] [GRAB] <food_food> (2013)  →  OK
+  [13] [PUTIN] <food_food> (2013) <freezer> (289)  →  SKIPPED (failed)
+  [14] [WALK] <food_food> (2016)  →  OK
+  [15] [GRAB] <food_food> (2016)  →  SKIPPED (failed)
+  [16] [PUTIN] <food_food> (2016) <freezer> (289)  →  SKIPPED (failed)
+  [17] [CLOSE] <box> (2014)  →  OK
+  [18] [WALK] <console> (2010)  →  OK
+  [19] [SWITCHON] <console> (2010)  →  OK
+  [20] [WALK] <phone> (2015)  →  OK
+  [21] [SWITCHOFF] <phone> (2015)  →  OK
+2026-07-27 09:44:17,296 - INFO - Openable check failed: [CLOSE] <freezer> (289) [1]
+  [22] [CLOSE] <freezer> (289)  →  SKIPPED (failed)
+2026-07-27 09:44:17,296 - INFO -   no-adapt result: 17 executed, 5 skipped | skipped: ['[PUTIN] <food_food> (2009) <freezer> (289)', '[PUTIN] <food_food> (2013) <freezer> (289)', '[GRAB] <food_food> (2016)', '[PUTIN] <food_food> (2016) <freezer> (289)', '[CLOSE] <freezer> (289)']
+
+  FINAL OUTPUT SAVED (17 executed / 5 skipped)
+2026-07-27 09:44:18,314 - INFO - Saved 50 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:44:18,316 - INFO - Progress: 50 | Tree: 0 | Fallback: 0
+2026-07-27 09:44:18,317 - INFO - Saved 50 outputs → /opt/iGibson/output_sda/virtualhome/action_sequencing_hard50/gpt-4o-mini-noadapt_hard50_a1_outputs.json
+2026-07-27 09:44:18,318 - INFO - 
+=== DONE ===
+2026-07-27 09:44:18,318 - INFO - Total tasks    : 50
+2026-07-27 09:44:18,318 - INFO - Total replans  : 0
+2026-07-27 09:44:18,318 - INFO - Tree successes : 0
+2026-07-27 09:44:18,318 - INFO - LLM fallbacks  : 0
+2026-07-27 09:44:18,321 - INFO - Avg replans    : 0.00

@@ -45,6 +45,29 @@ def _is_name_id(obj):
     return oid is not None
 
 
+def _goal_placement_for(held_obj, goal_edge_relations, model):
+    """
+    If held_obj ('name_id' token) has a known placement goal — an edge goal
+    FROM its id TO some container/surface — return (action, target_token),
+    using PUTIN for an INSIDE goal and PUTBACK otherwise. Returns (None,
+    None) when there's no such goal (nothing better to do than DROP it).
+    """
+    if not goal_edge_relations:
+        return None, None
+    _, oid = _split_name_id(held_obj)
+    if oid is None:
+        return None, None
+    oid = int(oid)
+    for (from_id, to_id), relation in goal_edge_relations.items():
+        if from_id == oid:
+            target_name = model.id_to_name.get(to_id)
+            if not target_name:
+                continue
+            action = "PUTIN" if str(relation).upper() == "INSIDE" else "PUTBACK"
+            return action, f"{target_name}_{to_id}"
+    return None, None
+
+
 # =============================================================================
 # State wrapper for BFS — thin layer over ObjectStateModel
 # =============================================================================
@@ -426,6 +449,8 @@ def generate_replacement_subsequence(
     failed_target:        str  = None,
     banned_paths:         set  = None,
     banned_candidates:    set  = None,
+    goal_edge_relations:  dict = None,
+    prefer_goal_placement: bool = True,
 ) -> list:
     """
     Generate replacement subsequence using BFS search tree.
@@ -438,6 +463,13 @@ def generate_replacement_subsequence(
     role-aware — only the obj needs to be HELD, only the target needs to
     be OPEN. Without this the goal can demand e.g. holding a washing
     machine, which is unsatisfiable and wastes every replan attempt.
+
+    goal_edge_relations / prefer_goal_placement: when a hands-full repair
+    must free a hand, prefer_goal_placement=True (default) has it place a
+    held object at its own goal destination instead of dropping it, IF
+    goal_edge_relations shows one. Pass prefer_goal_placement=False to get
+    the plain-DROP behavior (the caller's fallback when the goal-aware
+    attempt returns empty).
     """
     initial_model = _build_initial_state(
         initial_state_dict, char_sitting, char_lying
@@ -489,13 +521,42 @@ def generate_replacement_subsequence(
     # both hands are full — OPEN requires a free hand (executor rule, modeled
     # in the SDG), so those chains are unsatisfiable without a DROP first.
     # Never drop the object the failed action needs to hold (failed_obj).
+    #
+    # A held object with its own placement goal (e.g. an item mid-carry to a
+    # washing machine) is offered ONLY the WALK+PUTBACK/PUTIN chain to that
+    # destination instead of DROP — a bare DROP abandons it with no record
+    # that it still needs delivery, which cascades into orphaned items when
+    # a multi-item carry runs out of hands (954_2: 5 items grabbed before any
+    # placement, each hands-full repair used to just drop the oldest one).
+    # If the destination isn't actually reachable right now (closed
+    # container, etc.) this candidate won't satisfy its preconditions and
+    # the tree search below returns empty; the caller then retries with
+    # prefer_goal_placement=False to fall back to plain DROP, so this can
+    # only ever help relative to the old behavior, never hurt it.
     _needs_open_chain = any(a == "OPEN" for (a, _, _) in guaranteed_candidates)
+    goal_placed_objs = []
     if ("not_both_hands_full" in needs_set
             or (_needs_open_chain and initial_model.hands_full())):
         for held_obj in filter(None, [initial_model.hand_right, initial_model.hand_left]):
             if failed_obj and str(held_obj) == str(failed_obj):
                 continue
-            guaranteed_candidates.append(("DROP", str(held_obj), None))
+            place_action, place_target = (
+                _goal_placement_for(held_obj, goal_edge_relations, initial_model)
+                if prefer_goal_placement else (None, None)
+            )
+            if place_action:
+                guaranteed_candidates.append(("WALK", place_target, None))
+                guaranteed_candidates.append((place_action, str(held_obj), place_target))
+                # not_both_hands_full alone can already read True from a
+                # rewound initial_state_dict that predates the OTHER hand
+                # filling up (t_start is pinned just before the diagnosed
+                # root cause, per hist_pos_to_plan_pos) — the search would
+                # then treat the bare WALK as already "achieving" the goal
+                # and never take the PUTBACK/PUTIN. Pin an explicit
+                # per-object requirement so this chain can't short-circuit.
+                goal_placed_objs.append(str(held_obj))
+            else:
+                guaranteed_candidates.append(("DROP", str(held_obj), None))
 
     # The failed action needs its object in hand: guarantee WALK + GRAB.
     if "holds_obj" in needs_set and failed_obj and failed_obj != "character":
@@ -622,6 +683,14 @@ def generate_replacement_subsequence(
             # node whose obj isn't held (WALK cupboard) trivially "achieved"
             # the goal without freeing a hand.
             target_effects.append(("check", "not_both_hands_full", "character"))
+            # initial_state_dict is often rewound to just before the OTHER
+            # hand filled up, so this check alone can already read True —
+            # letting the search stop after a bare WALK and never reach the
+            # PUTBACK/PUTIN. Pin an explicit per-object requirement for each
+            # object being goal-placed instead of dropped, so the chain
+            # can't short-circuit (see goal_placed_objs above).
+            for obj in goal_placed_objs:
+                target_effects.append(("check", "not_holds_obj", obj))
 
         elif need == "holding_anything":
             target_effects.append(("check", "holding_anything", "character"))

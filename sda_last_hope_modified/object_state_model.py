@@ -48,6 +48,11 @@ _CAN_PLUGGED = frozenset(k for k, v in _VH_OBJECT_STATES.items()
 # Objects that are grabbable
 _CAN_GRAB    = frozenset(k for k, v in _VH_OBJECT_STATES.items()
                           if "grabbed" in v)
+# The real VirtualHome executor (execution.py, GrabExecutor.check_grabbable)
+# hardcodes an exemption from the GRABBABLE-tag requirement for these two
+# class names — they can be grabbed even without the tag. Mirrored here so
+# the SDG model doesn't misdiagnose e.g. water as permanently ungrabbable.
+_GRAB_CLASS_EXCEPTIONS = frozenset({"water", "child"})
 
 
 class ObjectStateModel:
@@ -173,7 +178,7 @@ class ObjectStateModel:
                     states.add("CLOSED")   # default: closed
                 props.add("CAN_OPEN")
 
-            if "GRABBABLE" in props or name in _CAN_GRAB:
+            if "GRABBABLE" in props or name in _CAN_GRAB or name in _GRAB_CLASS_EXCEPTIONS:
                 props.add("GRABBABLE")
 
             combined = states | props

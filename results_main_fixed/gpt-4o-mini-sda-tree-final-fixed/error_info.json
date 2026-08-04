@@ -1,0 +1,4467 @@
+{
+    "27_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <washing_machine> (1001)",
+            "[SWITCHON] <washing_machine> (1001)",
+            "[SWITCHOFF] <washing_machine> (1001)",
+            "[OPEN] <washing_machine> (1001)",
+            "[GRAB] <clothes_jacket> (1003)",
+            "[WALK] <clothes_jacket> (1003)",
+            "[WALK] <washing_machine> (1001)",
+            "[PUTBACK] <clothes_jacket> (1003) <washing_machine> (1001)",
+            "[WALK] <soap> (1002)",
+            "[GRAB] <soap> (1002)",
+            "[WALK] <washing_machine> (1001)",
+            "[WALK] <soap> (1002)",
+            "[PUTBACK] <soap> (1002) <washing_machine> (1001)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <soap> (1002) <washing_machine> (1001)",
+        "goals_satisfied": false
+    },
+    "417_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <washing_machine> (1000)",
+            "[SWITCHON] <washing_machine> (1000)",
+            "[SWITCHOFF] <washing_machine> (1000)",
+            "[OPEN] <washing_machine> (1000)",
+            "[GRAB] <clothes_pants> (1001)",
+            "[PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)",
+            "[GRAB] <clothes_shirt> (1004)",
+            "[PUTBACK] <clothes_shirt> (1004) <washing_machine> (1000)",
+            "[GRAB] <clothes_shirt> (1003)",
+            "[PUTBACK] <clothes_shirt> (1003) <washing_machine> (1000)",
+            "[PUTBACK] <clothes_pants> (1002) <washing_machine> (1000)",
+            "[PUTBACK] <soap> (1005) <washing_machine> (1000)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[PUTBACK] <clothes_pants> (1002) <washing_machine> (1000)",
+        "goals_satisfied": false
+    },
+    "850_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <washing_machine> (1000)",
+            "[SWITCHON] <washing_machine> (1000)",
+            "[SWITCHOFF] <washing_machine> (1000)",
+            "[OPEN] <washing_machine> (1000)",
+            "[GRAB] <clothes_pants> (1001)",
+            "[PUTBACK] <clothes_pants> (1001) <washing_machine> (1000)",
+            "[WALK] <laundry_detergent> (1002)",
+            "[GRAB] <laundry_detergent> (1002)",
+            "[PUTBACK] <laundry_detergent> (1002) <washing_machine> (1000)",
+            "[WALK] <washing_machine> (1000)",
+            "[CLOSE] <washing_machine> (1000)",
+            "[SWITCHON] <washing_machine> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "954_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <washing_machine> (1001)",
+            "[OPEN] <washing_machine> (1001)",
+            "[WALK] <soap> (1006)",
+            "[GRAB] <soap> (1006)",
+            "[DROP] <soap> (1006)",
+            "[WALK] <clothes_dress> (1002)",
+            "[GRAB] <clothes_dress> (1002)",
+            "[DROP] <clothes_dress> (1002)",
+            "[WALK] <clothes_pants> (1003)",
+            "[GRAB] <clothes_pants> (1003)",
+            "[DROP] <clothes_pants> (1003)",
+            "[WALK] <clothes_shirt> (1004)",
+            "[GRAB] <clothes_shirt> (1004)",
+            "[WALK] <clothes_underwear> (1005)",
+            "[GRAB] <clothes_underwear> (1005)",
+            "[PUTBACK] <soap> (1006) <washing_machine> (1001)",
+            "[PUTBACK] <clothes_dress> (1002) <washing_machine> (1001)",
+            "[PUTBACK] <clothes_pants> (1003) <washing_machine> (1001)",
+            "[PUTBACK] <clothes_shirt> (1004) <washing_machine> (1001)",
+            "[PUTBACK] <clothes_underwear> (1005) <washing_machine> (1001)",
+            "[SWITCHON] <washing_machine> (1001)",
+            "[CLOSE] <washing_machine> (1001)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <soap> (1006) <washing_machine> (1001)",
+        "goals_satisfied": false
+    },
+    "11_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "120_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "125_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[PLUGIN] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "150_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "160_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (1002)",
+            "[SWITCHON] <light> (1002)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "180_2": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "205_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "222_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "232_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (1001)",
+            "[SWITCHON] <light> (1001)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "310_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "311_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "331_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "339_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <home_office> (319)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "345_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "392_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (64)",
+            "[SWITCHON] <light> (64)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "394_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "432_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "443_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "445_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "585_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "604_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (64)",
+            "[SWITCHON] <light> (64)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "627_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[TOUCH] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "705_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "708_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "715_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[PLUGIN] <light> (169)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "737_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "780_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)",
+            "[WALK] <light> (1000)",
+            "[SWITCHON] <light> (1000)",
+            "[WALK] <light> (411)",
+            "[SWITCHON] <light> (411)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "812_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "835_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <floor_lamp> (1000)",
+            "[SWITCHON] <floor_lamp> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "85_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (245)",
+            "[SWITCHON] <light> (245)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "874_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <light> (169)",
+            "[SWITCHON] <light> (169)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "491_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <tooth_paste> (1001)",
+            "[GRAB] <tooth_paste> (1001)",
+            "[WALK] <toothbrush> (1000)",
+            "[GRAB] <toothbrush> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "696_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toothbrush> (1001)",
+            "[GRAB] <toothbrush> (1001)",
+            "[WALK] <tooth_paste> (1000)",
+            "[GRAB] <tooth_paste> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "1003_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "115_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <home_office> (319)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "407_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "430_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "481_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <home_office> (319)",
+            "[WALK] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[WALK] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[WALK] <computer> (417)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "622_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[WALK] <mouse> (413)",
+            "[PLUGIN] <mouse> (413)",
+            "[WALK] <keyboard> (415)",
+            "[PLUGIN] <keyboard> (415)",
+            "[SWITCHON] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "699_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "824_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[WALK] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "87_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <laptop> (1000)",
+            "[SWITCHON] <laptop> (1000)",
+            "[WALK] <keyboard> (415)",
+            "[TYPE] <keyboard> (415)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "986_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[GRAB] <keyboard> (415)",
+            "[WALK] <computer> (417)",
+            "[TYPE] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "996_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (1001)",
+            "[SWITCHON] <computer> (1001)",
+            "[WALK] <keyboard> (1002)",
+            "[GRAB] <keyboard> (1002)",
+            "[TYPE] <keyboard> (1002)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1004_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <food_food> (1000)",
+            "[GRAB] <food_food> (1000)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (1000) <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "152_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <food_food> (1000)",
+            "[GRAB] <food_food> (1000)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (1000) <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "298_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <food_food> (1000)",
+            "[GRAB] <food_food> (1000)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (1000) <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "609_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "703_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <food_food> (1000)",
+            "[GRAB] <food_food> (1000)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_food> (1000) <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "772_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "837_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <food_cheese> (1001)",
+            "[GRAB] <food_cheese> (1001)",
+            "[WALK] <freezer> (289)",
+            "[WALK] <food_cheese> (1001)",
+            "[WALK] <freezer> (289)",
+            "[PUTIN] <food_cheese> (1001) <freezer> (289)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "158_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <bathroom> (1)",
+            "[TURNTO] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "323_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (37)",
+            "[WALK] <toilet> (37)",
+            "[SIT] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "430_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (37)",
+            "[SIT] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "478_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (37)",
+            "[SIT] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "496_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[WALK] <toilet> (37)",
+            "[WALK] <toilet> (37)",
+            "[TURNTO] <toilet> (37)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "624_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toilet> (1000)",
+            "[WALK] <toilet> (1000)",
+            "[SIT] <toilet> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "188_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[PUTBACK] <remote_control> (1000) <television> (410)",
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[TOUCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "803_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WALK] <remote_control> (1000)",
+            "[TURNTO] <remote_control> (1000)",
+            "[TOUCH] <remote_control> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "960_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[TOUCH] <remote_control> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "101_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1068_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "153_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "196_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "198_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "201_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "232_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "234_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "343_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "373_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "406_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "409_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "419_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "433_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "437_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "440_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "453_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "46_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "475_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "503_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "670_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <mouse> (413)",
+            "[PLUGIN] <mouse> (413)",
+            "[WALK] <keyboard> (415)",
+            "[PLUGIN] <keyboard> (415)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "719_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "757_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "787_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "795_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (170)",
+            "[SWITCHON] <computer> (170)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "819_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "874_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "910_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "91_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "93_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "962_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "190_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1001)",
+            "[OPEN] <dishwasher> (1001)",
+            "[WALK] <dish_soap> (1003)",
+            "[GRAB] <dish_soap> (1003)",
+            "[PUTBACK] <dish_soap> (1003) <dishwasher> (1001)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <dishwasher> (1001)",
+            "[CLOSE] <dishwasher> (1001)",
+            "[SWITCHON] <dishwasher> (1001)",
+            "[WALK] <bowl> (1000)",
+            "[GRAB] <bowl> (1000)",
+            "[WALK] <dishwasher> (1001)",
+            "[WALK] <bowl> (1000)",
+            "[WALK] <dishwasher> (1001)",
+            "[PUTBACK] <bowl> (1000) <dishwasher> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "201_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1002)",
+            "[GRAB] <dish_soap> (1002)",
+            "[PUTBACK] <dish_soap> (1002) <dishwasher> (1000)",
+            "[WALK] <plate> (1001)",
+            "[GRAB] <plate> (1001)",
+            "[PUTBACK] <plate> (1001) <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "223_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1001)",
+            "[GRAB] <dish_soap> (1001)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTBACK] <dish_soap> (1001) <dishwasher> (1000)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTBACK] <plate> (1003) <dishwasher> (1000)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTBACK] <plate> (1002) <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "327_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[SWITCHOFF] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[GRAB] <plate> (1001)",
+            "[WALK] <plate> (1001)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTBACK] <plate> (1001) <dishwasher> (1000)",
+            "[GRAB] <dish_soap> (1002)",
+            "[WALK] <dish_soap> (1002)",
+            "[PUTBACK] <dish_soap> (1002) <dishwasher> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <dish_soap> (1002) <dishwasher> (1000)",
+        "goals_satisfied": false
+    },
+    "383_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[SWITCHOFF] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[GRAB] <plate> (1001)",
+            "[WALK] <plate> (1001)",
+            "[WALK] <dishwasher> (1000)",
+            "[PUTBACK] <plate> (1001) <dishwasher> (1000)",
+            "[GRAB] <dish_soap> (1003)",
+            "[WALK] <dish_soap> (1003)",
+            "[PUTBACK] <dish_soap> (1003) <dishwasher> (1000)",
+            "[WALK] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <dishwasher> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <dish_soap> (1003) <dishwasher> (1000)",
+        "goals_satisfied": false
+    },
+    "417_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <fork> (1004)",
+            "[GRAB] <fork> (1004)",
+            "[PUTBACK] <fork> (1004) <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1005)",
+            "[GRAB] <dish_soap> (1005)",
+            "[PUTBACK] <dish_soap> (1005) <dishwasher> (1000)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[PUTBACK] <plate> (1003) <dishwasher> (1000)",
+            "[WALK] <drinking_glass> (1001)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[PUTBACK] <drinking_glass> (1001) <dishwasher> (1000)",
+            "[WALK] <drinking_glass> (1002)",
+            "[GRAB] <drinking_glass> (1002)",
+            "[PUTBACK] <drinking_glass> (1002) <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "487_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <dishwasher> (1001)",
+            "[SWITCHON] <dishwasher> (1001)",
+            "[SWITCHOFF] <dishwasher> (1001)",
+            "[OPEN] <dishwasher> (1001)",
+            "[GRAB] <fork> (1002)",
+            "[WALK] <fork> (1002)",
+            "[WALK] <dishwasher> (1001)",
+            "[PUTBACK] <fork> (1002) <dishwasher> (1001)",
+            "[GRAB] <spoon> (1004)",
+            "[WALK] <spoon> (1004)",
+            "[PUTBACK] <spoon> (1004) <dishwasher> (1001)",
+            "[WALK] <cup> (1003)",
+            "[PUTBACK] <cup> (1003) <dishwasher> (1001)",
+            "[WALK] <dish_soap> (1005)",
+            "[PUTBACK] <dish_soap> (1005) <dishwasher> (1001)",
+            "[WALK] <plate> (1000)",
+            "[PUTBACK] <plate> (1000) <dishwasher> (1001)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <spoon> (1004) <dishwasher> (1001)",
+        "goals_satisfied": false
+    },
+    "650_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1001)",
+            "[OPEN] <dishwasher> (1001)",
+            "[WALK] <pot> (1002)",
+            "[GRAB] <pot> (1002)",
+            "[PUTBACK] <pot> (1002) <dishwasher> (1001)",
+            "[WALK] <dish_soap> (1003)",
+            "[GRAB] <dish_soap> (1003)",
+            "[WALK] <dishwasher> (1001)",
+            "[PUTBACK] <dish_soap> (1003) <dishwasher> (1001)",
+            "[WALK] <plate> (1000)",
+            "[GRAB] <plate> (1000)",
+            "[WALK] <dishwasher> (1001)",
+            "[PUTBACK] <plate> (1000) <dishwasher> (1001)",
+            "[CLOSE] <dishwasher> (1001)",
+            "[SWITCHON] <dishwasher> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "783_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <plate> (1001)",
+            "[GRAB] <plate> (1001)",
+            "[PUTBACK] <plate> (1001) <dishwasher> (1000)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[PUTBACK] <plate> (1004) <dishwasher> (1000)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[PUTBACK] <plate> (1003) <dishwasher> (1000)",
+            "[WALK] <cup> (1006)",
+            "[GRAB] <cup> (1006)",
+            "[PUTBACK] <cup> (1006) <dishwasher> (1000)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <dishwasher> (1000)",
+            "[WALK] <plate> (1005)",
+            "[GRAB] <plate> (1005)",
+            "[PUTBACK] <plate> (1005) <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1007)",
+            "[GRAB] <dish_soap> (1007)",
+            "[PUTBACK] <dish_soap> (1007) <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "815_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1001)",
+            "[OPEN] <dishwasher> (1001)",
+            "[WALK] <dish_soap> (1002)",
+            "[GRAB] <dish_soap> (1002)",
+            "[PUTBACK] <dish_soap> (1002) <dishwasher> (1001)",
+            "[WALK] <plate> (1000)",
+            "[GRAB] <plate> (1000)",
+            "[WALK] <dishwasher> (1001)",
+            "[PUTBACK] <plate> (1000) <dishwasher> (1001)",
+            "[CLOSE] <dishwasher> (1001)",
+            "[SWITCHON] <dishwasher> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "826_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <fork> (1001)",
+            "[GRAB] <fork> (1001)",
+            "[PUTBACK] <fork> (1001) <dishwasher> (1000)",
+            "[WALK] <plate> (1004)",
+            "[GRAB] <plate> (1004)",
+            "[PUTBACK] <plate> (1004) <dishwasher> (1000)",
+            "[WALK] <plate> (1003)",
+            "[GRAB] <plate> (1003)",
+            "[PUTBACK] <plate> (1003) <dishwasher> (1000)",
+            "[WALK] <spoon> (1013)",
+            "[GRAB] <spoon> (1013)",
+            "[PUTBACK] <spoon> (1013) <dishwasher> (1000)",
+            "[WALK] <cup> (1009)",
+            "[GRAB] <cup> (1009)",
+            "[PUTBACK] <cup> (1009) <dishwasher> (1000)",
+            "[WALK] <plate> (1006)",
+            "[GRAB] <plate> (1006)",
+            "[PUTBACK] <plate> (1006) <dishwasher> (1000)",
+            "[WALK] <knife> (1012)",
+            "[GRAB] <knife> (1012)",
+            "[PUTBACK] <knife> (1012) <dishwasher> (1000)",
+            "[WALK] <spoon> (1014)",
+            "[GRAB] <spoon> (1014)",
+            "[PUTBACK] <spoon> (1014) <dishwasher> (1000)",
+            "[WALK] <fork> (1002)",
+            "[GRAB] <fork> (1002)",
+            "[PUTBACK] <fork> (1002) <dishwasher> (1000)",
+            "[WALK] <cup> (1008)",
+            "[GRAB] <cup> (1008)",
+            "[PUTBACK] <cup> (1008) <dishwasher> (1000)",
+            "[WALK] <cup> (1010)",
+            "[GRAB] <cup> (1010)",
+            "[PUTBACK] <cup> (1010) <dishwasher> (1000)",
+            "[WALK] <spoon> (1015)",
+            "[GRAB] <spoon> (1015)",
+            "[PUTBACK] <spoon> (1015) <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1016)",
+            "[GRAB] <dish_soap> (1016)",
+            "[PUTBACK] <dish_soap> (1016) <dishwasher> (1000)",
+            "[WALK] <plate> (1005)",
+            "[GRAB] <plate> (1005)",
+            "[PUTBACK] <plate> (1005) <dishwasher> (1000)",
+            "[WALK] <cup> (1007)",
+            "[GRAB] <cup> (1007)",
+            "[PUTBACK] <cup> (1007) <dishwasher> (1000)",
+            "[WALK] <knife> (1011)",
+            "[GRAB] <knife> (1011)",
+            "[PUTBACK] <knife> (1011) <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "856_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1002)",
+            "[GRAB] <dish_soap> (1002)",
+            "[PUTBACK] <dish_soap> (1002) <dishwasher> (1000)",
+            "[WALK] <plate> (1001)",
+            "[GRAB] <plate> (1001)",
+            "[PUTBACK] <plate> (1001) <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)",
+            "[WALK] <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "911_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dishwasher> (1000)",
+            "[OPEN] <dishwasher> (1000)",
+            "[WALK] <cup> (1001)",
+            "[GRAB] <cup> (1001)",
+            "[PUTBACK] <cup> (1001) <dishwasher> (1000)",
+            "[WALK] <dish_soap> (1003)",
+            "[GRAB] <dish_soap> (1003)",
+            "[PUTBACK] <dish_soap> (1003) <dishwasher> (1000)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[PUTBACK] <plate> (1002) <dishwasher> (1000)",
+            "[CLOSE] <dishwasher> (1000)",
+            "[SWITCHON] <dishwasher> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1027_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[SIT] <bed> (105)",
+            "[LIE] <bed> (105)",
+            "[SLEEP]"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "181_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[SIT] <bed> (105)",
+            "[LIE] <bed> (105)",
+            "[SLEEP]"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "244_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[SIT] <bed> (105)",
+            "[LIE] <bed> (105)",
+            "[SLEEP]"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "269_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[SIT] <bed> (105)",
+            "[LIE] <bed> (105)",
+            "[SLEEP]"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "509_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bed",
+                    "105"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "875_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bed> (105)",
+            "[LIE] <bed> (105)",
+            "[SLEEP]"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "102_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[WALK] <sink> (42)",
+            "[WASH] <sink> (42)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "154_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "176_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WALK] <soap> (1000)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "214_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom_1",
+                    "1"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink_42",
+                    "42"
+                ]
+            },
+            {
+                "RINSE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "258_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (231)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "499_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "517_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink",
+                    "42"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink",
+                    "42"
+                ]
+            },
+            {
+                "RINSE": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "549_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "soap",
+                    "1001"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "hands_both",
+                    "1000"
+                ]
+            },
+            {
+                "RINSE": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "562_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <faucet> (43)",
+            "[GRAB] <water> (1000)",
+            "[PUTIN] <water> (1000) <hands_both> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "580_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "657_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <faucet> (43)",
+            "[WASH] <soap> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "660_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "672_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <faucet> (43)",
+            "[WASH] <soap> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "710_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "741_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <faucet> (43)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "750_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water> (1001)",
+            "[GRAB] <water> (1001)",
+            "[WALK] <sink> (42)",
+            "[PUTIN] <water> (1001) <hands_both> (1002)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "805_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <sink> (42)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "80_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "bathroom_1",
+                    "1"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink_42",
+                    "42"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "813_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[WALK] <water> (1000)",
+            "[WASH] <water> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "928_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[WALK] <sink> (42)",
+            "[WASH] <sink> (42)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "995_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bathroom> (1)",
+            "[WALK] <soap> (1000)",
+            "[WASH] <soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1035_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "113_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "12_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "137_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "203_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "220_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "242_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "279_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "287_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "292_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "297_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "381_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "388_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "38_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "429_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "437_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "451_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "469_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "479_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "502_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "612_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "856_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cat> (1000)",
+            "[TOUCH] <cat> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "384_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[WALK] <mouse> (413)",
+            "[GRAB] <mouse> (413)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[LOOKAT] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "540_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[TURNTO] <phone> (1000)",
+            "[LOOKAT] <phone> (1000)",
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "60_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <laptop> (1000)",
+            "[SWITCHON] <laptop> (1000)",
+            "[TURNTO] <laptop> (1000)",
+            "[LOOKAT] <laptop> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "71_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <keyboard> (415)",
+            "[GRAB] <keyboard> (415)",
+            "[WALK] <mouse> (413)",
+            "[GRAB] <mouse> (413)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[LOOKAT] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "7_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <mouse> (413)",
+            "[GRAB] <mouse> (413)",
+            "[WALK] <computer> (417)",
+            "[SWITCHON] <computer> (417)",
+            "[TURNTO] <computer> (417)",
+            "[LOOKAT] <computer> (417)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1070_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toothbrush> (1001)",
+            "[GRAB] <toothbrush> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "313_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toothbrush> (1001)",
+            "[GRAB] <toothbrush> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "689_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toothbrush> (1002)",
+            "[GRAB] <toothbrush> (1002)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "718_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <toothbrush> (1001)",
+            "[GRAB] <toothbrush> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "1049_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dvd_player> (1000)",
+            "[SWITCHON] <dvd_player> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "113_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cd_player> (1000)",
+            "[SWITCHON] <cd_player> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "161_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "173_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <cd_player> (1000)",
+            "[PLUGIN] <cd_player> (1000)",
+            "[SWITCHON] <cd_player> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "23_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "263_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "305_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "363_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dvd_player> (1001)",
+            "[SWITCHON] <dvd_player> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "385_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cd_player> (1000)",
+            "[SWITCHON] <cd_player> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "403_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "415_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <headset> (1000)",
+            "[GRAB] <headset> (1000)",
+            "[PUTON] <headset> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "462_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "463_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "503_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cd_player> (1000)",
+            "[SWITCHON] <cd_player> (1000)",
+            "[WALK] <cd_player> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "59_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <headset> (1001)",
+            "[GRAB] <headset> (1001)",
+            "[PUTON] <headset> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "737_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "773_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "910_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <stereo> (1000)",
+            "[SWITCHON] <stereo> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "953_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cd_player> (1001)",
+            "[SWITCHON] <cd_player> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1057_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "117_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "134_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[PLUGIN] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "170_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "197_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "21_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "225_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1001)",
+            "[GRAB] <remote_control> (1001)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "259_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "307_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "329_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "342_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "377_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "383_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "411_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "454_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "459_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "548_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <television> (248)",
+            "[SWITCHON] <television> (248)",
+            "[TURNTO] <television> (248)",
+            "[WATCH] <television> (248)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "595_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[WATCH] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "684_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "74_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "806_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "98_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <remote_control> (1000)",
+            "[GRAB] <remote_control> (1000)",
+            "[WALK] <television> (410)",
+            "[SWITCHON] <television> (410)",
+            "[TURNTO] <television> (410)",
+            "[LOOKAT] <television> (410)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1064_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "156_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "171_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[WALK] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "175_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "181_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <water> (1001)",
+            "[GRAB] <water> (1001)",
+            "[WALK] <water_glass> (1000)",
+            "[PUTIN] <water> (1001) <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "26_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "286_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "291_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water_glass> (1001)",
+            "[GRAB] <water_glass> (1001)",
+            "[WALK] <water> (1000)",
+            "[DRINK] <water_glass> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "317_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <cup> (1001)",
+            "[GRAB] <cup> (1001)",
+            "[DRINK] <cup> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "488_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[WALK] <sink> (231)",
+            "[GRAB] <water> (1001)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "510_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water> (1000)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[DRINK] <drinking_glass> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "528_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <drinking_glass> (1000)",
+            "[GRAB] <drinking_glass> (1000)",
+            "[DRINK] <drinking_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "532_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <drinking_glass> (1001)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[DRINK] <drinking_glass> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "589_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[WALK] <water> (1001)",
+            "[GRAB] <water> (1001)",
+            "[DRINK] <water> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "600_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "662_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "688_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "787_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "788_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <drinking_glass> (1001)",
+            "[GRAB] <drinking_glass> (1001)",
+            "[DRINK] <drinking_glass> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "814_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "850_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <water_glass> (1001)",
+            "[GRAB] <water_glass> (1001)",
+            "[DRINK] <water_glass> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "861_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cup> (1000)",
+            "[GRAB] <cup> (1000)",
+            "[DRINK] <cup> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "878_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <water_glass> (1000)",
+            "[GRAB] <water_glass> (1000)",
+            "[DRINK] <water_glass> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1073_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[WALK] <novel> (1000)",
+            "[WALK] <light> (411)",
+            "[PUTBACK] <novel> (1000) <light> (411)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[READ] <novel> (1000)",
+        "goals_satisfied": false
+    },
+    "1088_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "15_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <address_book> (1000)",
+            "[GRAB] <address_book> (1000)",
+            "[READ] <address_book> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "163_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <chair> (356)",
+            "[GRAB] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[WALK] <novel> (1000)",
+            "[WALK] <chair> (356)",
+            "[PUTBACK] <novel> (1000) <chair> (356)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[READ] <novel> (1000)",
+        "goals_satisfied": false
+    },
+    "16_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "192_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "208_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1001)",
+            "[GRAB] <novel> (1001)",
+            "[READ] <novel> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "221_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1001)",
+            "[GRAB] <novel> (1001)",
+            "[READ] <novel> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "241_2": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <bathroom> (1)",
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "341_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <spectacles> (1003)",
+            "[GRAB] <spectacles> (1003)",
+            "[WALK] <novel> (1001)",
+            "[GRAB] <novel> (1001)",
+            "[READ] <novel> (1001)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "484_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <chair> (356)",
+            "[SIT] <chair> (356)",
+            "[STANDUP]",
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "504_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "508_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "544_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "57_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "617_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <nightstand> (100)",
+            "[OPEN] <nightstand> (100)",
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[WALK] <novel> (1000)",
+            "[WALK] <nightstand> (100)",
+            "[PUTBACK] <novel> (1000) <nightstand> (100)",
+            "[WALK] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[READ] <novel> (1000)",
+        "goals_satisfied": false
+    },
+    "628_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[GRAB] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[WALK] <novel> (1000)",
+            "[WALK] <couch> (352)",
+            "[PUTBACK] <novel> (1000) <couch> (352)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[READ] <novel> (1000)",
+        "goals_satisfied": false
+    },
+    "688_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "693_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <chair> (103)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "821_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <chair> (356)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "86_1": {
+        "executable": false,
+        "actions": [
+            "[WALK] <filing_cabinet> (399)",
+            "[GRAB] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[WALK] <novel> (1000)",
+            "[WALK] <filing_cabinet> (399)",
+            "[PUTBACK] <novel> (1000) <filing_cabinet> (399)",
+            "[WALK] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[READ] <novel> (1000)",
+        "goals_satisfied": false
+    },
+    "896_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "897_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <novel> (1000)",
+            "[GRAB] <novel> (1000)",
+            "[READ] <novel> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "1083_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <water> (1002)",
+            "[GRAB] <water> (1002)",
+            "[WALK] <oven> (295)",
+            "[OPEN] <oven> (295)",
+            "[PUTIN] <water> (1002) <oven> (295)",
+            "[SWITCHON] <oven> (295)",
+            "[WALK] <pot> (1003)",
+            "[GRAB] <pot> (1003)",
+            "[WALK] <oven> (295)",
+            "[WALK] <pot> (1003)",
+            "[WALK] <oven> (295)",
+            "[PUTBACK] <pot> (1003) <oven> (295)",
+            "[WALK] <oven> (295)",
+            "[CLOSE] <oven> (295)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "392_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <freezer> (289)",
+            "[OPEN] <freezer> (289)",
+            "[WALK] <pot> (1001)",
+            "[GRAB] <pot> (1001)",
+            "[CLOSE] <freezer> (289)",
+            "[WALK] <oven> (295)",
+            "[PUTBACK] <pot> (1001) <oven> (295)",
+            "[SWITCHON] <oven> (295)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "755_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <oven> (295)",
+            "[SWITCHON] <oven> (295)",
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <sauce_pan> (1003)",
+            "[GRAB] <sauce_pan> (1003)",
+            "[WALK] <oven> (295)",
+            "[WALK] <sauce_pan> (1003)",
+            "[WALK] <oven> (295)",
+            "[PUTBACK] <sauce_pan> (1003) <oven> (295)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "124_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "137_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "204_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "268_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "297_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "356"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "299_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "300_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "321_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "332_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "379_2": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "387_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "390_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "3_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "416_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[WALK] <couch> (352)",
+            "[LIE] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "438_1": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "442_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "447_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "449_1": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "455_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "456_2": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "473_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "490_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "563_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "567_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "570_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "674_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "6_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "742_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "762_2": {
+        "executable": false,
+        "actions": [
+            {
+                "STANDUP": []
+            },
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "793_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "798_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "932_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "941_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "96_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)",
+            "[SIT] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "976_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "couch_352",
+                    "352"
+                ]
+            },
+            {
+                "LIE": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "149_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "154_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "180_1": {
+        "executable": true,
+        "actions": [
+            "[STANDUP]",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <floor> (76)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "195_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "211_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "241_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "264_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)",
+            "[PUTBACK] <phone> (1000) <desk> (357)",
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "265_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "287_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "352_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "360_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "388_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "431_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "436_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "442_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "474_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "482_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "497_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "553_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "601_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)",
+            "[PUTBACK] <phone> (247) <character> (65)",
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "70_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "864_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "963_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "974_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "976_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (1000)",
+            "[GRAB] <phone> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "99_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <phone> (247)",
+            "[GRAB] <phone> (247)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "183_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <coffe_maker> (290)",
+            "[OPEN] <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1000)",
+            "[GRAB] <coffee_filter> (1000)",
+            "[GRAB] <coffee_filter> (1000)",
+            "[WALK] <coffee_filter> (1000)",
+            "[DROP] <coffee_filter> (1000)",
+            "[WALK] <ground_coffee> (1001)",
+            "[GRAB] <ground_coffee> (1001)",
+            "[WALK] <water> (1002)",
+            "[GRAB] <water> (1002)",
+            "[POUR] <water> (1002) <coffe_maker> (290)",
+            "[PUTBACK] <coffee_filter> (1000) <coffe_maker> (290)",
+            "[PUTBACK] <ground_coffee> (1001) <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)"
+        ],
+        "error_type": "wrong_temporal_order",
+        "error_action": "[PUTBACK] <coffee_filter> (1000) <coffe_maker> (290)",
+        "goals_satisfied": false
+    },
+    "229_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <coffe_maker> (290)",
+            "[OPEN] <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1000)",
+            "[GRAB] <coffee_filter> (1000)",
+            "[WALK] <water> (1002)",
+            "[WALK] <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1000)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <coffee_filter> (1000) <coffe_maker> (290)",
+            "[WALK] <ground_coffee> (1001)",
+            "[GRAB] <ground_coffee> (1001)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <ground_coffee> (1001) <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)",
+            "[WALK] <coffe_maker> (290)",
+            "[CLOSE] <coffe_maker> (290)",
+            "[WALK] <coffe_maker> (290)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "310_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <water> (1002)",
+            "[WALK] <coffe_maker> (290)",
+            "[POUR] <water> (1002) <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1000)",
+            "[GRAB] <coffee_filter> (1000)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <coffee_filter> (1000) <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[POUR] <water> (1002) <coffe_maker> (290)",
+        "goals_satisfied": false
+    },
+    "721_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <coffe_maker> (290)",
+            "[PLUGIN] <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)",
+            "[SWITCHOFF] <coffe_maker> (290)",
+            "[OPEN] <coffe_maker> (290)",
+            "[GRAB] <ground_coffee> (1002)",
+            "[WALK] <ground_coffee> (1002)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <ground_coffee> (1002) <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1001)",
+            "[GRAB] <coffee_filter> (1001)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <coffee_filter> (1001) <coffe_maker> (290)",
+            "[WALK] <water> (1000)",
+            "[GRAB] <water> (1000)",
+            "[WALK] <coffe_maker> (290)",
+            "[POUR] <water> (1000) <coffe_maker> (290)",
+            "[WALK] <coffe_maker> (290)",
+            "[CLOSE] <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "764_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <water> (1002)",
+            "[WALK] <coffe_maker> (290)",
+            "[POUR] <water> (1002) <coffe_maker> (290)",
+            "[WALK] <coffee_filter> (1000)",
+            "[GRAB] <coffee_filter> (1000)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <coffee_filter> (1000) <coffe_maker> (290)",
+            "[WALK] <ground_coffee> (1001)",
+            "[GRAB] <ground_coffee> (1001)",
+            "[WALK] <coffe_maker> (290)",
+            "[PUTBACK] <ground_coffee> (1001) <coffe_maker> (290)",
+            "[SWITCHON] <coffe_maker> (290)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[POUR] <water> (1002) <coffe_maker> (290)",
+        "goals_satisfied": false
+    },
+    "419_2": {
+        "executable": false,
+        "actions": [
+            "[WALK] <cloth_napkin> (1001)",
+            "[GRAB] <cloth_napkin> (1001)",
+            "[WALK] <table> (226)",
+            "[PUTBACK] <cloth_napkin> (1001) <table> (226)",
+            "[WALK] <plate> (1002)",
+            "[GRAB] <plate> (1002)",
+            "[WALK] <table> (226)",
+            "[PUTBACK] <plate> (1002) <table> (226)",
+            "[PUTBACK] <fork> (1004) <table> (226)",
+            "[PUTBACK] <cup> (1005) <table> (226)",
+            "[PUTBACK] <knife> (1003) <table> (226)"
+        ],
+        "error_type": "missing_step",
+        "error_action": "[PUTBACK] <fork> (1004) <table> (226)",
+        "goals_satisfied": false
+    },
+    "446_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <cupboard> (229)",
+            "[OPEN] <cupboard> (229)",
+            "[WALK] <plate> (1000)",
+            "[GRAB] <plate> (1000)",
+            "[WALK] <table> (226)",
+            "[PUTBACK] <plate> (1000) <table> (226)",
+            "[WALK] <plate> (1001)",
+            "[GRAB] <plate> (1001)",
+            "[WALK] <table> (226)",
+            "[PUTBACK] <plate> (1001) <table> (226)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "710_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <kitchen_cabinet> (1000)",
+            "[OPEN] <kitchen_cabinet> (1000)",
+            "[WALK] <plate> (1001)",
+            "[GRAB] <plate> (1001)",
+            "[WALK] <table> (226)",
+            "[PUTBACK] <plate> (1001) <table> (226)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "84_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <couch> (352)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "93_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <bedroom> (67)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "368_1": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dining_room> (201)",
+            "[WALK] <character> (65)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "729_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <shower> (36)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "975_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <shower> (36)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": true
+    },
+    "231_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "plate",
+                    "1000"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "water",
+                    "1002"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "31_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink",
+                    "231"
+                ]
+            },
+            {
+                "GRAB": [
+                    "sponge",
+                    "1002"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink",
+                    "231"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "349_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "dish_soap_1000",
+                    "1000"
+                ]
+            },
+            {
+                "GRAB": [
+                    "dish_soap_1000",
+                    "1000"
+                ]
+            },
+            {
+                "WALK": [
+                    "faucet_232",
+                    "232"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "397_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "dining_room_201",
+                    "201"
+                ]
+            },
+            {
+                "GRAB": [
+                    "plate_1001",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "bathroom_1",
+                    "1"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "hallucination error",
+        "error_action": null
+    },
+    "429_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "kitchen_counter",
+                    "230"
+                ]
+            },
+            {
+                "GRAB": [
+                    "dish_soap",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "sink",
+                    "231"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "553_2": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink",
+                    "231"
+                ]
+            },
+            {
+                "GRAB": [
+                    "soap",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate",
+                    "1000"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "594_2": {
+        "executable": true,
+        "actions": [
+            "[WALK] <dish_soap> (1000)",
+            "[GRAB] <dish_soap> (1000)",
+            "[WALK] <sink> (42)",
+            "[WASH] <dish_soap> (1000)"
+        ],
+        "error_type": null,
+        "error_action": null,
+        "goals_satisfied": false
+    },
+    "746_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sponge",
+                    "1002"
+                ]
+            },
+            {
+                "GRAB": [
+                    "sponge",
+                    "1002"
+                ]
+            },
+            {
+                "WALK": [
+                    "water",
+                    "1001"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "961_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "sink",
+                    "231"
+                ]
+            },
+            {
+                "GRAB": [
+                    "dish_soap",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "plate",
+                    "1000"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    },
+    "988_1": {
+        "executable": false,
+        "actions": [
+            {
+                "WALK": [
+                    "cupboard",
+                    "229"
+                ]
+            },
+            {
+                "OPEN": [
+                    "cupboard",
+                    "229"
+                ]
+            },
+            {
+                "WALK": [
+                    "bowl",
+                    "1001"
+                ]
+            },
+            {
+                "GRAB": [
+                    "bowl",
+                    "1001"
+                ]
+            },
+            {
+                "WALK": [
+                    "faucet",
+                    "232"
+                ]
+            },
+            {
+                "WASH": []
+            }
+        ],
+        "error_type": "parameter error",
+        "error_action": null
+    }
+}

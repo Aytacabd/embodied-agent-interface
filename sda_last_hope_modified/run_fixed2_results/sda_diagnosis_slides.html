@@ -1,0 +1,693 @@
+<title>How the Repair Loop Works</title>
+<style>
+  :root {
+    --bg: #EDEFEA;
+    --stage: #F6F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1EE;
+    --ink: #1B211F;
+    --muted: #5C6B66;
+    --faint: #8A968F;
+    --line: #DCE1DD;
+    --accent: #1F6F5C;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E4F1EC;
+    --resolved: #2E7D4F;
+    --resolved-bg: #E4F1E7;
+    --gaveup: #B23A2E;
+    --gaveup-bg: #FBE8E5;
+    --shadow: 0 8px 30px rgba(27,33,31,0.10), 0 2px 8px rgba(27,33,31,0.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0C0F0D; --stage: #171C19; --surface: #1B211D; --surface-2: #232A25;
+      --ink: #E9EEEA; --muted: #8FA39C; --faint: #64756E; --line: #2B332F;
+      --accent: #4FB89B; --accent-ink: #0B1512; --accent-soft: #1C2C26;
+      --resolved: #5FBD82; --resolved-bg: #1B2E22;
+      --gaveup: #E2685C; --gaveup-bg: #341E1B;
+      --shadow: 0 8px 30px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0C0F0D; --stage: #171C19; --surface: #1B211D; --surface-2: #232A25;
+    --ink: #E9EEEA; --muted: #8FA39C; --faint: #64756E; --line: #2B332F;
+    --accent: #4FB89B; --accent-ink: #0B1512; --accent-soft: #1C2C26;
+    --resolved: #5FBD82; --resolved-bg: #1B2E22;
+    --gaveup: #E2685C; --gaveup-bg: #341E1B;
+    --shadow: 0 8px 30px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #EDEFEA; --stage: #F6F7F5; --surface: #FFFFFF; --surface-2: #EEF1EE;
+    --ink: #1B211F; --muted: #5C6B66; --faint: #8A968F; --line: #DCE1DD;
+    --accent: #1F6F5C; --accent-ink: #FFFFFF; --accent-soft: #E4F1EC;
+    --resolved: #2E7D4F; --resolved-bg: #E4F1E7;
+    --gaveup: #B23A2E; --gaveup-bg: #FBE8E5;
+    --shadow: 0 8px 30px rgba(27,33,31,0.10), 0 2px 8px rgba(27,33,31,0.06);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: clamp(10px, 3vh, 32px) clamp(10px, 3vw, 32px);
+    overflow: hidden;
+  }
+  .mono {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .deck {
+    width: 100%;
+    max-width: 1220px;
+    aspect-ratio: 16 / 9.5;
+    max-height: 94vh;
+    position: relative;
+    background: var(--stage);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: clamp(24px, 4vw, 56px) clamp(32px, 5.4vw, 74px);
+    opacity: 0;
+  }
+  .slide.active { display: flex; opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) { .slide { transition: opacity .25s ease; } }
+
+  .kicker {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: clamp(10px, 1vw, 11.5px);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: clamp(9px, 1.4vh, 15px);
+  }
+  .kicker::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  h1.slide-title, h2.slide-title {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-weight: 700; letter-spacing: -0.01em;
+    margin: 0 0 clamp(8px,1.2vh,13px);
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  h1.slide-title { font-size: clamp(26px, 4.1vw, 47px); }
+  h2.slide-title { font-size: clamp(18px, 2.5vw, 26px); }
+
+  .dek { font-size: clamp(12px, 1.35vw, 15.5px); color: var(--muted); max-width: 68ch; margin: 0 0 clamp(10px, 1.8vh, 18px); line-height: 1.55; }
+  .dek b { color: var(--ink); font-weight: 600; }
+  .dek .mono.hl { color: var(--ink); font-weight: 700; }
+
+  .slide-body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(8px,1.4vh,14px); }
+
+  /* ── title slide ─────────────────────────────────────────────────── */
+  .slide.title-slide { justify-content: center; }
+  .slide.title-slide .stat-row { display: flex; gap: clamp(20px,3vw,40px); margin-top: clamp(16px,2.8vh,28px); }
+  .slide.title-slide .stat-row .s .n { font-family: ui-monospace, monospace; font-size: clamp(21px,2.4vw,30px); font-weight: 700; color: var(--accent); }
+  .slide.title-slide .stat-row .s .l { font-size: clamp(10px,1vw,12px); color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+
+  /* ── SVG connector arrow ──────────────────────────────────────────── */
+  .conn { flex-shrink: 0; color: var(--faint); display: flex; align-items: center; }
+  .conn svg { width: clamp(16px,1.8vw,22px); height: auto; display: block; }
+
+  /* ── pipeline diagram ────────────────────────────────────────────── */
+  .pipeline { display: flex; align-items: stretch; gap: clamp(4px,0.8vw,10px); flex-wrap: nowrap; }
+  .pipe-step {
+    flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: clamp(12px,1.8vh,20px) clamp(10px,1.2vw,16px);
+    display: flex; flex-direction: column; gap: 7px; min-width: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .pipe-step .badge {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700;
+  }
+  .pipe-step .t { font-weight: 700; font-size: clamp(12.5px,1.3vw,15px); margin-top: 2px; }
+  .pipe-step .f { font-size: clamp(10.5px,1.05vw,12px); color: var(--muted); line-height: 1.4; }
+  .pipe-loop {
+    margin-top: 14px; font-size: clamp(11px,1.1vw,12.5px); color: var(--faint);
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; background: var(--surface-2); border-radius: 8px; align-self: flex-start;
+  }
+
+  /* ── failing-steps illustration ───────────────────────────────────── */
+  .step-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .step-chip {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 9px;
+    padding: 9px 14px; font-size: clamp(11px,1.2vw,13px); color: var(--ink);
+    display: flex; align-items: center; gap: 7px; white-space: nowrap;
+  }
+  .step-chip .ok-mark { color: var(--resolved); font-weight: 700; }
+  .step-chip.fail { background: var(--gaveup-bg); border-color: var(--gaveup); color: var(--gaveup); font-weight: 600; }
+  .step-arrow { color: var(--faint); font-size: 12px; }
+
+  /* ── funnel diagram (combinatorics) ──────────────────────────────── */
+  .funnel-row { display: flex; align-items: center; gap: clamp(10px,1.6vw,20px); }
+  .funnel-stage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .funnel-shape {
+    background: var(--surface); border: 2px solid var(--line); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, monospace; font-weight: 700; color: var(--ink);
+  }
+  .funnel-stage.big .funnel-shape { width: clamp(120px,15vw,200px); height: clamp(80px,10vh,120px); font-size: clamp(15px,1.8vw,22px); border-color: var(--faint); }
+  .funnel-stage.mid .funnel-shape { width: clamp(84px,10vw,130px); height: clamp(60px,7.4vh,88px); font-size: clamp(14px,1.6vw,19px); border-color: var(--accent); color: var(--accent); }
+  .funnel-stage.small .funnel-shape { width: clamp(60px,7vw,90px); height: clamp(60px,7vw,90px); border-radius: 50%; font-size: clamp(15px,1.8vw,20px); background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .funnel-stage .cap { font-size: clamp(10px,1.05vw,12px); color: var(--muted); max-width: 20ch; line-height: 1.4; }
+  .funnel-arrow { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .funnel-arrow .lbl { font-size: clamp(9.5px,1vw,11px); color: var(--faint); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ── doctor/lab cards ─────────────────────────────────────────────── */
+  .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px,2vw,22px); }
+  .dl-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: clamp(14px,2vh,20px) clamp(14px,2vw,20px); }
+  .dl-card .role { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .dl-card .role .ic {
+    width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .dl-card.doctor .role .ic { background: var(--accent-soft); }
+  .dl-card.lab .role .ic { background: var(--surface-2); }
+  .dl-card .role .name { font-weight: 700; font-size: clamp(13.5px,1.5vw,16px); }
+  .dl-card p { font-size: clamp(11.5px,1.2vw,13.5px); color: var(--muted); line-height: 1.55; margin: 0; }
+  .dl-card p + p { margin-top: 8px; }
+
+  /* ── verdict pills ────────────────────────────────────────────────── */
+  .verdicts { display: flex; gap: 10px; margin-top: 12px; }
+  .verdict-pill { flex: 1; border-radius: 9px; padding: 9px 12px; font-size: clamp(10.5px,1.1vw,12px); display: flex; flex-direction: column; gap: 2px; }
+  .verdict-pill.hard { background: var(--gaveup-bg); color: var(--gaveup); }
+  .verdict-pill.unknown { background: var(--surface-2); color: var(--muted); }
+  .verdict-pill .vt { font-weight: 700; }
+
+  /* ── guarantee callout ────────────────────────────────────────────── */
+  .guarantee {
+    border: 1.5px solid var(--accent); border-radius: 12px; padding: clamp(14px,2vh,20px) clamp(16px,2.2vw,24px);
+    background: var(--accent-soft);
+  }
+  .guarantee .lead { font-weight: 700; font-size: clamp(14px,1.6vw,18px); color: var(--ink); margin-bottom: 6px; }
+  .guarantee p { font-size: clamp(12px,1.3vw,14.5px); color: var(--muted); margin: 0; line-height: 1.55; }
+
+  /* ── exception stat block ─────────────────────────────────────────── */
+  .exception-stat { display: flex; align-items: baseline; gap: 16px; }
+  .exception-stat .big { font-family: ui-monospace, monospace; font-weight: 700; font-size: clamp(40px,5.5vw,68px); color: var(--accent); line-height: 1; }
+  .exception-stat .of { font-size: clamp(12px,1.3vw,14px); color: var(--muted); max-width: 26ch; }
+
+  /* ── strategy cards ──────────────────────────────────────────────── */
+  .strategy-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(6px,1vw,12px); }
+  .strat-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: clamp(10px,1.4vh,14px) clamp(8px,1vw,12px); display: flex; flex-direction: column; gap: 5px; }
+  .strat-card.emph { border-color: var(--accent); background: var(--accent-soft); }
+  .strat-card .name { font-weight: 700; font-size: clamp(11.5px,1.2vw,13.5px); color: var(--accent); }
+  .strat-card .desc { font-size: clamp(10.5px,1.05vw,12px); color: var(--muted); line-height: 1.45; }
+  .strat-card .trigger { font-size: clamp(9.5px,0.95vw,11px); color: var(--faint); margin-top: 2px; font-style: italic; }
+
+  /* ── bullets ─────────────────────────────────────────────────────── */
+  ul.big-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: clamp(8px,1.5vh,15px); }
+  ul.big-list li { display: flex; gap: 13px; align-items: flex-start; font-size: clamp(12px, 1.35vw, 15px); color: var(--ink); }
+  ul.big-list li .mk {
+    flex-shrink: 0; width: 25px; height: 25px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, monospace; font-size: 11.5px; color: var(--accent); font-weight: 700; margin-top: 1px;
+  }
+  ul.big-list li b { color: var(--accent); }
+  ul.big-list li .sub { display: block; color: var(--muted); font-size: 0.86em; margin-top: 2px; font-weight: 400; }
+
+  /* ── headline comparison ──────────────────────────────────────────── */
+  .headline-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px,2vw,20px); }
+  .headline-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: clamp(14px,2vh,22px) clamp(16px,2.2vw,24px); }
+  .headline-card .set-name { font-family: ui-monospace, monospace; font-size: clamp(11px,1.15vw,13px); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: clamp(10px,1.6vh,14px); }
+  .compare-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px; }
+  .compare-row:last-child { margin-bottom: 0; }
+  .compare-row .label { width: clamp(120px,13vw,168px); flex-shrink: 0; font-size: clamp(11px,1.15vw,13px); color: var(--muted); }
+  .compare-row .track { flex: 1; height: clamp(16px,2vh,22px); background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+  .compare-row .fill { height: 100%; border-radius: 4px; }
+  .compare-row .fill.noadapt { background: var(--faint); }
+  .compare-row .fill.sda { background: var(--accent); }
+  .compare-row .val { width: clamp(44px,5vw,58px); text-align: right; flex-shrink: 0; font-family: ui-monospace, monospace; font-weight: 700; font-size: clamp(12px,1.3vw,14px); }
+  .headline-foot { margin-top: clamp(8px,1.4vh,12px); padding-top: 9px; border-top: 1px dashed var(--line); font-size: clamp(10.5px,1.1vw,12px); color: var(--faint); }
+  .headline-foot b { color: var(--muted); font-family: ui-monospace, monospace; }
+
+  /* ── chart bars — enlarged for results slides ─────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px,2.8vw,34px); flex: 1; min-height: 0; }
+  .chart-block h3 { font-family: ui-monospace, monospace; font-size: clamp(11px,1.15vw,13px); letter-spacing: 0.05em; text-transform: uppercase; color: var(--faint); margin: 0 0 clamp(10px,1.6vh,16px); }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: clamp(7px,1.2vh,11px); }
+  .bar-row .blabel { width: clamp(120px,13vw,185px); flex-shrink: 0; font-size: clamp(11.5px,1.2vw,13.5px); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-row .btrack { flex: 1; height: clamp(16px,2.2vh,22px); background: var(--surface-2); border-radius: 4px; overflow: hidden; display: flex; }
+  .bar-row .bfill { height: 100%; background: var(--accent); border-radius: 4px; min-width: 3px; }
+  .bar-row .seg.resolved { background: var(--resolved); height: 100%; }
+  .bar-row .seg.gaveup { background: var(--gaveup); height: 100%; }
+  .bar-row .bval { width: 32px; text-align: right; flex-shrink: 0; font-family: ui-monospace, monospace; font-weight: 600; font-size: clamp(11.5px,1.2vw,13.5px); color: var(--ink); }
+  .legend { display: flex; gap: 16px; margin-bottom: clamp(8px,1.4vh,12px); }
+  .legend .item { display: flex; align-items: center; gap: 6px; font-size: clamp(10.5px,1.1vw,12px); color: var(--muted); }
+  .legend .sw { width: 10px; height: 10px; border-radius: 2px; }
+  .legend .sw.resolved { background: var(--resolved); }
+  .legend .sw.gaveup { background: var(--gaveup); }
+  .panel-stats { display: flex; gap: clamp(12px,1.8vw,20px); margin-top: clamp(12px,2vh,18px); padding-top: clamp(10px,1.6vh,14px); border-top: 1px solid var(--line); }
+  .panel-stats .p .n { font-family: ui-monospace, monospace; font-weight: 700; font-size: clamp(17px,1.9vw,23px); }
+  .panel-stats .p .n.good { color: var(--resolved); }
+  .panel-stats .p .l { font-size: clamp(9.5px,1vw,11px); color: var(--faint); text-transform: uppercase; letter-spacing: 0.04em; max-width: 17ch; margin-top: 2px; }
+
+  /* ── nav chrome ──────────────────────────────────────────────────── */
+  .nav { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; padding: 11px clamp(20px,3vw,40px) 15px; pointer-events: none; }
+  .nav > * { pointer-events: auto; }
+  .dots { display: flex; gap: 4px; flex-wrap: wrap; max-width: 58%; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); border: none; padding: 0; cursor: pointer; }
+  .dot.on { background: var(--accent); width: 15px; border-radius: 3px; }
+  @media (prefers-reduced-motion: no-preference) { .dot { transition: all .2s ease; } }
+  .navbtn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .navbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .navbtn:focus-visible, .dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .counter { font-family: ui-monospace, monospace; font-size: 10.5px; color: var(--faint); }
+</style>
+
+<div class="deck" id="deck" tabindex="0" aria-label="Presentation, use arrow keys to navigate">
+
+  <!-- 1 — Title -->
+  <div class="slide title-slide active">
+    <div class="kicker">A Walkthrough</div>
+    <h1 class="slide-title">How the Repair Loop<br>Actually Works</h1>
+    <p class="dek">What happens when a household robot's plan breaks mid-task — how the system traces the real cause, why it asks a language model for judgment instead of solving it by rule alone, and how well the whole thing performs.</p>
+    <div class="stat-row">
+      <div class="s"><div class="n mono">211</div><div class="l">failures diagnosed</div></div>
+      <div class="s"><div class="n mono">91.9%</div><div class="l">fixed automatically</div></div>
+      <div class="s"><div class="n mono">392</div><div class="l">tasks tested</div></div>
+    </div>
+  </div>
+
+  <!-- 2 — The problem -->
+  <div class="slide">
+    <div class="kicker">01 · The problem</div>
+    <h2 class="slide-title">The first plan is rarely the last one</h2>
+    <p class="dek">A language model's first attempt at a plan usually looks reasonable — and usually breaks somewhere in the middle. Here, the robot is told to wash a load of laundry:</p>
+    <div class="slide-body">
+      <div class="step-row">
+        <span class="step-chip">Walk to washing machine <span class="ok-mark">✓</span></span>
+        <span class="step-arrow">→</span>
+        <span class="step-chip">Open it <span class="ok-mark">✓</span></span>
+        <span class="step-arrow">→</span>
+        <span class="step-chip">Pick up soap <span class="ok-mark">✓</span></span>
+        <span class="step-arrow">→</span>
+        <span class="step-chip">Pick up a dress <span class="ok-mark">✓</span></span>
+        <span class="step-arrow">→</span>
+        <span class="step-chip fail">Pick up pants <span>✗</span></span>
+      </div>
+      <p class="dek" style="margin-top:16px">Both hands are already full. The plan didn't account for that — and without some way to recover, this is where the task simply ends.</p>
+      <p class="dek">Even given <b>three separate tries</b> with no diagnosis or repair — just plan, attempt, and try fresh on failure — that only succeeds <span class="mono hl">15–78%</span> of the time, depending how demanding the task is. Everything from here is what closes that gap in a single, informed attempt.</p>
+    </div>
+  </div>
+
+  <!-- 3 — Pipeline overview -->
+  <div class="slide">
+    <div class="kicker">02 · Overview</div>
+    <h2 class="slide-title">Four steps, every time something breaks</h2>
+    <div class="slide-body">
+      <div class="pipeline">
+        <div class="pipe-step"><div class="badge">1</div><div class="t">Diagnose</div><div class="f">figure out what kind of failure this is</div></div>
+        <div class="pipe-step"><div class="badge">2</div><div class="t">Trace the cause</div><div class="f">find the exact moment things went wrong</div></div>
+        <div class="pipe-step"><div class="badge">3</div><div class="t">Search for a fix</div><div class="f">explore ways to satisfy what's missing</div></div>
+        <div class="pipe-step"><div class="badge">4</div><div class="t">Weave it back in</div><div class="f">rejoin the rest of the original plan and retry</div></div>
+      </div>
+      <div class="pipe-loop">↺&nbsp;&nbsp;up to three tries per task — each one re-runs the whole plan from the start</div>
+      <p class="dek" style="margin-top:18px">A language model is only asked for input once in this loop, for a short hint at step 3. Steps 1, 2 and 4 are handled entirely by rule — the same rules the simulated house itself runs on.</p>
+    </div>
+  </div>
+
+  <!-- 4 — Step 1: classify -->
+  <div class="slide">
+    <div class="kicker">03 · Step 1</div>
+    <h2 class="slide-title">Diagnose: what kind of failure is this?</h2>
+    <p class="dek">The house doesn't explain <em>why</em> an action failed — so the system replays what happened and works it out. Three shapes of failure come up in practice:</p>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">1</span><div><b>A step was skipped</b> <span class="sub">Something the action needed was never done — e.g. trying to put an item away that was never picked up.</span></div></li>
+        <li><span class="mk">2</span><div><b>Steps happened out of order</b> <span class="sub">Everything needed did happen, just in the wrong sequence — e.g. both hands filled up before the plan tried to pick up a third item.</span></div></li>
+        <li><span class="mk">3</span><div><b>The object can't do that</b> <span class="sub">The action doesn't apply to this object at all — e.g. asking the character to lie down on something you can't lie on.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5 — Step 2: root cause finder -->
+  <div class="slide">
+    <div class="kicker">04 · Step 2</div>
+    <h2 class="slide-title">Tracing back to the real cause</h2>
+    <p class="dek">The system replays the plan from the very beginning and watches, action by action, for the exact moment things stopped being true — not the step that just failed, but whatever happened earlier that actually caused it. Once it knows that, it picks how to respond:</p>
+    <div class="slide-body">
+      <div class="strategy-grid">
+        <div class="strat-card"><div class="name">Add the missing step</div><div class="desc">One small thing was skipped.</div><div class="trigger">walk over, stand up, face the object</div></div>
+        <div class="strat-card"><div class="name">Patch this action</div><div class="desc">The object can't do what was asked.</div><div class="trigger">try a close variation, same spot</div></div>
+        <div class="strat-card"><div class="name">Swap the action</div><div class="desc">The step itself was the wrong idea.</div><div class="trigger">ask for a different one entirely</div></div>
+        <div class="strat-card"><div class="name">Already done</div><div class="desc">The goal is already true.</div><div class="trigger">drop the now-pointless step</div></div>
+        <div class="strat-card emph"><div class="name">Rebuild the sequence</div><div class="desc">Everything else — more than one thing needs to change, or no single-step patch applies.</div><div class="trigger">hands off to the full search, next</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 — Step 3: the search -->
+  <div class="slide">
+    <div class="kicker">05 · Step 3</div>
+    <h2 class="slide-title">Searching for a fix</h2>
+    <p class="dek">For the general case, the system explores possible next actions and keeps the <em>shortest</em> sequence that actually satisfies what's missing — checked directly against the same rules the house itself enforces. It has three sources of ideas to draw from:</p>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">1</span><div><b>Rule-based fixes</b> <span class="sub">Open a closed door, free up a hand, walk to the right spot — worked out directly from what's known about the objects involved, no guessing required.</span></div></li>
+        <li><span class="mk">2</span><div><b>A hint from the language model</b> <span class="sub">A short list of suggested actions naming what might fix it — treated as ideas to test, not something accepted on faith.</span></div></li>
+        <li><span class="mk">3</span><div><b>What the plan was already trying to do</b> <span class="sub">Keeps the search from losing track of steps it still needs to cover.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 7 — Step 4: splice + safety nets -->
+  <div class="slide">
+    <div class="kicker">06 · Step 4</div>
+    <h2 class="slide-title">Weave it back in, then try again</h2>
+    <p class="dek">The fix gets stitched into the original plan and the whole thing re-runs from the top. Three specific safeguards keep that stitching from causing new problems:</p>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">✓</span><div><b>Put things where they belong</b> <span class="sub">If both hands are full, the fix now delivers a held item to wherever it was actually supposed to end up, instead of just dropping it on the floor.</span></div></li>
+        <li><span class="mk">✓</span><div><b>Reopen what got closed</b> <span class="sub">If something needed is now stuck behind a door another fix just shut, the system reopens it, retrieves what it needs, then puts everything back the way it was.</span></div></li>
+        <li><span class="mk">✓</span><div><b>Don't discard a step that's genuinely necessary</b> <span class="sub">A pickup that's the actual cause of a problem still has to happen eventually — it no longer gets thrown away just for being the trigger.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 8 — NEW: why not pure search -->
+  <div class="slide">
+    <div class="kicker">07 · Why a language model</div>
+    <h2 class="slide-title">The search space is enormous, blind</h2>
+    <p class="dek">The house understands <span class="mono hl">41</span> distinct actions and holds roughly <span class="mono hl">290</span> objects in an average scene. Checked blindly — every action against every object, before even considering actions that involve two objects at once — that's a lot to get through before finding one valid repair.</p>
+    <div class="slide-body">
+      <div class="funnel-row">
+        <div class="funnel-stage big">
+          <div class="funnel-shape">~12,000</div>
+          <div class="cap">raw action–object combinations, checked blindly</div>
+        </div>
+        <div class="funnel-arrow"><div class="conn"><svg viewBox="0 0 24 12" fill="none"><path d="M0 6H22M22 6L15 1M22 6L15 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="lbl">language model proposes</span></div>
+        <div class="funnel-stage mid">
+          <div class="funnel-shape">3</div>
+          <div class="cap">candidate actions, typically — the median across every failure this session</div>
+        </div>
+        <div class="funnel-arrow"><div class="conn"><svg viewBox="0 0 24 12" fill="none"><path d="M0 6H22M22 6L15 1M22 6L15 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="lbl">rules verify</span></div>
+        <div class="funnel-stage small">
+          <div class="funnel-shape">1</div>
+          <div class="cap">repair actually used</div>
+        </div>
+      </div>
+      <p class="dek" style="margin-top:20px">Something has to narrow the field before exact checking is even feasible. That narrowing step is where judgment — not more search — earns its place.</p>
+    </div>
+  </div>
+
+  <!-- 9 — NEW: doctor and lab -->
+  <div class="slide">
+    <div class="kicker">08 · Why a language model</div>
+    <h2 class="slide-title">Think of it as a doctor and a lab</h2>
+    <div class="slide-body">
+      <div class="dl-grid">
+        <div class="dl-card doctor">
+          <div class="role"><span class="ic">🩺</span><span class="name">The language model is the doctor</span></div>
+          <p>It looks at the failure and suggests what might fix it — typically about three candidate actions per failure, drawn from everyday judgment about how a house actually works.</p>
+          <p>A doctor's judgment is what narrows down a huge range of possibilities to a short, plausible list. It isn't the final word.</p>
+        </div>
+        <div class="dl-card lab">
+          <div class="role"><span class="ic">⚗️</span><span class="name">The rule-based checker is the lab</span></div>
+          <p>It doesn't take the doctor's suggestions on faith. For each one, it can only answer one of two things:</p>
+          <div class="verdicts">
+            <div class="verdict-pill hard"><span class="vt">Provably wrong</span>rejected outright</div>
+            <div class="verdict-pill unknown"><span class="vt">Can't rule it out</span>passes through for the search to try</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 — NEW: the lab has final word (the persuasion core) -->
+  <div class="slide">
+    <div class="kicker">09 · Why a language model</div>
+    <h2 class="slide-title">The lab has the final word, always</h2>
+    <p class="dek">A structured search explores only what the lab didn't rule out, and returns the shortest sequence that actually resolves the problem. Nothing downstream of that search asks the language model anything — it's ordinary, deterministic code from there.</p>
+    <div class="slide-body">
+      <div class="guarantee">
+        <div class="lead">The guarantee this gives you</div>
+        <p>The language model cannot make a broken repair pass. At worst, its suggestions are all rejected — and the step gets dropped, which can cost a goal, but it is never silently accepted as a fix that doesn't actually hold up. A wrong idea costs progress. It never costs correctness.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 — NEW: the one exception, quantified -->
+  <div class="slide">
+    <div class="kicker">10 · Why a language model</div>
+    <h2 class="slide-title">The one honest exception — and how rare it is</h2>
+    <p class="dek">There is exactly one situation where the language model's output goes straight into the plan without the lab checking it first: when a step is diagnosed as fundamentally the wrong thing to attempt, it's asked to propose a direct replacement, accepted as-is.</p>
+    <div class="slide-body">
+      <div class="exception-stat">
+        <div class="big mono">2<span style="font-size:0.5em;color:var(--faint)"> / 211</span></div>
+        <div class="of">diagnosed failures took this unverified path across both evaluation sets — under 1%.</div>
+      </div>
+      <p class="dek" style="margin-top:18px">Everywhere else — the other <b>99%+</b> — every suggestion passes through the lab before anything reaches the plan.</p>
+    </div>
+  </div>
+
+  <!-- 12 — NEW: synthesis -->
+  <div class="slide">
+    <div class="kicker">11 · Why a language model</div>
+    <h2 class="slide-title">Judgment narrows it. Verification makes it exact.</h2>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">A</span><div><b>Judgment picks a short list</b> <span class="sub">From thousands of raw possibilities down to a handful of plausible ones, in a single step — no everyday common sense is built into the rules themselves.</span></div></li>
+        <li><span class="mk">B</span><div><b>Verification makes it exact</b> <span class="sub">Nothing reaches the plan unless it genuinely, provably satisfies what's missing.</span></div></li>
+        <li><span class="mk">=</span><div><b>Neither half is enough alone</b> <span class="sub">Judgment without checking would occasionally accept something that looks right but isn't. Checking without judgment would have to search enormously to find what a person would guess instantly.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 13 — Headline results -->
+  <div class="slide">
+    <div class="kicker">12 · Results</div>
+    <h2 class="slide-title">Does the loop actually help?</h2>
+    <div class="slide-body">
+      <div class="headline-grid">
+        <div class="headline-card">
+          <div class="set-name">Everyday tasks — 342 of them</div>
+          <div class="compare-row"><span class="label">No repair, best of 3 tries</span><span class="track"><span class="fill noadapt" style="width:77.9%"></span></span><span class="val mono">77.9%</span></div>
+          <div class="compare-row"><span class="label">With the repair loop</span><span class="track"><span class="fill sda" style="width:90.6%"></span></span><span class="val mono">90.6%</span></div>
+          <div class="headline-foot">+<b>12.7pt</b> over three independent, unguided attempts.</div>
+        </div>
+        <div class="headline-card">
+          <div class="set-name">Deliberately hard tasks — 50 of them</div>
+          <div class="compare-row"><span class="label">No repair, best of 3 tries</span><span class="track"><span class="fill noadapt" style="width:14.6%"></span></span><span class="val mono">14.6%</span></div>
+          <div class="compare-row"><span class="label">With the repair loop</span><span class="track"><span class="fill sda" style="width:50%"></span></span><span class="val mono">50.0%</span></div>
+          <div class="headline-foot"><b>3.4×</b> better than best-of-3 unguided attempts.</div>
+        </div>
+      </div>
+      <p class="dek" style="margin-top:20px">The repair loop makes one careful pass with up to three fix attempts — it isn't "three independent guesses," it's three <em>informed</em> ones.</p>
+    </div>
+  </div>
+
+  <!-- 14 — main breakdown -->
+  <div class="slide">
+    <div class="kicker">13 · Results — everyday tasks</div>
+    <h2 class="slide-title">342 tasks: where the fixes land</h2>
+    <div class="slide-body">
+      <div class="two-col">
+        <div class="chart-block">
+          <h3>How each failure got handled</h3>
+          <div id="chart-main-strategy"></div>
+        </div>
+        <div class="chart-block">
+          <h3>...and whether it actually worked</h3>
+          <div class="legend"><span class="item"><span class="sw resolved"></span>fixed</span><span class="item"><span class="sw gaveup"></span>gave up</span></div>
+          <div id="chart-main-outcome"></div>
+        </div>
+      </div>
+      <div class="panel-stats">
+        <div class="p"><div class="n mono">96</div><div class="l">failures across 68 tasks</div></div>
+        <div class="p"><div class="n mono good">85.4%</div><div class="l">fixed automatically</div></div>
+        <div class="p"><div class="n mono">1 of 15</div><div class="l">"can't do that" patches worked — the weak spot</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15 — hard breakdown -->
+  <div class="slide">
+    <div class="kicker">14 · Results — hard tasks</div>
+    <h2 class="slide-title">50 hard tasks: where the fixes land</h2>
+    <div class="slide-body">
+      <div class="two-col">
+        <div class="chart-block">
+          <h3>How each failure got handled</h3>
+          <div id="chart-hard-strategy"></div>
+        </div>
+        <div class="chart-block">
+          <h3>...and whether it actually worked</h3>
+          <div class="legend"><span class="item"><span class="sw resolved"></span>fixed</span><span class="item"><span class="sw gaveup"></span>gave up</span></div>
+          <div id="chart-hard-outcome"></div>
+        </div>
+      </div>
+      <div class="panel-stats">
+        <div class="p"><div class="n mono">115</div><div class="l">failures across 43 tasks</div></div>
+        <div class="p"><div class="n mono good">97.4%</div><div class="l">fixed automatically</div></div>
+        <div class="p"><div class="n mono">33 of 43</div><div class="l">tasks used every one of the 3 tries allowed</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16 — Takeaways -->
+  <div class="slide">
+    <div class="kicker">15 · Takeaways</div>
+    <h2 class="slide-title">What the numbers actually say</h2>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">→</span><div><b>The loop fixes 85–97% of what it diagnoses</b> — from a short list of ideas per failure, every one independently verified.<span class="sub">The remaining gap is mostly one narrow, known weak spot, not broad unreliability.</span></div></li>
+        <li><span class="mk">→</span><div><b>The "object can't do that" weak spot depends heavily on the task mix</b><span class="sub">Only 1 of 15 such patches worked on everyday tasks (driven by "go to sleep"-type tasks), but 13 of 14 worked on the hard set, which doesn't include that task type at all.</span></div></li>
+        <li><span class="mk">→</span><div><b>The 3-try limit is a real ceiling, not a formality</b><span class="sub">33 of 43 repaired hard tasks used all three tries — some recovery headroom is being traded for that tighter limit.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 17 — closing -->
+  <div class="slide">
+    <div class="kicker">Closing</div>
+    <h2 class="slide-title">The short version</h2>
+    <div class="slide-body">
+      <ul class="big-list">
+        <li><span class="mk">1</span><div>Most failures aren't random — the system can trace almost all of them back to one exact, identifiable cause.</div></li>
+        <li><span class="mk">2</span><div>A language model supplies judgment about what makes sense; formal rules supply the guarantee that only a genuinely valid fix ever gets used — and that guarantee holds for over 99% of every repair attempted.</div></li>
+        <li><span class="mk">3</span><div>That combination is what turns a plan that breaks constantly into one that recovers on its own, in 9 out of 10 cases, across two very different task sets.</div></li>
+      </ul>
+      <p class="dek" style="margin-top:20px">A companion dashboard breaks every chart here down further, with the full underlying counts.</p>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="navbtn" id="prevBtn" aria-label="Previous slide">‹</button>
+    <div class="dots" id="dots"></div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="counter mono" id="counter">1 / 17</span>
+      <button class="navbtn" id="nextBtn" aria-label="Next slide">›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const dotsEl = document.getElementById("dots");
+  const counterEl = document.getElementById("counter");
+  let i = 0;
+
+  slides.forEach((_, idx) => {
+    const b = document.createElement("button");
+    b.className = "dot" + (idx === 0 ? " on" : "");
+    b.setAttribute("aria-label", "Go to slide " + (idx + 1));
+    b.addEventListener("click", () => go(idx));
+    dotsEl.appendChild(b);
+  });
+  const dots = Array.from(dotsEl.children);
+
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
+    dots.forEach((d, idx) => d.classList.toggle("on", idx === i));
+    counterEl.textContent = (i + 1) + " / " + slides.length;
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", () => go(i - 1));
+  document.getElementById("nextBtn").addEventListener("click", () => go(i + 1));
+  document.getElementById("deck").addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go(i + 1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); go(i - 1); }
+  });
+  window.addEventListener("keydown", (e) => {
+    if (document.activeElement === document.body) {
+      if (e.key === "ArrowRight") go(i + 1);
+      if (e.key === "ArrowLeft") go(i - 1);
+    }
+  });
+  document.getElementById("deck").focus();
+
+  // ── bar charts ──────────────────────────────────────────────────────
+  function el(tag, cls, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function barChart(container, obj) {
+    const entries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+    const max = Math.max(...entries.map(e => e[1]));
+    entries.forEach(([label, val]) => {
+      const row = el("div", "bar-row");
+      row.appendChild(el("span", "blabel", label));
+      const track = el("span", "btrack");
+      const fill = el("span", "bfill");
+      fill.style.width = Math.max(2, (val / max) * 100) + "%";
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el("span", "bval mono", val));
+      container.appendChild(row);
+    });
+  }
+  function stackChart(container, strategyOutcome) {
+    const entries = Object.entries(strategyOutcome)
+      .map(([k, v]) => [k, (v.resolved || 0) + (v.gave_up || 0), v])
+      .sort((a, b) => b[1] - a[1]);
+    entries.forEach(([label, total, v]) => {
+      const row = el("div", "bar-row");
+      row.appendChild(el("span", "blabel", label));
+      const track = el("span", "btrack");
+      const r = v.resolved || 0, g = v.gave_up || 0;
+      if (r) { const s = el("span", "seg resolved"); s.style.width = (r / total * 100) + "%"; track.appendChild(s); }
+      if (g) { const s = el("span", "seg gaveup"); s.style.width = (g / total * 100) + "%"; track.appendChild(s); }
+      row.appendChild(track);
+      row.appendChild(el("span", "bval mono", total));
+      container.appendChild(row);
+    });
+  }
+
+  const STRAT_LABELS = {
+    reconstruct: "Rebuild sequence",
+    insert_prep: "Add missing step",
+    local: "Patch this action",
+    already_satisfied: "Already done",
+    wrong_action: "Swap the action",
+  };
+  function relabel(obj) {
+    const out = {};
+    Object.entries(obj).forEach(([k, v]) => { out[STRAT_LABELS[k] || k] = v; });
+    return out;
+  }
+
+  barChart(document.getElementById("chart-main-strategy"), relabel({
+    "reconstruct": 39, "insert_prep": 37, "local": 15, "already_satisfied": 3, "wrong_action": 2
+  }));
+  stackChart(document.getElementById("chart-main-outcome"), relabel({
+    "reconstruct": {resolved: 39, gave_up: 0},
+    "insert_prep": {resolved: 37, gave_up: 0},
+    "local": {resolved: 1, gave_up: 14},
+    "already_satisfied": {resolved: 3, gave_up: 0},
+    "wrong_action": {resolved: 2, gave_up: 0},
+  }));
+  barChart(document.getElementById("chart-hard-strategy"), relabel({
+    "insert_prep": 60, "reconstruct": 40, "local": 14, "already_satisfied": 1
+  }));
+  stackChart(document.getElementById("chart-hard-outcome"), relabel({
+    "reconstruct": {resolved: 38, gave_up: 2},
+    "insert_prep": {resolved: 60, gave_up: 0},
+    "already_satisfied": {resolved: 1, gave_up: 0},
+    "local": {resolved: 13, gave_up: 1},
+  }));
+})();
+</script>

@@ -1,0 +1,22 @@
+{
+    "tasks": 48,
+    "attempts_joined": 3,
+    "error_info_files": [
+        "results_hard50_noadapt_a1/gpt-4o-mini-noadapt_hard50_a1/error_info.json",
+        "results_hard50_noadapt_a2/gpt-4o-mini-noadapt_hard50_a2/error_info.json",
+        "results_hard50_noadapt_a3/gpt-4o-mini-noadapt_hard50_a3/error_info.json"
+    ],
+    "first_success_histogram": {
+        "attempt_1": 6,
+        "attempt_2": 1,
+        "attempt_3": 0
+    },
+    "never_succeeded": 41,
+    "pass_at_k": {
+        "pass@1": 12.5,
+        "pass@2": 14.5833,
+        "pass@3": 14.5833
+    },
+    "early_stop_attempts_consumed": 131,
+    "early_stop_mean_attempts_per_task": 2.7292
+}
