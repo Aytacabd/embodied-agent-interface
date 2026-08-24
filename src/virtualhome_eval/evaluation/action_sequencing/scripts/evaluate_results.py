@@ -233,121 +233,129 @@ def evaluate_results(args):
 
             if not format_error and not hallucination_error and not parameter_error:
                 logger.info(f"{actions=}")
-                if actions == gd_actions:
-                    all_executable_plan += 1
-                else:
-                    motion_planner.reset()
-                    exe_flag = True
-                    history_actions = []
-                    executable = True
-                    error_action = None
-                    prev_env_states = copy.deepcopy(motion_planner.env_state)
-                    history_env_states = [copy.deepcopy(prev_env_states.to_dict())]
-                    if len(actions) == 0:
-                        exe_flag = False
-                        executable = False
-                    for action in actions:
-                        logger.info(f"Current {action=}")
-                        history_env_states_cp = copy.deepcopy(history_env_states)
-                        exe_flag, my_info = motion_planner.my_execute_primitive_action_eval(
-                            action
+                # NOTE: originally there was a shortcut here — if the
+                # predicted plan was byte-identical to the gold plan, it
+                # skipped straight to 'all_executable_plan += 1' and never
+                # ran scoring at all, so an exact-match plan never got
+                # credited in error_info or all_correct_plan (silently
+                # absent from both, not marked as failed — a real
+                # undercount, confirmed on both the hard-50 and everyday
+                # sets). Fix: always run the real scoring path below,
+                # since an exact match is guaranteed correct anyway
+                # (same actions + deterministic sim = gold's outcome,
+                # and gold is verified to satisfy its own goal).
+                motion_planner.reset()
+                exe_flag = True
+                history_actions = []
+                executable = True
+                error_action = None
+                prev_env_states = copy.deepcopy(motion_planner.env_state)
+                history_env_states = [copy.deepcopy(prev_env_states.to_dict())]
+                if len(actions) == 0:
+                    exe_flag = False
+                    executable = False
+                for action in actions:
+                    logger.info(f"Current {action=}")
+                    history_env_states_cp = copy.deepcopy(history_env_states)
+                    exe_flag, my_info = motion_planner.my_execute_primitive_action_eval(
+                        action
+                    )
+                    if not exe_flag:
+                        logger.info(f"Current action {action} not executable.")
+                        logger.info(f"{my_info=}")
+                        error_action = action
+                        formal_info_checker = TemporalOrderChecker(
+                            my_info, history_env_states_cp
                         )
-                        if not exe_flag:
-                            logger.info(f"Current action {action} not executable.")
-                            logger.info(f"{my_info=}")
-                            error_action = action
-                            formal_info_checker = TemporalOrderChecker(
-                                my_info, history_env_states_cp
-                            )
-                            formal_info = formal_info_checker.run_checker()
-                            failed_error_code = formal_info.get_error_type()
-                            ADDITIONAL_ERRROR_CODE = 4
-                            if failed_error_code not in error_code_to_number:
-                                # TemporalOrderChecker cannot classify some
-                                # failures (e.g. PUTOBJBACK with empty hands
-                                # yields None) — count as UNKNOWN_ERROR
-                                # instead of aborting the whole evaluation.
-                                logger.info(
-                                    f"Unclassified error code {failed_error_code} "
-                                    f"for {action} — counting as UNKNOWN_ERROR"
-                                )
-                                failed_error_code = 5
-                            error_code_to_number[failed_error_code] += 1
+                        formal_info = formal_info_checker.run_checker()
+                        failed_error_code = formal_info.get_error_type()
+                        ADDITIONAL_ERRROR_CODE = 4
+                        if failed_error_code not in error_code_to_number:
+                            # TemporalOrderChecker cannot classify some
+                            # failures (e.g. PUTOBJBACK with empty hands
+                            # yields None) — count as UNKNOWN_ERROR
+                            # instead of aborting the whole evaluation.
                             logger.info(
-                                f"Encounter error: {error_code_to_type[failed_error_code]}"
+                                f"Unclassified error code {failed_error_code} "
+                                f"for {action} — counting as UNKNOWN_ERROR"
                             )
-                            if failed_error_code != ADDITIONAL_ERRROR_CODE:
-                                if failed_error_code == 0:
-                                    logger.info(
-                                        f"Current action {action} has wrong order error on task {file_id}."
-                                    )
-                                executable = False
-                                history_actions_cp = copy.deepcopy(history_actions)
-                                logger.info(f"{failed_error_code=}")
-                                logger.info(f"{history_actions_cp=}")
-                                break
-                        else:
-                            logger.info(f"Current action {action} executable.")
-                            history_actions.append(action)
-                            new_env_state = copy.deepcopy(
-                                motion_planner.env_state.to_dict()
-                            )
-                            history_env_states.append(new_env_state)
-
-                    if executable:
-                        all_executable_plan += 1
-                        logger.info("Executable!")
-                        error_info[file_id] = {
-                            "executable": executable,
-                            "actions": actions,
-                            "error_type": None,
-                            "error_action": None,
-                        }
+                            failed_error_code = 5
+                        error_code_to_number[failed_error_code] += 1
+                        logger.info(
+                            f"Encounter error: {error_code_to_type[failed_error_code]}"
+                        )
+                        if failed_error_code != ADDITIONAL_ERRROR_CODE:
+                            if failed_error_code == 0:
+                                logger.info(
+                                    f"Current action {action} has wrong order error on task {file_id}."
+                                )
+                            executable = False
+                            history_actions_cp = copy.deepcopy(history_actions)
+                            logger.info(f"{failed_error_code=}")
+                            logger.info(f"{history_actions_cp=}")
+                            break
                     else:
-                        error_info[file_id] = {
-                            "executable": executable,
-                            "actions": actions,
-                            "error_type": error_code_to_type[failed_error_code].lower(),
-                            "error_action": error_action,
-                        }
+                        logger.info(f"Current action {action} executable.")
+                        history_actions.append(action)
+                        new_env_state = copy.deepcopy(
+                            motion_planner.env_state.to_dict()
+                        )
+                        history_env_states.append(new_env_state)
 
-                    (
-                        node_match_num,
-                        edge_match_num,
-                        action_match_num,
-                        all_pred_success,
-                        _,
-                        _,
-                        _,
-                    ) = scene_evaluate_wID(
-                        motion_planner.env_state.to_dict(),
-                        gold_node_goals,
-                        gold_edge_goals,
-                        motion_planner.acting_char_id,
-                        action_seq=history_actions,
-                        action_goals=gold_action_goals,
-                    )
-                    logger.info(
-                        f"Predicted: {node_match_num=}, {edge_match_num=}, {action_match_num=}"
-                    )
-                    logger.info(
-                        f"Gold: {len(gold_node_goals)=}, {len(gold_edge_goals)=}, {len(gold_action_goals)=}"
-                    )
-                    logger.info(f"Goals all satisfied: {all_pred_success=}")
-                    all_matched_node += node_match_num
-                    all_matched_edge += edge_match_num
-                    all_matched_action += action_match_num
-                    all_matched_all += node_match_num + edge_match_num + action_match_num
+                if executable:
+                    all_executable_plan += 1
+                    logger.info("Executable!")
+                    error_info[file_id] = {
+                        "executable": executable,
+                        "actions": actions,
+                        "error_type": None,
+                        "error_action": None,
+                    }
+                else:
+                    error_info[file_id] = {
+                        "executable": executable,
+                        "actions": actions,
+                        "error_type": error_code_to_type[failed_error_code].lower(),
+                        "error_action": error_action,
+                    }
 
-                    if all_pred_success:
-                        all_correct_plan += 1
-                        logger.info("EVERYTHING SUCCEED!")
-                    # Persist per-task goal success so best-of-k attempt
-                    # sweeps can be joined offline (first-success attempt,
-                    # pass@k). Records from the format/hallucination/
-                    # parameter branches never get this key — those are
-                    # failures by definition (treated as False in the join).
-                    error_info[file_id]["goals_satisfied"] = bool(all_pred_success)
+                (
+                    node_match_num,
+                    edge_match_num,
+                    action_match_num,
+                    all_pred_success,
+                    _,
+                    _,
+                    _,
+                ) = scene_evaluate_wID(
+                    motion_planner.env_state.to_dict(),
+                    gold_node_goals,
+                    gold_edge_goals,
+                    motion_planner.acting_char_id,
+                    action_seq=history_actions,
+                    action_goals=gold_action_goals,
+                )
+                logger.info(
+                    f"Predicted: {node_match_num=}, {edge_match_num=}, {action_match_num=}"
+                )
+                logger.info(
+                    f"Gold: {len(gold_node_goals)=}, {len(gold_edge_goals)=}, {len(gold_action_goals)=}"
+                )
+                logger.info(f"Goals all satisfied: {all_pred_success=}")
+                all_matched_node += node_match_num
+                all_matched_edge += edge_match_num
+                all_matched_action += action_match_num
+                all_matched_all += node_match_num + edge_match_num + action_match_num
+
+                if all_pred_success:
+                    all_correct_plan += 1
+                    logger.info("EVERYTHING SUCCEED!")
+                # Persist per-task goal success so best-of-k attempt
+                # sweeps can be joined offline (first-success attempt,
+                # pass@k). Records from the format/hallucination/
+                # parameter branches never get this key — those are
+                # failures by definition (treated as False in the join).
+                error_info[file_id]["goals_satisfied"] = bool(all_pred_success)
 
             else:
                 if format_error:

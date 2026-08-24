@@ -1,0 +1,127 @@
+{
+  "total_diagnoses": 111,
+  "tasks_total": 50,
+  "tasks_with_at_least_one_diagnosis": 43,
+  "tasks_with_zero_diagnosis_clean_first_try": 7,
+  "resolved_count": 109,
+  "gave_up_count": 2,
+  "resolve_rate_pct": 98.2,
+  "by_error_type": {
+    "MISSING_STEP": 65,
+    "WRONG_TEMPORAL_ORDER": 33,
+    "AFFORDANCE_ERROR": 13
+  },
+  "by_replan_strategy": {
+    "insert_prep": 52,
+    "reconstruct": 45,
+    "local": 13,
+    "already_satisfied": 1
+  },
+  "by_outcome": {
+    "resolved": 109,
+    "gave_up": 2
+  },
+  "by_failed_verb": {
+    "PUTBACK": 38,
+    "GRAB": 26,
+    "PUTIN": 26,
+    "SWITCHON": 6,
+    "SWITCHOFF": 6,
+    "CLOSE": 5,
+    "OPEN": 4
+  },
+  "by_unsatisfied_need": {
+    "next_to_target": 50,
+    "obj_not_inside_closed_container": 37,
+    "next_to_obj": 17,
+    "target_open_or_not_openable": 17,
+    "holds_obj": 15,
+    "not_both_hands_full": 7
+  },
+  "strategy_outcome_breakdown": {
+    "reconstruct": {
+      "resolved": 43,
+      "gave_up": 2
+    },
+    "insert_prep": {
+      "resolved": 52
+    },
+    "already_satisfied": {
+      "resolved": 1
+    },
+    "local": {
+      "resolved": 13
+    }
+  },
+  "errtype_outcome_breakdown": {
+    "MISSING_STEP": {
+      "resolved": 63,
+      "gave_up": 2
+    },
+    "WRONG_TEMPORAL_ORDER": {
+      "resolved": 33
+    },
+    "AFFORDANCE_ERROR": {
+      "resolved": 13
+    }
+  },
+  "diagnoses_per_task_histogram": {
+    "3": 28,
+    "2": 12,
+    "1": 3
+  },
+  "max_diagnoses_single_task": 3,
+  "_raw_diagnoses_sample": [
+    {
+      "task": "9001_1",
+      "error_type": "MISSING_STEP",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "not_both_hands_full"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "OPEN"
+    },
+    {
+      "task": "9001_1",
+      "error_type": "WRONG_TEMPORAL_ORDER",
+      "replan_strategy": "insert_prep",
+      "unsatisfied_needs": [
+        "next_to_obj"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "CLOSE"
+    },
+    {
+      "task": "9002_1",
+      "error_type": "MISSING_STEP",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "not_both_hands_full"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "OPEN"
+    },
+    {
+      "task": "9002_1",
+      "error_type": "MISSING_STEP",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "not_both_hands_full",
+        "obj_not_inside_closed_container"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "GRAB"
+    },
+    {
+      "task": "9002_1",
+      "error_type": "WRONG_TEMPORAL_ORDER",
+      "replan_strategy": "insert_prep",
+      "unsatisfied_needs": [
+        "next_to_obj"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "CLOSE"
+    }
+  ]
+}

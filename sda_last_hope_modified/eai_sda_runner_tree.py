@@ -165,6 +165,8 @@ RULE 4 — Devices are plugged in by default. Only use PLUGIN if the scene expli
 
 RULE 5 — Max 2 objects held at once. DROP or PUTBACK before grabbing a third.
 
+RULE 6 — The character is NEVER an action argument. A goal like "character is LYING" or "character is ON bed" is achieved by targeting the FURNITURE: LIE ["bed_name", "bed_id"] / SIT ["chair_name", "chair_id"]. NEVER write SIT, LIE, GRAB or PUTBACK with the character as the object — a character cannot be sat on, lain on, grabbed or placed.
+
 Output ONLY the JSON, nothing else"""
 
 SUGGESTION_PROMPT = """You are fixing a failed action in a VirtualHome robot plan.
@@ -609,14 +611,49 @@ def build_id_aware_goal_strings(motion_planner, node_goals, edge_goals, action_g
     )
 
 
+def _character_target_actions(parsed) -> list:
+    """
+    Action names (upper-cased, deduped, order preserved) whose argument list
+    targets the acting character itself. Handles both the combined token
+    format ("character_65") and the raw interleaved format (["character",
+    "65"]) so it works on normalized plans AND on raw parse_llm_output
+    results (for _build_retry_prompt).
+    """
+    hits = []
+    for item in (parsed or []):
+        for action, args in item.items():
+            if not isinstance(args, list):
+                continue
+            for tok in args:
+                t = str(tok).strip().lower()
+                if t == "character" or re.match(r"^character(_\d+)+$", t):
+                    au = action.upper()
+                    if au not in hits:
+                        hits.append(au)
+                    break
+    return hits
+
+
 def parse_and_validate(raw: str, relevant_name_to_id: dict,
-                       goal_edge_relations: dict = None):
+                       goal_edge_relations: dict = None,
+                       char_guard: str = None):
     """
     goal_edge_relations: {(from_id, to_id): relation_type} built from the
     task's edge goals. PUTBACK creates an ON edge and PUTIN an INSIDE edge,
     and the evaluator matches edge goals EXACTLY — so when a goal exists for
     the (obj, target) pair, the placing action is corrected to whichever one
     produces the goal's relation.
+
+    char_guard: the acting character is never a valid object argument — no
+    gold plan targets it (self-actions STANDUP/SLEEP/WAKEUP are zero-arg)
+    and the executor can never satisfy sittable/lieable/grabbable on a
+    character node, making every such action structurally unrepairable
+    (12 of the 14 everyday local-strategy give-ups were LIE/SIT/GRAB on
+    character_65). "reject" returns None so the caller can issue a
+    corrective retry that names the mistake; "strip" removes the offending
+    actions and keeps the rest (for retries and repair subsequences, where
+    failing the whole parse would be worse than today's eventual drop);
+    None preserves the old unguarded behavior.
     """
     parsed = parse_llm_output(raw)
     if not parsed:
@@ -649,6 +686,26 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict,
             else:
                 normalized.append({action: args})
     parsed = normalized
+
+    if char_guard:
+        offending = _character_target_actions(parsed)
+        if offending:
+            if char_guard == "reject":
+                logger.warning(
+                    f"  🚷 Character used as object of {offending} — "
+                    f"rejecting plan for corrective retry"
+                )
+                return None
+            logger.warning(
+                f"  🚷 Character used as object of {offending} — "
+                f"stripping those actions"
+            )
+            parsed = [
+                item for item in parsed
+                if not _character_target_actions([item])
+            ]
+            if not parsed:
+                return None
 
     CONTAINER_OBJECTS = {
         "washing_machine", "fridge", "freezer", "dishwasher",
@@ -739,6 +796,21 @@ def _build_retry_prompt(base_prompt: str, raw_output: str) -> str:
     """
     ZERO_ARG = {"STANDUP", "SLEEP", "WAKEUP"}
     parsed = parse_llm_output(raw_output) or []
+
+    char_verbs = _character_target_actions(parsed)
+    if char_verbs:
+        verbs_str = " and ".join(char_verbs)
+        return base_prompt + (
+            f"\n\nIMPORTANT: your previous response used the character itself"
+            f" as the object of {verbs_str}. The character is NEVER a valid"
+            " action argument — a character cannot be sat on, lain on,"
+            " grabbed or placed. A goal like \"character is LYING\" or"
+            " \"character is ON bed\" is achieved by targeting the FURNITURE"
+            " named in the goals, e.g. \"LIE\": [\"bed_name\", \"bed_id\"]."
+            " Rewrite the plan with the correct objects. Respond with ONE"
+            " complete, syntactically valid JSON object and nothing else."
+        )
+
     empty_arg_verbs = []
     for item in parsed:
         for verb, args in item.items():
@@ -1509,14 +1581,20 @@ class EAISDATreeRunner:
         raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
         logger.info(f"  Initial plan: {raw_output}")
 
-        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                     char_guard="reject")
         if not actions:
             # One corrective retry — temp-0 re-asks must change the prompt or
             # they reproduce the same broken output verbatim.
             logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
             retry_prompt = _build_retry_prompt(base_prompt, raw_output)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
-            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+            # "strip" on the retry: if the model repeats the character
+            # mistake, salvage the rest of the plan instead of failing the
+            # whole parse — no worse than the eventual repair-loop drop,
+            # and it doesn't burn replan budget on an unfixable action.
+            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                         char_guard="strip")
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0
@@ -1912,7 +1990,8 @@ class EAISDATreeRunner:
                 # may reference an object outside the goal diff
                 wrong_map = dict(full_name_to_id)
                 wrong_map.update(relevant_name_to_id)
-                new_subseq = parse_and_validate(wrong_raw, wrong_map, goal_edge_relations)
+                new_subseq = parse_and_validate(wrong_raw, wrong_map, goal_edge_relations,
+                                                char_guard="strip")
 
                 if new_subseq:
                     # Never re-accept the action just diagnosed as wrong —
@@ -1935,7 +2014,8 @@ class EAISDATreeRunner:
                 else:
                     fallback_count += 1
                     fallback_raw = self.llm.call(base_prompt)
-                    new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id, goal_edge_relations)
+                    new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id, goal_edge_relations,
+                                                    char_guard="strip")
                     if new_subseq:
                         current_plan_eai = new_subseq
                         raw_output = plan_to_json_str(current_plan_eai)
@@ -2181,12 +2261,14 @@ class NoAdaptRunner(EAISDATreeRunner):
         raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
         logger.info(f"  Initial plan: {raw_output}")
 
-        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                     char_guard="reject")
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
             retry_prompt = _build_retry_prompt(base_prompt, raw_output)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
-            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+            actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                         char_guard="strip")
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0

@@ -123,16 +123,14 @@ class NoAdaptRunner(core.EAISDATreeRunner):
         raw_output = self.llm.call(base_prompt, label="INITIAL PLAN")
         core.logger.info(f"  Initial plan: {raw_output}")
 
-        actions = core.parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+        actions = core.parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                          char_guard="reject")
         if not actions:
             core.logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
-            retry_prompt = base_prompt + (
-                "\n\nIMPORTANT: your previous response was invalid or truncated."
-                " Respond with ONE complete, syntactically valid JSON object and"
-                " nothing else. If the plan is long, keep it complete anyway."
-            )
+            retry_prompt = core._build_retry_prompt(base_prompt, raw_output)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
-            actions = core.parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations)
+            actions = core.parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
+                                              char_guard="strip")
         if not actions:
             core.logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0

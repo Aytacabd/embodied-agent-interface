@@ -1,0 +1,11 @@
+label,model_name,n_tasks,task_success_rate,state_goal,relation_goal,total_goal,execution_success_rate
+everyday no-adapt a1,gpt-4o-mini-noadapt_main_a1,342,73.6842,90.8824,73.1544,80.625,93.9
+everyday no-adapt a2,gpt-4o-mini-noadapt_main_a2,342,75.4386,86.4706,65.7718,76.875,90.4
+everyday no-adapt a3,gpt-4o-mini-noadapt_main_a3,342,73.0994,83.2353,72.4832,77.125,91.5
+everyday with-repair,gpt-4o-mini-sda-tree-final-charguard-full,342,94.152,97.6471,85.5705,93.375,98.5
+hard no-adapt a1,gpt-4o-mini-noadapt_hard50_a1,50,20.0,87.1951,13.0682,48.8235,96.0
+hard no-adapt a2,gpt-4o-mini-noadapt_hard50_a2,50,16.0,82.9268,10.7955,45.5882,94.0
+hard no-adapt a3,gpt-4o-mini-noadapt_hard50_a3,50,12.0,82.9268,12.5,46.4706,94.0
+hard budget=3,gpt-4o-mini-sda-tree_hard50,50,58.0,77.439,77.2727,77.3529,58.0
+hard budget=5,gpt-4o-mini-sda-tree_hard50_r5,50,80.0,89.0244,89.7727,89.4118,80.0
+hard budget=10,gpt-4o-mini-sda-tree_hard50_r10,50,96.0,95.7317,96.5909,96.1765,96.0

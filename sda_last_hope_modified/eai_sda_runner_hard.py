@@ -60,7 +60,12 @@ core.TASK_DICT_PATH = osp.join(HARD_TASKS_DIR, "task_state_LTL_formula_accurate.
 core.ID2TASK_PATH = osp.join(HARD_TASKS_DIR, "id2task.json")
 core.MODEL = os.environ.get("HARD_MODEL", core.MODEL)
 core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50"
-core.MAX_REPLAN = 3
+_max_replan_override = os.environ.get("HARD_MAX_REPLAN")
+core.MAX_REPLAN = int(_max_replan_override) if _max_replan_override else 3
+if _max_replan_override:
+    # Distinct tag whenever the budget is overridden, so an r5 run can never
+    # resume-collide with (or silently overwrite) the r3 baseline's output.
+    core.MODEL_NAME += f"_r{core.MAX_REPLAN}"
 
 # ── Repeat-run tagging (T stays 0 — unlike no-adapt's best-of-k, this is
 # NOT resampling; it's checking SDA's own run-to-run stability, since the
@@ -68,7 +73,7 @@ core.MAX_REPLAN = 3
 # output (…_hard50_a<n>) so k runs coexist instead of resume-skipping. ─────
 _attempt = os.environ.get("ATTEMPT")
 if _attempt:
-    core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50_a{_attempt}"
+    core.MODEL_NAME += f"_a{_attempt}"
 core.OUTPUT_DIR = os.environ.get(
     "HARD_OUTPUT_DIR",
     osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),

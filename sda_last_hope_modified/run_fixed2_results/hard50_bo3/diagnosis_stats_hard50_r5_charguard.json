@@ -1,0 +1,133 @@
+{
+  "total_diagnoses": 140,
+  "tasks_total": 50,
+  "tasks_with_at_least_one_diagnosis": 40,
+  "tasks_with_zero_diagnosis_clean_first_try": 10,
+  "resolved_count": 129,
+  "gave_up_count": 11,
+  "resolve_rate_pct": 92.1,
+  "by_error_type": {
+    "MISSING_STEP": 76,
+    "WRONG_TEMPORAL_ORDER": 52,
+    "AFFORDANCE_ERROR": 12
+  },
+  "by_replan_strategy": {
+    "reconstruct": 72,
+    "insert_prep": 55,
+    "local": 12,
+    "already_satisfied": 1
+  },
+  "by_outcome": {
+    "resolved": 129,
+    "gave_up": 11
+  },
+  "by_failed_verb": {
+    "GRAB": 39,
+    "PUTBACK": 38,
+    "PUTIN": 34,
+    "OPEN": 11,
+    "CLOSE": 9,
+    "SWITCHON": 4,
+    "DROP": 3,
+    "SWITCHOFF": 2
+  },
+  "by_unsatisfied_need": {
+    "next_to_target": 57,
+    "obj_not_inside_closed_container": 49,
+    "holds_obj": 25,
+    "next_to_obj": 18,
+    "target_open_or_not_openable": 18,
+    "not_both_hands_full": 8,
+    "can_open": 3,
+    "closed": 3
+  },
+  "strategy_outcome_breakdown": {
+    "reconstruct": {
+      "resolved": 64,
+      "gave_up": 8
+    },
+    "insert_prep": {
+      "resolved": 55
+    },
+    "already_satisfied": {
+      "resolved": 1
+    },
+    "local": {
+      "resolved": 9,
+      "gave_up": 3
+    }
+  },
+  "errtype_outcome_breakdown": {
+    "MISSING_STEP": {
+      "resolved": 68,
+      "gave_up": 8
+    },
+    "WRONG_TEMPORAL_ORDER": {
+      "resolved": 52
+    },
+    "AFFORDANCE_ERROR": {
+      "resolved": 9,
+      "gave_up": 3
+    }
+  },
+  "diagnoses_per_task_histogram": {
+    "5": 17,
+    "2": 11,
+    "3": 9,
+    "1": 2,
+    "4": 1
+  },
+  "max_diagnoses_single_task": 5,
+  "_raw_diagnoses_sample": [
+    {
+      "task": "9001_1",
+      "error_type": "MISSING_STEP",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "not_both_hands_full"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "OPEN"
+    },
+    {
+      "task": "9001_1",
+      "error_type": "WRONG_TEMPORAL_ORDER",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "holds_obj"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "DROP"
+    },
+    {
+      "task": "9001_1",
+      "error_type": "WRONG_TEMPORAL_ORDER",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "holds_obj"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "DROP"
+    },
+    {
+      "task": "9001_1",
+      "error_type": "MISSING_STEP",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "not_both_hands_full"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "OPEN"
+    },
+    {
+      "task": "9001_1",
+      "error_type": "WRONG_TEMPORAL_ORDER",
+      "replan_strategy": "reconstruct",
+      "unsatisfied_needs": [
+        "holds_obj"
+      ],
+      "outcome": "resolved",
+      "failed_action_verb": "DROP"
+    }
+  ]
+}
