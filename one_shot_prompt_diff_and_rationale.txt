@@ -1,0 +1,488 @@
+================================================================================
+one_shot.py: ORIGINAL BASELINE vs CURRENT, WITH REASONS (2026-08-25)
+================================================================================
+Baseline source : embodied-agent-interface/embodied-agent-interface@main,
+                   src/virtualhome_eval/evaluation/action_sequencing/
+                   prompts/one_shot.py -- fetched fresh via raw.
+                   githubusercontent.com immediately before this comparison.
+Current source  : the same path in this repo, AFTER the 2026-08-25
+                   executor-verified corrections described in
+                   sdg_pddl_executor_verification.txt (Part 3).
+Baseline: 129 lines. Current: ~189 lines (170 of prompt content + 19 of a
+new explanatory header comment that sits outside the `prompt` string
+itself and is never sent to the LLM).
+
+This file only covers what's DIFFERENT and WHY. For "is each entry actually
+correct against the real executor," see Part 3 of
+sdg_pddl_executor_verification.txt -- that's the audit that produced most
+of the reasoning below.
+
+================================================================================
+PART A -- CHANGES THAT WERE MADE, THEN REVERTED BACK TO BASELINE (2026-08-25)
+================================================================================
+These no longer show up in a diff at all -- current now matches baseline
+exactly on all four, because the intermediate "fix" turned out to be wrong
+once checked against the real executor code, not just the PDDL.
+
+GREET
+    Baseline: (1, [['PERSON']])
+    Was changed to: (1, [[]])
+    Now: (1, [['PERSON']]) -- back to baseline
+    Why reverted: GreetExecutor.check_if_person requires Property.PERSON.
+    The no-precondition version silently dropped a real requirement.
+
+PLUGIN
+    Baseline: (1, [['HAS_PLUG']])
+    Was changed to: (1, [['HAS_PLUG', 'HAS_SWITCH']])
+    Now: (1, [['HAS_PLUG']]) -- back to baseline (comment wording differs
+    cosmetically: "Connect an electrical device to a power source" ->
+    "Plug in an object that has a plug", no functional difference)
+    Why reverted: the OR-with-HAS_SWITCH version matches the PDDL's stated
+    precondition, but PlugExecutor.check_plugable checks HAS_PLUG
+    unconditionally -- no has_switch branch exists in the executor for
+    either plug direction. The PDDL itself doesn't match the executor here;
+    matching the PDDL was the wrong target.
+
+TOUCH
+    Baseline: (1, [[]])
+    Was changed to: (1, [['READABLE']])
+    Now: (1, [[]]) -- back to baseline
+    Why reverted: TouchExecutor.check_reachable checks only proximity and
+    not-inside-a-closed-container. It never checks READABLE. (Contrast:
+    READ's READABLE requirement IS real -- ReadExecutor does check it. The
+    TOUCH addition was made by analogy to READ without checking TOUCH's
+    own executor class.)
+
+PUTOBJBACK
+    Baseline: not present in the supported-actions list at all
+    Was changed to: added, (1, [['GRABBABLE']])
+    Now: removed -- back to baseline (absent)
+    Why reverted: it's a real, dispatched executor action (PutBackExecutor
+    exists), so adding it wasn't wrong on its own terms. But it has a
+    confirmed, still-unfixed gap in sdg.py (missing the remembered-origin
+    and conditional-openness check that PUTBACK/PUTIN both have correctly),
+    and eai_sda_runner_tree.py's SYSTEM_PROMPT already tells the model
+    "NEVER use PUTOBJBACK" -- one_shot.py offering it while SYSTEM_PROMPT
+    banned it was a live contradiction. Resolved toward the ban, since
+    PUTOBJBACK is the less-verified of the two placement mechanisms.
+
+================================================================================
+PART B -- DIFFERENCES THAT STILL STAND, WITH REASONS
+================================================================================
+
+--- B1: structural additions (baseline was incomplete or ambiguous) ---
+
+Node/edge goal format spec
+    Baseline: "object_name is ... (some state)" / "object_name A is ...
+    to object_name B" -- bare class names, no ID.
+    Current: "object_name_object_id is STATE" / "...RELATION to
+    object_name_object_id" -- ID embedded in the described format.
+    Why: this thesis's core contribution is instance-level (not
+    class-level) tracking. Rule 4 (below) instructs the model to use exact
+    object IDs, not just class names -- that instruction is meaningless if
+    the goal-format description the model is shown doesn't itself contain
+    IDs. This change is a prerequisite for Rule 4, not decoration.
+
+OR/AND precondition semantics note
+    Baseline: no explicit statement; the AND-exception for CUT is only
+    implied by the SWITCHON/POUR example paragraph.
+    Current: explicit added note stating multi-property lists are OR
+    UNLESS it's CUT, which is AND.
+    Why: genuine ambiguity in the original -- a reader could easily assume
+    all multi-property lists follow one rule.
+
+SLEEP, WAKEUP added to the supported-actions list
+    Baseline: absent entirely.
+    Current: SLEEP: (0, []), WAKEUP: (0, [])
+    Why: both are real, dispatched executor actions (SleepExecutor,
+    WakeUpExecutor, confirmed against execution.py's Action->Executor
+    dispatch table). Baseline's list was simply incomplete -- any task
+    requiring these actions had no vocabulary for them at all.
+
+--- B2: precondition corrections that are still standing (verified against
+    the executor directly, not just the PDDL) ---
+
+CUT
+    Baseline: EATABLE, CUTABLE (typo -- missing a T)
+    Current: EATABLE, CUTTABLE
+    Why: literal spelling fix; PDDL and the executor both use "cuttable."
+
+PUTIN
+    Baseline: GRABBABLE (obj1), CAN_OPEN (obj2)
+    Current: GRABBABLE (obj1), [] (obj2 -- no static requirement)
+    Why: the real requirement (PutExecutor + _check_puttable, relation=
+    INSIDE branch) is conditional: "open, unless the container isn't
+    openable at all" -- not a flat CAN_OPEN gate, which would incorrectly
+    block PUTIN into non-openable containers. A static property table
+    can't express a conditional like this, so it's correctly left out of
+    the table; the actual dynamic rule lives in Rule 11 instead ("if
+    CLOSED, OPEN it first").
+
+WATCH
+    Baseline: no property requirement
+    Current: LOOKABLE
+    Why: WatchExecutor.check_watchable does require Property.LOOKABLE.
+    Confirmed directly against the executor class, not assumed from the
+    PDDL. Baseline's omission was a real gap.
+
+--- B3: behavioral rules (baseline's "Notice" 1-8 -> current's "Important
+    rules" 1-12) ---
+
+Old Notice 1 (CLOSE reverses OPEN) -> dropped
+    Why: redundant given the property table already states both actions'
+    requirements; the CLOSE/OPEN relationship is implicit in the executor
+    (both dispatch to the same OpenExecutor class with a boolean flag) and
+    doesn't need separate prose.
+
+Old Notice 2 (can't PUTIN character into a room) -> dropped
+    Why: redundant with the unchanged GRABBABLE precondition on PUTIN's
+    first argument -- a room isn't GRABBABLE, so the grammar check already
+    rejects this case without needing a dedicated sentence.
+
+Old Notice 3 (character never an argument) -> Rule 1
+    Why: same content, reworded for clarity. No behavioral change.
+
+Old Notice 4 (action names uppercase, no whitespace) -> dropped
+    Why: purely a formatting convention already implied by every example
+    and the full action list itself being uppercase; not load-bearing.
+
+Old Notice 5 (WALK before acting) -> Rule 2
+    Why: same core rule, but current adds an explicit case the baseline
+    left implicit -- if you WALK to grab a tool, you must WALK BACK to the
+    actual target before using that tool on it. A real gap: a plan that
+    grabs a rag near the sink then WIPEs a counter across the room needs a
+    second WALK, and baseline's phrasing didn't make that clear.
+
+Old Notice 6 (output object name + ID) -> Rule 3
+    Why: current is stricter and more explicit about the exact list shape
+    per argument count (1-object vs 2-object), reducing ambiguity in a
+    detail that directly affects whether the JSON parses correctly.
+
+NEW: Rule 4 (instance-ID discipline)
+    Why: no baseline equivalent. This is the prompt-side half of the
+    thesis's instance-level (not class-level) design -- without it, the
+    model has no signal that it must pick the SPECIFIC goal instance among
+    same-class duplicates rather than any object of that class.
+
+NEW: Rule 5 (PUTBACK/PUTIN goal-relation matching)
+    Why: no baseline equivalent. PUTBACK creates an ON edge, PUTIN creates
+    an INSIDE edge (confirmed in execution.py's PutExecutor, split by a
+    Relation parameter). Baseline's PUTIN had a CAN_OPEN gate that, if
+    read as "always use PUTIN for openable containers," could route a
+    washing-machine task through PUTIN when the goal actually demands an
+    ON relation (PUTBACK) -- an upstream scoring mismatch this rule
+    prevents at the prompt level.
+
+Old Notice 7 (output must not be empty) -> folded into the earlier
+    "Warning: No action requirement does not mean empty output" sentence
+    Why: consolidated rather than dropped; same instruction, said once
+    instead of twice in two different places.
+
+Old Notice 8 (WALK before acting, second copy) -> merged into Rule 2
+    Why: baseline stated this requirement twice (Notice 5 and Notice 8,
+    nearly identically). Current states it once.
+
+NEW: Rule 6 (PLUGIN before SWITCHON if PLUGGED_OUT)
+    Why: no baseline equivalent. SwitchExecutor.check_switchable does
+    require the object not be PLUGGED_OUT for switch-on (confirmed
+    directly). Without this rule, a plan could attempt SWITCHON on an
+    unplugged appliance and fail a precondition the model was never told
+    about.
+
+NEW: Rule 7 (TURNTO before WATCH, LOOKAT, or POINTAT)
+    Why: no baseline equivalent for WATCH/LOOKAT's facing requirement
+    (confirmed: WatchExecutor and LookAtExecutor both check facing).
+    POINTAT was added to this rule on 2026-08-25 specifically because
+    PointAtExecutor = LookAtExecutor (a literal class alias,
+    execution.py:2270) -- POINTAT's real precondition is facing_obj, the
+    same as WATCH/LOOKAT, not proximity.
+
+NEW: Rule 8 (prefer WALK over FIND for navigation)
+    Why: no baseline equivalent. FIND auto-navigates (confirmed via
+    FindExecutor's fallback to a Walk+Find joined executor), so it's
+    functionally redundant with WALK in most cases; this rule steers the
+    model toward the more predictable, explicit choice.
+
+NEW: Rule 9 (holding requirements for DRINK, READ, PUTIN, PUTBACK, WIPE)
+    Why: no baseline equivalent for most of these. As of 2026-08-25, TOUCH
+    was removed from this rule's list (see Part A) since TouchExecutor
+    never actually checks for holding.
+
+NEW: Rule 10 (DROP vs RELEASE distinction)
+    Why: no baseline equivalent. Baseline's action list had RELEASE with
+    a one-line comment and no guidance on when to prefer it over DROP;
+    current makes the distinction (falls to floor vs. stays in current
+    room, both free the hand) and warns against using either as a
+    substitute for PUTIN/PUTBACK/POUR.
+
+NEW: Rule 11 (OPEN a closed container before PUTIN)
+    Why: this is where PUTIN's dropped CAN_OPEN table entry (see B2) is
+    actually enforced -- as a dynamic, state-dependent rule rather than a
+    static property gate, matching what _check_puttable's relation==
+    INSIDE branch actually checks in the executor.
+
+NEW: Rule 12 (repeated action keys are ordered, not overwritten)
+    Why: no baseline equivalent. The evaluator's load_json_preserving_order
+    function (confirmed present in eval_utils.py) specifically supports
+    this, and a model unaware of it might assume standard JSON dict
+    semantics (last duplicate key wins) and avoid legitimate repeated
+    actions unnecessarily.
+
+--- B4: cosmetic-only (wording/formatting, no behavioral difference) ---
+"Data format" section prose reworded throughout; JSON-formatting
+description tightened into bulleted form; "json" -> "JSON" capitalization
+in three places; example section reworded (same FIND+PUTBACK example,
+clearer object IDs used: "12"/"7" instead of "sink_id"/"cup_id"); an
+explicit closing sentence added ("Only output the JSON dictionary of
+action commands and nothing else."); a colon added after "The current
+environment state is". None of these change what the model is asked to do.
+
+================================================================================
+PART C -- COMPLETENESS BATCH, APPLIED LATER THE SAME DAY (2026-08-25)
+================================================================================
+All four items originally listed here as "not yet acted on" have now been
+applied, in a second, lower-priority batch distinct from Part A/B (those
+fixed active wrong statements or contradictions; these fixed omissions and
+one over-restrictive entry -- none of them were causing wrong guidance,
+just incomplete or slightly narrow guidance):
+
+NEW Rule 13 (free-hand requirement)
+    Why: these actions call _find_free_hand in their respective Executor
+    classes and fail if both hands are full -- confirmed directly, and
+    already the reason sdg.py gained a matching not_both_hands_full
+    requirement on the same actions. Previously the single highest-value
+    gap left in the prompt: an ordinary two-GRAB plan followed by one of
+    them would fail with no warning anywhere in the prompt.
+
+    As first written (2026-08-25) the rule named six actions:
+    "Before OPEN, MOVE, PULL, SQUEEZE, PLUGIN, or PLUGOUT, make sure at
+    least one hand is free. If both hands are full, use DROP or PUTBACK to
+    free a hand first."
+
+    EXTENDED 2026-08-26 to nine, after a full sweep of every Executor class
+    (rather than only the ones already suspected) found three more that
+    call _find_free_hand and were never mentioned in any prompt:
+      - GRAB  (GrabExecutor)  -- SYSTEM_PROMPT's "max 2 held" RULE 5 covered
+        this case; one_shot.py had no equivalent at all.
+      - PUSH  (MoveExecutor)  -- inconsistent omission: MOVE and PULL were
+        already listed, and all three share MoveExecutor. Only the *movable*
+        check is gated by `action_name != "push"`; the free-hand check is
+        not gated at all, so PUSH needs it exactly like its two siblings.
+      - CUT   (CutExecutor)   -- gap created by the sdg.py alignment pass
+        the same day, which added not_both_hands_full to CUT's needs list
+        without a matching prompt-side rule.
+    Current wording: "Before GRAB, OPEN, MOVE, PUSH, PULL, SQUEEZE, PLUGIN,
+    PLUGOUT, or CUT, make sure at least one hand is free. Since you have two
+    hands, this means you can hold at most two objects at once. If both
+    hands are full, use DROP or PUTBACK to free a hand first."
+    The same nine-action list was applied to SYSTEM_PROMPT's RULE 7 so the
+    initial-plan prompt and the repair prompts agree.
+
+Rule 9 extended (CUT's knife requirement)
+    Added: "CUT requires holding a knife-classed tool (e.g., a knife), not
+    just a cuttable food item -- GRAB a knife first, then WALK to the food
+    and CUT it."
+    Why: CutExecutor.check_cuttable checks for "knife" in the class_name
+    of a currently-held object -- entirely separate from the EATABLE/
+    CUTTABLE properties of the target, which the table already covers.
+    Placed in Rule 9 rather than a new rule, matching how WIPE's identical
+    shape of requirement (hold a different object than the target) is
+    already handled there.
+
+SQUEEZE (comment expanded, precondition left as-is)
+    Added to the comment: "(also accepts certain non-clothes items by
+    class name, e.g. sponge, soap, rag, towel, cleaning_solution)"
+    Why: SqueezeExecutor.check_squeezable accepts a hardcoded list of
+    non-clothes classes in addition to the CLOTHES property. The
+    CLOTHES-only entry wasn't wrong, just narrower than what the executor
+    actually allows -- couldn't be cleanly folded into the OR-of-
+    properties table format (these are specific class names, not
+    properties like GRABBABLE/READABLE), so it's expressed as an
+    informational comment instead of a fabricated property.
+
+PUSH (MOVABLE requirement removed)
+    (1, [['MOVABLE']]) -> (1, [[]])
+    Why: MoveExecutor.check_movable explicitly exempts action_name=="push"
+    from the movable-property check -- confirmed directly in the executor
+    code. MOVE and PULL are not exempted and keep MOVABLE; only PUSH's
+    entry changed.
+================================================================================
+
+================================================================================
+PART D -- OVERFITTING CLEANUP (2026-08-25, later same day)
+================================================================================
+Rule 5's PUTIN/PUTBACK fallback and Rule 9's WIPE clause used to enumerate
+specific example object classes as guidance for cases with no governing
+edge goal. Checked against properties_data.json (314 real VirtualHome
+classes, each tagged with real properties):
+- CAN_OPEN: 68 real classes. Rule 5's old container list (fridge,
+  dishwasher, washing_machine, microwave, stove, cabinet, box, bag,
+  trashcan) covered 9 -- about 13%. Missing: freezer, oven, closet,
+  cupboard, kitchen_cabinet, bathroom_cabinet, filing_cabinet,
+  mini-fridge, printer, toilet, dresser, and a whole class of small
+  CAN_OPEN items (books, folders, envelopes, diaries) nothing in the
+  prompt would suggest are openable.
+- SURFACES: 41 real classes. Rule 5's old surface list covered about 8 --
+  roughly 20% -- and two of its terms ("counter", "shelf") don't match
+  real class names at all (the real ones are kitchen_counter/
+  bathroom_counter and bookshelf).
+- Some real classes carry BOTH CAN_OPEN and SURFACES (cabinet, nightstand,
+  desk, bathroom_cabinet, filing_cabinet, kitchen_cabinet, cd_player,
+  dvd_player, stereo, music_stand) -- the old either/or heuristic had no
+  way to express "this could legitimately be either."
+
+More importantly than the coverage gap: neither list was actually
+load-bearing. _check_puttable (execution.py) has no container/surface-
+class check for PUTBACK at all, and PUTIN's only conditional requirement
+(target must be open if openable) is already independently covered by
+Rule 11 regardless of which object it's applied to. WipeExecutor.
+check_wipe has no class check whatsoever on what's held -- any held
+object satisfies it. Both lists were curated illustrations of a decision
+the executor doesn't actually gate on.
+
+Given that, the fix applied was removal, not broadening -- a longer, more
+complete list would still have been an arbitrary sample of a decision
+that mostly doesn't affect executability or scoring, and would have cost
+more prompt space to say the same "roughly nothing" more thoroughly.
+
+Rule 5's third bullet
+    Was: "use PUTIN for enclosed containers such as fridge, dishwasher,
+    washing_machine, microwave, stove, cabinet, box, bag, or trashcan, and
+    PUTBACK for surfaces such as table, counter, desk, shelf, sofa, bench,
+    chair, or nightstand."
+    Now: "use ordinary judgment: PUTIN for enclosed containers, PUTBACK
+    for open surfaces."
+    The first two bullets of Rule 5 (the goal-driven ON/INSIDE matching)
+    were NOT touched -- those are general, load-bearing, and fixed a real
+    upstream scoring bug (PUTBACK creates ON, PUTIN creates INSIDE,
+    scene_evaluate_wID checks edges by exact relation match).
+
+Rule 9's WIPE clause
+    Was: "WIPE requires holding a wiping tool such as a rag, sponge,
+    towel, cloth, napkin, brush, or paper_towel; then WALK to the target
+    surface and WIPE it."
+    Now: "WIPE requires holding any object in hand first; then WALK to
+    the target surface and WIPE it."
+
+Caveat: this is inference from reading execution.py directly (solid
+evidence that these specific lists don't gate executability), not from
+running an eval with and without the old wording and diffing the results.
+No live simulator access existed in this session to confirm zero
+behavioral difference empirically -- worth a real A/B run before treating
+this as fully settled if the eval budget allows for one.
+================================================================================
+
+================================================================================
+PART E -- SYSTEM_PROMPT BROUGHT INTO PARITY (2026-08-25, later same day)
+================================================================================
+one_shot.py is the user-turn message; SYSTEM_PROMPT (defined in
+sda_last_hope_modified/eai_sda_runner_tree.py, not this file) is the
+system-turn message sent alongside it on every LLM call in the pipeline,
+including repair/diagnosis sub-calls. It had NOT been touched during the
+one_shot.py corrections above, and had drifted out of sync as a result:
+
+- RULE 2's fallback had the identical curated container/surface list
+  ("washing_machine, dishwasher, fridge, freezer, microwave, stove,
+  cabinet, box, bag, trashcan" / "table, counter, desk, shelf, nightstand,
+  sofa, bench, chair") as one_shot.py's old Rule 5, third bullet. Same
+  fix applied: replaced with "use ordinary judgment -- PUTIN for enclosed
+  containers, PUTBACK for open surfaces." Same reasoning as Part D:
+  neither PUTBACK nor PUTIN gate on container/surface class in
+  _check_puttable.
+- SYSTEM_PROMPT's RULE 5 ("max 2 objects held, DROP or PUTBACK before a
+  third") does NOT cover the free-hand requirement -- holding exactly 2
+  objects still leaves zero free hands, and OPEN/MOVE/PULL/SQUEEZE/
+  PLUGIN/PLUGOUT all call _find_free_hand and fail with both hands full.
+  Added as new RULE 7, matching one_shot.py's Rule 13.
+- Nothing in SYSTEM_PROMPT covered CUT's knife requirement
+  (CutExecutor.check_cuttable). Added as new RULE 8, matching one_shot.
+  py's Rule 9 extension.
+- Nothing in SYSTEM_PROMPT covered the TURNTO-before-WATCH/LOOKAT/POINTAT
+  requirement at all (one_shot.py's Rule 7 already had this for all
+  three). Added as new RULE 9.
+
+PUTOBJBACK ("NEVER use PUTOBJBACK") and the GREET/PLUGIN/TOUCH-property
+issues did NOT need parallel fixes here: SYSTEM_PROMPT already banned
+PUTOBJBACK before this session touched anything, and it never encoded
+per-action property preconditions (no property table exists in this
+prompt), so there was nothing wrong to revert on those three.
+
+The other three prompt strings in the same file (SUGGESTION_PROMPT,
+WRONG_ACTION_PROMPT, ACTION_GOAL_PROMPT) were read in full and checked
+against the same issues -- none needed changes. SUGGESTION_PROMPT and
+ACTION_GOAL_PROMPT are generic, template-driven meta-prompts with no
+hardcoded action-property claims. WRONG_ACTION_PROMPT was already
+consistent with everything verified this session (correctly bans
+PUTOBJBACK, correctly restricts PUTON to clothing, correctly routes
+liquids through GRAB+POUR) -- it appears to have already absorbed lessons
+from the same iterative failure analysis that produced the rest of this
+system, and needed no correction.
+================================================================================
+
+================================================================================
+PART F -- TASK-FINGERPRINT REMOVAL IN SYSTEM_PROMPT AND WRONG_ACTION_PROMPT
+          (2026-08-25, later same day)
+================================================================================
+Follow-up to Part D's principle (remove benchmark-specific curation, keep
+executor-grounded rules), applied to the two runner-side prompts that still
+carried visible residue of specific failure families. No executor-grounded
+rule was weakened; only the task-shaped phrasing changed.
+
+SYSTEM_PROMPT RULE 2
+    Was: "If an edge goal says 'X is ON to Y', you MUST use PUTBACK -- even
+    if Y is an appliance like a washing_machine." Plus: "NEVER use PUTON
+    with any appliance -- PUTON is only for wearing clothes on your body."
+    Now: the ON->PUTBACK / INSIDE->PUTIN mapping is stated as explicitly
+    class-independent ("The goal relation decides -- never the target's
+    object class"), and the PUTON line states the positive executor truth
+    (PutOnExecutor.check_puton: CLOTHES property, dresses the character)
+    instead of prohibiting one remembered mistake.
+    Why: the washing_machine example and the "any appliance" ban were both
+    written from one failure family (clothes-and-washing-machine tasks).
+    The underlying rules are fully general -- PutExecutor selects the
+    created relation purely by its Relation parameter, and PutOnExecutor
+    never dispatches on "appliance" at all -- so the general statement
+    carries the same information with no benchmark fingerprint.
+
+SYSTEM_PROMPT RULE 4
+    Was: "Devices are plugged in by default. Only use PLUGIN if the scene
+    explicitly shows a device as PLUGGED_OUT. PLUGOUT is rarely needed."
+    Now: "Use PLUGIN only when the current state explicitly shows a device
+    as PLUGGED_OUT (SWITCHON fails on a PLUGGED_OUT device). If the state
+    does not show PLUGGED_OUT, do not add PLUGIN or PLUGOUT."
+    Why: "plugged in by default" and "rarely needed" are statistical claims
+    about the benchmark's scene distribution -- dataset priors, not
+    simulator semantics. The operative instruction (act on the observable
+    PLUGGED_OUT state) survives unchanged and is now justified by the real
+    executor check (SwitchExecutor's PLUGGED_OUT rejection, the same fact
+    behind one_shot.py's Rule 6) rather than by a frequency claim.
+
+WRONG_ACTION_PROMPT
+    Was: a "Common mistakes and corrections" list containing per-task
+    recipes -- "To wash clothes: GRAB <clothes> then PUTIN <clothes>
+    <washing_machine>", "To put food in fridge: GRAB <food> then PUTIN
+    <food> <fridge>", and a water-into-coffee_maker POUR example with
+    concrete IDs -- plus a clothes_pants/washing_machine output example.
+    Now: "General principles for corrections" -- PUTON is CLOTHES-only and
+    never places objects; GRAB then PUTIN for any into-container placement
+    (with OPEN-if-CLOSED added, bringing this prompt into parity with
+    one_shot.py Rule 11 and SYSTEM_PROMPT RULE 3, which it previously
+    lacked); GRAB then PUTBACK for any onto-surface placement; liquids
+    move only via GRAB+POUR into a RECIPIENT; DROP/PUTOBJBACK lines kept
+    as-is (already general). Output example changed to neutral objects
+    (cup into cabinet).
+    Why: the removed lines were solution fragments for specific benchmark
+    task families, harvested from iterative failure analysis (acknowledged
+    in Part E) -- the clearest instance of task-level overfitting anywhere
+    in the prompt stack. Each recipe was an instantiation of a general
+    rule the executor actually enforces, so stating the rule itself keeps
+    the corrective power while removing the memorized answers. One format
+    example is retained because the JSON shape must be demonstrated; a
+    neutral object pair demonstrates it without pointing at any task.
+
+Caveat (same as Part D): this is judged from executor semantics, not from
+an A/B eval of old vs new wording. The repair path is where the removed
+recipes fired, so if repair-success rates drop on the affected task
+families, the general-principle phrasing (not the removal itself) is the
+first thing to revisit.
+================================================================================

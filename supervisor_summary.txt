@@ -1,0 +1,84 @@
+================================================================================
+SUMMARY FOR SUPERVISOR MEETING: sdg.py and one_shot.py (2026-08-25)
+================================================================================
+
+WHAT sdg.py IS AND HOW IT'S BUILT
+----------------------------------
+sdg.py implements the State-Dependency Graph (SDG) from the SDA-Planner
+paper, adapted for VirtualHome instead of the paper's original ALFRED.
+For each of the 42 actions VirtualHome's script language supports, it
+records what state must be true before the action can run (preconditions)
+and what becomes true after (effects).
+
+It's built from the official VirtualHome PDDL domain file as the primary
+source -- a formal specification the benchmark itself ships. Not every
+action VirtualHome actually supports is defined in that PDDL, so the
+remaining ones were modeled from the benchmark's real simulator code
+(execution.py) instead. The key adaptation for this thesis: everything is
+tracked at the object-INSTANCE level (a specific object's ID), not the
+object-CLASS level the original SDA-Planner paper uses -- this matters
+because many VirtualHome tasks have multiple objects of the same class in
+one scene (e.g. two lights), and class-level tracking can't tell them
+apart.
+
+WHAT one_shot.py IS AND HOW IT'S BUILT
+----------------------------------------
+one_shot.py is the prompt sent to the LLM for the Action Sequencing task.
+It starts from the EAI benchmark's official baseline prompt and adds:
+instance-ID discipline (matching the SDG's design), goal-relation-aware
+guidance for object placement, and a set of operational rules refined
+through testing. It has two parts: a table of which properties an object
+needs for each action, and a numbered list of behavioral rules.
+
+THE AUDIT DONE THIS SESSION
+------------------------------
+Every entry in both files was checked twice: once against the literal
+PDDL text, and -- more importantly -- against the actual Python code in
+execution.py, the part of the benchmark that really decides whether an
+action succeeds or fails. The PDDL and the real simulator don't always
+agree with each other, so checking only one of the two isn't enough.
+
+WHAT THAT AUDIT FOUND AND FIXED
+----------------------------------
+Genuine errors (the model was being told something false):
+- The prompt allowed PLUGIN on a device with only a switch and no plug --
+  the simulator rejects this every time, no exceptions.
+- The prompt required a "readable" property for TOUCH -- the simulator
+  never checks this.
+- The prompt was missing a "must be a person" requirement for GREET that
+  the simulator does enforce.
+- sdg.py's own model of POINTAT checked the wrong thing entirely
+  (proximity instead of facing direction).
+
+Real, silent gaps (nothing was false, but something needed was missing):
+- Six actions (OPEN, MOVE, PULL, SQUEEZE, PLUGIN, PLUGOUT) need a free
+  hand in the simulator; nothing told the model this before.
+- CUT requires holding a knife-type object; nothing said so before.
+
+Overfitting risk (removed, not expanded):
+- The prompt had example lists of "typical" containers and surfaces.
+  Checked against VirtualHome's real object list (314 classes), these
+  covered only 13-20% of what actually exists -- narrow enough to be
+  misleading rather than helpful. Replaced with general guidance instead
+  of a longer list, since neither list was actually required by the
+  simulator to begin with.
+
+Consistency:
+- There are two prompt layers sent together on every model call
+  (one_shot.py and a separate SYSTEM_PROMPT). They had drifted out of
+  sync after the first round of fixes; both are now aligned.
+
+WHAT'S HONESTLY STILL OPEN
+-----------------------------
+12 named actions in sdg.py (DROP, GREET, PUTON, PUTOFF, TOUCH, CUT, WATCH,
+SIT, LIE, WALK, RUN, PUTOBJBACK) still have a specific, documented gap
+between what's modeled and what the simulator actually does -- listed
+explicitly in sdg.py's own file header, not hidden. A few similar gaps
+remain in the prompt (e.g. seat capacity limits, door-blocked paths) that
+don't fit the prompt's format cleanly and were judged lower priority.
+
+Everything above is verified by reading the simulator's source code
+directly, not assumed. It has not been confirmed by re-running the actual
+benchmark and comparing scores before and after -- that would be the
+natural next step if there's time for it.
+================================================================================

@@ -125,6 +125,48 @@ EAI_VALID_ACTIONS = {
     "RELEASE", "PLUGIN", "PLUGOUT",
 }
 
+# Brought into parity with one_shot.py's 2026-08-25 corrections (see
+# one_shot_prompt_diff_and_rationale.txt in the repo root for the full
+# executor-level justification behind each of these):
+# - RULE 2's fallback dropped the curated container/surface list (same
+#   overfitting issue as one_shot.py's old Rule 5 -- neither PUTBACK nor
+#   PUTIN actually gate on container/surface class at the executor level;
+#   properties_data.json shows the old list covered ~13-20% of the real
+#   VirtualHome vocabulary).
+# - New RULE 7 (free-hand before OPEN/MOVE/PULL/SQUEEZE/PLUGIN/PLUGOUT):
+#   RULE 5's "max 2 held" doesn't cover this -- holding exactly 2 objects
+#   still leaves zero free hands for these six actions, all of which call
+#   _find_free_hand in execution.py.
+# - New RULE 8 (CUT needs a knife): CutExecutor.check_cuttable requires
+#   holding an object with "knife" in its class_name; nothing in
+#   SYSTEM_PROMPT covered this before.
+# - New RULE 9 (TURNTO before WATCH/LOOKAT/POINTAT): PointAtExecutor =
+#   LookAtExecutor (execution.py:2270, a literal alias), so POINTAT's real
+#   precondition is facing_obj, identical to WATCH/LOOKAT -- previously
+#   this prompt had no facing-related rule at all for any of the three.
+#
+# Overfitting-generalization pass (2026-08-25, later same day): removed
+# task-family fingerprints from SYSTEM_PROMPT and WRONG_ACTION_PROMPT
+# without weakening any executor-grounded rule:
+# - RULE 2: dropped the "washing_machine" example (residue of one failure
+#   family) -- the ON->PUTBACK / INSIDE->PUTIN mapping is now stated as
+#   explicitly class-independent, which is what PutExecutor's Relation
+#   parameter actually implements. The PUTON line is rephrased as what
+#   PutOnExecutor enforces (CLOTHES-only, dresses the character) instead
+#   of the failure-shaped "never with any appliance".
+# - RULE 4: "devices are plugged in by default" was a prior about the
+#   benchmark's scene distribution, not executor truth; rephrased to key
+#   only off the observable PLUGGED_OUT state, with the real executor
+#   reason attached (SwitchExecutor rejects SWITCHON when PLUGGED_OUT).
+# - WRONG_ACTION_PROMPT: the per-task recipes (wash clothes ->
+#   washing_machine, food -> fridge, water -> coffee_maker with concrete
+#   IDs) were solution fragments for specific benchmark task families,
+#   harvested from failure logs. Replaced with the general principles
+#   behind them: PUTIN creates INSIDE / PUTBACK creates ON, OPEN a CLOSED
+#   container before PUTIN (parity with one_shot.py Rule 11 / RULE 3
+#   here), liquids move only via GRAB+POUR into a RECIPIENT. Format
+#   examples now use neutral objects (cup/cabinet). Not A/B-validated
+#   against the old wording -- same caveat as the Part D cleanup.
 SYSTEM_PROMPT = """You are an embodied task planning assistant for a household robot in VirtualHome.
 
 CRITICAL — READ GOALS FIRST:
@@ -151,21 +193,26 @@ Example: WALK dishwasher → OPEN dishwasher → WALK plate → GRAB plate
 RULE 2 — MATCH THE GOAL RELATION (CRITICAL):
 - PUTBACK <object> <target> places the object ON TOP of the target (creates relation ON)
 - PUTIN <object> <target> places the object INSIDE the target (creates relation INSIDE)
-- If an edge goal says "X is ON to Y", you MUST use PUTBACK — even if Y is an appliance like a washing_machine.
-- If an edge goal says "X is INSIDE to Y", you MUST use PUTIN.
-- If no edge goal mentions the pair: use PUTIN for enclosed containers (washing_machine, dishwasher, fridge, freezer, microwave, stove, cabinet, box, bag, trashcan) and PUTBACK for surfaces (table, counter, desk, shelf, nightstand, sofa, bench, chair)
-- NEVER use PUTON with any appliance — PUTON is only for wearing clothes on your body
+- If an edge goal says "X is ON to Y", you MUST use PUTBACK. If it says "X is INSIDE to Y", you MUST use PUTIN. The goal relation decides — never the target's object class.
+- If no edge goal mentions the pair: use ordinary judgment — PUTIN for enclosed containers, PUTBACK for open surfaces
+- PUTON only dresses the character in a CLOTHES item — it never places an object onto another object. To place something onto anything, use PUTBACK.
 
 RULE 3 — GRAB from containers:
 If an object is stored inside a closed container (cabinet, fridge, etc.), you MUST:
 WALK <container> → OPEN <container> → WALK <object> → GRAB <object>
 Never attempt GRAB without first opening the container the object is in.
 
-RULE 4 — Devices are plugged in by default. Only use PLUGIN if the scene explicitly shows a device as PLUGGED_OUT. PLUGOUT is rarely needed.
+RULE 4 — Use PLUGIN only when the current state explicitly shows a device as PLUGGED_OUT (SWITCHON fails on a PLUGGED_OUT device). If the state does not show PLUGGED_OUT, do not add PLUGIN or PLUGOUT.
 
 RULE 5 — Max 2 objects held at once. DROP or PUTBACK before grabbing a third.
 
 RULE 6 — The character is NEVER an action argument. A goal like "character is LYING" or "character is ON bed" is achieved by targeting the FURNITURE: LIE ["bed_name", "bed_id"] / SIT ["chair_name", "chair_id"]. NEVER write SIT, LIE, GRAB or PUTBACK with the character as the object — a character cannot be sat on, lain on, grabbed or placed.
+
+RULE 7 — Before GRAB, OPEN, MOVE, PUSH, PULL, SQUEEZE, PLUGIN, PLUGOUT, or CUT, make sure at least one hand is free. If both hands are full, DROP or PUTBACK first.
+
+RULE 8 — CUT requires holding a knife-classed object (e.g. a knife), not just approaching cuttable food. GRAB a knife first, then WALK to the food and CUT it.
+
+RULE 9 — Before WATCH, LOOKAT, or POINTAT, use TURNTO to face the target first.
 
 Output ONLY the JSON, nothing else"""
 
@@ -182,8 +229,10 @@ Unsatisfied preconditions:
 Generate a SHORT list of corrective actions (2-5 actions) that would fix this error.
 These will be used as candidate nodes in a search tree.
 
+Every argument must be the object name followed by its numeric ID from the scene.
+
 Output ONLY a JSON object with the corrective actions.
-Example: {{"STANDUP": [], "WALK": ["object"], "GRAB": ["object"]}}"""
+Example: {{"STANDUP": [], "WALK": ["cabinet", "1000"], "GRAB": ["cup", "1001"]}}"""
 
 WRONG_ACTION_PROMPT = """You are fixing a VirtualHome robot plan that contains a semantically wrong action.
 
@@ -192,22 +241,20 @@ The following action is WRONG and must be REPLACED:
 
 Reason: {reason}
 
-Common mistakes and corrections:
-- PUTON <appliance> is wrong → use PUTIN <clothes> <appliance> to put clothes inside a machine
-- PUTON should only be used with wearable clothing items (e.g. PUTON clothes_pants)
-- To wash clothes: GRAB <clothes> then PUTIN <clothes> <washing_machine>
-- To put food in fridge: GRAB <food> then PUTIN <food> <fridge>
-- DROP <object> only discards a held object onto the floor — it is almost never the right action
-- PUTOBJBACK is unreliable and must be REPLACED: use PUTBACK <object> <surface> (or PUTIN <object> <container>) with an explicit target
-- To transfer water or another liquid into an appliance or container: GRAB <liquid> then POUR <liquid> <target>
-  Example: {{"GRAB": ["water", "1002"], "POUR": ["water", "1002", "coffee_maker", "290"]}}
+General principles for corrections:
+- PUTON only dresses the character in a CLOTHES item (e.g. PUTON clothes_pants). To place an object into or onto anything, use PUTIN (creates INSIDE) or PUTBACK (creates ON) instead.
+- To place any object inside a container or appliance: GRAB <object> first, then PUTIN <object> <container>. If the container is CLOSED, OPEN it before PUTIN.
+- To place any object onto a surface: GRAB <object> first, then PUTBACK <object> <surface>.
+- To transfer a liquid into a RECIPIENT target: GRAB <liquid> then POUR <liquid> <target>. Never PUTIN or PUTBACK a liquid.
+- DROP <object> only discards a held object onto the floor — never use it to place something at a target.
+- PUTOBJBACK is unreliable and must be REPLACED: use PUTBACK <object> <surface> (or PUTIN <object> <container>) with an explicit target.
 - NEVER output the same wrong action again.
 
 Every argument must be the object name followed by its numeric ID from the scene.
 
 Generate a corrected sequence of 2-6 actions that achieves the same goal correctly.
 Output ONLY a JSON object.
-Example: {{"WALK": ["washing_machine", "1000"], "GRAB": ["clothes_pants", "1001"], "PUTIN": ["clothes_pants", "1001", "washing_machine", "1000"]}}"""
+Example: {{"WALK": ["cabinet", "1000"], "GRAB": ["cup", "1001"], "PUTIN": ["cup", "1001", "cabinet", "1000"]}}"""
 
 ACTION_GOAL_PROMPT = """A VirtualHome robot plan executed with no errors, but the task also requires
 performing this action on some object, and the plan never did it:
@@ -257,14 +304,15 @@ class _OpenAIChatBackend:
         self.client = OpenAI(**kwargs)
 
     def complete(self, model: str, system_prompt: str, user_prompt: str) -> str:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": user_prompt})
         response = self.client.chat.completions.create(
             model=model,
             temperature=TEMPERATURE,
             max_tokens=MAX_TOKENS,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
+            messages=messages,
         )
         return response.choices[0].message.content.strip()
 
@@ -279,8 +327,9 @@ class _GeminiBackend:
     def complete(self, model: str, system_prompt: str, user_prompt: str) -> str:
         import urllib.request
         url = f"{self.base}/models/{model}:generateContent?key={self.api_key}"
+        text = f"{system_prompt}\n\n{user_prompt}" if system_prompt else user_prompt
         payload = json.dumps({
-            "contents": [{"parts": [{"text": system_prompt + "\n\n" + user_prompt}]}],
+            "contents": [{"parts": [{"text": text}]}],
             "generationConfig": {
                 "temperature": TEMPERATURE,
                 "maxOutputTokens": MAX_TOKENS,
@@ -333,12 +382,17 @@ class LLMClient:
     def call(self, user_prompt: str, system_prompt: str = None, label: str = "LLM") -> str:
         """Send one chat request and return the reply text ("" on error).
 
+        system_prompt=None means NO system message is sent — matching the
+        original EAI baseline, which sent one_shot.prompt alone. Callers in
+        the feedback/repair path pass SYSTEM_PROMPT explicitly; the
+        initial-plan and full-replan calls (one_shot-based) stay bare so
+        the baseline comparison attributes gains to the repair loop, not
+        to an enriched initial prompt.
+
         Preserves the pipeline's observable behavior exactly: VERBOSE
         response tracing, optional prompt echoing (SHOW_PROMPTS), wall-time
         logging, and the empty-string error contract.
         """
-        if system_prompt is None:
-            system_prompt = SYSTEM_PROMPT
         sep = "─" * 60
         if VERBOSE and SHOW_PROMPTS:
             print(f"\n{sep}")

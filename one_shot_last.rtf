@@ -1,0 +1,179 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Light;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 prompt = """\
+The task is to guide the robot to take actions from the current state to fulfill some node goals, edge goals, and action goals. The input will be the related objects in the scene, nodes and edges in the current environment, and the desired node goals, edge goals, and action goals. The output should be action commands in JSON format so that after the robot executes the action commands sequentially, the ending environment would satisfy the goals.\
+\
+Data format:\
+Objects in the scene indicates those objects involved in the action execution. Each object is shown with its class name and ID.\
+\
+Nodes and edges in the current environment show the nodes' names, states and properties, and edges in the environment.\
+Nodes follow the format:\
+object_name, states: ..., properties: ...\
+\
+Edges follow the format:\
+object_name A is ... to object_name B\
+\
+Node goals show target object states in the ending environment. They follow the format:\
+object_name_object_id is STATE\
+\
+Edge goals show target relationships of objects in the ending environment. They follow the format:\
+object_name_object_id is RELATION to object_name_object_id\
+\
+Action goals specify the necessary actions you need to include in your predicted action command sequence, and the order they appear in action goals should also be the RELATIVE order they appear in your predicted action command sequence if there are more than one line. Each line in action goals includes one action or more than one actions concatenated by OR. You only need to include ONE of the actions concatenated by OR in the same line.\
+\
+For example, if the action goal is:\
+The following action(s) should be included:\
+GRAB\
+TYPE or TOUCH\
+OPEN\
+------------------------\
+Then your predicted action command sequence should include GRAB, either TYPE or TOUCH, and OPEN. Besides, GRAB should be executed earlier than TYPE or TOUCH, and TYPE or TOUCH should be executed earlier than OPEN.\
+\
+If the action goal is:\
+The following action(s) should be included:\
+There is no action requirement.\
+It means there is no action you have to include in output, and you can use any action to achieve the node goals and edge goals. Warning: No action requirement does not mean empty output. You should always output some actions and their arguments.\
+\
+Action commands include action names and objects. Each action's number of objects is fixed (0, 1, or 2).\
+\
+Required output format:\
+- []: Represents 0 objects.\
+- [object_name, object_id]: Represents 1 object.\
+- [object1_name, object1_id, object2_name, object2_id]: Represents 2 objects.\
+\
+The output must be in JSON format, where:\
+- Dictionary keys are action names.\
+- Dictionary values are lists containing the objects and IDs for the corresponding action.\
+- The order of execution is determined by the order in which the key-value pairs appear in the JSON dictionary.\
+\
+Example:\
+If you want to first FIND the sink and then PUTBACK a cup onto the sink, you should output:\
+\{\
+  "FIND": ["sink", "12"],\
+  "PUTBACK": ["cup", "7", "sink", "12"]\
+\}\
+\
+The object of an action must satisfy the required properties preconditions.\
+\
+For example:\
+- SWITCHON has 1 object. To switch on something, the object should have property HAS_SWITCH.\
+  SWITCHON = ("Switch on", 1, [['HAS_SWITCH']])\
+\
+- POUR has 2 objects. To pour something A into something B, A should be POURABLE or DRINKABLE, and B should be RECIPIENT.\
+  POUR = ("Pour", 2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']])\
+\
+Action Definitions Format:\
+Each action is defined as a combination of:\
+- Action Name (String): a descriptive name for the action\
+- Required Number of Parameters (Integer): the count of parameters needed\
+- Preconditions for Each Object (List of Lists of Strings): property conditions that must be met for each object involved\
+\
+Note: When multiple properties appear in the same inner list (e.g., ['POURABLE', 'DRINKABLE']), the object must have AT LEAST ONE of them (OR semantics). Each inner list corresponds to one object argument. Exception: CUT requires the object to have BOTH EATABLE and CUTTABLE (AND semantics, as noted in its definition).\
+\
+Supported Actions List:\
+CLOSE: (1, [['CAN_OPEN']]) # Change state from OPEN to CLOSED\
+DRINK: (1, [['DRINKABLE', 'RECIPIENT']]) # Consume from an item that is DRINKABLE or is a RECIPIENT\
+FIND: (1, [[]]) # Locate an object; walks to it automatically if not already near (like WALK)\
+WALK: (1, [[]]) # Move towards something\
+GRAB: (1, [['GRABBABLE']]) # Take hold of an item that can be grabbed\
+LOOKAT: (1, [[]]) # Direct your gaze towards something\
+OPEN: (1, [['CAN_OPEN']]) # Open an item that can be opened\
+POINTAT: (1, [[]]) # Point towards something\
+PUTBACK: (2, [['GRABBABLE'], []]) # Place one object back onto a surface/object\
+PUTIN: (2, [['GRABBABLE'], []]) # Insert one object into another (target may be openable or non-openable)\
+RUN: (1, [[]]) # Run towards something\
+SIT: (1, [['SITTABLE']]) # Sit on a suitable object\
+STANDUP: (0, []) # Stand up from a sitting or lying position\
+SWITCHOFF: (1, [['HAS_SWITCH']]) # Turn off an item with a switch\
+SWITCHON: (1, [['HAS_SWITCH']]) # Turn on an item with a switch\
+TOUCH: (1, [[]]) # Physically touch something\
+TURNTO: (1, [[]]) # Turn your body to face something\
+WATCH: (1, [['LOOKABLE']]) # Observe something attentively\
+WIPE: (1, [[]]) # Clean or dry something by rubbing\
+PUTON: (1, [['CLOTHES']]) # Dress oneself with an item of clothing\
+PUTOFF: (1, [['CLOTHES']]) # Remove an item of clothing\
+GREET: (1, [['PERSON']]) # Offer a greeting to a person\
+DROP: (1, [[]]) # Let go of something so it falls\
+READ: (1, [['READABLE']]) # Read text from an object\
+LIE: (1, [['LIEABLE']]) # Lay oneself down on an object\
+POUR: (2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']]) # Pour from A (POURABLE or DRINKABLE) into B (RECIPIENT)\
+PUSH: (1, [[]]) # Exert force on something to move it away from you\
+PULL: (1, [['MOVABLE']]) # Exert force on something to bring it towards you\
+MOVE: (1, [['MOVABLE']]) # Change the location of an object\
+WASH: (1, [[]]) # Clean something by immersing and agitating it in water\
+RINSE: (1, [[]]) # Remove soap from something by applying water\
+SCRUB: (1, [[]]) # Clean something by rubbing it hard with a brush\
+SQUEEZE: (1, [['CLOTHES']]) # Compress clothes to extract liquid (also accepts certain non-clothes items by class name, e.g. sponge, soap, rag, towel, cleaning_solution)\
+PLUGIN: (1, [['HAS_PLUG']]) # Plug in an object that has a plug\
+PLUGOUT: (1, [['HAS_PLUG']]) # Unplug an object that has a plug\
+CUT: (1, [['EATABLE', 'CUTTABLE']]) # Cut some food \'97 object must have BOTH EATABLE and CUTTABLE properties (AND semantics, not OR)\
+EAT: (1, [['EATABLE']]) # Eat some food\
+SLEEP: (0, []) # Go to sleep\
+WAKEUP: (0, []) # Wake up from sleep\
+RELEASE: (1, [[]]) # Drop something inside the current room\
+TYPE: (1, [['HAS_SWITCH']]) # Type on a keyboard\
+\
+Important rules:\
+1. The subject of all actions is the character itself, that is, the robot. Do not include character as any action argument.\
+\
+2. Before applying any action to an object, you should first WALK to that object unless the current state clearly shows that the robot is already NEAR it. If you WALK to pick up a tool and then need to use it on a different object, you must WALK back to that target object before applying the action.\
+\
+3. Every action argument must include both object name and object ID.\
+- For 1-object actions, output exactly: [object_name, object_id]\
+- For 2-object actions, output exactly: [object1_name, object1_id, object2_name, object2_id]\
+- Do not output only object names.\
+- Do not omit IDs.\
+\
+4. When multiple objects share the same class name, use the exact object ID shown in the goals or scene description. Do not substitute a different instance of the same class. Your plan must satisfy the specific goal instances, not just any object of the same class.\
+\
+5. PUTBACK places the object ON TOP of the target (creates relation ON). PUTIN places the object INSIDE the target (creates relation INSIDE). Choose the action that produces the relation required by the edge goals:\
+- If an edge goal says "X is ON to Y", use PUTBACK \'97 even if Y is an appliance such as a washing_machine.\
+- If an edge goal says "X is INSIDE to Y", use PUTIN.\
+- If no edge goal mentions the pair, use ordinary judgment: PUTIN for enclosed containers, PUTBACK for open surfaces.\
+\
+6. Before using SWITCHON on an appliance, ensure it is plugged in. If the object is PLUGGED_OUT, use PLUGIN first, then SWITCHON.\
+\
+7. Before using WATCH, LOOKAT, or POINTAT on an object, you must first use TURNTO to face that object.\
+\
+8. Use WALK for navigation. FIND also navigates to the object (it walks automatically if the robot is not near), but prefer WALK; use FIND when the action goals explicitly require it.\
+\
+9. DRINK and READ require holding the object. PUTIN and PUTBACK require holding the first object. Use WALK + GRAB before these actions when needed. WIPE requires holding any object in hand first; then WALK to the target surface and WIPE it. CUT requires holding a knife-classed tool (e.g., a knife), not just a cuttable food item \'97 GRAB a knife first, then WALK to the food and CUT it.\
+\
+10. DROP and RELEASE both free your hand. Use DROP when you want the object to fall to the floor. Use RELEASE to let go of an object while staying in the current room (no specific surface needed). Never use DROP or RELEASE to place something into or onto a target \'97 use POUR for liquids into a container, and PUTIN/PUTBACK for objects.\
+\
+11. Before PUTIN into an openable container, if the container is CLOSED, WALK to the container and OPEN it first.\
+\
+12. Repeated action keys are allowed and represent repeated ordered actions. The evaluator preserves duplicate keys in order.\
+\
+13. Before GRAB, OPEN, MOVE, PUSH, PULL, SQUEEZE, PLUGIN, PLUGOUT, or CUT, make sure at least one hand is free. Since you have two hands, this means you can hold at most two objects at once. If both hands are full, use DROP or PUTBACK to free a hand first.\
+\
+Input:\
+The relevant objects in the scene are:\
+<object_in_scene>\
+\
+The current environment state is:\
+<cur_change>\
+\
+Node goals are:\
+<node_goals>\
+\
+Edge goals are:\
+<edge_goals>\
+\
+Action goals are:\
+<action_goals>\
+\
+Please output the list of action commands in JSON format so that after the robot executes the action commands sequentially, the ending environment satisfies all the node goals, edge goals, and action goals.\
+\
+Only output the JSON dictionary of action commands and nothing else.\
+\
+Output:\
+"""\
+\
+if __name__ == "__main__":\
+    pass\
+}

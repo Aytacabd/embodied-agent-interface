@@ -1,0 +1,528 @@
+================================================================================
+SDG ACTION-BY-ACTION VERIFICATION: sdg.py vs virtualhome.pddl vs execution.py
+================================================================================
+Scope   : all 42 actions in sda_last_hope_modified/sdg.py
+Method  : Part 1 checks sdg.py against the literal PDDL text.
+          Part 2 (added on a second pass) checks sdg.py against the ACTUAL
+          Python precondition-checking code in every Executor class in
+          execution.py -- not assumed from the PDDL, not assumed from names,
+          not assumed from sdg.py's own inline comments about what the
+          executor does. Every class listed below was opened and read.
+Verified source files (confirmed byte-identical to
+embodied-agent-interface/embodied-agent-interface@main on 2026-08-24):
+    - src/virtualhome_eval/resources/virtualhome/virtualhome.pddl
+    - src/virtualhome_eval/simulation/evolving_graph/execution.py
+    - src/virtualhome_eval/simulation/evolving_graph/motion_planner.py
+sdg.py itself has NO upstream counterpart -- it is original work in
+sda_last_hope_modified, built by porting the PDDL above.
+
+STATUS: FIXES APPLIED (2026-08-25) -- sda_last_hope_modified/sdg.py has been
+edited. POINTAT, PLUGIN, PLUGOUT, MOVE, PUSH, PULL, and SQUEEZE now match
+the executor-verified needs lists described in Part 2 below -- the
+"CONFIRMED DIVERGENCES" writeups for these seven are now a historical record
+of what was wrong and why, not a description of the current file. Verified
+by running sdg.py's self-test directly: all 29 checks (27 original + 2 new,
+POINTAT and SQUEEZE, which had no test before) pass. The module docstring in
+sdg.py was also restructured to separate "faithful PDDL requirements" from
+"genuine PDDL-vs-executor overrides" and to list the remaining known gaps
+below inline, so that split now lives in the code, not just this file.
+SECOND PASS: THE REMAINING GAPS ARE NOW FIXED TOO (2026-08-26).
+Everything the paragraph below described as "still NOT fixed" has since been
+corrected in sdg.py. Part 2's writeups for these six are now ALSO historical
+record, not a description of the current file. See sdg_pddl_comparison.md in
+the repo root for the current state and the full reasoning.
+  - DROP    : obj_inside_room removed (never implemented in DropExecutor)
+  - GREET   : next_to_obj -> person (was backwards in both directions)
+  - PUTON   : + clothes
+  - PUTOFF  : + clothes
+  - TOUCH   : readable + holds_obj removed, next_to_obj added
+  - CUT     : + not_both_hands_full
+Required one supporting change outside sdg.py: object_state_model.satisfies()
+gained a "person" branch. Without it the GREET fix would have been INERT --
+satisfies() returns True for any precondition name it doesn't recognise, so
+"person" would have silently passed on every object.
+Self-test rerun after the pass: 33 checks (29 previous + 4 new for GREET,
+PUTON, PUTOFF, CUT, which had no coverage before) -- all pass.
+A full sweep of all 42 Executor classes was run at the same time and found
+no further property or free-hand divergences in either direction. It did
+find that SwitchExecutor's _find_free_hand check and WipeExecutor's
+Property.SURFACES check are both COMMENTED OUT upstream, so sdg.py is
+correct to omit them -- noted here to save the next audit the false alarm.
+
+Still NOT fixed (genuinely out of reach for this schema, unchanged):
+CUT's "must be holding a knife-classed object" (needs a predicate that
+inspects held objects' class names -- stated in the prompt layer instead),
+and the schema-incompatible ones (WATCH same-room, SIT/LIE occupancy caps,
+WALK door-blocking, PUTOBJBACK's remembered-origin tracking).
+
+CHANGES FROM THE FIRST PASS (PDDL-only) -- read this before trusting Part 1's
+old framing on these three:
+  - PUTOBJBACK does NOT share a class with PUTBACK. PUTBACK/PUTIN use
+    PutExecutor (split by a Relation param). PUTOBJBACK uses its own
+    dedicated PutBackExecutor class. It's still authored independently,
+    just via a different mechanism than first described.
+  - POINTAT is a literal Python alias: `PointAtExecutor = LookAtExecutor`
+    (execution.py:2270). It DOES inherit a PDDL-covered action (LOOKAT /
+    look_at) -- but sdg.py's entry for it is WRONG, not just unverified.
+    See Part 2.
+  - RELEASE vs DROP is now resolved. DROP's entry was the wrong one, not
+    RELEASE's. See Part 2.
+
+================================================================================
+PART 1 -- sdg.py vs PDDL TEXT (42/42 actions checked)
+================================================================================
+Totals: Tier 1 = 30 | Tier 2 = 2 | Tier 3 = 7 | Tier 4 = 3 | SUM = 42
+(kept for reference -- superseded in places by Part 2 below)
+
+--- TIER 1: in PDDL, sdg.py matches the PDDL text exactly (30 actions) ---
+WALK, TURNTO, GRAB, PUTBACK, PUTIN, PUTON, DROP, POUR, MOVE, CLOSE,
+SWITCHON, SWITCHOFF, PLUGIN, PLUGOUT, SIT, STANDUP, LIE, SLEEP, WAKEUP,
+WASH, WIPE, SQUEEZE, CUT, DRINK, EAT, READ, TOUCH, WATCH, LOOKAT, TYPE
+
+--- TIER 2: in PDDL, sdg.py deliberately overrides it (2 actions) ---
+FIND, OPEN  (both re-verified against real executor code in Part 2 --
+             confirmed correct, see below)
+
+--- TIER 3: no PDDL entry by name, aliases a PDDL-covered executor class
+    (7 actions, inherits the parent's PDDL precondition) ---
+RUN(->WALK), PUSH(->MOVE), PULL(->MOVE), RINSE(->WASH), SCRUB(->WASH),
+PUTOBJBACK(->own class, reuses PUTBACK's internal helper), RELEASE(->DROP)
+
+--- TIER 4: no PDDL entry, no shared executor class (3 actions in the
+    original framing -- now 2, see correction above) ---
+GREET, PUTOFF   (POINTAT moved to "Tier 3, but wrong" -- see Part 2)
+
+================================================================================
+PART 2 -- sdg.py vs ACTUAL EXECUTOR CODE (all 42 actions, every class read)
+================================================================================
+Format per action: what execution.py's check_*() method ACTUALLY tests,
+vs what sdg.py's "needs" list says, and the reason for any gap.
+
+-------------------------- CONFIRMED EXACT MATCHES ---------------------------
+(sdg.py's needs list is a correct, complete model of what the real
+executor's precondition method checks)
+
+WALK     WalkExecutor.check_walk: not SITTING, not LYING -- matches.
+         (see WALK's own entry below in "PARTIAL / EXTRA" for a caveat)
+TURNTO   TurnToExecutor.check_turn_to: literally `return True`. Matches
+         sdg's empty needs list exactly.
+LOOKAT   LookAtExecutor.check_lookat: only checks facing. Matches.
+GRAB     GrabExecutor.check_grabbable: GRABBABLE (+ water/child special
+         case not in sdg.py, harmless widening), already-grabbed check,
+         close-to, not-inside-closed-container, free-hand. All 4 sdg.py
+         needs confirmed present.
+OPEN     OpenExecutor.check_openable (self.close=False branch): CAN_OPEN,
+         close-to, free-hand (confirmed OPEN-only via `if not self.close`),
+         must-be-CLOSED, must-NOT-be-ON (also confirmed OPEN-only). All 5
+         sdg.py needs confirmed present, confirmed OPEN-specific where
+         claimed.
+CLOSE    Same OpenExecutor class, self.close=True branch: CAN_OPEN,
+         close-to, must-be-OPEN. No free-hand check, no not-on check
+         (both correctly absent from sdg.py's CLOSE entry). Matches.
+PUTBACK  PutExecutor(Relation.ON) + _check_puttable: holds, close-to-
+         target, relation==ON skips the openable branch entirely. Matches.
+PUTIN    PutExecutor(Relation.INSIDE) + _check_puttable: holds, close-to-
+         target, relation==INSIDE triggers "not CAN_OPEN or is OPEN" check.
+         Matches sdg's target_open_or_not_openable exactly.
+SWITCHON SwitchExecutor(True): HAS_SWITCH, close-to, must-be-OFF, must-NOT-
+         be-PLUGGED_OUT (confirmed switch_on-only). Matches.
+SWITCHOFF Same class, switch_on=False: HAS_SWITCH, close-to, must-be-ON.
+         No plugged-state check (correctly absent from sdg.py). Matches.
+DRINK    DrinkExecutor.check_drinkable: DRINKABLE-or-RECIPIENT, holds.
+         Matches. No proximity check in either -- consistent.
+WIPE     WipeExecutor.check_wipe: close-to-surface, holding ANYTHING (not
+         property-checked) in either hand. Matches sdg's holding_anything
+         exactly -- confirms the PDDL's two-variable ?obj1/?obj2 reading
+         was carried through correctly to the executor level too.
+READ     ReadExecutor.check_readable: READABLE, holds. Matches.
+POUR     PourExecutor._check_pourable: POURABLE-or-DRINKABLE (src),
+         RECIPIENT (dest, + hands_both/sponge/face special case not in
+         sdg.py, harmless widening), holds, close-to-dest. All 4 sdg.py
+         needs confirmed.
+WASH/RINSE/SCRUB   WashExecutor.check_washable: close-to only. Matches
+         all three identical sdg.py entries.
+SLEEP/WAKEUP   Both check LYING-or-SITTING only. Matches both.
+
+------------------------ CONFIRMED DIVERGENCES --------------------------
+(sdg.py's needs list is wrong or incomplete relative to the real executor;
+ source reason given for each)
+
+FIND
+    Real: FindExecutor checks if already close/on-character/body-part; if
+    not, JoinedExecutor(WalkExecutor(), _FindExecutor()) -- auto-navigates.
+    sdg.py: needs=[], effect=next_to_obj. MATCHES the real behavior.
+    Source of the FIND-vs-PDDL gap: PDDL's `find` requires next_to as a
+    precondition with no effect -- circular at runtime. The executor's
+    auto-navigate convenience wrapper was added after/independent of the
+    PDDL and the PDDL was never updated to match.
+
+PLUGIN  **the most significant finding of this pass**
+    PDDL says: (has_plug OR has_switch) AND next_to AND plugged_out
+    sdg.py says: has_plug_or_has_switch, next_to_obj, plugged_out
+      -- sdg.py is a faithful, exact copy of the PDDL here.
+    PlugExecutor.check_plugable ACTUALLY checks:
+      `if Property.HAS_PLUG not in node.properties: fail`
+    -- unconditional, for BOTH plug-in and plug-out. There is no
+    has_switch branch anywhere in this method.
+    Source: the PDDL and sdg.py AGREE with each other and BOTH disagree
+    with the real executor. Whoever wrote the PDDL's plug_in action
+    modeled a switch-only plug-in path that the Python executor never
+    implemented. This means the earlier note calling PLUGIN's broadened
+    precondition a "PDDL-fidelity fix" is still technically true (it does
+    match the PDDL) but the PDDL itself does not match the executor here
+    -- state this precisely in the thesis, don't just say "matches PDDL."
+    Also missing from BOTH plugin and plugout: a free-hand check
+    (`_find_free_hand(...) is None -> fail`), present in the real code,
+    absent from both sdg.py entries.
+    Bonus finding, same class: the "still on" check for plug-OUT
+    (`if not self.plug_in and State.ON in states: assign_error_type(...)`)
+    never actually returns False -- falls through to `return True`
+    unconditionally. This looks like a genuine upstream bug (dead code),
+    not something sdg.py did. sdg.py's PLUGOUT `not_on` requirement is
+    the safe/conservative side to be wrong on.
+
+DROP
+    PDDL says: holds AND obj_inside(obj, room)
+    sdg.py says: holds_obj, obj_inside_room -- faithful copy of PDDL.
+    DropExecutor.check_drop ACTUALLY checks: only holds. No room check
+    exists anywhere in the class.
+    Source: same pattern as PLUGIN -- PDDL declared a constraint the
+    executor never implemented. This RESOLVES the earlier open question:
+    RELEASE's entry (holds_obj only, no obj_inside_room) is the one that
+    matches the real executor. DROP's entry is the one that's wrong,
+    despite being the "PDDL-verified" one.
+
+POINTAT
+    execution.py:2270 -- `PointAtExecutor = LookAtExecutor`, a literal
+    class alias, not a separate implementation.
+    Real precondition (LookAtExecutor.check_lookat): facing_obj only.
+    sdg.py says: needs=["next_to_obj"].
+    Source: this isn't a missing check, it's the WRONG check. sdg.py's
+    author reasonably assumed POINTAT needs proximity (pointing at
+    something distant seems odd) but the executor treats it identically
+    to LOOKAT/WATCH-lite -- facing is what's checked, not distance.
+    RECOMMEND: change POINTAT's needs to ["facing_obj"] in sdg.py.
+
+GREET
+    Real (GreetExecutor): ONLY checks Property.PERSON. There is no
+    proximity/closeness check anywhere in this class.
+    sdg.py says: needs=["next_to_obj"].
+    Source: sdg.py has this exactly backwards relative to what's missing
+    vs. extra -- it requires a check (next_to) the executor never makes,
+    while omitting the one property check (PERSON) the executor actually
+    enforces. The PERSON gap was already flagged as a confirmed prompt-
+    layer regression (baseline one_shot.py had GREET:(1,[['PERSON']]),
+    current has GREET:(1,[[]])); the next_to_obj-not-required part is new
+    to this pass.
+
+PUTON
+    Real (PutOnExecutor.check_puton): holding-check + Property.CLOTHES.
+    sdg.py says: needs=["holds_obj"] only -- missing CLOTHES.
+PUTOFF
+    Real (PutOffExecutor.check_putoff): on_char-check + Property.CLOTHES.
+    sdg.py says: needs=["on_char"] only -- missing CLOTHES.
+    Source (both): same blind spot as GREET/PERSON -- sdg.py's "properties
+    live in the prompt layer, not here" convention was applied
+    inconsistently. GRAB and POUR both DO fold a property check into
+    sdg.py (see footnote 1 below); PUTON/PUTOFF/GREET don't, and probably
+    should, or the prompt layer needs to be the enforced backstop for all
+    three consistently -- right now it's neither, consistently.
+
+PUSH
+    Real (MoveExecutor.check_movable): the MOVABLE-property failure
+    condition is gated by `action_name != "push"` -- meaning for PUSH
+    specifically, an object can be pushed with NO movable check at all.
+    sdg.py says: needs includes "movable" (identical copy of MOVE's entry).
+    Source: sdg.py generated PUSH's entry by copying MOVE's rather than
+    reading MoveExecutor's actual per-action-name branching. PULL does NOT
+    get this exemption (only "push" is special-cased in the code), so
+    PULL's inherited "movable" requirement IS correct -- only PUSH's is
+    wrong.
+MOVE, PUSH, PULL (all three)
+    Real: also require a free hand (`_find_free_hand(...) is None -> fail`).
+    sdg.py: none of the three entries include not_both_hands_full.
+    Source: same "OPEN got the fix, nothing else was checked" pattern as
+    PLUGIN/PLUGOUT above.
+
+SQUEEZE
+    Real (SqueezeExecutor.check_squeezable): free-hand check (missing from
+    sdg.py, same pattern again) PLUS a property check that's broader than
+    "clothes" -- a hardcoded list (cleaning_solution, tooth_paste, shampoo,
+    food_peanut_butter, dish_soap, soap, towel, rag, paper, sponge,
+    food_lemon, check) is accepted even without the CLOTHES property.
+    sdg.py says: needs=["next_to_obj", "clothes"] -- both close (clothes is
+    directionally right, list is a legitimate simplification) and missing
+    the free-hand requirement.
+
+CUT
+    Real (CutExecutor.check_cuttable): free-hand check (missing from
+    sdg.py) PLUS a real, substantial requirement neither PDDL nor sdg.py
+    have at all -- must be holding an object whose class_name contains
+    "knife". EATABLE and CUTTABLE are both checked too (those ARE in
+    sdg.py already).
+    Source: the knife requirement is pure executor-level realism (you
+    need a tool to cut food) that was never formalized in the PDDL this
+    was ported from, so it was never available to port.
+
+TOUCH
+    Real (TouchExecutor.check_reachable): close-to-object check, PLUS
+    inside-closed-container check. Does NOT check READABLE anywhere in
+    this class.
+    sdg.py says: needs=["readable", "holds_obj", "obj_not_inside_closed_
+    container"] -- includes readable (executor doesn't check it here,
+    though the prompt-grammar layer likely does -- see footnote 1),
+    MISSING next_to_obj (executor does check it, sdg.py doesn't have it).
+    Source: sdg.py was built from the PDDL, which omits next_to for touch
+    on the (reasonable) theory that holding something implies proximity to
+    it. WalkExecutor's code does maintain CLOSE relations for held objects
+    as the character moves, so this is likely non-binding in practice --
+    but it is a confirmed gap between sdg.py and what TouchExecutor's own
+    code checks, not just a PDDL-level nuance.
+
+WATCH
+    Real (WatchExecutor.check_watchable): LOOKABLE, facing,
+    inside-closed-container (all 3 already in sdg.py) PLUS a same-room
+    check (`node_room.id != char_room.id -> fail`) that's in neither PDDL
+    nor sdg.py.
+    Source: room-graph logic doesn't exist in the PDDL's predicate
+    vocabulary at all (no room-adjacency predicate), so there was nothing
+    to port.
+
+SIT, LIE
+    Real: both executors enforce a per-class-name max-occupancy table
+    (couch=4, chair=1, bed=3 for lying, etc.) neither PDDL nor sdg.py
+    model. Structurally this doesn't fit sdg.py's per-object needs-list
+    schema (it's a count over all objects ON a target, not a property of
+    the acting object) -- a legitimate reason it was never ported, not an
+    oversight of the same kind as the others above.
+
+WALK (and RUN by inheritance)
+    Real (WalkExecutor.check_walk): not-sitting/not-lying (in sdg.py) PLUS
+    real room-graph pathfinding -- fails if a closed door blocks every
+    path between the character's room and the target's room. Not in PDDL
+    (no door predicate exists) or sdg.py.
+
+PUTOBJBACK
+    Real (PutBackExecutor): looks up the object's remembered grab-origin
+    via state.executor_data, then reuses the SAME _check_puttable helper
+    PutExecutor uses against that remembered origin (holds + close-to-
+    origin + conditional openable check if the origin was a container).
+    sdg.py says: needs=["holds_obj"] only.
+    Source: sdg.py's entry treats PUTOBJBACK as needing nothing but
+    holding the object; the real executor implicitly re-applies PUTBACK/
+    PUTIN's full precondition set against a target sdg.py never has
+    visibility into (the remembered origin isn't tracked in sdg.py's
+    state model at all).
+
+--------------------------- NOT INDEPENDENTLY VERIFIED ---------------------------
+EAT   EatExecutor has an extra fallback (if the object itself isn't
+      eatable, check if something resting ON it is) not modeled in
+      sdg.py -- makes the executor MORE permissive than sdg.py assumes,
+      not less, so low risk either way.
+TYPE  TypeExecutor exempts objects literally named "keyboard" from the
+      HAS_SWITCH check. Minor, executor is more permissive than sdg.py
+      in this one case.
+
+================================================================================
+FOOTNOTES
+================================================================================
+[1] Property checks inside sdg.py (inconsistent, not a clean "properties
+    live in the prompt layer only" split):
+        DOES include a property check: GRAB (grabbable), POUR
+        (pourable_or_drinkable, target_is_recipient), TOUCH (readable)
+        DOES NOT include one, even though the real executor checks it:
+        GREET (person), PUTON (clothes), PUTOFF (clothes)
+    Worth deciding one convention and applying it uniformly if this comes
+    up in the defense -- right now which actions get a property check in
+    sdg.py looks more like "which ones got audited" than a deliberate rule.
+
+[2] Confirmed-genuine upstream files this whole verification rests on
+    (fetched fresh from embodied-agent-interface/embodied-agent-interface@main
+    and diffed byte-for-byte against the local copies used throughout):
+        virtualhome.pddl   -- identical
+        execution.py       -- identical
+        motion_planner.py  -- identical
+    Files that DO differ from upstream (deliberate, already diffed in
+    detail elsewhere): one_shot.py, eval_utils.py.
+
+[3] Bottom line on the question this file answers ("does sdg.py fully
+    match the executor?"): No. It matches the PDDL essentially perfectly
+    (Part 1). Against the actual executor code (Part 2), roughly two-
+    thirds of actions check out exactly, and the rest split into: a
+    recurring missing free-hand check (6 actions: MOVE, PUSH, PULL,
+    SQUEEZE, CUT, PLUGIN/PLUGOUT), two cases where sdg.py inherited a
+    PDDL requirement the executor never implemented (DROP, and PLUGIN's
+    has_switch branch), one case where sdg.py's requirement is simply the
+    wrong predicate (POINTAT), two missing property checks (PUTON,
+    PUTOFF), one missing tool requirement (CUT/knife), one missing
+    proximity check (TOUCH), and a handful of executor-only mechanics
+    that don't fit the needs-list schema at all (occupancy caps, room
+    pathfinding, same-room checks). None of this changes the correctness
+    of the parts already verified -- it defines exactly what "verified
+    against the executor" would still require if that's the claim you
+    want to make.
+================================================================================
+
+================================================================================
+DEFENSIBLE STATEMENTS FOR THESIS USE (added 2026-08-25)
+================================================================================
+Each statement below is scoped to exactly what was verified -- no rounding
+up. Use these as-is or adapt the wording; don't state a broader claim than
+the one it's paired with unless you re-verify further first.
+
+1. BASELINE FIDELITY
+   "virtualhome.pddl, execution.py, and motion_planner.py were confirmed
+   byte-identical to embodied-agent-interface/embodied-agent-interface's
+   main branch. No baseline simulator, domain file, or state-generation
+   code was modified as part of this work."
+
+2. PDDL AS PRIMARY SPECIFICATION
+   "The SDG's precondition/effect model uses the VirtualHome PDDL domain
+   as its primary specification. All 42 actions in the script vocabulary
+   were checked against it individually: 30 map onto a PDDL action with
+   matching preconditions and effects; the remaining 12 have no PDDL
+   definition under their own name and were instead verified against the
+   benchmark's actual Action->Executor dispatch table in execution.py."
+
+3. PRE-EXISTING DELIBERATE OVERRIDES
+   "Two actions (FIND, OPEN) were already documented, prior to this
+   verification pass, as cases where the executor's real behavior
+   overrides what the PDDL states. Both were re-confirmed directly against
+   the relevant Executor class's code during this audit."
+
+4. EXECUTOR-LEVEL AUDIT SCOPE
+   "Beyond PDDL-text comparison, every one of the 42 actions' modeled
+   preconditions was checked against the literal Python precondition-
+   checking logic in execution.py -- not assumed from the PDDL, and not
+   assumed from sdg.py's own prior comments about executor behavior."
+
+5. CORRECTIONS APPLIED
+   "This audit found 19 cases (beyond the pre-existing FIND/OPEN pair)
+   where sdg.py's modeled preconditions did not match the executor's
+   actual code. 7 of these -- POINTAT, PLUGIN, PLUGOUT, MOVE, PUSH, PULL,
+   SQUEEZE -- have been corrected in sdg.py, each with an inline comment
+   citing the specific Executor class and method that justifies the
+   change."
+
+6. CURRENT VERIFIED STATE (precise breakdown)
+   "As of the corrections applied on 2026-08-25: 28 of the 42 actions in
+   sdg.py are fully verified against the executor's actual code with no
+   known remaining discrepancy. 2 (EAT, TYPE) have a minor, low-risk gap
+   where the executor is slightly more permissive than sdg.py models (an
+   extra success path, not a missed failure cause). 12 have at least one
+   confirmed, unfixed gap, named explicitly in sdg.py's own docstring."
+
+7. INSTANCE-LEVEL DESIGN (the correctness check that matters most)
+   "Object-instance-level, not class-level, state tracking was verified
+   directly in the token-construction logic across
+   object_state_model.py, sdg.py, action_subtree.py, and the environment-
+   seeded fallback-resolution map in eai_sda_runner_tree.py. Every state
+   or token key found in these paths is suffixed by object ID (e.g.
+   f'{class_name}_{id}'); no class-name-only merging pattern was found in
+   any of the paths checked."
+
+8. REGRESSION COVERAGE
+   "sdg.py includes an executable self-test (python3 sdg.py) asserting
+   every modeled action's preconditions against their expected,
+   executor-verified values. Running it confirms all 29 checks pass as of
+   the corrections applied here -- 27 pre-existing checks plus 2 new ones
+   (POINTAT, SQUEEZE) that had no prior test coverage."
+
+9. WHAT IS NOT CLAIMED (the honesty statement -- keep this one too)
+   "This work does not claim sdg.py fully matches the executor. 12
+   actions have named, specific, currently-uncorrected gaps (WALK, RUN,
+   PUTOBJBACK, PUTON, PUTOFF, DROP, GREET, SIT, LIE, CUT, TOUCH, WATCH).
+   Several of these (per-class-name occupancy limits, room-adjacency
+   door-blocking, remembered-grab-origin tracking) reflect executor
+   mechanics that do not fit the needs-list precondition schema sdg.py
+   uses at all, rather than oversights within that schema."
+
+Arithmetic behind statement 6, for your own cross-check:
+   28 (clean) + 2 (EAT/TYPE, minor) + 12 (confirmed gaps) = 42.
+   7 (fixed this session) + 12 (still open) = 19 (statement 5's count).
+================================================================================
+
+================================================================================
+PART 3 -- one_shot.py's ACTION-PROPERTY TABLE, JUDGED AGAINST THE SAME
+          EXECUTOR EVIDENCE AS sdg.py (added 2026-08-25)
+================================================================================
+one_shot.py (src/virtualhome_eval/evaluation/action_sequencing/prompts/
+one_shot.py) has its own 42-line property-precondition table, separate from
+sdg.py, and it was last hand-verified only against the PDDL, before the
+executor-level audit in Part 2 existed. Re-checked here against the same
+Executor classes.
+
+REVERSE TWO EARLIER RECOMMENDATIONS -- both were praised as "PDDL-fidelity
+fixes" before the executor was read directly; the executor disagrees with
+the PDDL in both cases, same pattern as PLUGIN/DROP in sdg.py:
+
+PLUGIN  (high priority -- over-permissive, invites a guaranteed failure)
+    Current: PLUGIN: (1, [['HAS_PLUG', 'HAS_SWITCH']])
+    PlugExecutor.check_plugable checks HAS_PLUG unconditionally; no
+    has_switch branch exists anywhere in the executor.
+    Recommend: PLUGIN: (1, [['HAS_PLUG']])
+
+TOUCH  (over-permissive on the model's side, i.e. over-restrictive on what
+        the model is told it can do -- lower risk than PLUGIN but still a
+        real gap)
+    Current: TOUCH: (1, [['READABLE']])
+    TouchExecutor.check_reachable checks ONLY proximity and not-inside-a-
+    closed-container -- no READABLE check, no holding check either (Rule 9
+    also wrongly claims TOUCH requires holding).
+    Recommend: TOUCH: (1, [[]]) and remove TOUCH from Rule 9's holding
+    requirement.
+    Contrast: READ's [['READABLE']] IS correct -- ReadExecutor really does
+    check it. The TOUCH addition was made by analogy to READ without
+    checking TOUCH's own executor class.
+
+STATUS UPDATE (2026-08-25, later same day): all four items below (CUT
+knife requirement, free-hand rule, SQUEEZE broadening, PUSH movable
+removal) have now been applied to one_shot.py -- see
+one_shot_prompt_diff_and_rationale.txt for the exact wording and the
+executor citations behind each. This subsection is kept as the original
+findings/reasoning, not as an open to-do list anymore.
+
+WORTH ADDING (real gaps, moderate value) -- DONE:
+- CUT: CutExecutor requires holding a knife-classed object (class_name
+  contains "knife") -- a hand-item requirement, separate from the
+  EATABLE+CUTTABLE target properties already in the table. No rule
+  currently tells the model this.
+- Free-hand rule missing entirely: OPEN, MOVE, PULL, SQUEEZE, PLUGIN,
+  PLUGOUT all require a free hand at the executor level (same predicate
+  just added to sdg.py this session). One general rule covering all six
+  would work.
+- Rule 7 covers WATCH/LOOKAT needing TURNTO first but omits POINTAT, which
+  needs the identical treatment (POINTAT's real precondition is
+  facing_obj -- PointAtExecutor = LookAtExecutor, execution.py:2270).
+- GREET's PERSON requirement, dropped from baseline's [['PERSON']] to
+  current's [[]] -- still not restored (flagged earlier, repeated here for
+  completeness of this pass).
+
+LOW PRIORITY / OPTIONAL (over-restrictive only, no failure risk) -- DONE:
+- SQUEEZE: [['CLOTHES']] excludes real squeezable non-clothes items the
+  executor accepts via a hardcoded list (sponge, soap, cleaning_solution,
+  etc.) -- misses opportunities, doesn't cause failures.
+- PUSH: [['MOVABLE']] is stricter than needed (MoveExecutor exempts push
+  from this check specifically; MOVE and PULL are not exempted, so their
+  entries are correct as-is). Same risk profile as SQUEEZE -- leave alone
+  unless optimizing hard.
+
+CONFIRMED CORRECT, NO CHANGE (matches the executor directly, not just the
+PDDL): CLOSE, DRINK, FIND, WALK, GRAB, LOOKAT, OPEN, PUTBACK, PUTIN (empty
+list is correct -- the real conditional requirement is dynamic and already
+handled by Rule 11, not table-representable), RUN, SIT, STANDUP, SWITCHOFF,
+SWITCHON, TURNTO, WATCH, WIPE, PUTON, PUTOFF, DROP, READ, LIE, POUR, PULL,
+MOVE, WASH, RINSE, SCRUB, PLUGOUT, EAT, SLEEP, WAKEUP, RELEASE, TYPE. Note:
+PUTON/PUTOFF's CLOTHES check is here and correct -- sdg.py is still missing
+this same check (Part 2's open gap list), so the prompt is currently ahead
+of sdg.py on these two specifically.
+
+PUTOBJBACK -- revisit the standing contradiction with new evidence.
+Previously flagged: one_shot.py lists PUTOBJBACK as usable while
+eai_sda_runner_tree.py's SYSTEM_PROMPT says "NEVER use PUTOBJBACK." Now that
+PUTOBJBACK is confirmed to have a real, unfixed sdg.py gap (missing the
+remembered-origin/openness check that PUTBACK and PUTIN both have
+correctly), resolve the contradiction toward the ban: drop PUTOBJBACK from
+one_shot.py's supported list rather than removing the SYSTEM_PROMPT
+restriction. It's the less-verified of the two placement mechanisms.
+================================================================================

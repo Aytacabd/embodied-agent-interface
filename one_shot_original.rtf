@@ -1,0 +1,144 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red189\green198\blue208;
+\red173\green176\blue178;\red202\green202\blue202;\red150\green204\blue255;\red183\green111\blue179;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgray\c100000;\cssrgb\c78824\c81961\c85098;
+\cssrgb\c73333\c74510\c74902;\cssrgb\c83137\c83137\c83137;\cssrgb\c64706\c83922\c100000;\cssrgb\c77255\c52549\c75294;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww19020\viewh19640\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 prompt\strokec5  \strokec6 =\strokec5  \strokec7 """\strokec5 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec7 The task is to guide the robot to take actions from the current state to fulfill some node goals, edge goals, and action goals. The input will be the related objects in the scene, nodes and edges in the current environment, and the desired node goals, edge goals, and action goals. The output should be action commands in JSON format so that after the robot executes the action commands sequentially, the ending environment would satisfy the goals.\strokec5 \
+\
+\strokec7 Data format:\strokec5 \
+\strokec7 Objects in the scene indicates those objects involved in the action execution. It follows the format: <object_name> (object_id)\strokec5 \
+\
+\strokec7 Nodes and edges in the current environment shows the nodes' names, states and properties, and edges in the environment. \strokec5 \
+\strokec7 Nodes follow the format: object_name, states:... , properties:...\strokec5 \
+\strokec7 Edges follow the format: object_name A is ... to object_name B\strokec5 \
+\strokec7  \strokec5 \
+\strokec7 Node goals show the target object states in the ending environment. They follow the format: object_name is ... (some state)\strokec5 \
+\
+\strokec7 Edge goals show the target relationships of objects in the ending environment. They follow the format: object_name A is ... (some relationship) to object_name B.\strokec5 \
+\
+\strokec7 Action goals specify the necessary actions you need to include in your predicted action commands sequence, and the order they appear in action goals should also be the RELATIVE order they appear in your predicted action commands sequence if there are more than one line. Each line in action goals include one action or more than one actions concatenated by OR. You only need to include ONE of the actions concatenated by OR in the same line. For example, if the action goal is:\strokec5 \
+\strokec7 The following action(s) should be included:\strokec5 \
+\strokec7 GRAB\strokec5 \
+\strokec7 TYPE or TOUCH\strokec5 \
+\strokec7 OPEN\strokec5 \
+\strokec7 ------------------------\strokec5 \
+\strokec7 Then your predicted action commands sequence should include GRAB, either TYPE or TOUCH, and OPEN. Besides, GRAB should be executed earlier than TYPE or TOUCH, and TYPE or TOUCH should be executed earlier than OPEN.\strokec5 \
+\strokec7 If the action goal is:\strokec5 \
+\strokec7 The following action(s) should be included:\strokec5 \
+\strokec7 There is no action requirement.\strokec5 \
+\strokec7 It means there is no action you have to include in output, and you can use any action to achieve the node and edge goals. Warning: No action requirement does not mean empty output. You should always output some actions and their arguments.\strokec5 \
+\
+\strokec7 Action commands include action names and objects. Each action's number of objects is fixed (0, 1, or 2), and the output should include object names followed by their IDs:\strokec5 \
+\strokec7 []: Represents 0 objects.\strokec5 \
+\strokec7 [object, object_id]: Represents 1 object.\strokec5 \
+\strokec7 [object 1, object_1_id, object 2, object_2_id]: Represents 2 objects.\strokec5 \
+\strokec7 The output must be in JSON format, where:\strokec5 \
+\strokec7 Dictionary keys are action names.\strokec5 \
+\strokec7 Dictionary values are lists containing the objects (with their IDs) for the corresponding action.\strokec5 \
+\strokec7 The order of execution is determined by the order in which the key-value pairs appear in the JSON dictionary.\strokec5 \
+\
+\strokec7 For example, If you want to first FIND the sink and then PUTBACK a cup into the sink, you should express it as:\strokec5 \
+\strokec7 \{\strokec5 \
+\strokec7   "FIND": ["sink", "sink_id"],\strokec5 \
+\strokec7   "PUTBACK": ["cup", "cup_id", "sink", "sink_id"]\strokec5 \
+\strokec7 \}\strokec5 \
+\
+\strokec7 The object of action also needs to satisfied some properties preconditions. For example, SWITCHON's object number is 1. To switch on something, the object should 'HAS_SWITCH'. The rule is represented as SWITCHON = ("Switch on", 1, [['HAS_SWITCH']]). Another example is POUR. POUR's object number is 2. To pour sth A into sth B, A should be pourable and drinkable, and B should be RECIPIENT. The rule is represented as POUR = ("Pour", 2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']]).\strokec5 \
+\
+\strokec7 Action Definitions Format:\strokec5 \
+\strokec7 Each action is defined as a combination of:\strokec5 \
+\strokec7 Action Name (String): A descriptive name for the action.\strokec5 \
+\strokec7 Required Number of Parameters (Integer): The count of parameters needed to perform the action.\strokec5 \
+\strokec7 Preconditions for Each Object (List of Lists of Strings): Conditions that must be met for each object involved in the action.\strokec5 \
+\
+\strokec7 Supported Actions List:\strokec5 \
+\strokec7 CLOSE: (1, [['CAN_OPEN']]) # Change state from OPEN to CLOSED\strokec5 \
+\strokec7 DRINK: (1, [['DRINKABLE', 'RECIPIENT']]) # Consume a drinkable item\strokec5 \
+\strokec7 FIND: (1, [[]]) # Locate and approach an item\strokec5 \
+\strokec7 WALK: (1, [[]]) # Move towards something\strokec5 \
+\strokec7 GRAB: (1, [['GRABBABLE']]) # Take hold of an item that can be grabbed\strokec5 \
+\strokec7 LOOKAT: (1, [[]]) # Direct your gaze towards something\strokec5 \
+\strokec7 OPEN: (1, [['CAN_OPEN']]) # Open an item that can be opened\strokec5 \
+\strokec7 POINTAT: (1, [[]]) # Point towards something\strokec5 \
+\strokec7 PUTBACK: (2, [['GRABBABLE'], []]) # Place one object back onto or into another\strokec5 \
+\strokec7 PUTIN: (2, [['GRABBABLE'], ['CAN_OPEN']]) # Insert one object into another\strokec5 \
+\strokec7 RUN: (1, [[]]) # Run towards something\strokec5 \
+\strokec7 SIT: (1, [['SITTABLE']]) # Sit on a suitable object\strokec5 \
+\strokec7 STANDUP: (0, []) # Stand up from a sitting or lying position\strokec5 \
+\strokec7 SWITCHOFF: (1, [['HAS_SWITCH']]) # Turn off an item with a switch\strokec5 \
+\strokec7 SWITCHON: (1, [['HAS_SWITCH']]) # Turn on an item with a switch\strokec5 \
+\strokec7 TOUCH: (1, [[]]) # Physically touch something\strokec5 \
+\strokec7 TURNTO: (1, [[]]) # Turn your body to face something\strokec5 \
+\strokec7 WATCH: (1, [[]]) # Observe something attentively\strokec5 \
+\strokec7 WIPE: (1, [[]]) # Clean or dry something by rubbing\strokec5 \
+\strokec7 PUTON: (1, [['CLOTHES']]) # Dress oneself with an item of clothing\strokec5 \
+\strokec7 PUTOFF: (1, [['CLOTHES']]) # Remove an item of clothing\strokec5 \
+\strokec7 GREET: (1, [['PERSON']]) # Offer a greeting to a person\strokec5 \
+\strokec7 DROP: (1, [[]]) # Let go of something so it falls\strokec5 \
+\strokec7 READ: (1, [['READABLE']]) # Read text from an object\strokec5 \
+\strokec7 LIE: (1, [['LIEABLE']]) # Lay oneself down on an object\strokec5 \
+\strokec7 POUR: (2, [['POURABLE', 'DRINKABLE'], ['RECIPIENT']]) # Transfer a liquid from one container to another\strokec5 \
+\strokec7 PUSH: (1, [['MOVABLE']]) # Exert force on something to move it away from you\strokec5 \
+\strokec7 PULL: (1, [['MOVABLE']]) # Exert force on something to bring it towards you\strokec5 \
+\strokec7 MOVE: (1, [['MOVABLE']]) # Change the location of an object\strokec5 \
+\strokec7 WASH: (1, [[]]) # Clean something by immersing and agitating it in water\strokec5 \
+\strokec7 RINSE: (1, [[]]) # Remove soap from something by applying water\strokec5 \
+\strokec7 SCRUB: (1, [[]]) # Clean something by rubbing it hard with a brush\strokec5 \
+\strokec7 SQUEEZE: (1, [['CLOTHES']]) # Compress clothes to extract liquid\strokec5 \
+\strokec7 PLUGIN: (1, [['HAS_PLUG']]) # Connect an electrical device to a power source\strokec5 \
+\strokec7 PLUGOUT: (1, [['HAS_PLUG']]) # Disconnect an electrical device from a power source\strokec5 \
+\strokec7 CUT: (1, [['EATABLE', 'CUTABLE']]) # Cut some food\strokec5 \
+\strokec7 EAT: (1, [['EATABLE']]) # Eat some food\strokec5 \
+\strokec7 RELEASE: (1, [[]]) # Let go of something inside the current room\strokec5 \
+\strokec7 TYPE: (1, [['HAS_SWITCH']]) # Type on a keyboard\strokec5 \
+\
+\strokec7 Notice:\strokec5 \
+\strokec7 1. CLOSE action is opposed to OPEN action, CLOSE sth means changing the object's state from OPEN to CLOSE. \strokec5 \
+\
+\strokec7 2. You cannot [PUTIN] <character> <room name>. If you want robot INSIDE some room, please [WALK] <room name>.\strokec5 \
+\
+\strokec7 3. The subject of all these actions is <character>, that is, robot itself. Do not include <character> as object_name. NEVER EVER use character as any of the object_name, that is, the argument of actions.\strokec5 \
+\
+\strokec7 4. The action name should be upper case without white space. \strokec5 \
+\
+\strokec7 5. Importantly, if you want to apply ANY action on <object_name>, you should NEAR it. Therefore, you should apply WALK action as [WALK] <object_name> to first get near to the object before you apply any following actions, if you have no clue you are already NEAR <object_name>\strokec5 \
+\
+\strokec7 6. Output only object names and their IDs, not just the names.\strokec5 \
+\
+\strokec7 7. Output should not be empty! Always output some actions and their arguments.\strokec5 \
+\
+\strokec7 8. If you want to apply an action on an object, you should WALK to the object first.\strokec5 \
+\
+\strokec7 Input:\strokec5 \
+\strokec7 The relevant objects in the scene are:\strokec5 \
+\strokec7 <object_in_scene>\strokec5 \
+\
+\strokec7 The current environment state is\strokec5 \
+\strokec7 <cur_change>\strokec5 \
+\
+\strokec7 Node goals are:\strokec5 \
+\strokec7 <node_goals>\strokec5 \
+\
+\strokec7 Edge goals are:\strokec5 \
+\strokec7 <edge_goals>\strokec5 \
+\
+\strokec7 Action goals are:\strokec5 \
+\strokec7 <action_goals>\strokec5 \
+\
+\strokec7 Please output the list of action commands in json format so that after the robot executes the action commands sequentially, the ending environment would satisfy all the node goals, edge goals and action goals. The dictionary keys should be action names. The dictionary values should be a list containing the objects of the corresponding action. Only output the json of action commands in a dictionary with nothing else.\strokec5 \
+\
+\strokec7 Output:\strokec5 \
+\strokec7 """\strokec5 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec8 if\strokec5  \strokec4 __name__\strokec5  \strokec6 ==\strokec5  \strokec7 "__main__"\strokec5 :\
+    \strokec8 pass\strokec5 \
+}

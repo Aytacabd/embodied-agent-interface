@@ -1,20 +1,70 @@
 """
 State Dependency Graph (SDG) for VirtualHome
-Based on the uploaded VirtualHome PDDL, extended to cover the 42-action VirtualHome script vocabulary.
+Based on the uploaded VirtualHome PDDL as the primary specification, extended
+to cover the 42-action VirtualHome script vocabulary.
 
-Key corrections from PDDL:
+Notable PDDL requirements carried over faithfully (easy to miss, not errors
+in the PDDL -- verified directly against the PDDL text):
 - SWITCHON requires plugged_in (PDDL line 219)
-- FIND requires next_to and has no effect in the uploaded PDDL.
 - TYPE requires has_switch (PDDL line 383)
 - WATCH requires facing (PDDL line 391)
 - READ requires readable + holds_obj (PDDL line 307)
 - WAKEUP requires sitting_or_lying (PDDL line 483)
 - CLOSE effect adds not_on (PDDL line 151)
-- MOVE/PUSH/PULL require movable (PDDL line 399)
+- MOVE/PULL require movable (PDDL line 399)
 - SQUEEZE requires clothes (PDDL line 420)
 - CUT requires eatable + cuttable (PDDL line 458)
 - EAT requires eatable (PDDL line 469)
-- WIPE requires next_to surface + holding a wiping tool.
+- WIPE requires next_to surface + holding a wiping tool (PDDL uses a second,
+  unconstrained ?obj2 variable distinct from the wiped surface).
+
+Genuine PDDL-vs-executor overrides -- cases where execution.py's actual
+Python precondition checks were read directly and found to disagree with
+the PDDL text. The executor is the arbiter in all of these:
+- FIND: PDDL requires next_to with no effect (circular at runtime).
+  FindExecutor auto-navigates (delegates to WALK+FIND when not already
+  close) -- modeled here with no precondition, next_to_obj as an effect.
+- OPEN: PDDL doesn't mention hands. OpenExecutor.check_openable requires a
+  free hand via _find_free_hand, confirmed OPEN-only (not required for
+  CLOSE, which shares the same class via a boolean flag).
+- PLUGIN: PDDL says (has_plug OR has_switch). PlugExecutor.check_plugable
+  checks HAS_PLUG unconditionally for both plug directions -- no
+  has_switch branch exists in the executor at all.
+- PLUGIN, PLUGOUT: both require a free hand (_find_free_hand, unconditional
+  on plug direction) -- not in the PDDL for either.
+- MOVE, PUSH, PULL: all three require a free hand (_find_free_hand) -- not
+  in the PDDL.
+- PUSH specifically: MoveExecutor.check_movable's movable-property check is
+  explicitly gated by `action_name != "push"`, so PUSH never actually needs
+  "movable" (MOVE and PULL still do -- only push is exempted in the code).
+- SQUEEZE: requires a free hand (_find_free_hand) -- not in the PDDL.
+- POINTAT: PDDL has no point_at action at all. execution.py:2270 sets
+  `PointAtExecutor = LookAtExecutor` -- a literal class alias, not a
+  separate implementation -- so POINTAT's real precondition is facing_obj,
+  not proximity.
+
+Second executor-alignment pass (applied 2026-08-26) -- six entries that
+were previously flagged as known gaps are now corrected:
+- DROP: obj_inside_room removed (faithful to the PDDL, but
+  DropExecutor.check_drop only ever checks holds_obj).
+- GREET: needs was exactly backwards -- next_to_obj (never checked by
+  GreetExecutor) replaced with person (Property.PERSON, which it does
+  check). Required a new "person" branch in object_state_model.satisfies.
+- PUTON, PUTOFF: both gained the Property.CLOTHES check the executor
+  enforces.
+- TOUCH: readable and holds_obj removed (TouchExecutor checks neither),
+  next_to_obj added (it does check proximity).
+- CUT: gained not_both_hands_full (_find_free_hand in check_cuttable).
+
+Known remaining gaps (confirmed against the executor, NOT corrected --
+each needs machinery this needs-list schema cannot express):
+- CUT also requires holding an object whose class_name contains "knife".
+  Modeling it needs a predicate that inspects held objects' class names;
+  stated in the prompt layer instead (one_shot.py Rule 9).
+- WATCH (same-room check), SIT/LIE (per-class-name occupancy caps), WALK
+  (closed-door path-blocking), PUTOBJBACK (precondition depends on a
+  remembered grab-origin sdg.py doesn't track) all have real executor
+  logic that doesn't fit this needs-list schema at all.
 """
 
 SDG = {
@@ -48,8 +98,11 @@ SDG = {
         "effects": ["facing_obj"],
         "is_prep": True,
     },
+    # PDDL has no point_at action. execution.py:2270: PointAtExecutor =
+    # LookAtExecutor (a literal class alias) -- checks facing, not
+    # proximity. Verified against LookAtExecutor.check_lookat directly.
     "POINTAT": {
-        "needs":   ["next_to_obj"],
+        "needs":   ["facing_obj"],
         "effects": [],
         "is_prep": False,
     },
@@ -87,9 +140,12 @@ SDG = {
         "effects": ["not_holds_obj"],
         "is_prep": False,
     },
-    # PDDL put_on_character: holds_obj only (putting on self)
+    # PDDL put_on_character: holds_obj only (putting on self).
+    # PutOnExecutor.check_puton ALSO requires Property.CLOTHES -- not in the
+    # PDDL, added after reading the executor. Without it, PUTON on a
+    # non-clothes item fails in-env but diagnoses as Unsat=[].
     "PUTON": {
-        "needs":   ["holds_obj"],
+        "needs":   ["holds_obj", "clothes"],
         "effects": ["not_holds_obj", "on_char"],
         "is_prep": False,
     },
@@ -98,18 +154,24 @@ SDG = {
     #     "effects": ["not_holds_obj"],
     #     "is_prep": False,
     # },
-    # PDDL drop: holds_obj + obj_inside(?obj, ?room) — object must be in the current room
+    # PDDL drop: holds_obj + obj_inside(?obj, ?room). DropExecutor.check_drop
+    # checks ONLY holds -- the room condition exists in the PDDL but was
+    # never implemented in the executor, so obj_inside_room was dropped here
+    # (it could only ever cause a spurious repair, never catch a real
+    # failure). RELEASE's entry was already correct on this point.
     "DROP": {
-        "needs":   ["holds_obj", "obj_inside_room"],
+        "needs":   ["holds_obj"],
         "effects": ["not_holds_obj"],
         "is_prep": False,
     },
 
-"PUTOFF": {
-    "needs": ["on_char"],
-    "effects": ["not_on_char", "holds_obj"],
-    "is_prep": False,
-},
+    # PutOffExecutor.check_putoff: on_char + Property.CLOTHES. The PDDL has
+    # no put_off action at all; clothes added after reading the executor.
+    "PUTOFF": {
+        "needs":   ["on_char", "clothes"],
+        "effects": ["not_on_char", "holds_obj"],
+        "is_prep": False,
+    },
     "RELEASE": {
         "needs":   ["holds_obj"],
         "effects": ["not_holds_obj"],
@@ -121,24 +183,40 @@ SDG = {
         "effects": ["obj_inside_target"],
         "is_prep": False,
     },
-    # PDDL move: movable + next_to + not inside closed container
+    # PDDL move: movable + next_to + not inside closed container.
+    # MoveExecutor.check_movable also requires a free hand
+    # (_find_free_hand) for all three of MOVE/PUSH/PULL, unconditionally --
+    # not in the PDDL, added after reading the executor directly.
     "MOVE": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container",
+                    "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
+    # MoveExecutor.check_movable's movable-property check is explicitly
+    # gated by `action_name != "push"` -- for PUSH specifically the check
+    # can never fail, so "movable" is dropped here (kept for PULL, which
+    # gets no such exemption in the code).
     "PUSH": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "obj_not_inside_closed_container",
+                    "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
     "PULL": {
-        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "movable", "obj_not_inside_closed_container",
+                    "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
+    # GreetExecutor checks ONLY Property.PERSON -- there is no proximity
+    # check anywhere in the class. sdg.py previously had this exactly
+    # backwards: it required next_to_obj (never enforced, causing spurious
+    # WALK repairs) and omitted person (actually enforced, so GREET on a
+    # non-person failed in-env while diagnosing as Unsat=[] -- the blind
+    # repair-loop case). Now executor-exact.
     "GREET": {
-        "needs":   ["next_to_obj"],
+        "needs":   ["person"],
         "effects": [],
         "is_prep": False,
     },
@@ -175,15 +253,29 @@ SDG = {
         "effects": ["off", "not_on"],
         "is_prep": False,
     },
-    # PDDL plug_in: next_to + (has_plug OR has_switch) + plugged_out
+    # PDDL plug_in precondition is next_to + (has_plug OR has_switch) +
+    # plugged_out -- but PlugExecutor.check_plugable checks HAS_PLUG
+    # unconditionally; no has_switch branch exists anywhere in the executor
+    # for either plug direction. The PDDL and the executor disagree here;
+    # the executor is the arbiter. Also adds not_both_hands_full: the
+    # executor calls _find_free_hand and fails if both hands are full,
+    # for both plug-in and plug-out (not gated by direction).
     "PLUGIN": {
-        "needs":   ["next_to_obj", "has_plug_or_has_switch", "plugged_out"],
+        "needs":   ["next_to_obj", "has_plug", "plugged_out", "not_both_hands_full"],
         "effects": ["plugged_in", "not_plugged_out"],
         "is_prep": False,
     },
-    # PDDL plug_out: next_to + has_plug + plugged_in + not(on)
+    # PDDL plug_out: next_to + has_plug + plugged_in + not(on). has_plug
+    # here already matches the executor (unlike plug_in, plug_out's PDDL
+    # never had an OR branch to begin with). Adds not_both_hands_full --
+    # same unconditional _find_free_hand check, verified in the same
+    # PlugExecutor.check_plugable method. NOTE: the executor's "still on"
+    # check for plug-out sets an error message but never returns False
+    # (falls through to True) -- looks like an upstream dead-code bug.
+    # Keeping not_on here is the conservative choice: worst case it causes
+    # an unnecessary SWITCHOFF-before-PLUGOUT repair, never a false failure.
     "PLUGOUT": {
-        "needs":   ["next_to_obj", "has_plug", "plugged_in", "not_on"],
+        "needs":   ["next_to_obj", "has_plug", "plugged_in", "not_on", "not_both_hands_full"],
         "effects": ["plugged_out", "not_plugged_in"],
         "is_prep": False,
     },
@@ -247,15 +339,25 @@ SDG = {
         "effects": ["clean", "not_dirty"],
         "is_prep": False,
     },
-    # PDDL squeeze: next_to + clothes
+    # PDDL squeeze: next_to + clothes. SqueezeExecutor.check_squeezable
+    # also requires a free hand (_find_free_hand) -- not in the PDDL,
+    # added after reading the executor directly. (The executor's actual
+    # property check is broader than "clothes" -- a hardcoded list of
+    # squeezable items -- kept as "clothes" here as a simplification.)
     "SQUEEZE": {
-        "needs":   ["next_to_obj", "clothes"],
+        "needs":   ["next_to_obj", "clothes", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
-    # PDDL cut: next_to + eatable + cuttable
+    # PDDL cut: next_to + eatable + cuttable. CutExecutor.check_cuttable
+    # additionally requires a free hand (_find_free_hand) -- added here --
+    # AND that the character holds an object whose class_name contains
+    # "knife". The knife requirement is NOT modeled: it needs a predicate
+    # that inspects the class name of held objects, which this needs-list
+    # schema cannot express. It is stated in the prompt layer instead
+    # (one_shot.py Rule 9 / SYSTEM_PROMPT RULE 8).
     "CUT": {
-        "needs":   ["next_to_obj", "eatable", "cuttable"],
+        "needs":   ["next_to_obj", "eatable", "cuttable", "not_both_hands_full"],
         "effects": [],
         "is_prep": False,
     },
@@ -279,9 +381,14 @@ SDG = {
         "effects": [],
         "is_prep": False,
     },
-    # PDDL touch: readable + holds_lh/rh + not inside closed container
+    # PDDL touch: readable + holds_lh/rh + not inside closed container.
+    # TouchExecutor.check_reachable checks NEITHER readable NOR holding --
+    # only _is_character_close_to and _is_inside (closed container). Both
+    # PDDL conditions were dropped and next_to_obj added to match. (READ's
+    # readable+holds IS real -- ReadExecutor does check both; TOUCH's entry
+    # had been written by analogy to READ rather than from its own class.)
     "TOUCH": {
-        "needs":   ["readable", "holds_obj", "obj_not_inside_closed_container"],
+        "needs":   ["next_to_obj", "obj_not_inside_closed_container"],
         "effects": [],
         "is_prep": False,
     },
@@ -327,6 +434,7 @@ PRECONDITION_EXPLANATIONS = {
     "off":                             "The object must be off — use SWITCHOFF first.",
     "on":                              "The object must be on — use SWITCHON first.",
     "plugged_in":                      "The object must be plugged in — use PLUGIN first.",
+    "plugged_out":                     "The object is already plugged in — PLUGIN is not needed here.",
     "not_sitting":                     "The character is sitting — use STANDUP first.",
     "not_lying":                       "The character is lying — use STANDUP first.",
     "sitting_or_lying":                "The character must be sitting or lying first.",
@@ -339,6 +447,7 @@ PRECONDITION_EXPLANATIONS = {
     "eatable":                         "The object must be eatable.",
     "cuttable":                        "The object must be cuttable.",
     "clothes":                         "The object must be clothes.",
+    "person":                          "The object must be a person (e.g. man, woman, child).",
     "lookable":                        "The object must be lookable.",
     "pourable":                        "The object must be pourable.",
     "drinkable":                       "The object must be drinkable.",
@@ -379,7 +488,7 @@ def explain_precondition(precondition: str) -> str:
 
 
 if __name__ == "__main__":
-    print("=== SDG Verification against PDDL ===")
+    print("=== SDG Verification against PDDL + executor-verified corrections ===")
     checks = [
         ("WALK",      ["not_sitting", "not_lying"]),
         ("FIND",      []),   # executor auto-navigates (deviation from PDDL)
@@ -398,18 +507,30 @@ if __name__ == "__main__":
         ("PUTBACK",   ["holds_obj", "next_to_target"]),
         ("PUTIN",     ["holds_obj", "next_to_target", "target_open_or_not_openable"]),
         ("RELEASE",   ["holds_obj"]),
-        ("DROP", ["holds_obj", "obj_inside_room"]),
+        ("DROP", ["holds_obj"]),   # obj_inside_room: PDDL-only, never in DropExecutor
         ("DRINK",     ["holds_obj", "drinkable_or_recipient"]),
         ("POUR",      ["holds_obj", "pourable_or_drinkable", "next_to_target", "target_is_recipient"]),
-        ("PLUGIN",    ["next_to_obj", "has_plug_or_has_switch", "plugged_out"]),
-        ("PLUGOUT",   ["next_to_obj", "has_plug", "plugged_in", "not_on"]),
-        ("TOUCH",     ["readable", "holds_obj", "obj_not_inside_closed_container"]),
-        ("MOVE",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
-        ("PUSH",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
-        ("PULL",      ["next_to_obj", "movable", "obj_not_inside_closed_container"]),
+        ("PLUGIN",    ["next_to_obj", "has_plug", "plugged_out", "not_both_hands_full"]),
+        ("PLUGOUT",   ["next_to_obj", "has_plug", "plugged_in", "not_on", "not_both_hands_full"]),
+        # TouchExecutor.check_reachable checks proximity + closed-container
+        # only -- neither readable nor holding appear anywhere in the class.
+        ("TOUCH",     ["next_to_obj", "obj_not_inside_closed_container"]),
+        ("MOVE",      ["next_to_obj", "movable", "obj_not_inside_closed_container",
+                       "not_both_hands_full"]),
+        ("PUSH",      ["next_to_obj", "obj_not_inside_closed_container",
+                       "not_both_hands_full"]),
+        ("PULL",      ["next_to_obj", "movable", "obj_not_inside_closed_container",
+                       "not_both_hands_full"]),
         ("SIT",       ["next_to_obj", "sittable", "not_sitting"]),
         ("LIE",       ["next_to_obj", "lieable", "not_lying"]),
         ("WIPE", ["next_to_obj", "holding_anything"]),
+        ("POINTAT",   ["facing_obj"]),
+        ("SQUEEZE",   ["next_to_obj", "clothes", "not_both_hands_full"]),
+        # 2026-08-26 executor-alignment pass -- these four had no test before.
+        ("GREET",     ["person"]),                        # PERSON only, no proximity
+        ("PUTON",     ["holds_obj", "clothes"]),          # CLOTHES enforced by PutOnExecutor
+        ("PUTOFF",    ["on_char", "clothes"]),            # CLOTHES enforced by PutOffExecutor
+        ("CUT",       ["next_to_obj", "eatable", "cuttable", "not_both_hands_full"]),
     ]
     all_ok = True
     for action, expected in checks:

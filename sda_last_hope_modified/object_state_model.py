@@ -428,6 +428,8 @@ class ObjectStateModel:
             return self.has_state(obj, "CUTTABLE")
         if precondition == "clothes":
             return self.has_state(obj, "CLOTHES")
+        if precondition == "person":
+            return self.has_state(obj, "PERSON")
         if precondition == "lookable":
             return self.has_state(obj, "LOOKABLE")
         if precondition == "pourable":
