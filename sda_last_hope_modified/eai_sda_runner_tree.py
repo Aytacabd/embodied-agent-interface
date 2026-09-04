@@ -1847,9 +1847,45 @@ class EAISDATreeRunner:
                 break
 
             if replan_count >= MAX_REPLAN or attempt >= max_total_iters:
+                # Save what ACTUALLY EXECUTED in this final attempt, not the
+                # last spliced plan. evaluate_results.py re-simulates the saved
+                # string in a fresh environment and scores the state it reaches,
+                # so the saved string IS the measurement — and a plan that was
+                # spliced but never attempted measures neither what the agent
+                # achieved (it can break earlier than the agent got) nor what it
+                # would have achieved (it can run clean and credit a success the
+                # agent never demonstrated).
+                #
+                # This also makes the save convention identical to
+                # NoAdaptRunner's (executed subsequence). Without that, the two
+                # ablation arms are graded on different kinds of object: the
+                # no-adapt arm's plan is executable by construction, the SDA
+                # arm's budget-exhausted plan is non-executable by
+                # construction, so the Execution-SR gap between them measures
+                # the save rule rather than the planners.
+                unrun_plan = raw_output
+                raw_output = plan_to_json_str(history_actions)
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
+                logger.info(
+                    f"  💾 Saved executed prefix ({len(history_actions)} actions). "
+                    f"Discarded un-attempted spliced plan: {unrun_plan}"
+                )
+                if not history_actions:
+                    # plan_to_json_str([]) == "{}", which evaluate_results.py
+                    # counts as a PARSING error and then skips goal scoring
+                    # entirely — so this task scores 0 on every goal category
+                    # even for goals the initial state already satisfied. That
+                    # is an evaluator limitation, not a new one introduced
+                    # here (NoAdaptRunner emits "{}" the same way when nothing
+                    # executes). Logged distinctly so these tasks can be
+                    # counted and excluded from the parsing-error tally.
+                    logger.warning(
+                        f"  ⚠️  EMPTY EXECUTED PREFIX for {file_id} — nothing ran in the "
+                        f"final attempt; saved '{{}}' will be scored as a parsing error "
+                        f"and receive no goal credit"
+                    )
                 if VERBOSE:
-                    print(f"\n  FINAL OUTPUT SAVED (max replans reached):", flush=True)
+                    print(f"\n  FINAL OUTPUT SAVED (max replans reached — executed prefix):", flush=True)
                     print(f"  {raw_output}", flush=True)
                 break
 
@@ -1898,7 +1934,21 @@ class EAISDATreeRunner:
                     print(f"    Unsatisfied needs: {diagnosis.unsatisfied_needs}")
                     print(f"    Error objects    : {error_objects}")
             except Exception as e:
+                # Same reasoning as the budget-exhaustion exit above: this is a
+                # non-success exit, so save the executed prefix rather than
+                # whatever plan happened to be spliced last (or, on the first
+                # attempt, the raw un-parsed LLM text).
                 logger.warning(f"  Diagnosis failed: {e}", exc_info=True)
+                raw_output = plan_to_json_str(history_actions)
+                logger.info(
+                    f"  💾 Diagnosis aborted — saved executed prefix "
+                    f"({len(history_actions)} actions)"
+                )
+                if not history_actions:
+                    logger.warning(
+                        f"  ⚠️  EMPTY EXECUTED PREFIX for {file_id} — see note at the "
+                        f"max-replan exit above"
+                    )
                 break
 
             error_objects = set(str(x) for x in error_objects)
@@ -2065,14 +2115,17 @@ class EAISDATreeRunner:
                     current_plan_eai = history_actions + new_subseq + after_wrong
                     raw_output = plan_to_json_str(current_plan_eai)
                     logger.info(f"  🔄 Replaced with: {wrong_raw}")
-                else:
+                elif replan_count < MAX_REPLAN:
                     fallback_count += 1
-                    fallback_raw = self.llm.call(base_prompt)
+                    replan_count += 1
+                    fallback_raw = self.llm.call(base_prompt, label="FULL PLAN FALLBACK")
                     new_subseq = parse_and_validate(fallback_raw, relevant_name_to_id, goal_edge_relations,
                                                     char_guard="strip")
                     if new_subseq:
                         current_plan_eai = new_subseq
                         raw_output = plan_to_json_str(current_plan_eai)
+                else:
+                    logger.info("  ⚠️  Replan budget exhausted — skipping full-plan fallback")
                 continue
 
             # ── Step 1: LLM corrective suggestions ───────────────────────────

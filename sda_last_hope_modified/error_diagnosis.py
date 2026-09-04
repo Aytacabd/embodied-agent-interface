@@ -456,12 +456,27 @@ def diagnose_error(
     if failed_step.target:
         error_objects.add(failed_step.target)
 
+    # Eq. 4 quantifies UNIVERSALLY over the range:
+    #     t_end = max{t | {o_i | A_i=(a_i,o_i), for all i in (t_error, t]} subset-of O}
+    # i.e. EVERY action strictly after the failure and up to t_end must touch an
+    # error item, so the window stops at the FIRST later action that touches
+    # something else. Without the break this computed max{t | o_t in O} instead,
+    # which let a single mention of an error object near the end of a long plan
+    # drag the whole tail — and every unrelated action in between — into the
+    # reconstruction window, the candidate set and the retained retry tail.
+    #
+    # Note: the paper's A_i carries ONE object; VirtualHome actions carry up to
+    # two. "Touches an error item" is kept as the disjunctive test over
+    # (obj, target) that this function already used, so only the missing
+    # quantifier is being corrected here, not the per-step predicate.
     t_end = plan_anchor
     for step in full_plan:
-        if step.index > plan_anchor:
-            if (step.obj in error_objects or
-                    (step.target and step.target in error_objects)):
-                t_end = step.index
+        if step.index <= plan_anchor:
+            continue
+        if not (step.obj in error_objects or
+                (step.target and step.target in error_objects)):
+            break
+        t_end = step.index
     result.t_end = t_end
 
     return result

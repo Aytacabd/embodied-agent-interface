@@ -67,11 +67,42 @@ each needs machinery this needs-list schema cannot express):
   logic that doesn't fit this needs-list schema at all.
 """
 
+# ─────────────────────────────────────────────────────────────────────────────
+# "is_prep" and the paper's state-preparation-action definition
+# ─────────────────────────────────────────────────────────────────────────────
+# The SDA-Planner paper (arXiv:2509.26375, Section 4.2) defines a state
+# preparation action topologically: an action whose node "has exactly one
+# outgoing edge to an agent state node and no incoming edges from other state
+# nodes", i.e. one that "[is] not dependent on any prior state". Its example is
+# ALFRED's "find".
+#
+# Applied literally to the entries below, that admits FIND and TURNTO only.
+# WALK and RUN would be excluded, because the PDDL gives VirtualHome navigation
+# two posture preconditions (not_sitting, not_lying) and two effects
+# (next_to_obj, inside_room) -- ALFRED's "find" abstraction has neither.
+#
+# They are nevertheless flagged is_prep=True here, deliberately, because the
+# paper's formal rule and the paper's own worked example disagree once
+# transplanted onto this action set. is_prep is consumed in exactly one place:
+# the backward extension of t_start (Eq. 4) in error_diagnosis.diagnose_error.
+# In the paper's Fig. 3 example the root cause is ("pick up","pan") at t=3 and
+# t_start=2, i.e. THE NAVIGATION THAT SET UP THE ROOT CAUSE IS INSIDE THE
+# WINDOW. VirtualHome's WALK is the action that plays that role. Measured
+# directly on that scenario re-expressed in VirtualHome terms:
+#
+#     WALK.is_prep=True  -> t_source=5, t_start=4, window contains "WALK tomato"
+#     WALK.is_prep=False -> t_source=5, t_start=5, window contains nothing
+#
+# so the literal reading reproduces the definition while breaking the mechanism
+# the definition exists to serve. Following the example is the better trade;
+# the divergence is recorded rather than hidden. See chapter3_spec.md Section 9.2.
 SDG = {
 
     # ── Navigation ───────────────────────────────────────────────────────────
     # PDDL walk_towards: not(sitting) and not(lying) → next_to
     # PDDL walk_into:    not(sitting) and not(lying) → inside(char, room)
+    # is_prep=True: intentional divergence from the paper's formal definition —
+    # see the note above the SDG dict.
     "WALK": {
         "needs":   ["not_sitting", "not_lying"],
         "effects": ["next_to_obj", "inside_room"],
