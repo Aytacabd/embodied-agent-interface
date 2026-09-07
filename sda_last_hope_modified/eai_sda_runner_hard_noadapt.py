@@ -3,9 +3,8 @@ eai_sda_runner_hard_noadapt.py
 ==============================
 ABLATION connector: the 50 hard tasks WITHOUT the SDA feedback machinery —
 the "w/o adaptation" variant of the SDA-Planner paper's ablation (Fig. 4):
-when an action fails, it is SKIPPED and execution continues; no error
-diagnosis, no search tree, no repair prompts — the LLM never hears about
-failures. Its only call per task is the initial plan.
+no error diagnosis, no search tree, no repair prompts — the LLM never hears
+about failures. Its only call per task is the initial plan.
 
 Shared with the full-SDA arm (so the two arms differ ONLY in feedback):
   - task set, resources, dataset paths (same overrides as eai_sda_runner_hard)
@@ -14,11 +13,18 @@ Shared with the full-SDA arm (so the two arms differ ONLY in feedback):
   - the one corrective retry when the initial plan fails to parse
     (harness robustness, not feedback — both arms have it)
 
-What gets SAVED: the subsequence of actions that actually executed
-(skip-and-continue result), so the evaluator replays it identically and
-post-failure goal achievements still count — the paper's definition, and
-the choice most favorable to the baseline (makes the measured SDA delta
-conservative).
+What gets SAVED: the full predicted plan, exactly as the LLM produced it.
+The runner executes it once for the log, but saves the prediction rather
+than the executed subsequence, so the offline evaluator does the executing
+and judging. This matches the full-SDA arm, whose non-success exits also
+save the plan the planner ended with (restored to the original SDA
+behaviour), so an Execution-SR difference between the arms reflects the
+planners and not two different save rules.
+
+(Earlier versions saved the skip-and-continue subsequence here. That gave
+this arm two advantages the SDA arm did not have: its saved plan executed
+cleanly by construction, and actions occurring after a failure still
+counted toward goals.)
 
 Usage (inside the container, after the usual docker cp of this directory):
     python3 sda_eai/eai_sda_runner_hard_noadapt.py
@@ -135,7 +141,12 @@ class NoAdaptRunner(core.EAISDATreeRunner):
             core.logger.warning(f"  Could not parse initial plan for {file_id}")
             return raw_output, 0, 0, 0
 
-        # ── Single pass: skip-and-continue, no feedback ───────────────────────
+        # ── Single pass, no feedback ──────────────────────────────────────────
+        # The execution below is DIAGNOSTIC ONLY: it reports which actions would
+        # run, for the log. It does not change what is saved. The saved plan is
+        # the full prediction, matching the SDA arm's non-success exits and the
+        # plain benchmark convention — the planner emits a plan, the offline
+        # evaluator executes and judges it.
         motion_planner.reset()
         executed, skipped = [], []
         if core.VERBOSE:
@@ -145,19 +156,20 @@ class NoAdaptRunner(core.EAISDATreeRunner):
         for i, action in enumerate(actions):
             exe_flag, _ = motion_planner.my_execute_primitive_action_eval(action)
             if core.VERBOSE:
-                print(f"  [{i+1:02d}] {action}  →  {'OK' if exe_flag else 'SKIPPED (failed)'}", flush=True)
+                print(f"  [{i+1:02d}] {action}  →  {'OK' if exe_flag else 'FAILED'}", flush=True)
             if exe_flag:
                 executed.append(action)
             else:
                 skipped.append(action)
 
-        raw_output = core.plan_to_json_str(executed)
+        raw_output = core.plan_to_json_str(actions)
         core.logger.info(
-            f"  no-adapt result: {len(executed)} executed, {len(skipped)} skipped"
-            + (f" | skipped: {[str(a) for a in skipped]}" if skipped else "")
+            f"  no-adapt result: saved full predicted plan ({len(actions)} actions); "
+            f"{len(executed)} of them ran, {len(skipped)} failed"
+            + (f" | failed: {[str(a) for a in skipped]}" if skipped else "")
         )
         if core.VERBOSE:
-            print(f"\n  FINAL OUTPUT SAVED ({len(executed)} executed / {len(skipped)} skipped)", flush=True)
+            print(f"\n  FINAL OUTPUT SAVED (full plan, {len(actions)} actions)", flush=True)
         return raw_output, 0, 0, 0
 
 
