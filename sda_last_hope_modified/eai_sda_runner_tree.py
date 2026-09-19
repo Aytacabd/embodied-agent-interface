@@ -1861,11 +1861,22 @@ class EAISDATreeRunner:
                 # budget-exhausted task is the plan the planner actually ended
                 # with, marked non-executable.
                 #
-                # Note the residual asymmetry with NoAdaptRunner, which saves
-                # its skip-and-continue subsequence: that arm keeps actions from
-                # after its failure point and so is scored more generously on
-                # both ESR and goals. That favours the baseline and therefore
-                # makes the measured SDA delta conservative.
+                # NoAdaptRunner now uses this same rule (it saves the full
+                # prediction; its execution pass is diagnostic only), so the
+                # two arms are symmetric on the save rule and an ESR gap
+                # between them reflects the planners. Do NOT claim the SDA
+                # delta is "conservative" on save-rule grounds any more --
+                # that was true only while NoAdaptRunner saved its
+                # skip-and-continue subsequence, which it no longer does.
+                #
+                # One asymmetry does remain, and it favours THIS arm: the
+                # success path below saves clean_plan, i.e. with actions
+                # skipped as UNSEEN_OBJECT removed, whereas NoAdaptRunner
+                # removes nothing. UNSEEN_OBJECT is fatal in the offline
+                # evaluator (only ADDITIONAL_STEP is exempt), so a plan
+                # naming an absent object is survivable here and fatal there.
+                # That removal is part of the adaptation being measured, so
+                # it is kept -- but it must be disclosed, not assumed neutral.
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
                 logger.info(
                     f"  💾 Saved full predicted plan ({len(current_plan_eai)} actions); "
@@ -2305,10 +2316,14 @@ class NoAdaptRunner(EAISDATreeRunner):
     DATA_DIR are set to when instantiated — the full EAI set by default, or
     a connector's overrides (e.g. the Hard-50 resources) if applied first.
 
-    Saves the subsequence of actions that actually executed (the paper's
-    definition), so post-failure goals can still be credited — the choice
-    most favorable to this baseline, which makes the measured SDA delta
-    conservative rather than inflated.
+    Saves the full predicted plan, not the executed subsequence — execution
+    here is diagnostic only (it fills the log with which actions would run);
+    the offline evaluator does the actual executing and judging, exactly as
+    for the SDA arm. Saving the executed subsequence instead (the earlier
+    behaviour) handed this arm a plan that was executable by construction
+    and let post-failure actions count toward goals, which inflated its
+    execution rate relative to the SDA arm rather than making the delta
+    conservative.
     """
 
     def run_single_task(self, file_id, task_name, task_goal_dict):
