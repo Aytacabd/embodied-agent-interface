@@ -49,11 +49,26 @@ def repairs_consumed_per_task(log_path):
     return {t: consumed.get(t, 0) for t in all_tasks}
 
 
+def build_curve(log_path, error_info_path, max_budget=10, out_csv=None):
+    """Reconstruct Task SR at every budget from 1..max_budget.
+
+    Callable from the runner so a hard-suite run produces its curve without
+    a second manual step; `out_csv` overrides where the CSV is written.
+    """
+    global OUT_CSV
+    if out_csv:
+        OUT_CSV = out_csv
+    return _run(log_path, error_info_path, max_budget)
+
+
 def main():
     log_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_LOG
     error_info_path = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_ERROR_INFO
     max_budget = int(sys.argv[3]) if len(sys.argv) > 3 else DEFAULT_MAX_BUDGET
+    _run(log_path, error_info_path, max_budget)
 
+
+def _run(log_path, error_info_path, max_budget):
     consumed = repairs_consumed_per_task(log_path)
     error_info = json.load(open(error_info_path))
 
@@ -66,6 +81,15 @@ def main():
 
     goals_satisfied = {t: bool(error_info[t].get("goals_satisfied")) for t in tasks}
     n_total = len(tasks)
+    if n_total == 0:
+        # Nothing matched: usually the log has no "TASK:" / "ERROR
+        # DIAGNOSIS:" lines because stdout was not captured, or error_info
+        # belongs to a different run. Say so rather than dividing by zero.
+        print("No tasks could be matched between the log and error_info.json.\n"
+              "The log must contain the execution trace (the 'TASK:' and\n"
+              "'ERROR DIAGNOSIS:' lines printed during the run), and the\n"
+              "error_info.json must be the one scored from that same run.")
+        return None
     n_ever_succeeds = sum(goals_satisfied.values())
 
     print(f"Tasks analyzed: {n_total}")
@@ -106,8 +130,9 @@ def main():
             break
     print(f"\nSR stops improving after budget={stable_from} "
           f"(flat at {rows[stable_from - 1]['task_sr']:.1f}% through budget={max_budget}).")
-    print("Caveat: this only tells you where it stabilized WITHIN the range you "
-          "tested — it can't rule out further gains past budget=10.")
+    print(f"Caveat: this only tells you where it stabilized WITHIN the range you "
+          f"tested — it can't rule out further gains past budget={max_budget}.")
+    return {"rows": rows, "stable_from": stable_from, "csv": OUT_CSV}
 
 
 if __name__ == "__main__":

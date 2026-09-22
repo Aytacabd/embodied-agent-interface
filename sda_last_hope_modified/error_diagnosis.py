@@ -11,10 +11,20 @@ Algorithm:
 5. Calculate reconstruction window [t_start, t_end] (Eq. 4)
 6. Return DiagnosisResult with replan strategy
 
-Strategies:
-  - "local"       : Unsat=[] or AFFORDANCE_ERROR → generate additional steps
-  - "insert_prep" : single prep action needed (STANDUP / WALK)
-  - "reconstruct" : full window reconstruction using search tree
+Strategies. The first three are the paper's routes; the last two are
+additions of this work, for failures its taxonomy does not cover:
+  - "local"             : Unsat=[] or AFFORDANCE_ERROR → additional steps
+  - "insert_prep"       : single prep action needed (STANDUP / WALK / TURNTO)
+  - "reconstruct"       : full window reconstruction using the search tree
+  - "already_satisfied" : the action's effects already hold → drop it, no
+                          LLM call and no repair budget spent
+  - "wrong_action"      : the action is semantically wrong for its object
+                          (unheldable target, or PUTOBJBACK with no
+                          diagnosable precondition) → ask for a replacement
+
+Note that the runner branches only on "reconstruct", "already_satisfied"
+and "wrong_action": "local" and "insert_prep" are recorded for the logs and
+diagnosis statistics, but take the same repair path as "reconstruct".
 """
 
 import re
@@ -79,7 +89,9 @@ class DiagnosisResult:
         self.unsatisfied_needs = []
         self.t_start           = None
         self.t_end             = None
-        self.replan_strategy   = None  # "insert_prep" | "local" | "reconstruct"
+        # "local" | "insert_prep" | "reconstruct" | "already_satisfied" |
+        # "wrong_action" — see the module docstring for what each means.
+        self.replan_strategy   = None
 
     def __repr__(self):
         return (

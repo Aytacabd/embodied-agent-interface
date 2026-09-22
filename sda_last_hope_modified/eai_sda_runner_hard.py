@@ -58,10 +58,18 @@ HARD_TASKS_DIR = os.environ.get(
 
 core.TASK_DICT_PATH = osp.join(HARD_TASKS_DIR, "task_state_LTL_formula_accurate.json")
 core.ID2TASK_PATH = osp.join(HARD_TASKS_DIR, "id2task.json")
-core.MODEL = os.environ.get("HARD_MODEL", core.MODEL)
+core.MODEL = core.model_from_argv(os.environ.get("HARD_MODEL", core.MODEL))
+core.MODEL_EXPLICIT = core.MODEL_EXPLICIT or core.MODEL != core.DEFAULT_MODEL
 core.MODEL_NAME = f"{core.MODEL}-sda-tree_hard50"
+core.SUITE = "hard50"
+core.ARM = "sda"
+# The hard suite runs at budget 10 by default, where the everyday suite
+# runs at 3. The point of the hard set is to see how far repair can get and
+# where it stops paying, so the ceiling is set high enough that tasks end
+# through the loop's own stopping criterion rather than by hitting the cap;
+# the per-budget curve for 1..10 is then reconstructed from this one run.
 _max_replan_override = os.environ.get("HARD_MAX_REPLAN")
-core.MAX_REPLAN = int(_max_replan_override) if _max_replan_override else 3
+core.MAX_REPLAN = int(_max_replan_override) if _max_replan_override else 10
 if _max_replan_override:
     # Distinct tag whenever the budget is overridden, so an r5 run can never
     # resume-collide with (or silently overwrite) the r3 baseline's output.
@@ -74,6 +82,7 @@ if _max_replan_override:
 _attempt = os.environ.get("ATTEMPT")
 if _attempt:
     core.MODEL_NAME += f"_a{_attempt}"
+    core.RUN_VARIANT = f"a{_attempt}"
 core.OUTPUT_DIR = os.environ.get(
     "HARD_OUTPUT_DIR",
     osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
@@ -110,17 +119,40 @@ def _preflight():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default=None,
+                        help="Model id to plan with, e.g. gpt-4o-mini. "
+                             "Applied at import; always set it for a real run.")
     parser.add_argument("--max_tasks", type=int, default=None,
                          help="Max number of hard tasks to run")
     parser.add_argument("--task_ids", type=str, default=None,
                          help="Comma-separated subset of hard task IDs, "
                               "e.g. 9001_1,9011_1,9031_1 (default: all 50)")
+    parser.add_argument("--fresh", action="store_true",
+                        help="Start over: move any existing plans for this tag "
+                             "aside first, instead of resuming them. Use after "
+                             "changing model/prompt/budget, or when the existing "
+                             "plans were produced by older code.")
     args = parser.parse_args()
 
+    core.start_logging()
+
+
     if not core.API_KEY:
-        print("ERROR: API key not set!")
-        print("Run: export OPENAI_API_KEY='your_key'")
+        print("ERROR: no API key found in the environment.")
+        print("  OpenAI  : export OPENAI_API_KEY='sk-...'")
+        print("  Langdock: export LANGDOCK_API_KEY='...'")
         sys.exit(1)
+
+    # --fresh: retire the current plans instead of resuming them. Renaming
+    # rather than deleting means a mistaken --fresh costs nothing.
+    if args.fresh:
+        _stale = osp.join(core.OUTPUT_DIR, f"{core.MODEL_NAME}_outputs.json")
+        if osp.exists(_stale):
+            _retired = f"{_stale}.superseded_{core.RUN_TIMESTAMP}"
+            os.replace(_stale, _retired)
+            core.logger.info(f"--fresh: previous plans moved aside -> {_retired}")
+        else:
+            core.logger.info("--fresh: nothing to clear, starting from empty")
 
     _preflight()
 
@@ -132,4 +164,10 @@ if __name__ == "__main__":
     core.logger.info(f"Attempt    : {_attempt or '- (single run)'} | "
                      f"Temperature: {core.TEMPERATURE} | Tag: {core.MODEL_NAME}")
 
-    core.EAISDATreeRunner().run_all(max_tasks=args.max_tasks, task_ids=task_ids_set)
+    completed = core.EAISDATreeRunner().run_all(
+        max_tasks=args.max_tasks, task_ids=task_ids_set
+    )
+
+    if core.AUTO_EVALUATE:
+        core.run_evaluation()
+    sys.exit(0 if completed else 2)

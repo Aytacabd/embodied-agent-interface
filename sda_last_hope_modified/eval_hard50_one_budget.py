@@ -26,8 +26,18 @@ import os.path as osp
 import shutil
 import json
 
-BASE = "/opt/iGibson"
-RUNNER_OUTPUT_DIR = osp.join(BASE, "output_sda", "virtualhome", "action_sequencing_hard50")
+import eai_sda_runner_tree as core
+
+BASE = os.environ.get("SWEEP_BASE", "/opt/iGibson")
+
+# Resolved exactly the way eai_sda_runner_hard.py resolves it, by importing
+# the same config rather than restating a path. Hardcoding it separately is
+# what silently broke this script once the runner's default moved: the sweep
+# wrote to one directory and the scorer looked in another, finding nothing.
+RUNNER_OUTPUT_DIR = os.environ.get(
+    "HARD_OUTPUT_DIR",
+    osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
+)
 STAGING_ROOT = osp.join(BASE, "eval_staging_budget_sweep")
 RESULTS_ROOT = osp.join(BASE, "results_hard50_budget_sweep")
 CSV_PATH = osp.join(RESULTS_ROOT, "budget_sweep_summary.csv")

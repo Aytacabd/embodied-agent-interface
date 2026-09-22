@@ -62,8 +62,11 @@ import eai_sda_runner_tree as core
 # defaults (the full EAI set), left untouched on purpose.
 # =============================================================================
 
-core.MODEL = os.environ.get("MAIN_MODEL", core.MODEL)
+core.MODEL = core.model_from_argv(os.environ.get("MAIN_MODEL", core.MODEL))
+core.MODEL_EXPLICIT = core.MODEL_EXPLICIT or core.MODEL != core.DEFAULT_MODEL
 core.MODEL_NAME = f"{core.MODEL}-noadapt_main"
+core.SUITE = "everyday"
+core.ARM = "noadapt"
 
 # ── Best-of-k resampling arm ─────────────────────────────────────────────
 # ATTEMPT=n tags this sweep's output file (…-noadapt_main_a<n>) so k full
@@ -85,6 +88,7 @@ elif _attempt:
     core.TEMPERATURE = 1.0
 if _attempt:
     core.MODEL_NAME = f"{core.MODEL}-noadapt_main_a{_attempt}"
+    core.RUN_VARIANT = f"a{_attempt}"
 
 
 class NoAdaptRunner(core.EAISDATreeRunner):
@@ -180,20 +184,47 @@ class NoAdaptRunner(core.EAISDATreeRunner):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default=None,
+                        help="Model id to plan with, e.g. gpt-4o-mini. "
+                             "Applied at import; always set it for a real run.")
     parser.add_argument("--max_tasks", type=int, default=None,
                         help="Max number of tasks to run")
     parser.add_argument("--task_ids", type=str, default=None,
                         help="Comma-separated subset of task IDs")
+    parser.add_argument("--fresh", action="store_true",
+                        help="Start over: move any existing plans for this tag "
+                             "aside first, instead of resuming them. Use after "
+                             "changing model/prompt/budget, or when the existing "
+                             "plans were produced by older code.")
     args = parser.parse_args()
 
+    core.start_logging()
+
+
     if not core.API_KEY:
-        print("ERROR: API key not set!")
-        print("Run: export OPENAI_API_KEY='your_key'")
+        print("ERROR: no API key found in the environment.")
+        print("  OpenAI  : export OPENAI_API_KEY='sk-...'")
+        print("  Langdock: export LANGDOCK_API_KEY='...'")
         sys.exit(1)
+
+    # --fresh: retire the current plans instead of resuming them. Renaming
+    # rather than deleting means a mistaken --fresh costs nothing.
+    if args.fresh:
+        _stale = osp.join(core.OUTPUT_DIR, f"{core.MODEL_NAME}_outputs.json")
+        if osp.exists(_stale):
+            _retired = f"{_stale}.superseded_{core.RUN_TIMESTAMP}"
+            os.replace(_stale, _retired)
+            core.logger.info(f"--fresh: previous plans moved aside -> {_retired}")
+        else:
+            core.logger.info("--fresh: nothing to clear, starting from empty")
 
     core.logger.info("MODE: NO-ADAPTATION ABLATION (main set) — one LLM call "
                      "per task, failures skipped, no diagnosis/tree/repair")
     core.logger.info(f"Attempt    : {_attempt or '- (single run)'} | "
                      f"Temperature: {core.TEMPERATURE} | Tag: {core.MODEL_NAME}")
     task_ids_set = set(args.task_ids.split(",")) if args.task_ids else None
-    NoAdaptRunner().run_all(max_tasks=args.max_tasks, task_ids=task_ids_set)
+    completed = NoAdaptRunner().run_all(max_tasks=args.max_tasks, task_ids=task_ids_set)
+
+    if core.AUTO_EVALUATE:
+        core.run_evaluation()
+    sys.exit(0 if completed else 2)

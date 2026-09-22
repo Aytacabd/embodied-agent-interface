@@ -1,20 +1,43 @@
 """
 eai_sda_runner_tree.py
 ======================
-Full SDA-Planner pipeline with Adaptive Action SubTree Generation.
-Implements paper Sections 4.2, 4.3, 4.4.
+Full SDA-Planner pipeline with Adaptive Action SubTree Generation, run over
+the EAI action-sequencing suite in VirtualHome. Implements paper Sections
+4.2, 4.3 and 4.4.
 
-Cleaned ID-aware version:
-  - Uses runner-local goal-string builder instead of MotionPlanner.get_symbolic_goal_nl
-  - Keeps object identity as class_name_id inside the runner
-  - Strictly rejects ambiguous duplicate-class objects instead of guessing
+Quick start — one environment variable, nothing else:
+
+    export OPENAI_API_KEY=sk-...        # or: export LANGDOCK_API_KEY=...
+    python3 eai_sda_runner_tree.py
+
+The provider is inferred from whichever key is set, resource paths resolve
+from the installed virtualhome_eval package, and everything a run produces
+lands under ./runs (override with SDA_OUTPUT_DIR):
+
+    runs/virtualhome/action_sequencing/<tag>_outputs.json   the plans
+    runs/results/<tag>/{summary,error_info}.json            the scores
+    runs/logs/<tag>_<timestamp>.log                         the full log
+
+Scoring runs automatically when generation finishes (SDA_AUTO_EVAL=0 or
+--no_eval to skip, --eval_only to score an existing run without generating).
+
+Nothing is lost if a run stops: the outputs file is rewritten atomically
+after every single task, a task that raises is recorded and skipped rather
+than killing the run, and a spent budget or rejected key stops the loop
+cleanly instead of burning through the remaining tasks. Re-running the same
+command resumes — finished tasks are skipped, unfinished ones retried.
+
+Other options:
+    python3 eai_sda_runner_tree.py --max_tasks 50
+    python3 eai_sda_runner_tree.py --task_ids 650_2,190_1,487_1
+
+ID-aware design notes:
+  - Uses a runner-local goal-string builder rather than
+    MotionPlanner.get_symbolic_goal_nl
+  - Keeps object identity as class_name_id throughout the runner
+  - Rejects ambiguous duplicate-class objects instead of guessing
   - Converts one_shot output [name, id] -> name_id before json_to_action
   - Accepts subtree outputs in name_id format
-
-Usage:
-    python3 sda_eai/eai_sda_runner_tree.py
-    python3 sda_eai/eai_sda_runner_tree.py --max_tasks 50
-    python3 sda_eai/eai_sda_runner_tree.py --task_ids 650_2,190_1,487_1
 """
 
 import os
@@ -23,6 +46,7 @@ import json
 import copy
 import re
 import time
+import shutil
 import difflib
 import logging
 import argparse
@@ -30,6 +54,7 @@ import os.path as osp
 
 sys.path.insert(0, "/opt/iGibson/sda_eai")
 
+import virtualhome_eval
 import virtualhome_eval.simulation.evolving_graph.utils as utils
 from virtualhome_eval.simulation.evolving_graph.eval_utils import (
     construct_planner,
@@ -49,45 +74,226 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def start_logging(tag: str = None) -> str:
+    """Tee logging to a run-labelled file as well as the console.
+
+    Called from entry points rather than at import, so connectors that
+    import this module for its constants create no stray log files, and so
+    the filename picks up whatever SUITE/ARM/MODEL they have set by then.
+    """
+    # Grouped per model, matching the results layout, so one model's whole
+    # output is a single directory to copy out.
+    path = osp.join(LOG_DIR, model_dir(), f"{tag or run_scope()}.log")
+    os.makedirs(osp.dirname(path), exist_ok=True)
+    handler = logging.FileHandler(path, encoding="utf-8")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    )
+    logging.getLogger().addHandler(handler)
+
+    # stdout is teed into the same file, not just logging records. The
+    # execution trace and the diagnosis blocks are printed, not logged, and
+    # the budget-curve parser reads exactly those ("TASK:", "ERROR
+    # DIAGNOSIS:", "Replan strategy"). Without this the log would be missing
+    # them and the curve would silently come out empty. This reproduces what
+    # the old shell pipelines captured with `2>&1 | tee`.
+    sys.stdout = _Tee(sys.stdout, handler.stream)
+
+    logger.info(f"Log file → {path}")
+    return path
+
+
+class _Tee:
+    """Write-through to two streams, so console output is also recorded."""
+
+    def __init__(self, primary, secondary):
+        self._primary = primary
+        self._secondary = secondary
+
+    # At interpreter shutdown logging closes its handler's stream before
+    # stdout is torn down, so a late write or flush would raise on a closed
+    # file. That is noise from an already-finished run, never a lost line,
+    # so writes to the log copy fail quietly while the console copy, which
+    # is what the user sees, is never suppressed.
+    def write(self, data):
+        self._primary.write(data)
+        try:
+            self._secondary.write(data)
+            # Flushed per write, not left to buffering: if the process is
+            # killed outright, the trace so far must already be on disk —
+            # the log is the only record of what the repair loop was doing.
+            self._secondary.flush()
+        except ValueError:
+            pass
+        return len(data)
+
+    def flush(self):
+        self._primary.flush()
+        try:
+            self._secondary.flush()
+        except ValueError:
+            pass
+
+    def __getattr__(self, name):
+        return getattr(self._primary, name)
+
+
 # =============================================================================
 # LLM PROVIDER CONFIGURATION
 # =============================================================================
-# The ONLY block to touch when switching LLM providers — the rest of the
-# pipeline is provider-agnostic and talks to `LLMClient.call()` exclusively.
+# Normal use needs ONE environment variable: an API key. The provider is
+# inferred from which key is present, so neither this file nor any other
+# setting has to be touched:
 #
-#   API_PROVIDER  "openai" | "openai_compatible" | "groq" | "gemini"
-#                 openai_compatible = ANY OpenAI-style /chat/completions
-#                 server (vLLM, Ollama, Together, DeepSeek, Mistral, LM
-#                 Studio, ...) — set API_BASE_URL to its endpoint.
-#   MODEL         model id exactly as the provider names it
-#   API_KEY       resolved from env: LLM_API_KEY first, then the provider's
-#                 conventional variable (OPENAI_API_KEY / GROQ_API_KEY /
-#                 GEMINI_API_KEY)
-#   API_BASE_URL  endpoint override, needed only for openai_compatible
-#                 (e.g. "http://localhost:11434/v1" for Ollama)
+#     export OPENAI_API_KEY=sk-...        # -> OpenAI directly
+#     export LANGDOCK_API_KEY=...         # -> Langdock (OpenAI-compatible)
+#     python3 eai_sda_runner_tree.py
 #
-# Everything is env-overridable without editing this file:
-#   LLM_PROVIDER, LLM_MODEL, LLM_API_KEY, LLM_BASE_URL
+# Langdock serves an OpenAI-shaped /chat/completions endpoint, so it runs
+# through the same backend as OpenAI and differs only in base URL. Set
+# LANGDOCK_REGION (default "eu") if the workspace lives in another region.
+#
+# Every inferred value can still be overridden explicitly:
+#   LLM_PROVIDER  "openai" | "langdock" | "openai_compatible" | "groq" | "gemini"
+#   LLM_MODEL     model id exactly as the provider names it
+#   LLM_API_KEY   key, taking precedence over the per-provider variables
+#   LLM_BASE_URL  endpoint override (needed only for openai_compatible)
 # (the hard-task connectors additionally override MODEL via HARD_MODEL)
 
-API_PROVIDER = os.environ.get("LLM_PROVIDER", "openai")
-MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+_PROVIDER_KEY_VARS = {
+    "openai":            "OPENAI_API_KEY",
+    "openai_compatible": "OPENAI_API_KEY",
+    "langdock":          "LANGDOCK_API_KEY",
+    "groq":              "GROQ_API_KEY",
+    "gemini":            "GEMINI_API_KEY",
+}
+
+
+def _detect_provider() -> str:
+    """Provider from LLM_PROVIDER, else from whichever API key is set."""
+    explicit = os.environ.get("LLM_PROVIDER")
+    if explicit:
+        return explicit
+    for provider in ("openai", "langdock", "groq", "gemini"):
+        if os.environ.get(_PROVIDER_KEY_VARS[provider]):
+            return provider
+    return "openai"
+
+
+API_PROVIDER = _detect_provider()
 API_KEY = os.environ.get("LLM_API_KEY") or os.environ.get(
-    {
-        "openai": "OPENAI_API_KEY",
-        "openai_compatible": "OPENAI_API_KEY",
-        "groq": "GROQ_API_KEY",
-        "gemini": "GEMINI_API_KEY",
-    }.get(API_PROVIDER, "OPENAI_API_KEY"),
-    "",
+    _PROVIDER_KEY_VARS.get(API_PROVIDER, "OPENAI_API_KEY"), ""
 )
 API_BASE_URL = os.environ.get("LLM_BASE_URL", "")
+LANGDOCK_REGION = os.environ.get("LANGDOCK_REGION", "eu")
+
+# The model is whatever you ask for. The default exists only so a bare
+# smoke test runs; every real run should name the model explicitly, via
+# --model or LLM_MODEL, because the model is what the results are about.
+# MODEL_EXPLICIT records which of the two happened, so the entry point can
+# say out loud when it fell back.
+#
+# The default is per-provider because the catalogues do not overlap:
+# Langdock carries no 4o-generation model at all, so gpt-4o-mini would fail
+# there immediately, and gpt-5-mini is its nearest small equivalent.
+_DEFAULT_MODELS = {
+    "openai": "gpt-4o-mini",
+    "langdock": "gpt-5-mini",
+}
+DEFAULT_MODEL = _DEFAULT_MODELS.get(API_PROVIDER, "gpt-4o-mini")
+
+
+def _model_from_argv_early(default: str) -> str:
+    """--model, read before argparse, so the tag below is built only once."""
+    argv = sys.argv[1:]
+    for i, arg in enumerate(argv):
+        if arg == "--model" and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith("--model="):
+            return arg.split("=", 1)[1]
+    return default
+
+
+_ENV_MODEL = os.environ.get("LLM_MODEL")
+MODEL = _model_from_argv_early(_ENV_MODEL or DEFAULT_MODEL)
+MODEL_EXPLICIT = bool(_ENV_MODEL) or MODEL != DEFAULT_MODEL
 
 # Generation parameters, shared by every backend.
 TEMPERATURE = 0     # deterministic — the tabu/repair-memory logic relies on it
 MAX_TOKENS = 2048   # 512 truncated 30-50-step hard-task plans mid-JSON
 
 MODEL_NAME = f"{MODEL}-sda-tree-final{os.environ.get('SDA_TAG_SUFFIX', '')}"
+
+# Which task suite and which arm this process is running. MODEL_NAME stays
+# the stable identity of the outputs file (and therefore of the resume
+# checkpoint), so these are kept separate and used only to label results and
+# logs. The connectors override them; see run_label().
+SUITE = "everyday"   # "everyday" (342 tasks) | "hard50" (50 hard tasks)
+ARM = "sda"          # "sda" (diagnosis + repair) | "noadapt" (single shot)
+RUN_VARIANT = ""     # e.g. "a2" for the second best-of-k sampling attempt
+
+# One timestamp per process, so a run's log and its results carry the same
+# stamp instead of drifting by however long generation took.
+RUN_TIMESTAMP = time.strftime("%Y%m%d_%H%M%S")
+
+
+def model_from_argv(default: str) -> str:
+    """Read --model straight from argv, before argparse has run.
+
+    The connectors build their output tag at import time, so the model has
+    to be settled before __main__ parses anything. Reading it here lets the
+    tag keep being built in exactly one place, rather than being rebuilt
+    afterwards from a second copy of its format that could drift.
+
+    Accepts both "--model x" and "--model=x". Returns `default` unchanged
+    when the flag is absent, so env vars and per-provider defaults still
+    apply.
+    """
+    argv = sys.argv[1:]
+    for i, arg in enumerate(argv):
+        if arg == "--model" and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith("--model="):
+            return arg.split("=", 1)[1]
+    return default
+
+
+def model_dir() -> str:
+    """This run's model as a directory name.
+
+    Results and logs are grouped per model, so one model's output can be
+    copied out on its own instead of dragging every other model's along.
+    Slashes are the only character a provider id realistically contains
+    that a path cannot.
+    """
+    return str(MODEL).replace("/", "_")
+
+
+def run_scope() -> str:
+    """Everything identifying this run except the model: suite, arm,
+    budget, best-of-k variant, start time.
+
+        everyday_sda_r3_20260920_0213
+        hard50_sda_r10_20260920_0530
+        everyday_noadapt_a2_20260920_0641
+
+    The repair budget is included for the SDA arm because the budget sweep
+    varies exactly that, and the variant for best-of-k attempts, so runs
+    differing only in those are still told apart at a glance rather than by
+    timestamp alone.
+    """
+    parts = [SUITE, ARM]
+    if ARM == "sda":
+        parts.append(f"r{MAX_REPLAN}")
+    if RUN_VARIANT:
+        parts.append(RUN_VARIANT)
+    parts.append(RUN_TIMESTAMP)
+    return "_".join(parts)
+
+
+def run_label() -> str:
+    """Full identity of the run, model included: <model>_<scope>."""
+    return f"{model_dir()}_{run_scope()}"
 
 MAX_REPLAN = 3
 SCENEGRAPH_ID = 1
@@ -97,12 +303,37 @@ TREE_MAX_NODES = 500
 VERBOSE = True        # show execution trace, responses, diagnosis
 SHOW_PROMPTS = False  # set True to also print full prompts sent to LLM
 
-RESOURCE_DIR = "/usr/local/lib/python3.8/dist-packages/virtualhome_eval/resources"
-DATASET_DIR = "/usr/local/lib/python3.8/dist-packages/virtualhome_eval/dataset"
-OUTPUT_DIR = "/opt/iGibson/output_sda/virtualhome/action_sequencing"
+# Resource paths resolve from the installed virtualhome_eval package, so the
+# same file runs inside the container and on a local checkout. SDA_OUTPUT_DIR
+# overrides where runs are written; the default sits next to this file.
+_PKG_DIR = osp.dirname(virtualhome_eval.__file__)
+RESOURCE_DIR = os.environ.get("EAI_RESOURCE_DIR", osp.join(_PKG_DIR, "resources"))
+DATASET_DIR = os.environ.get("EAI_DATASET_DIR", osp.join(_PKG_DIR, "dataset"))
+def _default_run_root() -> str:
+    """Where a run writes when SDA_OUTPUT_DIR says nothing.
+
+    Inside the iGibson container this stays /opt/iGibson/output_sda, the
+    location every previous run and every sweep script already uses, so
+    container behaviour is unchanged. Anywhere else it falls back to a
+    ./runs directory beside this file, which is what makes a local
+    checkout runnable at all.
+    """
+    legacy = "/opt/iGibson/output_sda"
+    if osp.isdir("/opt/iGibson"):
+        return legacy
+    return osp.join(osp.dirname(osp.abspath(__file__)), "runs")
+
+
+RUN_ROOT = os.environ.get("SDA_OUTPUT_DIR", _default_run_root())
+OUTPUT_DIR = osp.join(RUN_ROOT, "virtualhome", "action_sequencing")
+RESULTS_DIR = os.environ.get("SDA_RESULTS_DIR", osp.join(RUN_ROOT, "results"))
+LOG_DIR = os.environ.get("SDA_LOG_DIR", osp.join(RUN_ROOT, "logs"))
 TASK_DICT_PATH = osp.join(RESOURCE_DIR, "virtualhome/task_state_LTL_formula_accurate.json")
 ID2TASK_PATH = osp.join(RESOURCE_DIR, "virtualhome/id2task.json")
 DATA_DIR = osp.join(DATASET_DIR, "programs_processed_precond_nograb_morepreconds")
+
+# Auto-score the run with the benchmark's own evaluator when it finishes.
+AUTO_EVALUATE = os.environ.get("SDA_AUTO_EVAL", "1") not in ("0", "false", "False")
 
 
 # =============================================================================
@@ -346,12 +577,25 @@ class _GeminiBackend:
 
 # provider name -> (backend class, default base_url).
 # API_BASE_URL (env LLM_BASE_URL) overrides the default when set.
+# Langdock speaks the OpenAI chat-completions dialect, so it reuses that
+# backend and only supplies its own regional endpoint.
 _BACKENDS = {
     "openai":            (_OpenAIChatBackend, ""),
     "openai_compatible": (_OpenAIChatBackend, ""),
+    "langdock":          (_OpenAIChatBackend,
+                          f"https://api.langdock.com/openai/{LANGDOCK_REGION}/v1"),
     "groq":              (_OpenAIChatBackend, "https://api.groq.com/openai/v1"),
     "gemini":            (_GeminiBackend, ""),
 }
+
+# Substrings marking an error that will not fix itself on the next call:
+# spent budget, revoked key, disabled billing. The runner stops on these
+# rather than spending the rest of the task list on calls that cannot work.
+_FATAL_API_MARKERS = (
+    "insufficient_quota", "exceeded your current quota", "billing",
+    "invalid_api_key", "incorrect api key", "authentication",
+    "unauthorized", "permission_denied", "account is not active",
+)
 
 
 class LLMClient:
@@ -377,6 +621,10 @@ class LLMClient:
                 f"{sorted(_BACKENDS)} or register a backend class in _BACKENDS"
             )
         self.backend = backend_cls(API_KEY, API_BASE_URL or default_base)
+        # Set to the offending message once the key or budget is spent, so
+        # run_all can stop and keep what it has instead of looping on a
+        # call that cannot succeed. See _FATAL_API_MARKERS.
+        self.fatal_error = None
         logger.info(f"LLM: {API_PROVIDER} / {MODEL}")
 
     def call(self, user_prompt: str, system_prompt: str = None, label: str = "LLM") -> str:
@@ -404,6 +652,13 @@ class LLMClient:
             result = self.backend.complete(MODEL, system_prompt, user_prompt)
         except Exception as e:
             logger.error(f"API error ({API_PROVIDER}/{MODEL}): {e}")
+            blob = f"{type(e).__name__}: {e}".lower()
+            if any(marker in blob for marker in _FATAL_API_MARKERS):
+                self.fatal_error = f"{type(e).__name__}: {e}"
+                logger.error(
+                    "Treating this as fatal (spent budget or bad key) — "
+                    "the run will stop after saving progress."
+                )
             result = ""
         elapsed = time.time() - t0
         if VERBOSE:
@@ -1501,7 +1756,18 @@ class EAISDATreeRunner:
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         logger.info("EAI resources loaded.")
 
-    def run_all(self, max_tasks=None, task_ids=None):
+    def run_all(self, max_tasks=None, task_ids=None) -> bool:
+        """Plan every task in the suite, saving durably as it goes.
+
+        Resumable by design: an existing outputs file is loaded first and
+        any task already carrying a non-empty plan is skipped, so re-running
+        the same command after any kind of stop picks up where it left off
+        and retries only what did not finish.
+
+        Returns True if the sweep reached the end of the task list, False if
+        it stopped early because the key was rejected or the budget ran out
+        (progress is saved either way).
+        """
         logger.info("=== EAI + SDA-Planner (Full Search Tree) ===")
         logger.info(f"Model      : {MODEL_NAME}")
         logger.info(f"Provider   : {API_PROVIDER}")
@@ -1524,6 +1790,8 @@ class EAISDATreeRunner:
             outputs, done_ids = [], set()
 
         total = replan_total = tree_success = fallback_count = 0
+        crashed = []          # task ids whose run raised; retried on resume
+        stopped_early = False  # set when the key or budget gives out
 
         for task_name, task_files in self.task_dicts.items():
             for file_id, task_goal_dict in task_files.items():
@@ -1533,7 +1801,7 @@ class EAISDATreeRunner:
                 if max_tasks and total >= max_tasks:
                     logger.info(f"Reached max_tasks={max_tasks}, stopping.")
                     self._save(outputs)
-                    return
+                    return True
 
                 if file_id in done_ids:
                     continue
@@ -1541,30 +1809,57 @@ class EAISDATreeRunner:
                 total += 1
                 logger.info(f"\n[{total}] {task_name} | {file_id}")
 
-                result, rc, ts, fb = self.run_single_task(
-                    file_id, task_name, task_goal_dict
-                )
+                # One task's crash must not cost the whole run: record it,
+                # save, and move on. The empty llm_output means a resume
+                # picks this task up again rather than treating it as done.
+                try:
+                    result, rc, ts, fb = self.run_single_task(
+                        file_id, task_name, task_goal_dict
+                    )
+                except Exception as e:
+                    logger.exception(f"Task {file_id} crashed: {e}")
+                    result, rc, ts, fb = "", 0, 0, 0
+                    crashed.append(file_id)
+
                 replan_total += rc
                 tree_success += ts
                 fallback_count += fb
                 outputs.append({"identifier": file_id, "llm_output": result})
 
+                # Save after EVERY task, not every tenth: a stop between
+                # saves would otherwise discard up to nine completed tasks.
+                self._save(outputs)
+
+                if self.llm.fatal_error:
+                    logger.error(
+                        f"Stopping early after {total} task(s): "
+                        f"{self.llm.fatal_error}"
+                    )
+                    logger.info(
+                        "Progress is saved. Fix the key or budget and re-run "
+                        "the same command — finished tasks are skipped."
+                    )
+                    stopped_early = True
+                    break
+
                 time.sleep(1)
 
-                if total % 10 == 0:
-                    self._save(outputs)
-                    logger.info(
-                        f"Progress: {total} | "
-                        f"Tree: {tree_success} | Fallback: {fallback_count}"
-                    )
+            if stopped_early:
+                break
 
         self._save(outputs)
-        logger.info("\n=== DONE ===")
+        logger.info("\n=== DONE ===" if not stopped_early else "\n=== STOPPED EARLY ===")
         logger.info(f"Total tasks    : {total}")
         logger.info(f"Total replans  : {replan_total}")
         logger.info(f"Tree successes : {tree_success}")
         logger.info(f"LLM fallbacks  : {fallback_count}")
         logger.info(f"Avg replans    : {replan_total / max(total, 1):.2f}")
+        if crashed:
+            logger.warning(
+                f"{len(crashed)} task(s) crashed and stayed unfinished: "
+                f"{crashed} — re-running retries exactly these."
+            )
+        return not stopped_early
 
     def run_single_task(self, file_id, task_name, task_goal_dict):
         """Returns (raw_output, replan_count, tree_success_count, fallback_count)"""
@@ -2295,10 +2590,154 @@ class EAISDATreeRunner:
         return raw_output, replan_count, tree_success, fallback_count
 
     def _save(self, outputs: list):
+        """Write the outputs file atomically.
+
+        A plain open(path, "w") truncates first, so an interruption between
+        truncate and write leaves an unparseable file and loses every task
+        in it. Writing a sibling temp file and renaming means the visible
+        file is always a complete, valid JSON document: either the previous
+        save or this one, never a half-written mix.
+        """
         path = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")
-        with open(path, "w") as f:
+        tmp = f"{path}.tmp"
+        with open(tmp, "w") as f:
             json.dump(outputs, f, indent=4)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
         logger.info(f"Saved {len(outputs)} outputs → {path}")
+
+
+def _write_budget_curve(results_dir: str) -> None:
+    """Reconstruct Task SR at every budget 1..MAX_REPLAN for a repair run.
+
+    Answers "how many repair attempts does a task actually need", which is
+    the question the hard suite exists to ask, and does it from the run that
+    just finished rather than from ten separate runs: the loop is never told
+    how much budget is left, so a task that succeeded after k repairs would
+    also have succeeded under any ceiling >= k.
+
+    Needs this run's log (for repairs consumed per task) and its
+    error_info.json (for which tasks actually met their goals), so it runs
+    after scoring. Skipped for the no-adapt arm, which has no repair budget.
+    """
+    if ARM != "sda" or MAX_REPLAN < 2:
+        return
+    error_info = osp.join(results_dir, "error_info.json")
+    log_path = osp.join(LOG_DIR, model_dir(), f"{run_scope()}.log")
+    if not (osp.exists(error_info) and osp.exists(log_path)):
+        logger.info("Budget curve skipped (needs this run's log and error_info).")
+        return
+    try:
+        import analyze_budget_stabilization as curve
+
+        logger.info(f"\n=== REPAIR-BUDGET CURVE (1..{MAX_REPLAN}) ===")
+        curve.build_curve(
+            log_path, error_info, MAX_REPLAN,
+            out_csv=osp.join(results_dir, "budget_curve.csv"),
+        )
+    except Exception as e:
+        logger.warning(
+            f"Budget curve failed ({e}) — scores are unaffected. Rebuild with: "
+            f"python3 analyze_budget_stabilization.py {log_path} {error_info} {MAX_REPLAN}"
+        )
+
+
+def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
+    """Score a finished run with the benchmark's own offline evaluator.
+
+    Re-executes the saved plans in a fresh simulator and writes
+    summary.json and error_info.json under <results_dir>/<tag>/.
+
+    Everything is derived from the config as the connectors leave it, so
+    hard-task runs need no special handling:
+      - the resource dir comes from TASK_DICT_PATH, which the hard
+        connectors repoint at difficult_tasks/resources;
+      - the outputs file is staged into a private
+        <tag>/virtualhome/action_sequencing/ directory, because the
+        evaluator always appends that suffix to the path it is given, while
+        the hard connectors write to an action_sequencing_hard50 leaf.
+        Staging one file also stops the evaluator from re-scoring every
+        historical run sitting in the same directory.
+
+    Returns True when scoring produced a summary. Scoring needs the
+    simulator, so it is kept non-fatal: a failure here leaves the run's own
+    outputs untouched and re-runnable via eval_tag.py.
+    """
+    tag = tag or MODEL_NAME
+    results_dir = results_dir or RESULTS_DIR
+    os.makedirs(results_dir, exist_ok=True)
+
+    outputs_file = osp.join(OUTPUT_DIR, f"{tag}_outputs.json")
+    if not osp.exists(outputs_file):
+        logger.warning(f"Nothing to score: {outputs_file} does not exist")
+        return False
+
+    logger.info(f"\n=== EVALUATING {tag} ===")
+    try:
+        import virtualhome_eval.evaluation.action_sequencing.scripts.evaluate_results as er
+
+        # <resource_dir>/virtualhome/task_state_LTL_formula_accurate.json
+        resource_dir = osp.dirname(osp.dirname(TASK_DICT_PATH))
+        stage_root = osp.join(RUN_ROOT, "_eval", tag)
+        stage_dir = osp.join(stage_root, "virtualhome", "action_sequencing")
+        os.makedirs(stage_dir, exist_ok=True)
+        shutil.copy2(outputs_file, osp.join(stage_dir, f"{tag}_outputs.json"))
+
+        args = argparse.Namespace(
+            llm_response_path=stage_root,
+            resource_dir=resource_dir,
+            dataset_dir=DATASET_DIR,
+            output_dir=results_dir,
+            dataset="virtualhome",
+        )
+        er.extract_model_names = lambda _dir: [tag]
+        er.evaluate_results(args)
+    except Exception as e:
+        logger.exception(f"Evaluation failed ({e}) — run outputs are intact.")
+        logger.info(f"Score it later with: python3 eval_tag.py --tag {tag}")
+        return False
+
+    # The evaluator always writes to <output_dir>/<tag>/. Move that into a
+    # run-labelled directory so model, suite, arm and time are visible on
+    # disk and successive runs of the same tag do not overwrite each other.
+    written = osp.join(results_dir, tag)
+    final_dir = osp.join(results_dir, model_dir(), run_scope())
+    if osp.isdir(written) and written != final_dir:
+        if osp.isdir(final_dir):
+            shutil.rmtree(final_dir)
+        shutil.move(written, final_dir)
+
+    summary_path = osp.join(final_dir, "summary.json")
+    if osp.exists(summary_path):
+        with open(summary_path) as f:
+            summary = json.load(f)
+        # Record what produced these numbers, so a results directory is
+        # still interpretable months later without consulting the logs.
+        meta = {
+            "model": MODEL,
+            "provider": API_PROVIDER,
+            "suite": SUITE,
+            "arm": ARM,
+            "output_tag": tag,
+            "started": RUN_TIMESTAMP,
+            "scored": time.strftime("%Y%m%d_%H%M%S"),
+            "max_replan": MAX_REPLAN,
+            "temperature": TEMPERATURE,
+            "plans_file": outputs_file,
+        }
+        with open(osp.join(final_dir, "run_meta.json"), "w") as f:
+            json.dump(meta, f, indent=2)
+
+        logger.info(f"summary.json    → {summary_path}")
+        logger.info(f"error_info.json → {osp.join(final_dir, 'error_info.json')}")
+        logger.info(f"run_meta.json   → {osp.join(final_dir, 'run_meta.json')}")
+        logger.info(json.dumps(summary, indent=2))
+        _write_budget_curve(final_dir)
+        return True
+
+    logger.warning(f"Evaluator wrote no summary at {summary_path}")
+    return False
 
 
 class NoAdaptRunner(EAISDATreeRunner):
@@ -2416,7 +2855,18 @@ class NoAdaptRunner(EAISDATreeRunner):
 # =============================================================================
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Run the SDA planner over the EAI action-sequencing suite. "
+                    "Needs one API key in the environment (OPENAI_API_KEY or "
+                    "LANGDOCK_API_KEY); re-running resumes where it left off."
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Model id to plan with, e.g. gpt-4o-mini, gpt-4o, gpt-5. "
+             "Overrides LLM_MODEL. Always set this for a real run.",
+    )
     parser.add_argument("--max_tasks", type=int, default=None, help="Max number of tasks to run")
     parser.add_argument(
         "--task_ids",
@@ -2424,19 +2874,74 @@ if __name__ == "__main__":
         default=None,
         help="Comma-separated task IDs e.g. 650_2,190_1,487_1",
     )
+    parser.add_argument(
+        "--fresh",
+        action="store_true",
+        help="Start over: move any existing plans for this tag aside first, "
+             "instead of resuming them. Use after changing model/prompt/budget.",
+    )
+    parser.add_argument(
+        "--no_eval",
+        action="store_true",
+        help="Skip the automatic scoring pass at the end",
+    )
+    parser.add_argument(
+        "--eval_only",
+        action="store_true",
+        help="Score an existing run without generating anything",
+    )
+    # --model is declared so it appears in --help and is accepted here, but
+    # it was already applied at import (see _model_from_argv_early), because
+    # MODEL_NAME is built there and must not be rebuilt from a second copy
+    # of its format.
     args = parser.parse_args()
 
+    log_path = start_logging()
+
+    if args.eval_only:
+        sys.exit(0 if run_evaluation() else 1)
+
     if not API_KEY:
-        print("ERROR: API key not set!")
-        print("Run: export OPENAI_API_KEY='your_key'")
+        print("ERROR: no API key found in the environment.")
+        print("  OpenAI  : export OPENAI_API_KEY='sk-...'")
+        print("  Langdock: export LANGDOCK_API_KEY='...'")
         sys.exit(1)
+
+    if not MODEL_EXPLICIT:
+        logger.warning(
+            f"No model given — falling back to the default {MODEL!r}. "
+            f"Name it explicitly (--model {MODEL} or LLM_MODEL) for any run "
+            f"whose numbers you intend to keep."
+        )
+    logger.info(f"Model: {MODEL} | Provider: {API_PROVIDER} | Suite: {SUITE} | Arm: {ARM}")
+
+    # --fresh: retire the current plans instead of resuming them. Renaming
+    # rather than deleting means a mistaken --fresh costs nothing.
+    if args.fresh:
+        stale = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")
+        if osp.exists(stale):
+            retired = f"{stale}.superseded_{RUN_TIMESTAMP}"
+            os.replace(stale, retired)
+            logger.info(f"--fresh: previous plans moved aside → {retired}")
+        else:
+            logger.info("--fresh: nothing to clear, starting from empty")
 
     task_ids_set = None
     if args.task_ids:
         task_ids_set = set(args.task_ids.split(","))
         logger.info(f"Running only task IDs: {task_ids_set}")
 
-    EAISDATreeRunner().run_all(
+    completed = EAISDATreeRunner().run_all(
         max_tasks=args.max_tasks,
         task_ids=task_ids_set,
     )
+
+    # Score whatever finished. Worth doing even after an early stop: the
+    # partial run is still a valid, scoreable set of saved plans.
+    if AUTO_EVALUATE and not args.no_eval:
+        run_evaluation()
+    else:
+        logger.info(f"Scoring skipped. Run: python3 eval_tag.py --tag {MODEL_NAME}")
+
+    logger.info(f"Log file → {log_path}")
+    sys.exit(0 if completed else 2)
