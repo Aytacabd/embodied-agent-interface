@@ -1010,6 +1010,79 @@ def _character_target_actions(parsed) -> list:
     return hits
 
 
+def _combine_name_id_args(parsed):
+    """Convert one_shot output to combined name_id tokens:
+      ["light", "245"]              -> ["light_245"]
+      ["apple", "7", "fridge", "2"] -> ["apple_7", "fridge_2"]
+    Shared by parse_and_validate and the retry prompt, so the retry names
+    exactly the arguments the parser rejected."""
+    normalized = []
+    for item in (parsed if isinstance(parsed, list) else [{k: v} for k, v in parsed.items()]):
+        for action, args in item.items():
+            if isinstance(args, list):
+                combined = []
+                i = 0
+                while i < len(args):
+                    cur = str(args[i]).strip()
+                    nxt = str(args[i + 1]).strip() if i + 1 < len(args) else None
+                    if nxt is not None and nxt.isdigit():
+                        # Normalize: the LLM may echo instance names from the
+                        # prompt, e.g. ["light_245", "245"] -> "light_245_245".
+                        # The dedup regex collapses that back to "light_245".
+                        combined.append(_normalize_name_id_token(f"{cur}_{nxt}"))
+                        i += 2
+                    else:
+                        combined.append(_normalize_name_id_token(cur))
+                        i += 1
+                normalized.append({action: combined})
+            else:
+                normalized.append({action: args})
+    return normalized
+
+
+def _unresolved_object_notes(raw_output: str, name_to_id: dict) -> list:
+    """One sentence per object argument the parser cannot resolve against
+    the task's object list, stating the facts from the scene without
+    choosing a replacement: what the given ID really is, and which objects
+    of the named class exist."""
+    parsed = filter_valid_actions(parse_llm_output(raw_output) or [])
+    if not parsed or not name_to_id:
+        return []
+    id_to_name, class_ids = {}, {}
+    for key, oid in name_to_id.items():
+        m = re.match(r"^(.+)_(\d+)$", str(key))
+        if m and isinstance(oid, int) and int(m.group(2)) == oid:
+            id_to_name[oid] = m.group(1)
+            class_ids.setdefault(m.group(1), set()).add(oid)
+    notes, seen = [], set()
+    for item in _combine_name_id_args(parsed):
+        for action, args in item.items():
+            if action.upper() in ("STANDUP", "SLEEP", "WAKEUP") or not isinstance(args, list):
+                continue
+            for tok in args:
+                tok = str(tok)
+                if tok in name_to_id or tok in seen or tok == "character":
+                    continue
+                seen.add(tok)
+                m = re.match(r"^(.+)_(\d+)$", tok)
+                name, oid = (m.group(1), int(m.group(2))) if m else (tok, None)
+                if oid is not None and oid in id_to_name:
+                    note = (f"'{name}' ({oid}) is not a valid object: object {oid}"
+                            f" is called '{id_to_name[oid]}'.")
+                elif oid is not None:
+                    note = f"There is no object with ID {oid} among the objects listed for this task."
+                else:
+                    note = f"'{name}' has no object ID."
+                same_class = sorted(class_ids.get(name, ()))
+                if same_class and (oid is None or id_to_name.get(oid) != name):
+                    note += (f" Objects called '{name}': "
+                             + ", ".join(f"{name} ({i})" for i in same_class[:6]) + ".")
+                elif not same_class and oid not in id_to_name:
+                    note += f" There is no object called '{name}' in this task."
+                notes.append(note)
+    return notes
+
+
 def parse_and_validate(raw: str, relevant_name_to_id: dict,
                        goal_edge_relations: dict = None,
                        char_guard: str = None):
@@ -1037,31 +1110,7 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict,
 
     parsed = filter_valid_actions(parsed)
 
-    # Convert one_shot output:
-    #   ["light", "245"] -> ["light_245"]
-    #   ["apple", "7", "fridge", "2"] -> ["apple_7", "fridge_2"]
-    normalized = []
-    for item in (parsed if isinstance(parsed, list) else [{k: v} for k, v in parsed.items()]):
-        for action, args in item.items():
-            if isinstance(args, list):
-                combined = []
-                i = 0
-                while i < len(args):
-                    cur = str(args[i]).strip()
-                    nxt = str(args[i + 1]).strip() if i + 1 < len(args) else None
-                    if nxt is not None and nxt.isdigit():
-                        # Normalize: the LLM may echo instance names from the
-                        # prompt, e.g. ["light_245", "245"] -> "light_245_245".
-                        # The dedup regex collapses that back to "light_245".
-                        combined.append(_normalize_name_id_token(f"{cur}_{nxt}"))
-                        i += 2
-                    else:
-                        combined.append(_normalize_name_id_token(cur))
-                        i += 1
-                normalized.append({action: combined})
-            else:
-                normalized.append({action: args})
-    parsed = normalized
+    parsed = _combine_name_id_args(parsed)
 
     if char_guard:
         offending = _character_target_actions(parsed)
@@ -1156,7 +1205,7 @@ def parse_and_validate(raw: str, relevant_name_to_id: dict,
         return None
 
 
-def _build_retry_prompt(base_prompt: str, raw_output: str) -> str:
+def _build_retry_prompt(base_prompt: str, raw_output: str, name_to_id: dict = None) -> str:
     """
     Corrective retry message for a failed initial-plan parse.
 
@@ -1204,6 +1253,20 @@ def _build_retry_prompt(base_prompt: str, raw_output: str) -> str:
             f" \"{example}\": [\"object_name\", \"object_id\"]."
             " Respond with ONE complete, syntactically valid JSON object and"
             " nothing else."
+        )
+
+    # Object arguments the parser could not resolve (e.g. "food" 2009 where
+    # object 2009 is food_food). A generic "invalid" note made the model
+    # repeat the same name on retry (hard-50 9043_1/9048_1), so say which
+    # argument failed and what the scene holds, leaving the choice to it.
+    notes = _unresolved_object_notes(raw_output, name_to_id)
+    if notes:
+        return base_prompt + (
+            "\n\nIMPORTANT: your previous response used objects that do not"
+            " exist in this task:\n- " + "\n- ".join(notes) +
+            "\nRewrite the plan using only objects from the list above, each"
+            " as its exact name and ID. Respond with ONE complete,"
+            " syntactically valid JSON object and nothing else."
         )
 
     return base_prompt + (
@@ -2058,7 +2121,7 @@ class EAISDATreeRunner:
             # One corrective retry — temp-0 re-asks must change the prompt or
             # they reproduce the same broken output verbatim.
             logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
-            retry_prompt = _build_retry_prompt(base_prompt, raw_output)
+            retry_prompt = _build_retry_prompt(base_prompt, raw_output, relevant_name_to_id)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
             # "strip" on the retry: if the model repeats the character
             # mistake, salvage the rest of the plan instead of failing the
@@ -3088,7 +3151,7 @@ class NoAdaptRunner(EAISDATreeRunner):
                                      char_guard="reject")
         if not actions:
             logger.warning(f"  Could not parse initial plan for {file_id} — retrying once")
-            retry_prompt = _build_retry_prompt(base_prompt, raw_output)
+            retry_prompt = _build_retry_prompt(base_prompt, raw_output, relevant_name_to_id)
             raw_output = self.llm.call(retry_prompt, label="INITIAL PLAN (retry)")
             actions = parse_and_validate(raw_output, relevant_name_to_id, goal_edge_relations,
                                          char_guard="strip")
