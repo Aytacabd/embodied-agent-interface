@@ -2101,6 +2101,7 @@ class EAISDATreeRunner:
             failed_plan_idx = None   # 0-based position in current_plan_eai
             err_type = None
             skipped_indices = set()
+            unseen_indices = set()   # subset of skipped_indices: object absent from the scene
             # Successful actions before the first UNSEEN_OBJECT skip: the
             # runner skips those, but the offline evaluator stops there.
             eval_prefix = None
@@ -2139,6 +2140,7 @@ class EAISDATreeRunner:
                         else:
                             logger.info(f"  ⏭️  Skipping unseen object: {action}")
                         skipped_indices.add(action_idx)
+                        unseen_indices.add(action_idx)
                         if eval_prefix is None:
                             eval_prefix = len(history_actions)
                         continue
@@ -2437,7 +2439,19 @@ class EAISDATreeRunner:
             ]
             win_start_plan = hist_pos_to_plan_pos(t_start, hist_to_plan, failed_plan_idx)
 
-            before = history_actions[:max(0, t_start - 1)]
+            # The plan's own prefix, not just the actions that executed: an
+            # action skipped as ADDITIONAL_STEP (e.g. a CLOSE placed before
+            # the cupboard was ever opened) must stay in the plan so the goal
+            # guard can relocate it on success, and so a failed task still
+            # saves it. Rebuilding the prefix from history_actions deleted it
+            # for good (hard-50: ~25 goal CLOSEs per run). Only actions naming
+            # an absent object are dropped, since the evaluator treats those
+            # as fatal. The kept skips change no state, so the repair's start
+            # state (history_env_states[t_start - 1]) is unaffected.
+            def _kept_prefix(end_plan_idx):
+                return [a for i, a in enumerate(current_plan_eai[:end_plan_idx])
+                        if i not in unseen_indices]
+            before = _kept_prefix(max(0, win_start_plan - 1))
             after = current_plan_eai[t_end:]
 
             # For "reconstruct", t_source (root_cause_at) is the diagnosed
@@ -2551,7 +2565,9 @@ class EAISDATreeRunner:
                 after_wrong = current_plan_eai[after_idx:]
 
                 if new_subseq:
-                    current_plan_eai = history_actions + new_subseq + after_wrong
+                    prefix = (_kept_prefix(failed_plan_idx) if failed_plan_idx is not None
+                              else history_actions)
+                    current_plan_eai = prefix + new_subseq + after_wrong
                     raw_output = plan_to_json_str(current_plan_eai)
                     logger.info(f"  🔄 Replaced with: {wrong_raw}")
                 elif replan_count < MAX_REPLAN:
@@ -2627,10 +2643,6 @@ class EAISDATreeRunner:
                 )
 
             if tree_result:
-                logger.info(f"  🌳 Tree found: {tree_result}")
-                if VERBOSE:
-                    print(f"\n  TREE SEARCH RESULT: {tree_result}")
-                tree_success += 1
                 # Record BEFORE resolution: if resolution fails, the next
                 # attempt must get a different path, not this one again.
                 tried_repairs.setdefault(failure_sig, set()).add(_repair_key(tree_result))
@@ -2638,6 +2650,16 @@ class EAISDATreeRunner:
                     tree_result, relevant_name_to_id, full_name_to_id,
                     goal_edge_relations,
                 )
+                # Counted (and logged as "Tree found", which repair_stats
+                # reads) only once the result converts into plan actions;
+                # otherwise nothing is spliced and it is not a found repair.
+                if new_subseq:
+                    logger.info(f"  🌳 Tree found: {tree_result}")
+                    if VERBOSE:
+                        print(f"\n  TREE SEARCH RESULT: {tree_result}")
+                    tree_success += 1
+                else:
+                    logger.info(f"  🌳 Tree result not convertible to plan actions: {tree_result}")
             else:
                 # Tree exhausted: every viable repair was already tried (or
                 # none exists). The plan cannot change, so the next attempt
@@ -2791,6 +2813,72 @@ def _write_budget_curve(results_dir: str) -> None:
         )
 
 
+_TREE_STRATEGIES = ("reconstruct", "insert_prep", "local")
+
+
+def _write_repair_stats(results_dir: str) -> None:
+    """results/repair_stats.json: how often each repair route ran, how often
+    the subtree search found a replacement, and how those tasks ended.
+
+    Built from the merged session logs (each task counted once, from its
+    final attempt) joined with error_info.json. "Tree found" means the
+    search returned a replacement that was spliced in, not that the next
+    execution got past the failure; task-level success comes from the
+    evaluator's goals_satisfied.
+    """
+    if ARM != "sda":
+        return
+    error_info_path = osp.join(results_dir, "error_info.json")
+    log_file = _merged_session_log()
+    if not (osp.exists(error_info_path) and log_file):
+        return
+    try:
+        import parse_diagnosis_stats as pds
+
+        diagnoses, task_order = pds.parse_log(log_file)
+        error_info = json.load(open(error_info_path))
+        ok = {t: bool(r.get("goals_satisfied")) for t, r in error_info.items()}
+
+        tree = [d for d in diagnoses if d["replan_strategy"] in _TREE_STRATEGIES]
+        tree_tasks = {d["task"] for d in tree}
+        found_tasks = {d["task"] for d in tree if d["outcome"] == "resolved"}
+        repaired_tasks = {d["task"] for d in diagnoses}
+        stats = {
+            "tasks_in_log": len(set(task_order)),
+            "tasks_with_no_failure": len(set(task_order) - repaired_tasks),
+            "tasks_with_a_failure": len(repaired_tasks),
+            "tasks_with_a_failure_that_succeeded": sum(ok.get(t, False) for t in repaired_tasks),
+            "tree": {
+                "searches": len(tree),
+                "found_replacement": sum(d["outcome"] == "resolved" for d in tree),
+                "exhausted": sum(d["outcome"] == "gave_up" for d in tree),
+                "outcome_unknown": sum(d["outcome"] == "unknown" for d in tree),
+                "tasks_using_tree": len(tree_tasks),
+                "tasks_using_tree_that_succeeded": sum(ok.get(t, False) for t in tree_tasks),
+                "tasks_with_a_found_replacement": len(found_tasks),
+                "tasks_with_a_found_replacement_that_succeeded": sum(ok.get(t, False) for t in found_tasks),
+            },
+            "wrong_action": {
+                "diagnoses": sum(d["replan_strategy"] == "wrong_action" for d in diagnoses),
+                "replaced": sum(d["replan_strategy"] == "wrong_action" and d["outcome"] == "resolved" for d in diagnoses),
+            },
+            "already_satisfied_removals": sum(d["replan_strategy"] == "already_satisfied" for d in diagnoses),
+            "diagnosis_details": pds.summarize(diagnoses, task_order),
+        }
+        with open(osp.join(results_dir, "repair_stats.json"), "w") as f:
+            json.dump(stats, f, indent=2)
+        t = stats["tree"]
+        logger.info(
+            f"Tree: {t['searches']} searches, {t['found_replacement']} found a "
+            f"replacement, {t['exhausted']} exhausted | tasks using tree: "
+            f"{t['tasks_using_tree']}, of which succeeded: "
+            f"{t['tasks_using_tree_that_succeeded']}"
+        )
+        logger.info(f"repair_stats.json → {osp.join(results_dir, 'repair_stats.json')}")
+    except Exception as e:
+        logger.warning(f"Repair stats failed ({e}) — scores are unaffected.")
+
+
 def _merged_session_log():
     """All of this suite's session logs as one trace for the budget curve.
 
@@ -2921,6 +3009,7 @@ def run_evaluation(tag: str = None, out_dir: str = None) -> bool:
         logger.info(f"run_meta.json   → {osp.join(final_dir, 'run_meta.json')}")
         logger.info(json.dumps(summary, indent=2))
         _write_budget_curve(final_dir)
+        _write_repair_stats(final_dir)
         return True
 
     logger.warning(f"Evaluator wrote no summary at {summary_path}")
@@ -3129,7 +3218,7 @@ if __name__ == "__main__":
     if AUTO_EVALUATE and not args.no_eval:
         run_evaluation()
     else:
-        logger.info(f"Scoring skipped. Run: python3 eval_tag.py --tag {MODEL_NAME}")
+        logger.info("Scoring skipped. Score later by re-running the same command with --eval_only")
 
     logger.info(f"Log file → {log_path}")
     sys.exit(0 if completed else 2)

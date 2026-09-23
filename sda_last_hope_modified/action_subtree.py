@@ -653,10 +653,15 @@ def generate_replacement_subsequence(
 
         elif need == "obj_not_inside_closed_container":
             # error_objects contains BOTH the blocked object and its container
-            # (FIX 3). Only the object that is actually inside a container
-            # must end up held — requiring holds_obj on the container itself
-            # (e.g. a cabinet) makes the BFS goal unsatisfiable.
-            for obj in normalized_error_objects:
+            # (FIX 3). Only the failed action's own object must end up held,
+            # and only its container open — same rule as holds_obj above.
+            # Iterating over every error object also caught the container
+            # itself whenever it sits inside another container (box inside a
+            # trashcan, tasks 9041/9045/9046): the goal then demanded holding
+            # the box and opening the trashcan, which is unsatisfiable, so the
+            # search reported "exhausted" and the GRAB/PUTIN was dropped.
+            inside_objs = [failed_obj] if failed_obj else list(normalized_error_objects)
+            for obj in inside_objs:
                 container = container_targets.get(obj) or initial_model.get_container(obj)
                 if container:
                     target_effects.append(("check", "open", str(container)))

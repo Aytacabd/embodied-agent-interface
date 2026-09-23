@@ -68,6 +68,27 @@ def evaluate_results(args):
             llm_response_path, f"{model_name}_outputs.json"
         )
         llm_response = json.load(open(llm_response_json, "r"))
+        # De-duplicate by identifier, keeping the last non-empty record.
+        # The runner's resume path re-runs any task whose previous pass
+        # produced no output ("" after a crash or an unparseable plan) and
+        # used to append the retry rather than replace the original, so a
+        # resumed sweep can carry two records for one task. Left alone the
+        # evaluator scores that task twice: program_num and every goal
+        # denominator gain one, and the task's matched goals are counted
+        # twice, while error_info (keyed by file_id) keeps only the last.
+        # Observed on the everyday sweeps as 343 records for 342 tasks.
+        _seen = {}
+        for _rec in llm_response:
+            _id = _rec["identifier"]
+            if _id in _seen and not str(_rec.get("llm_output", "")).strip():
+                continue
+            _seen[_id] = _rec
+        if len(_seen) != len(llm_response):
+            logger.warning(
+                f"{len(llm_response) - len(_seen)} duplicate identifier(s) in "
+                f"{llm_response_json} — scoring the last record of each"
+            )
+        llm_response = list(_seen.values())
         # scene metrics
         program_num = 0
 
@@ -256,6 +277,15 @@ def evaluate_results(args):
                 motion_planner.reset()
                 exe_flag = True
                 history_actions = []
+                # Per-task tally of every runtime error this plan hit, in
+                # the same counting convention as the run-wide
+                # error_code_to_number (ADDITIONAL_STEP does not stop the
+                # plan, so one plan can contribute several). Persisting it
+                # lets a best-of-k merge rebuild the runtime-error
+                # breakdown exactly as a single-run summary computes it,
+                # instead of approximating it from the one error_type that
+                # happened to stop the plan.
+                task_error_codes = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
                 executable = True
                 error_action = None
                 prev_env_states = copy.deepcopy(motion_planner.env_state)
@@ -290,6 +320,7 @@ def evaluate_results(args):
                             )
                             failed_error_code = 5
                         error_code_to_number[failed_error_code] += 1
+                        task_error_codes[failed_error_code] += 1
                         logger.info(
                             f"Encounter error: {error_code_to_type[failed_error_code]}"
                         )
@@ -365,6 +396,20 @@ def evaluate_results(args):
                 # parameter branches never get this key — those are
                 # failures by definition (treated as False in the join).
                 error_info[file_id]["goals_satisfied"] = bool(all_pred_success)
+                # Per-task goal counts, so a best-of-k merge can pick a
+                # winning attempt per task and re-derive the partial-goal
+                # rates over the same denominators a single-run summary
+                # uses. Totals are the gold counts and so are identical
+                # across attempts; only the match counts vary.
+                error_info[file_id].update({
+                    "node_match": node_match_num,
+                    "node_total": len(gold_node_goals),
+                    "edge_match": edge_match_num,
+                    "edge_total": len(gold_edge_goals),
+                    "action_match": action_match_num,
+                    "action_total": len(gold_action_goals),
+                    "error_code_counts": task_error_codes,
+                })
 
             else:
                 if format_error:
@@ -390,6 +435,22 @@ def evaluate_results(args):
                     }
                 else:
                     raise ValueError("Unknown error type")
+                # The grammar-error branches never reach the simulator, so
+                # no goal can have been matched and no runtime error can
+                # have fired. Recording the zeros explicitly — with the
+                # gold totals — keeps every task's record the same shape,
+                # so the merge does not have to guess which keys a failure
+                # record is missing.
+                error_info[file_id].update({
+                    "goals_satisfied": False,
+                    "node_match": 0,
+                    "node_total": len(gold_node_goals),
+                    "edge_match": 0,
+                    "edge_total": len(gold_edge_goals),
+                    "action_match": 0,
+                    "action_total": len(gold_action_goals),
+                    "error_code_counts": {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
+                })
 
         # calculate metrics, keep two decimal digits with percentage
         logger.info(f"Program number: {program_num}")

@@ -1,7 +1,8 @@
 """
 analyze_budget_stabilization.py
 =================================
-Reconstructs Task Success Rate at every repair budget from 1 to 10, using
+Reconstructs Task Success Rate at every repair budget from 0 (initial plan
+only) to 10, using
 ONLY the single budget=10 run produced by run_hard50_once_budget10.sh — no
 re-running at each budget needed.
 
@@ -26,6 +27,7 @@ that's what run_hard50_once_budget10.sh produces)
 import sys
 import json
 import csv
+import re
 from collections import Counter
 
 import parse_diagnosis_stats as pds
@@ -36,17 +38,31 @@ DEFAULT_MAX_BUDGET = 10
 OUT_CSV = "run_fixed2_results/hard50_budget10/reconstructed_budget_curve.csv"
 
 
+# The three LLM calls that consume repair budget (eai_sda_runner_tree.py
+# increments replan_count immediately before each). Counting these, rather
+# than diagnoses, is exact: a diagnosis can end in a free removal
+# (already_satisfied, repeated wrong action) that costs no budget, and a
+# wrong-action fix followed by a full-plan fallback costs two.
+_REPAIR_CALL = re.compile(
+    r"\[(SUGGESTION \(replan \d+\)|WRONG ACTION FIX|FULL PLAN FALLBACK)\] "
+    r"(RESPONSE RECEIVED|\d)"
+)
+_TASK = re.compile(r"^\s*TASK:\s*(\S+)\s*\|")
+
+
 def repairs_consumed_per_task(log_path):
-    diags, task_order = pds.parse_log(log_path)
-    consumed = Counter()
-    for d in diags:
-        # already_satisfied is a free removal (no LLM repair call) — it
-        # doesn't cost budget, same convention used for "avg replans used
-        # per task" earlier in this project.
-        if d["replan_strategy"] != "already_satisfied":
-            consumed[d["task"]] += 1
-    all_tasks = sorted(set(task_order))
-    return {t: consumed.get(t, 0) for t in all_tasks}
+    """Repair calls each task made, from the runner log. A task appearing
+    more than once (resumed/retried) keeps its last occurrence."""
+    consumed, task = {}, None
+    with open(log_path, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            m = _TASK.search(line)
+            if m:
+                task = m.group(1)
+                consumed[task] = 0
+            elif task and _REPAIR_CALL.search(line):
+                consumed[task] += 1
+    return consumed
 
 
 def build_curve(log_path, error_info_path, max_budget=10, out_csv=None):
@@ -99,21 +115,28 @@ def _run(log_path, error_info_path, max_budget):
           f"{sorted(t for t in tasks if not goals_satisfied[t])}")
     print()
 
+    # Budget 0 = the initial plan alone (attempt 1); budget b allows b
+    # repairs, i.e. up to b+1 attempts at the plan.
     rows = []
     prev_sr = None
-    print(f"{'budget':>6}  {'successes':>9}  {'task_sr':>8}  {'gain_vs_prev':>13}")
-    for b in range(1, max_budget + 1):
+    print(f"{'repairs':>7}  {'attempts':>8}  {'successes':>9}  {'task_sr':>8}  {'gain':>9}")
+    for b in range(0, max_budget + 1):
         successes = sum(
             1 for t in tasks if goals_satisfied[t] and consumed[t] <= b
         )
         sr = 100.0 * successes / n_total
-        gain = "" if prev_sr is None else f"{sr - prev_sr:+.1f} pt"
-        print(f"{b:>6}  {successes:>9}  {sr:>7.1f}%  {gain:>13}")
-        rows.append({"budget": b, "successes": successes, "task_sr": round(sr, 4)})
+        gain = None if prev_sr is None else round(sr - prev_sr, 4)
+        print(f"{b:>7}  {b + 1:>8}  {successes:>9}  {sr:>7.1f}%  "
+              f"{'' if gain is None else f'{gain:+.1f} pt':>9}")
+        rows.append({
+            "repairs_allowed": b, "attempts": b + 1, "successes": successes,
+            "tasks": n_total, "task_sr": round(sr, 4),
+            "gain_vs_previous_pt": "" if gain is None else gain,
+        })
         prev_sr = sr
 
     with open(OUT_CSV, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["budget", "successes", "task_sr"])
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)
     print(f"\nSaved curve to {OUT_CSV}")
@@ -124,14 +147,14 @@ def _run(log_path, error_info_path, max_budget):
     # be thrown off by float rounding — successes is monotonic in budget
     # by construction, so this is an exact check.
     stable_from = max_budget
-    for b in range(1, max_budget + 1):
-        if all(rows[i]["successes"] == rows[b - 1]["successes"] for i in range(b - 1, max_budget)):
+    for b in range(0, max_budget + 1):
+        if all(r["successes"] == rows[b]["successes"] for r in rows[b:]):
             stable_from = b
             break
-    print(f"\nSR stops improving after budget={stable_from} "
-          f"(flat at {rows[stable_from - 1]['task_sr']:.1f}% through budget={max_budget}).")
+    print(f"\nSR stops improving after {stable_from} repair(s) "
+          f"(flat at {rows[stable_from]['task_sr']:.1f}% through {max_budget}).")
     print(f"Caveat: this only tells you where it stabilized WITHIN the range you "
-          f"tested — it can't rule out further gains past budget={max_budget}.")
+          f"tested — it can't rule out further gains past {max_budget} repairs.")
     return {"rows": rows, "stable_from": stable_from, "csv": OUT_CSV}
 
 
