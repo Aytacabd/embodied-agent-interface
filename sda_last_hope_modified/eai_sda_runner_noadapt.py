@@ -44,10 +44,10 @@ Best-of-k resampling baseline (k independent full sweeps, T=1.0):
 then evaluate (one pass scores all attempt tags) and join with
 combine_bo_attempts.py for first-success-attempt / pass@k.
 
-Output: <MODEL>-noadapt_main_outputs.json in the same
-output_sda/virtualhome/action_sequencing dir the full-SDA arm writes to —
-both land in the evaluator's default scan location for this dataset/
-eval_type, so no staging copy is needed before evaluate_results.
+Output: sda_noadapt/<MODEL>/outputs/virtualhome/action_sequencing/
+<MODEL>-noadapt_main[_a<n>]_outputs.json, scored into
+sda_noadapt/<MODEL>/results/everyday_noadapt[_a<n>]/ (see the output layout
+in eai_sda_runner_tree.py).
 """
 
 import os
@@ -210,11 +210,12 @@ if __name__ == "__main__":
     # --fresh: retire the current plans instead of resuming them. Renaming
     # rather than deleting means a mistaken --fresh costs nothing.
     if args.fresh:
-        _stale = osp.join(core.OUTPUT_DIR, f"{core.MODEL_NAME}_outputs.json")
+        _stale = core.outputs_path()
         if osp.exists(_stale):
             _retired = f"{_stale}.superseded_{core.RUN_TIMESTAMP}"
             os.replace(_stale, _retired)
             core.logger.info(f"--fresh: previous plans moved aside -> {_retired}")
+            core.retire_logs()
         else:
             core.logger.info("--fresh: nothing to clear, starting from empty")
 

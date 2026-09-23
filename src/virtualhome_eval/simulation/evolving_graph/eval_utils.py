@@ -1155,6 +1155,28 @@ def check_no_hallucination_in_arg(action_list, relevant_id):
                     return False
     return True
 
+_COMBINED_NAME_ID = re.compile(r"^(.+)_(\d+)$")
+
+
+def normalize_combined_name_id(action_list):
+    """Rewrite combined-format args (["light_245"], ["apple_7", "fridge_2"])
+    into the interleaved format (["light", "245"], ["apple", "7", "fridge", "2"])
+    that the hallucination/grammar checks and json_to_action expect.
+    A list is only rewritten when EVERY element is name_id-shaped and none is a
+    bare id, so interleaved lists and malformed lists (e.g. ["light"]) pass
+    through untouched and are rejected by check_name_id_format as before."""
+    for action_dict in action_list:
+        for predicate_name, params in action_dict.items():
+            if not params:
+                continue
+            parts = [_COMBINED_NAME_ID.match(str(p)) for p in params]
+            if all(parts) and not any(str(p).isdigit() for p in params):
+                action_dict[predicate_name] = [
+                    x for m in parts for x in (m.group(1), m.group(2))
+                ]
+    return action_list
+
+
 def check_name_id_format(action_list):
     for action_dict in action_list:
         for predicate_name, params in action_dict.items():

@@ -8,24 +8,26 @@ the EAI action-sequencing suite in VirtualHome. Implements paper Sections
 Quick start — one environment variable, nothing else:
 
     export OPENAI_API_KEY=sk-...        # or: export LANGDOCK_API_KEY=...
-    python3 eai_sda_runner_tree.py
+    python3 eai_sda_runner_tree.py --model gpt-4o-mini
 
 The provider is inferred from whichever key is set, resource paths resolve
 from the installed virtualhome_eval package, and everything a run produces
-lands under ./runs (override with SDA_OUTPUT_DIR):
+lands in one folder per model and suite (see "Output layout" below the config):
 
-    runs/virtualhome/action_sequencing/<tag>_outputs.json   the plans
-    runs/results/<tag>/{summary,error_info}.json            the scores
-    runs/logs/<tag>_<timestamp>.log                         the full log
+    original_with_sda/<model>/everyday/        (hard tasks: .../hard50/)
+      outputs/<tag>_outputs.json      the plans — the checkpoint a re-run resumes from
+      results/{summary,error_info,run_meta}.json, budget_curve.csv
+      logs/run_<timestamp>.log        one per session
 
 Scoring runs automatically when generation finishes (SDA_AUTO_EVAL=0 or
 --no_eval to skip, --eval_only to score an existing run without generating).
 
 Nothing is lost if a run stops: the outputs file is rewritten atomically
-after every single task, a task that raises is recorded and skipped rather
-than killing the run, and a spent budget or rejected key stops the loop
-cleanly instead of burning through the remaining tasks. Re-running the same
-command resumes — finished tasks are skipped, unfinished ones retried.
+after every single task, a task that raises or whose LLM calls fail is saved
+as unfinished rather than scored, and a spent budget or rejected key stops
+the loop cleanly instead of burning through the remaining tasks. Re-running
+the same command resumes — finished tasks are skipped, unfinished ones
+retried.
 
 Other options:
     python3 eai_sda_runner_tree.py --max_tasks 50
@@ -46,6 +48,7 @@ import json
 import copy
 import re
 import time
+import glob
 import shutil
 import difflib
 import logging
@@ -81,9 +84,8 @@ def start_logging(tag: str = None) -> str:
     import this module for its constants create no stray log files, and so
     the filename picks up whatever SUITE/ARM/MODEL they have set by then.
     """
-    # Grouped per model, matching the results layout, so one model's whole
-    # output is a single directory to copy out.
-    path = osp.join(LOG_DIR, model_dir(), f"{tag or run_scope()}.log")
+    # <model>/<suite>/logs/, next to that suite's outputs and results.
+    path = log_path() if tag is None else osp.join(logs_dir(), f"{tag}.log")
     os.makedirs(osp.dirname(path), exist_ok=True)
     handler = logging.FileHandler(path, encoding="utf-8")
     handler.setFormatter(
@@ -304,30 +306,87 @@ VERBOSE = True        # show execution trace, responses, diagnosis
 SHOW_PROMPTS = False  # set True to also print full prompts sent to LLM
 
 # Resource paths resolve from the installed virtualhome_eval package, so the
-# same file runs inside the container and on a local checkout. SDA_OUTPUT_DIR
-# overrides where runs are written; the default sits next to this file.
+# same file runs inside the container and on a local checkout.
 _PKG_DIR = osp.dirname(virtualhome_eval.__file__)
 RESOURCE_DIR = os.environ.get("EAI_RESOURCE_DIR", osp.join(_PKG_DIR, "resources"))
 DATASET_DIR = os.environ.get("EAI_DATASET_DIR", osp.join(_PKG_DIR, "dataset"))
-def _default_run_root() -> str:
-    """Where a run writes when SDA_OUTPUT_DIR says nothing.
+# ── Output layout ────────────────────────────────────────────────────────
+# One tree per arm, one folder per model, one folder per suite:
+#
+#   <base>/original_with_sda/<model>/       (no-adapt arm: <base>/sda_noadapt/)
+#     everyday/
+#       outputs/<tag>_outputs.json          plans; rewritten after every task,
+#                                           this is the checkpoint a re-run resumes from
+#       results/{summary,error_info,run_meta}.json, budget_curve.csv
+#       logs/run_<timestamp>.log            one per session (a resume adds one)
+#     hard50/
+#       ...same...
+#
+# The suite folder gets a suffix only when a run departs from that suite's
+# default: hard50_r5 for a non-default repair budget, hard50_a2 for a
+# best-of-k attempt. <base> is /opt/iGibson in the container, else the
+# repository root; SDA_OUTPUT_DIR replaces <base>/<arm tree>.
+#
+# Resolved at call time, not import time: the connectors set MODEL, ARM,
+# SUITE, MAX_REPLAN and MODEL_NAME after importing this module.
+_BASE_DIR = (
+    "/opt/iGibson" if osp.isdir("/opt/iGibson")
+    else osp.dirname(osp.dirname(osp.abspath(__file__)))
+)
+_DEFAULT_BUDGET = {"everyday": 3, "hard50": 10}
+# Explicit plans directory (HARD_OUTPUT_DIR); None = the layout above.
+OUTPUT_DIR = None
 
-    Inside the iGibson container this stays /opt/iGibson/output_sda, the
-    location every previous run and every sweep script already uses, so
-    container behaviour is unchanged. Anywhere else it falls back to a
-    ./runs directory beside this file, which is what makes a local
-    checkout runnable at all.
-    """
-    legacy = "/opt/iGibson/output_sda"
-    if osp.isdir("/opt/iGibson"):
-        return legacy
-    return osp.join(osp.dirname(osp.abspath(__file__)), "runs")
+
+def run_root() -> str:
+    tree = "original_with_sda" if ARM == "sda" else "sda_noadapt"
+    return os.environ.get("SDA_OUTPUT_DIR") or osp.join(_BASE_DIR, tree)
 
 
-RUN_ROOT = os.environ.get("SDA_OUTPUT_DIR", _default_run_root())
-OUTPUT_DIR = osp.join(RUN_ROOT, "virtualhome", "action_sequencing")
-RESULTS_DIR = os.environ.get("SDA_RESULTS_DIR", osp.join(RUN_ROOT, "results"))
-LOG_DIR = os.environ.get("SDA_LOG_DIR", osp.join(RUN_ROOT, "logs"))
+def suite_dir() -> str:
+    name = SUITE
+    if ARM == "sda" and MAX_REPLAN != _DEFAULT_BUDGET.get(SUITE):
+        name += f"_r{MAX_REPLAN}"
+    if RUN_VARIANT:
+        name += f"_{RUN_VARIANT}"
+    return osp.join(run_root(), model_dir(), name)
+
+
+def outputs_dir() -> str:
+    return OUTPUT_DIR or osp.join(suite_dir(), "outputs")
+
+
+def outputs_path(tag: str = None) -> str:
+    return osp.join(outputs_dir(), f"{tag or MODEL_NAME}_outputs.json")
+
+
+def results_dir() -> str:
+    return osp.join(suite_dir(), "results")
+
+
+def logs_dir() -> str:
+    return osp.join(suite_dir(), "logs")
+
+
+def log_path() -> str:
+    return osp.join(logs_dir(), f"run_{RUN_TIMESTAMP}.log")
+
+
+def retire_logs() -> None:
+    """--fresh: move this suite's earlier session logs aside, so the budget
+    curve (which reads every log here) only sees the new run."""
+    # The current session's log is already open by the time --fresh runs.
+    old = sorted(f for f in glob.glob(osp.join(logs_dir(), "run_*.log"))
+                 if f != log_path())
+    if not old:
+        return
+    dest = osp.join(logs_dir(), f"superseded_{RUN_TIMESTAMP}")
+    os.makedirs(dest, exist_ok=True)
+    for f in old:
+        shutil.move(f, dest)
+    logger.info(f"--fresh: {len(old)} earlier log(s) moved aside → {dest}")
+
+
 TASK_DICT_PATH = osp.join(RESOURCE_DIR, "virtualhome/task_state_LTL_formula_accurate.json")
 ID2TASK_PATH = osp.join(RESOURCE_DIR, "virtualhome/id2task.json")
 DATA_DIR = osp.join(DATASET_DIR, "programs_processed_precond_nograb_morepreconds")
@@ -529,7 +588,9 @@ class _OpenAIChatBackend:
 
     def __init__(self, api_key: str, base_url: str = ""):
         from openai import OpenAI
-        kwargs = {"api_key": api_key}
+        # The SDK backs off exponentially on 429/5xx; the default of 2 retries
+        # gives up within seconds under sustained rate limiting.
+        kwargs = {"api_key": api_key, "max_retries": 6}
         if base_url:
             kwargs["base_url"] = base_url
         self.client = OpenAI(**kwargs)
@@ -625,6 +686,11 @@ class LLMClient:
         # run_all can stop and keep what it has instead of looping on a
         # call that cannot succeed. See _FATAL_API_MARKERS.
         self.fatal_error = None
+        # Calls that raised (rate limit, timeout, 5xx, bad request) since the
+        # counter was last reset. run_all resets it per task and treats any
+        # failure as "task unfinished", so an API error is never scored as a
+        # failed repair.
+        self.failed_calls = 0
         logger.info(f"LLM: {API_PROVIDER} / {MODEL}")
 
     def call(self, user_prompt: str, system_prompt: str = None, label: str = "LLM") -> str:
@@ -652,7 +718,8 @@ class LLMClient:
             result = self.backend.complete(MODEL, system_prompt, user_prompt)
         except Exception as e:
             logger.error(f"API error ({API_PROVIDER}/{MODEL}): {e}")
-            blob = f"{type(e).__name__}: {e}".lower()
+            self.failed_calls += 1
+            blob =f"{type(e).__name__}: {e}".lower()
             if any(marker in blob for marker in _FATAL_API_MARKERS):
                 self.fatal_error = f"{type(e).__name__}: {e}"
                 logger.error(
@@ -1753,7 +1820,7 @@ class EAISDATreeRunner:
         self.name_equivalence = utils.load_name_equivalence()
         self.task_dicts = json.load(open(TASK_DICT_PATH))[f"scene_{SCENEGRAPH_ID}"]
         self.id2task = json.load(open(ID2TASK_PATH))
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        os.makedirs(outputs_dir(), exist_ok=True)
         logger.info("EAI resources loaded.")
 
     def run_all(self, max_tasks=None, task_ids=None) -> bool:
@@ -1777,20 +1844,34 @@ class EAISDATreeRunner:
         logger.info(f"Task IDs   : {task_ids or 'ALL'}")
         logger.info("LLM fallback on tree fail: DISABLED")
 
-        out_path = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")
+        out_path = outputs_path()
         if osp.exists(out_path):
             existing = json.load(open(out_path))
+            # One entry per task. Older resumes appended a retried task next
+            # to its empty entry, and the evaluator scores every entry, so a
+            # duplicate counted the task twice. Keep the last non-empty entry.
+            by_id = {}
+            for d in existing:
+                if d["identifier"] not in by_id or d["llm_output"] not in ("", "..."):
+                    by_id[d["identifier"]] = d
+            if len(by_id) != len(existing):
+                logger.info(
+                    f"Collapsed {len(existing) - len(by_id)} duplicate entries "
+                    f"in {out_path}"
+                )
             done_ids = {
-                d["identifier"] for d in existing
+                i for i, d in by_id.items()
                 if d["llm_output"] not in ("", "...")
             }
-            outputs = list(existing)
+            outputs = list(by_id.values())
             logger.info(f"Resuming: {len(done_ids)} tasks already done")
         else:
             outputs, done_ids = [], set()
 
         total = replan_total = tree_success = fallback_count = 0
         crashed = []          # task ids whose run raised; retried on resume
+        api_failed = []       # task ids with a failed LLM call; retried on resume
+        consecutive_api_failed = 0
         stopped_early = False  # set when the key or budget gives out
 
         for task_name, task_files in self.task_dicts.items():
@@ -1812,6 +1893,7 @@ class EAISDATreeRunner:
                 # One task's crash must not cost the whole run: record it,
                 # save, and move on. The empty llm_output means a resume
                 # picks this task up again rather than treating it as done.
+                self.llm.failed_calls = 0
                 try:
                     result, rc, ts, fb = self.run_single_task(
                         file_id, task_name, task_goal_dict
@@ -1821,10 +1903,33 @@ class EAISDATreeRunner:
                     result, rc, ts, fb = "", 0, 0, 0
                     crashed.append(file_id)
 
+                # A failed LLM call comes back as "", which the loop reads as
+                # an unusable reply: a repair would be spent and the task could
+                # end as a genuine-looking failure. Save it as unfinished
+                # instead, so a re-run retries the whole task.
+                if self.llm.failed_calls:
+                    logger.warning(
+                        f"Task {file_id}: {self.llm.failed_calls} LLM call(s) "
+                        f"failed — saved as unfinished, re-run to retry it"
+                    )
+                    result, rc, ts, fb = "", 0, 0, 0
+                    api_failed.append(file_id)
+                    consecutive_api_failed += 1
+                else:
+                    consecutive_api_failed = 0
+
                 replan_total += rc
                 tree_success += ts
                 fallback_count += fb
-                outputs.append({"identifier": file_id, "llm_output": result})
+                entry = {"identifier": file_id, "llm_output": result}
+                idx = next(
+                    (i for i, d in enumerate(outputs) if d["identifier"] == file_id),
+                    None,
+                )
+                if idx is None:
+                    outputs.append(entry)
+                else:
+                    outputs[idx] = entry
 
                 # Save after EVERY task, not every tenth: a stop between
                 # saves would otherwise discard up to nine completed tasks.
@@ -1838,6 +1943,18 @@ class EAISDATreeRunner:
                     logger.info(
                         "Progress is saved. Fix the key or budget and re-run "
                         "the same command — finished tasks are skipped."
+                    )
+                    stopped_early = True
+                    break
+
+                # Every call failing (e.g. a parameter the model rejects, or a
+                # provider outage) would otherwise sweep the whole suite into
+                # empty entries.
+                if consecutive_api_failed >= 3:
+                    logger.error(
+                        "Stopping early: LLM calls failed in 3 tasks in a row. "
+                        "Check the API errors above, then re-run the same "
+                        "command — finished tasks are skipped."
                     )
                     stopped_early = True
                     break
@@ -1858,6 +1975,11 @@ class EAISDATreeRunner:
             logger.warning(
                 f"{len(crashed)} task(s) crashed and stayed unfinished: "
                 f"{crashed} — re-running retries exactly these."
+            )
+        if api_failed:
+            logger.warning(
+                f"{len(api_failed)} task(s) had failed LLM calls and stayed "
+                f"unfinished: {api_failed} — re-running retries exactly these."
             )
         return not stopped_early
 
@@ -1955,6 +2077,10 @@ class EAISDATreeRunner:
         banned_cands = {}    # failure_sig -> set of (ACTION, obj, target) that failed in env
         last_spliced = None  # (failure_sig, set of repair action strings)
         deferred_goal_actions = []  # goal-achieving actions removed by drops (goal guard)
+        # Best failed plan so far: (successful actions before the first
+        # evaluator-fatal failure, attempt number, plan). Saved instead of the
+        # last plan when the repair budget runs out.
+        best_failed = None
 
         # L4: removals (already_satisfied / loop-breaker drops) do NOT consume
         # the repair budget — only actual repair attempts (LLM calls) do.
@@ -1975,6 +2101,9 @@ class EAISDATreeRunner:
             failed_plan_idx = None   # 0-based position in current_plan_eai
             err_type = None
             skipped_indices = set()
+            # Successful actions before the first UNSEEN_OBJECT skip: the
+            # runner skips those, but the offline evaluator stops there.
+            eval_prefix = None
 
             # ── Execute current plan ──────────────────────────────────────────
             if VERBOSE:
@@ -2010,6 +2139,8 @@ class EAISDATreeRunner:
                         else:
                             logger.info(f"  ⏭️  Skipping unseen object: {action}")
                         skipped_indices.add(action_idx)
+                        if eval_prefix is None:
+                            eval_prefix = len(history_actions)
                         continue
 
                     if VERBOSE:
@@ -2141,6 +2272,12 @@ class EAISDATreeRunner:
                     print(f"  {raw_output}", flush=True)
                 break
 
+            # This pass failed: remember it if it got furthest so far. `>=` so
+            # a later (more repaired) plan wins ties.
+            n_ok = eval_prefix if eval_prefix is not None else len(history_actions)
+            if best_failed is None or n_ok >= best_failed[0]:
+                best_failed = (n_ok, attempt + 1, list(current_plan_eai))
+
             if replan_count >= MAX_REPLAN or attempt >= max_total_iters:
                 # Save the full predicted plan, NOT the executed prefix — this
                 # is the original SDA behaviour (sda_eai/eai_sda_runner_tree.py:
@@ -2172,13 +2309,23 @@ class EAISDATreeRunner:
                 # naming an absent object is survivable here and fatal there.
                 # That removal is part of the adaptation being measured, so
                 # it is kept -- but it must be disclosed, not assumed neutral.
+                #
+                # Which plan: of every plan tried for this task, the one whose
+                # execution got furthest (most successful actions before the
+                # first failure the evaluator treats as fatal), not simply the
+                # last one — a late repair can make things worse. Always
+                # re-serialised, so a budget spent on unparseable repairs
+                # never saves the raw initial LLM text.
+                best_n, best_attempt, best_plan = best_failed
+                raw_output = plan_to_json_str(best_plan)
                 logger.info(f"  ⚠️  Max replanning reached for {file_id}")
                 logger.info(
-                    f"  💾 Saved full predicted plan ({len(current_plan_eai)} actions); "
-                    f"{len(history_actions)} of them executed before it broke"
+                    f"  💾 Saved full plan from attempt {best_attempt} of {attempt + 1} "
+                    f"({len(best_plan)} actions, {best_n} executed before it broke; "
+                    f"last attempt reached {n_ok})"
                 )
                 if VERBOSE:
-                    print(f"\n  FINAL OUTPUT SAVED (max replans reached — full plan):", flush=True)
+                    print(f"\n  FINAL OUTPUT SAVED (max replans reached — furthest-executing plan, attempt {best_attempt}):", flush=True)
                     print(f"  {raw_output}", flush=True)
                 break
 
@@ -2598,7 +2745,8 @@ class EAISDATreeRunner:
         file is always a complete, valid JSON document: either the previous
         save or this one, never a half-written mix.
         """
-        path = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")
+        path = outputs_path()
+        os.makedirs(osp.dirname(path), exist_ok=True)
         tmp = f"{path}.tmp"
         with open(tmp, "w") as f:
             json.dump(outputs, f, indent=4)
@@ -2624,8 +2772,8 @@ def _write_budget_curve(results_dir: str) -> None:
     if ARM != "sda" or MAX_REPLAN < 2:
         return
     error_info = osp.join(results_dir, "error_info.json")
-    log_path = osp.join(LOG_DIR, model_dir(), f"{run_scope()}.log")
-    if not (osp.exists(error_info) and osp.exists(log_path)):
+    log_file = _merged_session_log()
+    if not (osp.exists(error_info) and log_file):
         logger.info("Budget curve skipped (needs this run's log and error_info).")
         return
     try:
@@ -2633,17 +2781,50 @@ def _write_budget_curve(results_dir: str) -> None:
 
         logger.info(f"\n=== REPAIR-BUDGET CURVE (1..{MAX_REPLAN}) ===")
         curve.build_curve(
-            log_path, error_info, MAX_REPLAN,
+            log_file, error_info, MAX_REPLAN,
             out_csv=osp.join(results_dir, "budget_curve.csv"),
         )
     except Exception as e:
         logger.warning(
             f"Budget curve failed ({e}) — scores are unaffected. Rebuild with: "
-            f"python3 analyze_budget_stabilization.py {log_path} {error_info} {MAX_REPLAN}"
+            f"python3 analyze_budget_stabilization.py {log_file} {error_info} {MAX_REPLAN}"
         )
 
 
-def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
+def _merged_session_log():
+    """All of this suite's session logs as one trace for the budget curve.
+
+    A resumed run spreads its tasks over several logs, and a task that was
+    interrupted or retried appears in more than one. Each log is split into
+    per-task blocks (from one "TASK:" line to the next) and only the latest
+    block per task is kept, so every task is counted once, from its final
+    attempt. Returns the merged file's path, or None if there are no logs.
+    """
+    logs = sorted(glob.glob(osp.join(logs_dir(), "run_*.log")))
+    if not logs:
+        return None
+    blocks = {}
+    for path in logs:  # run_<timestamp> sorts chronologically
+        with open(path, encoding="utf-8", errors="replace") as f:
+            lines = f.readlines()
+        task, block = None, []
+        for line in lines + ["TASK: __end__ |\n"]:
+            m = re.search(r"^\s*TASK:\s*(\S+)\s*\|", line)
+            if m:
+                if task and task != "__end__":
+                    blocks.pop(task, None)  # re-insert so order = latest run
+                    blocks[task] = block
+                task, block = m.group(1), [line]
+            elif task:
+                block.append(line)
+    merged = osp.join(logs_dir(), "_merged_for_budget_curve.log")
+    with open(merged, "w", encoding="utf-8") as f:
+        for block in blocks.values():
+            f.writelines(block)
+    return merged
+
+
+def run_evaluation(tag: str = None, out_dir: str = None) -> bool:
     """Score a finished run with the benchmark's own offline evaluator.
 
     Re-executes the saved plans in a fresh simulator and writes
@@ -2665,10 +2846,8 @@ def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
     outputs untouched and re-runnable via eval_tag.py.
     """
     tag = tag or MODEL_NAME
-    results_dir = results_dir or RESULTS_DIR
-    os.makedirs(results_dir, exist_ok=True)
-
-    outputs_file = osp.join(OUTPUT_DIR, f"{tag}_outputs.json")
+    final_dir = out_dir or results_dir()
+    outputs_file = outputs_path(tag)
     if not osp.exists(outputs_file):
         logger.warning(f"Nothing to score: {outputs_file} does not exist")
         return False
@@ -2679,7 +2858,8 @@ def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
 
         # <resource_dir>/virtualhome/task_state_LTL_formula_accurate.json
         resource_dir = osp.dirname(osp.dirname(TASK_DICT_PATH))
-        stage_root = osp.join(RUN_ROOT, "_eval", tag)
+        stage_root = osp.join(suite_dir(), "_eval")
+        scored_root = osp.join(stage_root, "scored")
         stage_dir = osp.join(stage_root, "virtualhome", "action_sequencing")
         os.makedirs(stage_dir, exist_ok=True)
         shutil.copy2(outputs_file, osp.join(stage_dir, f"{tag}_outputs.json"))
@@ -2688,25 +2868,25 @@ def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
             llm_response_path=stage_root,
             resource_dir=resource_dir,
             dataset_dir=DATASET_DIR,
-            output_dir=results_dir,
+            output_dir=scored_root,
             dataset="virtualhome",
         )
         er.extract_model_names = lambda _dir: [tag]
         er.evaluate_results(args)
     except Exception as e:
         logger.exception(f"Evaluation failed ({e}) — run outputs are intact.")
-        logger.info(f"Score it later with: python3 eval_tag.py --tag {tag}")
+        logger.info("Score it later by re-running the same command with --eval_only")
         return False
 
-    # The evaluator always writes to <output_dir>/<tag>/. Move that into a
-    # run-labelled directory so model, suite, arm and time are visible on
-    # disk and successive runs of the same tag do not overwrite each other.
-    written = osp.join(results_dir, tag)
-    final_dir = osp.join(results_dir, model_dir(), run_scope())
-    if osp.isdir(written) and written != final_dir:
+    # The evaluator always writes to <output_dir>/<tag>/. Move that to
+    # results/<run>/; re-scoring the same run replaces the previous scores.
+    written = osp.join(scored_root, tag)
+    if osp.isdir(written):
         if osp.isdir(final_dir):
             shutil.rmtree(final_dir)
+        os.makedirs(osp.dirname(final_dir), exist_ok=True)
         shutil.move(written, final_dir)
+    shutil.rmtree(stage_root, ignore_errors=True)  # staging copy only
 
     summary_path = osp.join(final_dir, "summary.json")
     if osp.exists(summary_path):
@@ -2714,6 +2894,8 @@ def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
             summary = json.load(f)
         # Record what produced these numbers, so a results directory is
         # still interpretable months later without consulting the logs.
+        with open(outputs_file) as f:
+            plans = json.load(f)
         meta = {
             "model": MODEL,
             "provider": API_PROVIDER,
@@ -2725,6 +2907,11 @@ def run_evaluation(tag: str = None, results_dir: str = None) -> bool:
             "max_replan": MAX_REPLAN,
             "temperature": TEMPERATURE,
             "plans_file": outputs_file,
+            "log_files": sorted(glob.glob(osp.join(logs_dir(), "run_*.log"))),
+            "tasks_in_plans_file": len(plans),
+            "tasks_unfinished": sum(
+                1 for d in plans if d["llm_output"] in ("", "...")
+            ),
         }
         with open(osp.join(final_dir, "run_meta.json"), "w") as f:
             json.dump(meta, f, indent=2)
@@ -2918,11 +3105,12 @@ if __name__ == "__main__":
     # --fresh: retire the current plans instead of resuming them. Renaming
     # rather than deleting means a mistaken --fresh costs nothing.
     if args.fresh:
-        stale = osp.join(OUTPUT_DIR, f"{MODEL_NAME}_outputs.json")
+        stale = outputs_path()
         if osp.exists(stale):
             retired = f"{stale}.superseded_{RUN_TIMESTAMP}"
             os.replace(stale, retired)
             logger.info(f"--fresh: previous plans moved aside → {retired}")
+            retire_logs()
         else:
             logger.info("--fresh: nothing to clear, starting from empty")
 

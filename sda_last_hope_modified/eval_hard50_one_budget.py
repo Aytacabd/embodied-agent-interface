@@ -22,6 +22,7 @@ collide with the existing r3/r5 baselines.
 """
 import sys
 import os
+import re
 import os.path as osp
 import shutil
 import json
@@ -34,10 +35,18 @@ BASE = os.environ.get("SWEEP_BASE", "/opt/iGibson")
 # the same config rather than restating a path. Hardcoding it separately is
 # what silently broke this script once the runner's default moved: the sweep
 # wrote to one directory and the scorer looked in another, finding nothing.
-RUNNER_OUTPUT_DIR = os.environ.get(
-    "HARD_OUTPUT_DIR",
-    osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
-)
+def runner_outputs_path(model_name: str) -> str:
+    """Where eai_sda_runner_hard.py saved this tag: the model's outputs/
+    folder, the model being the tag's prefix (<model>-sda-tree_hard50_r<n>)."""
+    if os.environ.get("HARD_OUTPUT_DIR"):
+        return osp.join(os.environ["HARD_OUTPUT_DIR"], f"{model_name}_outputs.json")
+    core.MODEL = model_name.split("-sda-tree_hard50")[0]
+    core.SUITE, core.ARM = "hard50", "sda"
+    m = re.search(r"_r(\d+)", model_name)
+    core.MAX_REPLAN = int(m.group(1)) if m else 10
+    m = re.search(r"_(a\d+)$", model_name)
+    core.RUN_VARIANT = m.group(1) if m else ""
+    return core.outputs_path(model_name)
 STAGING_ROOT = osp.join(BASE, "eval_staging_budget_sweep")
 RESULTS_ROOT = osp.join(BASE, "results_hard50_budget_sweep")
 CSV_PATH = osp.join(RESULTS_ROOT, "budget_sweep_summary.csv")
@@ -54,7 +63,7 @@ def main():
         sys.exit(1)
     budget, model_name = sys.argv[1], sys.argv[2]
 
-    src = osp.join(RUNNER_OUTPUT_DIR, f"{model_name}_outputs.json")
+    src = runner_outputs_path(model_name)
     if not osp.exists(src):
         print(f"ERROR: {src} not found — did the runner finish for budget {budget}?")
         sys.exit(1)

@@ -63,10 +63,9 @@ core.MODEL_EXPLICIT = core.MODEL_EXPLICIT or core.MODEL != core.DEFAULT_MODEL
 core.MODEL_NAME = f"{core.MODEL}-noadapt_hard50"
 core.SUITE = "hard50"
 core.ARM = "noadapt"
-core.OUTPUT_DIR = os.environ.get(
-    "HARD_OUTPUT_DIR",
-    osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
-)
+# Plans go in the model's outputs/ folder like every other run (the
+# _hard50 tag keeps them apart); HARD_OUTPUT_DIR still forces a location.
+core.OUTPUT_DIR = os.environ.get("HARD_OUTPUT_DIR") or None
 
 # ── Best-of-k resampling arm ─────────────────────────────────────────────
 # Same protocol as eai_sda_runner_noadapt.py's main-set version: ATTEMPT=n
@@ -227,11 +226,12 @@ if __name__ == "__main__":
     # --fresh: retire the current plans instead of resuming them. Renaming
     # rather than deleting means a mistaken --fresh costs nothing.
     if args.fresh:
-        _stale = osp.join(core.OUTPUT_DIR, f"{core.MODEL_NAME}_outputs.json")
+        _stale = core.outputs_path()
         if osp.exists(_stale):
             _retired = f"{_stale}.superseded_{core.RUN_TIMESTAMP}"
             os.replace(_stale, _retired)
             core.logger.info(f"--fresh: previous plans moved aside -> {_retired}")
+            core.retire_logs()
         else:
             core.logger.info("--fresh: nothing to clear, starting from empty")
 

@@ -148,12 +148,17 @@ def evaluate_results(args):
                 elif isinstance(id_val, list):
                     for i in id_val:
                         relevant_name_to_id[f"{name}_{i}"] = i
-            # ADD THIS room wouldnt appear
+            # Rooms are valid WALK targets but never appear among the goal-
+            # relevant objects. Add ONLY rooms (adding every node would let
+            # arbitrary scene objects pass the hallucination check), and never
+            # overwrite an existing bare class-name entry.
             for node in motion_planner.env_graph.get_nodes():
                 nd = node.to_dict()
+                if nd.get("category") != "Rooms":
+                    continue
                 name = nd["class_name"]
                 nid = nd["id"]
-                relevant_name_to_id[name] = nid
+                relevant_name_to_id.setdefault(name, nid)
                 relevant_name_to_id[f"{name}_{nid}"] = nid
 
             _, _, _, all_success, _, _, _ = scene_evaluate_wID(
@@ -196,8 +201,12 @@ def evaluate_results(args):
                 actions = None
                 format_error = True
 
-            #if actions is None or len(actions) == 0 or not check_name_id_format(actions)[0]:
-            if actions is None or len(actions) == 0:
+            # Accept the combined ["light_245"] format by converting it to the
+            # interleaved one first; anything still odd-length (e.g. ["light"])
+            # is a format error, as in upstream EAI.
+            if actions:
+                actions = normalize_combined_name_id(actions)
+            if actions is None or len(actions) == 0 or not check_name_id_format(actions)[0]:
                 all_parsing_wrong += 1
                 logger.info(f"Task {task_name}, file {file_id} prediction has no prediction")
                 format_error = True

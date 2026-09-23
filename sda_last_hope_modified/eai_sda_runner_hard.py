@@ -83,10 +83,9 @@ _attempt = os.environ.get("ATTEMPT")
 if _attempt:
     core.MODEL_NAME += f"_a{_attempt}"
     core.RUN_VARIANT = f"a{_attempt}"
-core.OUTPUT_DIR = os.environ.get(
-    "HARD_OUTPUT_DIR",
-    osp.join(osp.dirname(core.OUTPUT_DIR), "action_sequencing_hard50"),
-)
+# Plans go in the model's outputs/ folder like every other run (the
+# _hard50 tag keeps them apart); HARD_OUTPUT_DIR still forces a location.
+core.OUTPUT_DIR = os.environ.get("HARD_OUTPUT_DIR") or None
 
 
 def _preflight():
@@ -146,11 +145,12 @@ if __name__ == "__main__":
     # --fresh: retire the current plans instead of resuming them. Renaming
     # rather than deleting means a mistaken --fresh costs nothing.
     if args.fresh:
-        _stale = osp.join(core.OUTPUT_DIR, f"{core.MODEL_NAME}_outputs.json")
+        _stale = core.outputs_path()
         if osp.exists(_stale):
             _retired = f"{_stale}.superseded_{core.RUN_TIMESTAMP}"
             os.replace(_stale, _retired)
             core.logger.info(f"--fresh: previous plans moved aside -> {_retired}")
+            core.retire_logs()
         else:
             core.logger.info("--fresh: nothing to clear, starting from empty")
 
